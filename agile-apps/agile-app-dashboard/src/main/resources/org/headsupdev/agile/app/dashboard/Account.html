@@ -1,0 +1,70 @@
+<!--
+  ~ HeadsUp Agile
+  ~ Copyright 2009-2012 Heads Up Development Ltd.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<html>
+  <body>
+    <wicket:extend>
+      <table style="float: right;">
+        <tr>
+          <td wicket:id="velocity">
+            <table>
+              <tr>
+                <td class="dashheader">Your current velocity (avg. <span wicket:id="velocity">5.3</span>)</td>
+              </tr>
+              <tr>
+                <td class="velnumber"><span wicket:id="currentvelocity">5.3</span></td>
+              </tr>
+              <tr>
+                <td class="dashfooter">developer average <span wicket:id="averagevelocity">5.0</span></td>
+              </tr>
+            </table>
+          </td>
+          <td rowspan="3"><img wicket:id="account" alt="account graph" class="accountgraph" /></td>
+        </tr>
+      </table>
+
+
+      <wicket:container wicket:id="details">user</wicket:container>
+
+      <h3>Issues</h3>
+      <p>Open issues being watched by <span wicket:id="issues-name"></span></p>
+      <div wicket:id="issues"></div>
+
+      <wicket:enclosure child="comments">
+      <h3>Time Worked</h3>
+      <p>Recently logged time (<span wicket:id="loggedtimeday">todo</span> logged today)
+          (<span wicket:id="loggedtimeweek">todo</span> logged this week)</p>
+      <table class="comments vertical">
+        <tr wicket:id="comments">
+          <td class="comment-icon"><img wicket:id="icon"/></td>
+          <td class="comment-title" wicket:id="worked-title">
+            <span wicket:id="worked">0h</span> work logged by <span wicket:id="username">username</span> for issue
+            <a wicket:id="issue-link"><span class="relatedissue" wicket:id="issue">issue</span></a>
+            <span class="relatedissue" wicket:id="summary">summary</span>
+            on <span wicket:id="created">created</span>
+          </td>
+        </tr>
+      </table>
+      </wicket:enclosure>
+
+      <h3>Activity</h3>
+      <p><span wicket:id="history-name"></span>'s 10 most recent events</p>
+      <div wicket:id="events"></div>
+    </wicket:extend>
+  </body>
+</html>

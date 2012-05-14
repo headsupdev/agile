@@ -1,0 +1,451 @@
+<!--
+  ~ HeadsUp Agile
+  ~ Copyright 2009-2012 Heads Up Development Ltd.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.headsupdev</groupId>
+    <artifactId>headsupdev-parent</artifactId>
+    <version>2</version>
+  </parent>
+
+  <groupId>org.headsupdev.agile</groupId>
+  <artifactId>agile</artifactId>
+  <version>2.0-alpha-3-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>HeadsUp Agile</name>
+
+  <scm>
+    <connection>scm:git:git://github.com/headsupdev/agile.git</connection>
+    <developerConnection>scm:git:git@github.com:headsupdev/agile.git</developerConnection>
+    <url>http://headsupdev.org/agile/files/</url>
+  </scm>
+
+  <properties>
+    <org.osgi.service.http.port>8069</org.osgi.service.http.port>
+    <org.ops4j.pax.web.session.timeout>60</org.ops4j.pax.web.session.timeout>
+
+    <headsup.db.url>jdbc:h2:file:${user.home}/.headsup/data;DB_CLOSE_ON_EXIT=FALSE</headsup.db.url>
+    <headsup.db.dialect>org.hibernate.dialect.H2Dialect</headsup.db.dialect>
+    <headsup.db.driver>org.h2.Driver</headsup.db.driver>
+    <headsup.db.username>sa</headsup.db.username>
+    <headsup.db.password />
+
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.headsupdev.support</groupId>
+      <artifactId>java-support</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.headsupdev.agile</groupId>
+        <artifactId>agile-api</artifactId>
+        <version>2.0-alpha-3-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>org.headsupdev.agile</groupId>
+        <artifactId>agile-scm</artifactId>
+        <version>2.0-alpha-3-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>org.headsupdev.agile</groupId>
+        <artifactId>agile-core</artifactId>
+        <version>2.0-alpha-3-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>org.headsupdev.agile</groupId>
+        <artifactId>agile-security</artifactId>
+        <version>2.0-alpha-3-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>org.headsupdev.agile</groupId>
+        <artifactId>agile-storage</artifactId>
+        <version>2.0-alpha-3-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>org.headsupdev.agile</groupId>
+        <artifactId>agile-web</artifactId>
+        <version>2.0-alpha-3-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>org.headsupdev.agile</groupId>
+        <artifactId>agile-framework</artifactId>
+        <version>2.0-alpha-3-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>org.headsupdev.agile</groupId>
+        <artifactId>agile-runtime-controller</artifactId>
+        <version>2.0-alpha-3-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>org.headsupdev.agile</groupId>
+        <artifactId>agile-runtime</artifactId>
+        <version>2.0-alpha-3-SNAPSHOT</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.headsupdev.agile</groupId>
+        <artifactId>agile-app-dashboard</artifactId>
+        <version>2.0-alpha-3-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>org.headsupdev.agile</groupId>
+        <artifactId>agile-app-admin</artifactId>
+        <version>2.0-alpha-3-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>org.headsupdev.agile</groupId>
+        <artifactId>agile-app-history</artifactId>
+        <version>2.0-alpha-3-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>org.headsupdev.agile</groupId>
+        <artifactId>agile-app-files</artifactId>
+        <version>2.0-alpha-3-SNAPSHOT</version>
+      </dependency> 
+      <dependency>
+        <groupId>org.headsupdev.agile</groupId>
+        <artifactId>agile-app-artifacts</artifactId>
+        <version>2.0-alpha-3-SNAPSHOT</version>
+      </dependency> 
+      <dependency>
+        <groupId>org.headsupdev.agile</groupId>
+        <artifactId>agile-app-docs</artifactId>
+        <version>2.0-alpha-3-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>org.headsupdev.agile</groupId>
+        <artifactId>agile-app-issues</artifactId>
+        <version>2.0-alpha-3-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>org.headsupdev.agile</groupId>
+        <artifactId>agile-app-milestones</artifactId>
+        <version>2.0-alpha-3-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>org.headsupdev.agile</groupId>
+        <artifactId>agile-app-builds</artifactId>
+        <version>2.0-alpha-3-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>org.headsupdev.agile</groupId>
+        <artifactId>agile-app-search</artifactId>
+        <version>2.0-alpha-3-SNAPSHOT</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.headsupdev.agile</groupId>
+        <artifactId>agile-framework</artifactId>
+        <type>bundle</type>
+        <version>2.0-alpha-3-SNAPSHOT</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.headsupdev.irc</groupId>
+        <artifactId>irc-api</artifactId>
+        <version>1.0</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.wicket</groupId>
+        <artifactId>wicket</artifactId>
+        <version>1.4.18</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.wicket</groupId>
+        <artifactId>wicket-extensions</artifactId>
+        <version>1.4.18</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.wicket</groupId>
+        <artifactId>wicket-datetime</artifactId>
+        <version>1.4.18</version>
+      </dependency>
+      <dependency>
+        <groupId>org.wicketstuff</groupId>
+        <artifactId>wicketstuff-animator</artifactId>
+        <version>1.4.18</version>
+      </dependency>
+      <dependency>
+        <groupId>org.wicketstuff</groupId>
+        <artifactId>progressbar</artifactId>
+        <version>1.4.18</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.opensymphony.quartz</groupId>
+        <artifactId>quartz</artifactId>
+        <version>1.6.1</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.codehaus.plexus</groupId>
+        <artifactId>plexus-utils</artifactId>
+        <version>1.4.9-headsup</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.headsupdev.support</groupId>
+        <artifactId>java-support</artifactId>
+        <version>1.2</version>
+      </dependency>
+      <dependency>
+        <groupId>org.headsupdev.support</groupId>
+        <artifactId>java-compression</artifactId>
+        <version>1.0</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.maven</groupId>
+        <artifactId>maven-model</artifactId>
+        <version>2.0.4</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.hibernate</groupId>
+        <artifactId>hibernate-core</artifactId>
+        <version>3.3.1.GA</version>
+      </dependency>
+      <dependency>
+        <groupId>org.hibernate</groupId>
+        <artifactId>hibernate-search</artifactId>
+        <version>3.1.0.GA</version>
+      </dependency>
+
+      <dependency>
+        <groupId>rome</groupId>
+        <artifactId>rome</artifactId>
+        <version>0.9</version>
+      </dependency>
+      <dependency>
+        <groupId>jdom</groupId>
+        <artifactId>jdom</artifactId>
+        <version>1.0</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>1.5.11</version>
+      </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-log4j12</artifactId>
+        <version>1.5.11</version>
+      </dependency>
+
+      <dependency>
+        <groupId>javax.servlet</groupId>
+        <artifactId>servlet-api</artifactId>
+        <version>2.4</version>
+        <scope>provided</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>2.3.2</version>
+        <configuration>
+          <source>1.6</source>
+          <target>1.6</target>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.ops4j</groupId>
+        <artifactId>maven-pax-plugin</artifactId>
+        <version>1.5</version>
+        <configuration>
+          <provision>
+            <param>--platform=felix</param>
+            <param>--bootDelegation=com.sun.*,javax.xml.*,javax.swing.*,javax.net.*,javax.crypto.*</param>
+          </provision>
+        </configuration>
+      </plugin>
+    </plugins>
+
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>2.4.1</version>
+          <configuration>
+            <escapeString>!</escapeString>
+          </configuration>
+        </plugin>
+        <plugin>
+          <artifactId>maven-release-plugin</artifactId>
+          <version>2.0</version>
+          <configuration>
+            <useReleaseProfile>false</useReleaseProfile>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+
+  <repositories>
+    <repository>
+      <id>headsupdev-release</id>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <url>http://headsupdev.org/repository/release/</url>
+    </repository>
+    <repository>
+      <id>headsupdev-snapshot</id>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <url>http://headsupdev.org/repository/snapshot/</url>
+    </repository>
+    <repository>
+      <id>headsupdev-external</id>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <url>http://headsupdev.org/repository/external/</url>
+    </repository>
+
+    <repository>
+      <id>ops4j-release</id>
+      <url>http://repository.ops4j.org/mvn-releases/</url>
+    </repository>
+  </repositories>
+
+  <pluginRepositories>
+    <pluginRepository>
+      <id>codehaus.snapshots</id>
+      <name>Codehaus Snapshot Development Repository</name>
+      <url>http://snapshots.repository.codehaus.org</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+    </pluginRepository>
+  </pluginRepositories>
+
+  <distributionManagement>
+    <site>
+      <id>headsupdev-site</id>
+      <url>dav:http://headsupdev.org/repository/site/headsup/</url>
+    </site>
+  </distributionManagement>
+
+  <modules>
+    <module>agile-osgi-settings</module>
+    <module>agile-api</module>
+    <module>agile-storage</module>
+    <module>agile-scm</module>
+    <module>agile-core</module>
+    <module>agile-security</module>
+    <module>agile-runtime-controller</module>
+    <module>agile-web</module>
+    <module>agile-framework</module>
+    <module>agile-apps</module>
+    <module>agile-runtime</module>
+  </modules>
+
+  <profiles>
+    <profile>
+      <id>release-profile</id>
+
+      <activation>
+        <property>
+          <name>performRelease</name>
+          <value>true</value>
+        </property>
+      </activation>
+
+      <build>
+        <plugins>
+<!--
+          <plugin>
+            <inherited>true</inherited>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+
+            <executions>
+              <execution>
+                <id>attach-sources</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+-->
+<!--
+          <plugin>
+            <inherited>true</inherited>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+
+            <executions>
+              <execution>
+                <id>attach-javadocs</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+-->
+          <plugin>
+            <inherited>true</inherited>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-deploy-plugin</artifactId>
+
+            <configuration>
+              <updateReleaseInfo>true</updateReleaseInfo>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
+</project>

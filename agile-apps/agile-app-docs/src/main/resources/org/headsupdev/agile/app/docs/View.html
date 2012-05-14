@@ -1,0 +1,58 @@
+<!--
+  ~ HeadsUp Agile
+  ~ Copyright 2009-2012 Heads Up Development Ltd.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<html>
+  <body>
+    <wicket:extend>
+      <div wicket:id="content">
+        content
+      </div>
+      <div wicket:id="notfound" class="error">
+        The page "<span wicket:id="page">page</span>" does not exist for project
+        <span style="font-weight:bold" wicket:id="project">project</span>.<br />
+        You can <a wicket:id="create">create</a> it.
+      </div>
+
+      <div wicket:id="details">
+        <table class="attachments">
+          <tr>
+            <th class="attachments" colspan="3">attachments</th>
+          </tr>
+          <wicket:container wicket:id="attachments">
+          <tr>
+            <td class="attachment-filename"><img wicket:id="attachment-icon" alt="file-icon" />
+              <a wicket:id="attachment-link"><span wicket:id="attachment-label">filename</span></a>
+            </td>
+            <td class="attachment-username" wicket:id="username">username</td>
+            <td class="attachment-created" wicket:id="created">created</td>
+          </tr>
+          </wicket:container>
+        </table>
+
+        <table class="comments">
+          <tr>
+            <th class="comments" colspan="2">comments</th>
+          </tr>
+          <wicket:container wicket:id="comments">
+            <wicket:container wicket:id="comment">[comment]</wicket:container>
+          </wicket:container>
+        </table>
+      </div>
+    </wicket:extend>
+  </body>
+</html>

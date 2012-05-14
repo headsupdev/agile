@@ -1,0 +1,139 @@
+<!--
+  ~ HeadsUp Agile
+  ~ Copyright 2009-2012 Heads Up Development Ltd.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org/" xml:lang="en" lang="en">
+  <head profile="http://www.w3.org/2005/10/profile">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <title wicket:id="pagetitle">HeadsUp :: app :: page</title>
+
+    <link rel="icon" type="image/ico" href="/favicon.ico" />
+    <link rel="shortcut icon" type="image/ico" href="/favicon.ico" />
+
+    <!-- latest jQuery direct from google's CDN -->
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js">
+    </script>
+
+    <script type="text/javascript">
+      function load()
+      {
+        if ( document.login != null )
+        {
+          document.login.username.focus();
+        }
+      }
+
+      $(function()
+      {
+        var refreshScrolls = function()
+        {
+          $('#mainmenu').jScrollPane();
+          $('#submenu').jScrollPane();
+        }
+        $(window).bind('resize', refreshScrolls);
+
+        refreshScrolls();
+      });
+    </script>
+
+  </head>
+  <body onload="load()">
+    <div id="spacer">&nbsp;</div>
+    <div id="outerpage">
+      <div id="page">
+        <div id="header1">
+          <a href="/" class="headbutton">
+            <img src="/resources/org.headsupdev.agile.web.HeadsUpPage/images/agile-title.png" />
+          </a>
+          <!--h1 wicket:id="producttitle">HeadsUp</h1-->
+          <div id="userpanelbutton">
+            <div wicket:id="userpanelbutton"><span wicket:id="label">\/</span></div>
+          </div>
+          <ul wicket:id="userpanel" id="userpanel" class="up">
+            <li class="username" wicket:id="username"></li>
+            <wicket:enclosure child="userdashbutton">
+            <li class="hiddenonmobile"><div class="headbutton" wicket:id="userdashbutton"><span class="totals" wicket:id="totals">0</span></div></li>
+            </wicket:enclosure>
+            <li><a class="account headbutton" wicket:id="account">my account</a></li>
+            <li><a class="login headbutton" wicket:id="login-link"><span wicket:id="login-label"></span></a></li>
+            <li><a class="search headbutton" wicket:id="search">search</a></li>
+            <li><a class="support headbutton" wicket:id="support">support</a></li>
+          </ul>
+          <div id="taskpanel" wicket:id="taskpanel">
+            <a wicket:id="tasklink" href="tasks"><img wicket:id="spinner" id="spinner" style="" /></a>
+          </div>
+          <div id="userdashboard" class="up" wicket:id="userdashboard"></div>
+          <div id="userdashboardbackground" class="up" wicket:id="userdashboardbackground">&nbsp;</div>
+        </div>
+        <div id="header2">
+          <div id="projectselect">
+            <div wicket:id="projectlink"><span wicket:id="projectname">project</span></div>
+          </div>
+          <form wicket:id="quicksearch" class="quicksearch hiddenonmobile">
+            <input type="text" placeholder="Search..." wicket:id="query" value="" class="input" />
+            <input type="submit" value="Go" class="submit" />
+          </form>
+        </div>
+        <div id="mainmenu">
+          <ul>
+            <li wicket:id="mainmenu" class="mainmenu-item"><a wicket:id="mainmenu-link"><span wicket:id="mainmenu-label"></span></a></li>
+          </ul>
+        </div>
+        <div id="submenu" wicket:id="submenu-container">
+          <ul>
+            <li wicket:id="submenu" class="submenu-item"><a wicket:id="submenu-link"><span wicket:id="submenu-label"></span></a></li>
+          </ul>
+        </div>
+        <div id="main">
+          <div id="projectmenu" wicket:id="projectmenu" class="up">
+            <div id="projectmenu-header">&nbsp;</div>
+            <div id="projectmenu-content">
+              <div wicket:id="project-tree">tree</div>
+              <wicket:enclosure>
+                <br />
+                <span class="alllink"><a wicket:id="allprojects-link" class="">All projects</a></span>
+              </wicket:enclosure>
+              <span wicket:id="noprojects" class="noprojects">No projects</span>
+            </div>
+            <div id="projectmenu-footer">&nbsp;</div>
+          </div>
+          <div id="content">
+            <h2 wicket:id="title">title</h2>
+            <div wicket:id="messages"></div>
+            <wicket:child />
+          </div>
+        </div>
+        <div id="footer">
+          <div class="content">
+            <span wicket:id="footer-text2" class="copyright">copyright</span>
+            <span class="footer2"><span wicket:id="footer-text1">copyright</span>
+              <span wicket:id="footer-note" class="note">expire</span>
+              <a wicket:id="footer-update" class="update">Update is available</a>
+            </span>
+            <a href="http://headsupdev.com/" target="_blank">
+              <img class="headsupdev" src="/resources/org.headsupdev.agile.web.HeadsUpPage/images/headsupdev-logo.png" />
+            </a>
+          </div>
+        </div>
+        <div wicket:id="agile-dialog">&nbsp</div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,35 @@
+div.setup table {
+    margin-left:auto;
+    margin-right: auto;
+}
+
+div.setup form.adduser td {
+    text-align: right;
+}
+
+form.database table {
+    width: 100%;
+}
+
+form.database th {
+    width: 25%;
+}
+
+form.database td {
+    width: 75%;
+    overflow: hidden;
+}
+
+form.database input {
+    width: 100%;
+}
+
+form.database span.input {
+    width: 100%;
+    white-space: nowrap;
+    display: block;
+}
+
+div.error {
+    margin-bottom: 10px;
+}

@@ -1,0 +1,74 @@
+<!--
+  ~ HeadsUp Agile
+  ~ Copyright 2009-2012 Heads Up Development Ltd.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<html>
+  <body>
+    <wicket:panel>
+      <table class="moredetails listing">
+        <tr>
+          <th colspan="4">Dependencies</th>
+        </tr>
+        <tr>
+          <th>ArtifactId</th>
+          <th>GroupId</th>
+          <th>Version</th>
+          <th>Type</th>
+        </tr>
+        <tr wicket:id="dependencies">
+          <td>
+            <span wicket:id="dependency-artifact">artifact</span>
+            <a wicket:id="artifact-link"><span wicket:id="artifact-label">artifact</span></a>
+          </td>
+          <td>
+            <span wicket:id="dependency-group">group</span>
+            <a wicket:id="group-link"><span wicket:id="group-label">group</span></a>
+          </td>
+          <td>
+            <span wicket:id="dependency-version">version</span>
+            <a wicket:id="version-link"><span wicket:id="version-label">version</span></a>
+          </td>
+          <td><img wicket:id="type-icon" alt="type icon" class="icon" /><span wicket:id="dependency-type"></span></td>
+        </tr>
+        <tr>
+          <td colspan="4" class="nobackground">&nbsp;</td>
+        </tr>
+        <tr>
+          <th colspan="4">Developers</th>
+        </tr>
+        <tr wicket:id="developers">
+          <td colspan="4">
+            <span wicket:id="developer">username</span>
+            <a wicket:id="developer-link"><span wicket:id="developer-label">username</span></a>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="4">&nbsp;</td>
+        </tr>
+        <tr>
+          <th colspan="4">Modules</th>
+        </tr>
+        <tr wicket:id="modules">
+          <td colspan="4">
+            <span wicket:id="name">name</span>
+            <a wicket:id="module-link"><span wicket:id="module-label">name</span></a>
+          </td>
+        </tr>
+      </table>
+    </wicket:panel>
+  </body>
+</html>

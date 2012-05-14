@@ -1,0 +1,66 @@
+<!--
+  ~ HeadsUp Agile
+  ~ Copyright 2009-2012 Heads Up Development Ltd.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <relativePath>../agile-osgi-settings/</relativePath>
+    <groupId>org.headsupdev.agile</groupId>
+    <artifactId>agile-osgi-settings</artifactId>
+    <version>2.0-alpha-3-SNAPSHOT</version>
+  </parent>
+  <artifactId>agile-security</artifactId>
+  <name>HeadsUp Agile Security</name>
+  <packaging>bundle</packaging>
+
+  <properties>
+    <bundle.symbolicName>org.headsupdev.agile.security</bundle.symbolicName>
+    <bundle.namespace>org.headsupdev.agile.security</bundle.namespace>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.headsupdev.agile</groupId>
+      <artifactId>agile-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.headsupdev.agile</groupId>
+      <artifactId>agile-storage</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.headsupdev.agile</groupId>
+      <artifactId>agile-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-core</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.felix</groupId>
+      <artifactId>org.osgi.core</artifactId>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.felix</groupId>
+      <artifactId>org.osgi.compendium</artifactId>
+      <optional>true</optional>
+    </dependency>
+  </dependencies>
+</project>

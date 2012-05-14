@@ -1,0 +1,144 @@
+<!--
+  ~ HeadsUp Agile
+  ~ Copyright 2009-2012 Heads Up Development Ltd.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <relativePath>../agile-osgi-settings/</relativePath>
+    <groupId>org.headsupdev.agile</groupId>
+    <artifactId>agile-osgi-settings</artifactId>
+    <version>2.0-alpha-3-SNAPSHOT</version>
+  </parent>
+  <artifactId>agile-scm</artifactId>
+  <name>HeadsUp Agile SCM</name>
+  <packaging>bundle</packaging>
+
+  <properties>
+    <bundle.symbolicName>org.headsupdev.agile.scm</bundle.symbolicName>
+    <bundle.namespace>org.headsupdev.agile.scm</bundle.namespace>
+  </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.apache.maven.scm</groupId>
+        <artifactId>maven-scm-api</artifactId>
+        <version>1.3</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.maven.scm</groupId>
+        <artifactId>maven-scm-manager-plexus</artifactId>
+        <version>1.3</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.maven.scm</groupId>
+        <artifactId>maven-scm-provider-svnexe</artifactId>
+        <version>1.3.1-headsup</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.maven.scm</groupId>
+        <artifactId>maven-scm-provider-gitexe</artifactId>
+        <version>1.3.4-headsup</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.maven.scm</groupId>
+        <artifactId>maven-scm-provider-git-commons</artifactId>
+        <version>1.3.1-headsup</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.maven.scm</groupId>
+        <artifactId>maven-scm-provider-hg</artifactId>
+        <version>1.3.2-headsup</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+  <dependencies>
+    <dependency>
+      <groupId>org.headsupdev.agile</groupId>
+      <artifactId>agile-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.headsupdev.support</groupId>
+      <artifactId>java-support</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.maven.scm</groupId>
+      <artifactId>maven-scm-manager-plexus</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven.scm</groupId>
+      <artifactId>maven-scm-provider-svnexe</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven.scm</groupId>
+      <artifactId>maven-scm-provider-gitexe</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven.scm</groupId>
+      <artifactId>maven-scm-provider-hg</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.felix</groupId>
+      <artifactId>org.osgi.core</artifactId>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.felix</groupId>
+      <artifactId>org.osgi.compendium</artifactId>
+      <optional>true</optional>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <!--
+         | the following instructions build a simple set of public/private classes into an OSGi bundle
+        -->
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <configuration>
+          <instructions>
+            <Bundle-Activator>${bundle.namespace}.ScmActivator</Bundle-Activator>
+            <Import-Package><![CDATA[
+                org.headsupdev.agile.api.*,
+                org.headsupdev.agile.scm.*,
+                org.headsupdev.support.java,
+
+                !org.apache.maven.scm.command.blame,!org.apache.regexp,org.codehaus.plexus.util.*,
+
+                !com.sun.*,!javax.*,!oracle.xml.*,!org.jaxen.*,!org.w3c.*,!junit.*,
+                org.osgi.framework,org.osgi.util.tracker,org.slf4j
+            ]]></Import-Package>
+            <Export-Package>${bundle.namespace}.*,org.apache.maven.scm.*</Export-Package>
+            <Embed-Transitive>true</Embed-Transitive>
+            <Embed-Dependency>*;artifactId=!hibernate-annotations|hibernate-commons-annotations|ejb3-persistence|hibernate-commons|hibernate-core|antlr|commons-collections|jta
+                |log4j.osgi|slf4j-api|slf4j-log4j14|dom4j|xml-apis|maven-model|maven-scm-api|maven-scm-manager-plexus|
+                maven-scm-provider-svnexe|maven-scm-provider-svn-commons|maven-scm-provider-gitexe|maven-scm-provider-git-commons|maven-scm-provider-hg|plexus-utils|mail</Embed-Dependency>
+            <Bundle-ClassPath>.,{maven-dependencies}</Bundle-ClassPath>
+          </instructions>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>

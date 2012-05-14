@@ -1,0 +1,79 @@
+<!--
+  ~ HeadsUp Agile
+  ~ Copyright 2009-2012 Heads Up Development Ltd.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<html>
+  <body>
+    <wicket:panel>
+      <h2>Build <span wicket:id="id">id</span></h2>
+
+      <table class="details vertical">
+        <tr>
+          <th>Status</th>
+          <td><img wicket:id="status" alt="status icon" /></td>
+          <th>Start Time</th>
+          <td wicket:id="start">start</td>
+        </tr>
+        <tr>
+          <th>Tests</th>
+          <td wicket:id="tests">0</td>
+          <th>Duration</th>
+          <td wicket:id="duration">duration</td>
+        </tr>
+        <tr>
+          <th>Failures</th>
+          <td wicket:id="failures">0</td>
+          <th>Errors</th>
+          <td wicket:id="errors">0</td>
+        </tr>
+        <tr>
+          <th>Revision</th>
+          <td class="revision" colspan="3"><a wicket:id="revision-link"><span wicket:id="revision">0</span></a></td>
+        </tr>
+      </table>
+
+      <wicket:enclosure child="changes">
+      <p>Changes since last successful build
+          (<a wicket:id="passedBuild-link"><span wicket:id="passedBuild">0</span></a><span wicket:id="passedBuild">0</span>)
+          <wicket:enclosure child="passedRevision-link">
+          (revision <a wicket:id="passedRevision-link"><span wicket:id="passedRevision">0</span></a>)
+          </wicket:enclosure>
+      </p>
+
+      <table class="changes listing">
+        <tr>
+          <th>Author</th>
+          <th>Comment</th>
+          <th>Revision</th>
+          <th>Date</th>
+        </tr>
+        <tr wicket:id="changes">
+          <td class="author">
+            <a wicket:id="author-link"><span wicket:id="author">author</span></a>
+            <span wicket:id="authorName">author</span>
+          </td>
+          <td class="comment" wicket:id="comment">comment</td>
+          <td class="revision"><a wicket:id="revision-link"><span wicket:id="revision">0</span></a></td>
+          <td class="date" wicket:id="date">date</td>
+        </tr>
+      </table>
+      </wicket:enclosure>
+      <p wicket:id="nochanges">There are no changes since the last successful build
+          (<a wicket:id="passedBuild-link"><span wicket:id="passedBuild">0</span></a><span wicket:id="passedBuild">0</span>).</p>
+    </wicket:panel>
+  </body>
+</html>

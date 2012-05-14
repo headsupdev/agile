@@ -1,0 +1,14 @@
+p.build {
+    border-top: 1px solid black;
+    padding-top:  5px;
+    font-size: 90%;
+    color: gray;
+}
+
+p.build .version, p.build .date {
+    font-style: italic;
+}
+
+p.build .update {
+    color: red;
+}

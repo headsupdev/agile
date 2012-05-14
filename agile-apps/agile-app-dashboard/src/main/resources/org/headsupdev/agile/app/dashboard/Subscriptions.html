@@ -1,0 +1,46 @@
+<!--
+  ~ HeadsUp Agile
+  ~ Copyright 2009-2012 Heads Up Development Ltd.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<html>
+  <body>
+    <wicket:extend>
+      <!-- TODO fix this -->
+      <p>This is currently configured to only send out build failure notifications, further configuration will be added shortly.</p>
+      <p>Subscriptions enable you to be notified when anything changes in a project.
+        It is like a personal email notifier, messages will be delivered directly to your account's email address.</p>
+      <p>Choose your subscriptions from the list below, if a project is missing then ask your administrator to add
+        you to the member list. Remember you can change your subscriptions at any time.</p>
+
+      <form wicket:id="editsubscriptions">
+        <table class="listing">
+          <tr>
+            <th style="border-right: 1px solid gray;">Project</th>
+            <th>Subscribe</th>
+          </tr>
+
+          <wicket:container wicket:id="subscription">children</wicket:container>
+
+          <tr>
+            <td colspan="2"><input type="submit" value="Save Subscriptions" /></td>
+          </tr>
+        </table>
+      </form>
+
+    </wicket:extend>
+  </body>
+</html>

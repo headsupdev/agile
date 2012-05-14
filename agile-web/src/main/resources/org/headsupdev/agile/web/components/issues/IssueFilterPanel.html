@@ -1,0 +1,53 @@
+<!--
+  ~ HeadsUp Agile
+  ~ Copyright 2009-2012 Heads Up Development Ltd.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<html>
+  <body>
+    <wicket:panel>
+      <div wicket:id="filter">
+        <form wicket:id="filterform">
+          <table class="vertical">
+            <tr>
+              <th>Status</th>
+              <td><input type="checkbox" wicket:id="showStatusNew" />new</td>
+              <td><input type="checkbox" wicket:id="showStatusFeedback" />feedback</td>
+              <td><input type="checkbox" wicket:id="showStatusAssigned" />assigned</td>
+              <td><input type="checkbox" wicket:id="showStatusReopened" />reopened</td>
+              <td><input type="checkbox" wicket:id="showStatusInProgress" />in progress</td>
+              <td><input type="checkbox" wicket:id="showStatusResolved" />resolved</td>
+              <td><input type="checkbox" wicket:id="showStatusClosed" />closed</td>
+            </tr>
+            <tr wicket:id="assigns">
+              <th>Assignment</th>
+              <wicket:container wicket:id="assignment">
+                <td colspan="2" wicket:id="cell">
+                  <input type="radio" wicket:id="radio" />
+                  <span wicket:id="label">assigned to me</span>
+                </td>
+              </wicket:container>
+            </tr>
+            <tr><td colspan="8" class="buttons">
+              <input type="submit" value="Apply" wicket:id="applybutton" />
+              <input type="reset" value="Cancel" wicket:id="cancelbutton" />
+            </td></tr>
+          </table>
+        </form>
+      </div>
+    </wicket:panel>
+  </body>
+</html>

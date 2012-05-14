@@ -1,0 +1,11 @@
+table.details th {
+    width: 20%;
+}
+
+table.details td {
+    width: 30%;
+}
+
+table.details {
+    width: 100%;
+}

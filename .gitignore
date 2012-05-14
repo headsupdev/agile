@@ -1,0 +1,20 @@
+# Maven files #
+###############
+target/
+
+# IDEA files #
+##############
+*.ipr
+*.iws
+*.iml
+.idea
+
+# OS generated files #
+######################
+.DS_Store*
+
+# testing directory #
+#####################
+agilepro-2.0-alpha-2-SNAPSHOT
+
+

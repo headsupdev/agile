@@ -1,0 +1,55 @@
+<!--
+  ~ HeadsUp Agile
+  ~ Copyright 2009-2012 Heads Up Development Ltd.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<html>
+  <body>
+    <wicket:panel>
+      <form wicket:id="edit">
+        <table class="info vertical">
+          <tr>
+            <th class="name" style="width:20%">name</th>
+            <td class="name" style="width:30%"><span wicket:id="name-label">name</span><input type="text" wicket:id="name" /></td>
+            <th class="project" style="width:20%">project</th>
+            <td wicket:id="project" class="project" style="width:30%">project</td>
+          </tr>
+          <tr>
+            <!--<th class="created">created</th>-->
+            <!--<td wicket:id="created" class="created">created</td>-->
+            <th class="start">start</th>
+            <td class="start"><div wicket:id="startDate">start</div></td>
+            <th class="due">due</th>
+            <td class="due"><div wicket:id="dueDate">due</div></td>
+          </tr>
+        </table>
+
+        <table class="details">
+          <tr>
+            <th class="description">description</th>
+          </tr>
+          <tr>
+            <td class="description"><textarea rows="8" cols="25" wicket:id="description">description</textarea></td>
+          </tr>
+
+          <tr>
+            <td><input type="submit" value="Save" /></td>
+          </tr>
+        </table>
+      </form>
+    </wicket:panel>
+  </body>
+</html>

@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!--
+  ~ HeadsUp Agile
+  ~ Copyright 2009-2012 Heads Up Development Ltd.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org/" xml:lang="en" lang="en">
+  <body>
+    <wicket:border>
+      <div class="filterborder">
+        <script type="text/javascript">
+          function moveFilterButtonBackground( value ) {
+            Wicket.$('filterbutton').style.backgroundPosition = '65px ' + ( -26 + ( value * 39 ) ) + 'px';
+          }
+        </script>
+        <div wicket:id="filterbutton" id="filterbutton" class="filterbuttonhidden">Filter</div>
+        <div wicket:id="filter" id="filter" class="filterhidden">
+          <wicket:body />
+        </div>
+      </div>
+    </wicket:border>
+  </body>
+</html>

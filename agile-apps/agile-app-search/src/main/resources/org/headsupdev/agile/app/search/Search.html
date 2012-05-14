@@ -1,0 +1,49 @@
+<!--
+  ~ HeadsUp Agile
+  ~ Copyright 2009-2012 Heads Up Development Ltd.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<html>
+  <body>
+    <wicket:extend>
+      <form wicket:id="search" class="search">
+        <input type="submit" value="Go" class="submit" />
+        <input type="text" placeholder="Search..." wicket:id="query" value="" class="input" />
+      </form>
+      <h3>Results</h3>
+      <div class="results">
+        <div wicket:id="result" class="result-item">
+          <img wicket:id="icon" class="result-icon" alt="result icon" />
+          <span wicket:id="relevance" class="result-relevance">100%</span>
+          <!--<a wicket:id="projectlink" class="result-project-link">-->
+            Project: <span wicket:id="project" class="result-project">project</span>
+          <!--</a>-->
+          <div wicket:id="nolink" class="result-nolink">
+            <span wicket:id="title" class="result-title">title</span>
+          </div>
+          <a wicket:id="link" class="result-link">
+            <span wicket:id="title" class="result-title">title</span>
+          </a>
+          <p class="result-summary" wicket:id="summary" >summary</p>
+        </div>
+      </div>
+      <p wicket:id="noresults">No items were found for your query, try adjusting your search<wicket:enclosure>
+          or searching <a wicket:id="notallprojectsLink">All Projects</a></wicket:enclosure>.<br />
+        If something should have been listed you could try <a href="/search/reindex">reindexing</a> the data.</p>
+      <wicket:enclosure><div><a wicket:id="morelink">More results...</a></div></wicket:enclosure>
+    </wicket:extend>
+  </body>
+</html>

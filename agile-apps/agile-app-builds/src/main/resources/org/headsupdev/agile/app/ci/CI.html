@@ -1,0 +1,93 @@
+<!--
+  ~ HeadsUp Agile
+  ~ Copyright 2009-2012 Heads Up Development Ltd.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<html>
+  <body>
+    <wicket:extend>
+      <p wicket:id="building">
+        <span class="status-running">&nbsp;&nbsp;&nbsp;&nbsp;</span>Project is currently building...
+        <a wicket:id="cancel"><span class="status-remove-nohover">&nbsp;&nbsp;&nbsp;&nbsp;</span>Cancel build</a>
+      </p>
+      <p wicket:id="queued">
+        <span class="status-queued">&nbsp;&nbsp;&nbsp;&nbsp;</span>Project is queued for building...
+        <a wicket:id="remove"><span class="status-remove-nohover">&nbsp;&nbsp;&nbsp;&nbsp;</span>Remove build from queue</a>
+      </p>
+      <wicket:enclosure>
+      <p><a wicket:id="build"><span class="status-force">&nbsp;&nbsp;&nbsp;&nbsp;</span>Build project now</a>
+      </wicket:enclosure>
+
+      <wicket:container wicket:id="buildlist">
+      <p>Last 25 builds for this project.</p>
+      <table class="builds listing">
+        <tr>
+          <th class="id">#</th>
+          <th class="status">&nbsp;</th>
+          <th class="title">Project</th>
+          <th class="tests">Tests</th>
+          <th class="failures">Failures</th>
+          <th class="errors">Errors</th>
+          <th class="date">Start</th>
+          <th class="duration">Duration</th>
+        </tr>
+        <tr wicket:id="builds" class="odd">
+          <td class="id"><a wicket:id="buildId-link"><span wicket:id="buildId-label">id</span></a></td>
+          <td class="status">
+            <span class="status" wicket:id="status-icon" alt="status icon">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <a class="status" wicket:id="status-link" alt="status icon" href="#">&nbsp;&nbsp;&nbsp;&nbsp;</a>
+          </td>
+          <td class="title"><span wicket:id="name">name</span></td>
+          <td class="tests" wicket:id="tests">0</td>
+          <td class="failures" wicket:id="failures">0</td>
+          <td class="errors" wicket:id="errors">0</td>
+          <td class="date" wicket:id="start">start</td>
+          <td class="duration" wicket:id="duration">duration</td>
+        </tr>
+      </table>
+      </wicket:container>
+
+      <wicket:container wicket:id="projectlist">
+      <p>Build status for all child projects.</p>
+      <table class="projects listing">
+        <tr>
+          <th class="id">#</th>
+          <th class="title">Project</th>
+          <th class="tests">Tests</th>
+          <th class="failures">Failures</th>
+          <th class="errors">Errors</th>
+          <th class="date">Start</th>
+          <th class="duration">Duration</th>
+        </tr>
+        <tr wicket:id="projects" class="odd">
+          <td class="id"><a wicket:id="buildId-link"><span wicket:id="buildId-label">id</span></a></td>
+          <td class="title">
+            <span wicket:id="indent"> </span>
+            <span class="status" wicket:id="status-icon" alt="status icon">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <a class="status" wicket:id="status-link" alt="status icon" href="#">&nbsp;&nbsp;&nbsp;&nbsp;</a>
+            <a href="project" wicket:id="project-link"><span wicket:id="name">name</span></a>
+          </td>
+          <td class="tests" wicket:id="tests">0</td>
+          <td class="failures" wicket:id="failures">0</td>
+          <td class="errors" wicket:id="errors">0</td>
+          <td class="date" wicket:id="start">start</td>
+          <td class="duration" wicket:id="duration">duration</td>
+        </tr>
+      </table>
+      </wicket:container>
+    </wicket:extend>
+  </body>
+</html>

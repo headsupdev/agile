@@ -1,0 +1,42 @@
+<!--
+  ~ HeadsUp Agile
+  ~ Copyright 2009-2012 Heads Up Development Ltd.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<html>
+  <body>
+    <wicket:extend>
+      <div style="width:100%;text-align:center">
+        <p class="speechbubble big">Oops!</p>
+      </div>
+
+      <p>Oops! An error occurred which prevented this page from being displayed.</p>
+      <p>The error has been reported and will be fixed as soon as we can manage.</p>
+
+      <wicket:container wicket:id="userError">
+      <p>Please press back and try again or go to the application <a wicket:id="home">home page</a>.</p>
+      </wicket:container>
+
+      <wicket:container wicket:id="systemError">
+      <p>The cause was:<br /><span wicket:id="cause">cause</span></p>
+
+      <span wicket:id="debug" id="debugbutton" class="button">Show Debug</span>
+
+      <pre wicket:id="stack" id="stacktrace" class="stackhidden">stack</pre>
+      </wicket:container>
+    </wicket:extend>
+  </body>
+</html>

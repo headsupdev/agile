@@ -1,0 +1,94 @@
+.history-date {
+    height: 30px;
+    padding: 2px;
+}
+
+.history-date-day {
+    font-weight: bold;
+    font-size: 24pt;
+    color: gray;
+
+    float: left;
+    padding-right: 2px;
+}
+
+.history-date-month {
+    font-size: 11pt;
+    color: gray;
+
+    display: block;
+    padding-top: 2px;
+    margin-bottom: -2px;
+}
+
+.history-date-year {
+    font-size: 11pt;
+    color: gray;
+}
+
+
+.history-item {
+    margin-top: 15pt;
+    padding: 15px 0;
+    padding-bottom: 0;
+    border-top: 1px solid #c3c3c3;
+}
+
+.history-link {
+    text-decoration: none;
+    display: block;
+    
+    padding-top: 10pt;
+    padding-left: 15pt;
+}
+
+.history-icon {
+    vertical-align: top;
+    margin: 1px;
+}
+
+.history-time {
+    font-weight: bold;
+    color: #5b5b5b;
+    
+    padding-left: 15pt;
+}
+
+.history-project {
+    display: block;
+    font-weight: normal;
+    
+    padding-left: 15pt;
+}
+
+.history-project a {
+    font-weight: normal;
+}
+
+.history-summary {
+    padding: 10pt 15pt;
+    margin: 15pt 0;
+
+    color:  #5b5b5b;
+    background-color: #f7f8f3;
+}
+
+.history-more {
+    float: right;
+    font-size: 90%;
+
+    margin-top: -22pt;
+    margin-right: 15pt;
+}
+
+.filter-item {
+    width: 24%;
+    white-space: nowrap;
+    display: inline-block;
+}
+
+td.filterapp {
+    border-right: 1px solid black;
+    font-weight: bold;
+    width: 100px;
+}

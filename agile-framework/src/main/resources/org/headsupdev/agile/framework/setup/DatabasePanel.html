@@ -1,0 +1,52 @@
+<!--
+  ~ HeadsUp Agile
+  ~ Copyright 2009-2012 Heads Up Development Ltd.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<wicket:panel>
+  <h3>Configure Database</h3>
+
+  <p>By default a simple file-system database (h2) will be created.
+    To use a different database please change the information below.</p>
+  <p>When you are done click the "Save" button.</p>
+
+  <div class="error" wicket:id="restart">
+    <span>Restarting setup with the new database, please wait a few minutes then <a href="/">click here</a>.</span>
+  </div>
+
+  <form wicket:id="database" class="database">
+    <table class="vertical">
+      <tr>
+        <th><label for="url">Url</label></th>
+        <td><span class="input" id="url" wicket:id="url">url</span></td>
+        <td><img wicket:id="test" /></td>
+      </tr>
+      <tr>
+        <th><label for="username">Username</label></th>
+        <td><input type="text" id="username" wicket:id="username" /></td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <th><label for="password">Password</label></th>
+        <td><input type="text" id="password" wicket:id="password" /></td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td colspan="3"><input type="submit" value="Save" /></td>
+      </tr>
+    </table>
+  </form>
+</wicket:panel>

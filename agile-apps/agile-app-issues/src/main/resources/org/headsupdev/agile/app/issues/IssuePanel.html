@@ -1,0 +1,125 @@
+<!--
+  ~ HeadsUp Agile
+  ~ Copyright 2009-2012 Heads Up Development Ltd.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<html>
+  <body>
+    <wicket:panel>
+      <h2>Issue <span wicket:id="id">0</span>: <span wicket:id="summary" class="summary" colspan="3">summary</span></h2>
+
+      <table class="info vertical">
+        <tr>
+          <th class="type" style="width:20%">Type</th>
+          <td wicket:id="type" class="type" style="width:30%"><img wicket:id="type-icon" /><span wicket:id="typelabel">type</span></td>
+          <th class="project" style="width:20%">Project</th>
+          <td wicket:id="project" class="project" style="width:30%">project</td>
+        </tr>
+        <tr>
+          <th class="priority">Priority</th>
+          <td class="priority"><img wicket:id="priority-icon" /><span wicket:id="priority">priority</span></td>
+          <th class="version">Version</th>
+          <td wicket:id="version" class="version">version</td>
+        </tr>
+        <tr>
+          <th class="status">Status</th>
+          <td wicket:id="status" class="status new">status</td>
+          <th class="milestone">Milestone</th>
+          <td class="milestone">
+            <a wicket:id="milestone-link"><span wicket:id="milestone">milestone</span></a>
+            <form wicket:id="add-form" style="display: inline">
+              <input type="submit" wicket:id="milestone-add-issue" value="add issue" />
+            </form>
+          </td>
+        </tr>
+        <tr>
+          <th class="reporter">Reported By</th>
+          <td class="reporter"><a wicket:id="reporter-link"><span wicket:id="reporter">reporter</span></a></td>
+          <th class="assigned">Assigned To</th>
+          <td class="assigned"><a wicket:id="assigned-link"><span wicket:id="assigned">assigned</span></a></td>
+        </tr>
+        <tr>
+          <th class="watchers">Watched By</th>
+          <td class="watchers" wicket:id="watchers"></td>
+          <wicket:enclosure child="order">
+          <th class="order">Order</th>
+          <td class="order" wicket:id="order"></td>
+          </wicket:enclosure>
+        </tr>
+        <tr>
+          <th class="created">Created</th>
+          <td wicket:id="created" class="created">created</td>
+          <th class="updated">Updated</th>
+          <td wicket:id="updated" class="updated">updated</td>
+        </tr>
+        <tr>
+          <th class="estimate">Time Estimate</th>
+          <td class="estimate"><span wicket:id="estimate">0h</span></td>
+          <wicket:enclosure child="required">
+          <th class="required">Time <span wicket:id="requiredLabel">required</span></th>
+          <td class="required"><span wicket:id="required">0h</span></td>
+          </wicket:enclosure>
+        </tr>
+
+        <tr class="details"><th colspan="4">
+          <hr />
+        </th></tr>
+
+        <tr>
+          <th class="environment">Environment</th>
+          <td wicket:id="environment" class="environment" colspan="3">environment</td>
+        </tr>
+
+        <tr class="details"><th colspan="4">
+          <hr />
+        </th></tr>
+
+        <tr class="details">
+          <th class="description" colspan="3">Description</th>
+          <th class="relationships sidebar">Relationships</th>
+        </tr>
+        <tr class="details">
+          <td wicket:id="description" class="description" colspan="3" rowspan="3">description</td>
+          <td class="sidebar">
+            <div wicket:id="relationship">
+              <span class="relationship" wicket:id="name">relationship</span>
+              <a wicket:id="issue-link"><span class="relatedissue" wicket:id="issue">issue</span></a>
+              <span class="relatedissue" wicket:id="summary">summary</span>
+            </div>
+            <div wicket:id="reverse-relationship">
+              <span class="relationship" wicket:id="name">relationship</span>
+              <a wicket:id="issue-link"><span class="relatedissue" wicket:id="issue">issue</span></a>
+              <span class="relatedissue" wicket:id="summary">summary</span>
+            </div>
+          </td>
+        </tr>
+
+        <tr class="details">
+          <th class="changesets sidebar">Change Sets</th>
+        </tr>
+        <tr class="details">
+          <td class="sidebar">
+            <div wicket:id="changeset">
+              <span class="changeset">is related to changeset</span>
+              <a wicket:id="set-link"><span class="relatedset" wicket:id="set">set</span></a>
+              <span class="relatedset" wicket:id="summary">summary</span>
+            </div>
+          </td>
+        </tr>
+      </table>
+    </wicket:panel>
+  </body>
+</html>

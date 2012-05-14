@@ -1,0 +1,107 @@
+<!--
+  ~ HeadsUp Agile
+  ~ Copyright 2009-2012 Heads Up Development Ltd.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<html>
+  <body>
+    <wicket:extend>
+      <p>A collection of statistics that can help in detecting possible problems or locating
+        the source of capacity problems.</p>
+
+      <p><span wicket:id="productname">HeadsUp</span> has been running on this installation of <span wicket:id="name" class="statsvalue">name</span>
+        version <span wicket:id="version" class="statsvalue">version</span> with
+        <span wicket:id="processors" class="statsvalue">1</span> available
+        <span wicket:id="arch" class="statsvalue">arch</span> processors for
+        <span wicket:id="uptime" class="statsvalue">1 sec</span>.</p>
+
+      <p>Using virtual machine <span wicket:id="vmname" class="statsvalue">name</span>,
+        version <span wicket:id="vmversion" class="statsvalue">version</span>
+        provided by <span wicket:id="vmvendor" class="statsvalue">vendor</span>.</p>
+
+      <h3>Time</h3>
+      <table wicket:id="times" class="stats vertical">
+        <tr class="odd">
+          <th>uptime</th>
+          <td class="wide"><span wicket:id="uptime2">1</span></td>
+        </tr>
+        <tr class="even">
+          <th>cpu time</th>
+          <td class="wide"><span wicket:id="cputime">1</span></td>
+        </tr>
+        <tr class="odd">
+          <th>average cpu%</th>
+          <td class="wide"><span wicket:id="percenttime">1</span></td>
+        </tr>
+      </table>
+      <p wicket:id="notimes">CPU timings unavailable</p>
+
+      <h3>Memory</h3>
+      <table wicket:id="mem" class="stats listing">
+        <tr>
+          <th colspan="4">Physical Memory</th>
+        </tr>
+        <tr class="odd">
+          <th class="vertical">Free</th>
+          <td><span wicket:id="freeram">1</span></td>
+          <th class="vertical">Total</th>
+          <td><span wicket:id="totalram">1</span></td>
+        </tr>
+
+        <tr><td colspan="4">&nbsp;</td></tr>
+        <tr>
+          <th colspan="4">Swapped Space</th>
+        </tr>
+        <tr class="odd">
+          <th class="vertical">Free</th>
+          <td><span wicket:id="freeswap">1</span></td>
+          <th class="vertical">Total</th>
+          <td><span wicket:id="totalswap">1</span></td>
+        </tr>
+      </table>
+      <p wicket:id="nomem">Memory statistics unavailable</p>
+
+      <h3>Database Pool</h3>
+      <table class="stats listing">
+        <tr>
+          <th colspan="4">Active Connections</th>
+        </tr>
+        <tr class="odd">
+          <th class="vertical">Current</th>
+          <td><span wicket:id="active">1</span></td>
+          <th class="vertical">Maximum</th>
+          <td><span wicket:id="maxActive">1</span></td>
+        </tr>
+
+        <tr><td colspan="4">&nbsp;</td></tr>
+        <tr>
+          <th colspan="4">Idle Connections</th>
+        </tr>
+        <tr class="odd">
+          <th class="vertical">Current</th>
+          <td><span wicket:id="idle">1</span></td>
+          <th class="vertical">Maximum</th>
+          <td><span wicket:id="maxIdle">1</span></td>
+        </tr>
+      </table>
+
+      <wicket:enclosure>
+      <h3>Open Database Sessions</h3>
+      <div wicket:id="sessions">a table</div>
+      </wicket:enclosure>
+    </wicket:extend>
+  </body>
+</html>

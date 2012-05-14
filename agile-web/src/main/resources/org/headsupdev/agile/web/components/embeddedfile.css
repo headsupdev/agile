@@ -1,0 +1,18 @@
+
+div.file div.content {
+    margin-top: 5px;
+    padding: 5px;
+    padding-bottom: 0;
+    border: 1px dashed black;
+
+    font-size: 85%;
+}
+
+div.file .code {
+    font-family: monospace;
+    white-space: pre-wrap;
+}
+
+div.file div.toolbar {
+    display: none;
+}

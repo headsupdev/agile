@@ -1,0 +1,45 @@
+table.info, table.info, table.relationships, table.changesets, table.comments, table.attachments {
+    width: 100%;
+}
+
+.summary input, .environment input, .details textarea {
+    width: 100%;
+}
+
+table.info, table.relationships, table.changesets, table.comments, table.attachments {
+    margin-top: 1em;
+}
+
+table.info td.type img, table.info td.priority img {
+    padding-right: 5px;
+}
+
+.comment-icon {
+    width: 16px;
+}
+
+.relationships .relatedstatus {
+    background-color: transparent;
+}
+
+.relatedstatus.status50, .relatedstatus.status60 {
+    text-decoration: line-through;
+}
+
+tr.details hr {
+    margin: 10px 0;
+    height: 1px;
+    border: none;
+    border-top: 1px solid #c3c3c3;
+}
+
+tr.details td {
+    border-left: none;
+    font-weight: normal;
+
+    vertical-align: top;
+}
+
+.sidebar {
+    border-left: 1px solid #c3c3c3 !important;
+}

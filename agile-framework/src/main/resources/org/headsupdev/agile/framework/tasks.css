@@ -1,0 +1,45 @@
+.task {
+    margin-top: 15pt;
+    padding: 15px 0;
+    padding-bottom: 0;
+    border-top: 1px solid #c3c3c3;
+}
+
+.task p {
+    padding: 10pt 15pt;
+    margin: 15pt 0;
+
+    color:  #5b5b5b;
+    background-color: #f7f8f3;
+}
+
+.task .project {
+    display: block;
+    font-weight: normal;
+    
+    padding-left: 15pt;
+}
+
+.task .project a {
+    font-weight: normal;
+}
+
+.task .title {
+    display: block;
+    font-weight: bold;
+    
+    padding-top: 10pt;
+    padding-left: 15pt;
+}
+
+.task .time {
+    font-weight: bold;
+    color: #5b5b5b;
+    
+    padding-left: 15pt;
+}
+
+.task .description {
+    font-size: 90%;
+    padding-left: 20px;
+}

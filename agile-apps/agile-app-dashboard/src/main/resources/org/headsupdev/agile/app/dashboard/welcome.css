@@ -1,0 +1,74 @@
+#content p {
+    padding-bottom: 127px;
+}
+
+img.activitygraph {
+    width: 256px;
+}
+
+img.accountgraph {
+    width: 226px;
+}
+
+img.activitygraph, img.accountgraph {
+    height: 150px;
+    margin: 5px;
+}
+
+img.icon {
+    padding: 0 2px;
+    vertical-align: middle;
+}
+
+#content div.project {
+    width: 271px;
+}
+
+#content div.subprojects {
+    margin-top: 130px;
+}
+
+#content div.user {
+    width: 241px;
+}
+
+#content div.project, #content div.user {
+    float: left;
+    height: 180px;
+
+    margin-top: -130px;
+    padding-bottom: 5px;
+    margin-bottom: 129px;
+
+    text-align: center;
+    font-size: 90%;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+#content div.project span.caption, #content div.user span.caption {
+    display: block;
+    margin-top: -5px;
+}
+
+#content div.project a, #content div.user a {
+    border: none;
+}
+
+#content div.project a:hover, #content div.user a:hover,
+ #content div.project a:hover span, #content div.user span a:hover {
+    background-color: transparent;
+}
+
+table.project-details th {
+    width: 20%;
+}
+
+table.project-details td {
+    width: 30%;
+}
+
+table.project-details, table.details, table.moredetails {
+    width: 100%;
+}
+

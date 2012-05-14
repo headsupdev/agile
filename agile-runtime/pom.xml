@@ -1,0 +1,358 @@
+<!--
+  ~ HeadsUp Agile
+  ~ Copyright 2009-2012 Heads Up Development Ltd.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.headsupdev.agile</groupId>
+    <artifactId>agile</artifactId>
+    <version>2.0-alpha-3-SNAPSHOT</version>
+  </parent>
+  <artifactId>agile-runtime</artifactId>
+  <name>HeadsUp Agile Runtime</name>
+  <packaging>jar</packaging>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.felix</groupId>
+      <artifactId>org.apache.felix.main</artifactId>
+      <version>2.0.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.headsupdev.agile</groupId>
+      <artifactId>agile-runtime-controller</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.headsupdev.agile</groupId>
+      <artifactId>agile-api</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>org.headsupdev.support</groupId>
+          <artifactId>java-support</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.headsupdev.agile</groupId>
+      <artifactId>agile-scm</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.headsupdev.agile</groupId>
+      <artifactId>agile-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.headsupdev.agile</groupId>
+      <artifactId>agile-security</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.headsupdev.agile</groupId>
+      <artifactId>agile-storage</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.headsupdev.agile</groupId>
+      <artifactId>agile-framework</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.headsupdev.agile</groupId>
+      <artifactId>agile-app-dashboard</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.headsupdev.agile</groupId>
+      <artifactId>agile-app-admin</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.headsupdev.agile</groupId>
+      <artifactId>agile-app-history</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.headsupdev.agile</groupId>
+      <artifactId>agile-app-files</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.headsupdev.agile</groupId>
+      <artifactId>agile-app-artifacts</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.headsupdev.agile</groupId>
+      <artifactId>agile-app-docs</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.headsupdev.agile</groupId>
+      <artifactId>agile-app-issues</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.headsupdev.agile</groupId>
+      <artifactId>agile-app-milestones</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.headsupdev.agile</groupId>
+      <artifactId>agile-app-builds</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.headsupdev.agile</groupId>
+      <artifactId>agile-app-search</artifactId>
+    </dependency>
+
+    <!-- other osgi deps we need -->
+    <dependency>
+      <groupId>org.apache.felix</groupId>
+      <artifactId>org.apache.felix.shell</artifactId>
+      <version>1.4.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.felix</groupId>
+      <artifactId>org.apache.felix.shell.tui</artifactId>
+      <version>1.4.1</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.wicket</groupId>
+      <artifactId>wicket</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.wicket</groupId>
+      <artifactId>wicket-extensions</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.wicket</groupId>
+      <artifactId>wicket-datetime</artifactId>
+    </dependency>
+
+      <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-log4j12</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.headsupdev.osgi</groupId>
+      <artifactId>log4j</artifactId>
+      <version>1.2.14</version>
+    </dependency>
+      
+    <dependency>
+      <groupId>org.apache.felix</groupId>
+      <artifactId>org.apache.felix.scr</artifactId>
+      <version>1.0.8</version>
+    </dependency>
+    <dependency>
+      <groupId>org.ops4j.pax.web</groupId>
+      <artifactId>pax-web-jetty-bundle</artifactId>
+      <version>0.7.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.ops4j.pax.web</groupId>
+      <artifactId>pax-web-extender-whiteboard</artifactId>
+      <version>0.7.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.headsupdev.osgi</groupId>
+      <artifactId>commons-logging</artifactId>
+      <version>1.1.1</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-collections</groupId>
+      <artifactId>commons-collections</artifactId>
+      <version>3.2.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.headsupdev.osgi</groupId>
+      <artifactId>org.opensymphony.quartz</artifactId>
+      <version>1.6.1</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <resources>
+      <resource>
+        <directory>src/main/conf</directory>
+        <filtering>true</filtering>
+      </resource>
+      <resource>
+        <directory>src/main/scripts</directory>
+        <filtering>true</filtering>
+        <targetPath>../scripts</targetPath>
+      </resource>
+    </resources>
+    <plugins>
+      <plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>process-resources</id>
+            <goals>
+              <goal>resources</goal>
+            </goals>
+            <phase>process-resources</phase>
+            <configuration>
+              <outputDirectory>${project.build.directory}/conf</outputDirectory>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>unpack-felix</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>unpack</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>org.apache.felix</groupId>
+                  <artifactId>org.apache.felix.main</artifactId>
+                  <overWrite>false</overWrite>
+                  <outputDirectory>${project.build.directory}/classes</outputDirectory>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>org.headsupdev.agile</groupId>
+                  <artifactId>agile-runtime-controller</artifactId>
+                  <overWrite>false</overWrite>
+                  <outputDirectory>${project.build.directory}/classes</outputDirectory>
+                  <includes>**/*.class</includes>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+
+          <execution>
+            <id>copy-framework</id>
+            <phase>package</phase>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.directory}/framework</outputDirectory>
+              <overWriteReleases>false</overWriteReleases>
+              <overWriteSnapshots>false</overWriteSnapshots>
+              <overWriteIfNewer>true</overWriteIfNewer>
+              <excludeTransitive>true</excludeTransitive>
+
+              <includeArtifactIds>
+                pax-web-extender-whiteboard,pax-web-jetty-bundle,agile-api,agile-storage,agile-security,agile-scm,agile-core,agile-framework,commons-logging,commons-collections,log4j,slf4j-api,slf4j-log4j12,org.opensymphony.quartz,org.apache.felix.scr,wicket
+              </includeArtifactIds>
+            </configuration>
+          </execution>
+
+          <execution>
+            <id>copy-debug</id>
+            <phase>package</phase>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.directory}/debug</outputDirectory>
+              <overWriteReleases>false</overWriteReleases>
+              <overWriteSnapshots>false</overWriteSnapshots>
+              <overWriteIfNewer>true</overWriteIfNewer>
+              <excludeTransitive>true</excludeTransitive>
+
+              <includeArtifactIds>
+                org.apache.felix.shell,org.apache.felix.shell.tui
+              </includeArtifactIds>
+            </configuration>
+          </execution>
+
+          <execution>
+            <id>copy-bundles</id>
+            <phase>package</phase>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.directory}/apps</outputDirectory>
+              <overWriteReleases>false</overWriteReleases>
+              <overWriteSnapshots>false</overWriteSnapshots>
+              <overWriteIfNewer>true</overWriteIfNewer>
+              <excludeTransitive>true</excludeTransitive>
+
+              <excludeArtifactIds>
+                org.apache.felix.main,org.apache.felix.shell,org.apache.felix.shell.tui,junit,pax-web-extender-whiteboard,pax-web-jetty-bundle,org.apache.felix.main,agile-runtime-controller,junit,agile-api,agile-storage,agile-security,agile-scm,agile-core,agile-framework,java-support,commons-logging,commons-collections,log4j,slf4j-api,slf4j-log4j12,org.opensymphony.quartz,org.apache.felix.scr,wicket,wicket-extensions,wicket-datetime
+              </excludeArtifactIds>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <dependencies>
+          <dependency>
+            <groupId>ant</groupId>
+            <artifactId>ant-nodeps</artifactId>
+            <version>1.6.5</version>
+          </dependency>
+        </dependencies>
+
+        <executions>
+          <execution>
+            <id>set-mainClass</id>
+            <phase>compile</phase>
+            <configuration>
+              <tasks>
+                <replace file="${project.build.directory}/classes/META-INF/MANIFEST.MF" token="org.apache.felix.main.Main" value="org.headsupdev.agile.runtime.Main" />
+              </tasks>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>2.4</version>
+        <configuration>
+          <archive>
+            <manifestFile>${project.build.directory}/classes/META-INF/MANIFEST.MF</manifestFile>
+          </archive>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>2.2-beta-2</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>attached</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <finalName>agile-${project.version}</finalName>
+          <appendAssemblyId>false</appendAssemblyId>
+          <descriptors>
+            <descriptor>src/main/assembly/bin.xml</descriptor>
+          </descriptors>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>

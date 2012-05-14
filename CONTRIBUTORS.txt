@@ -1,0 +1,52 @@
+Heads Up Development Contributor Agreement
+==========================================
+
+The submitter agrees by adding his or her name within the section below named
+"Contributors" and submitting the resulting modified document to the
+canonical shared repository location for this software project (whether
+directly, as a user with "direct commit access", or via a "pull request"), he
+or she is signing a contract electronically.  The submitter becomes a
+Contributor after a) he or she signs this document by adding their name
+beneath the "Contributors" section below, and b) the resulting document is
+accepted into the canonical version control repository.
+
+License Terms
+-------------
+
+Upon submitting a change or new work to a Heads Up Development source
+Repository (a "Contribution"), you agree to assign, and hereby do assign,
+a sublicensable, irrevocable, perpetual, worldwide, non-exclusive,
+royalty-free and fully paid-up copyright and trade secret license to reproduce,
+adapt, translate, modify, and prepare derivative works of, publicly display,
+publicly perform, sublicense, make available and distribute Licensor
+Contribution(s) and any derivative works thereof under license terms of 
+Heads Up Development’s choosing including any Open Source Software license.
+
+Representations, Warranty, and Indemnification
+----------------------------------------------
+
+Contributor represents and warrants that the Committed Code does not violate
+the rights of any person or entity, and that the Contributor has legal
+authority to enter into this Agreement and legal authority over Contributed
+Code. Further, Contributor indemnifies Heads Up Development against violations.
+
+Notices
+-------
+
+Contributor confirms that any notices required will be included in any
+Committed Code.
+
+List of Contributors
+====================
+
+The below-signed are contributors to a code repository that is part of the
+project named "HeadsUp Agile". Each below-signed contributor has read,
+understand and agrees to the terms above in the section within this document
+entitled "Heads Up Development Contributor Agreement" as of the date beside
+his or her name.
+
+Contributors
+------------
+
+- Andrew Williams, 2012/05/13
+- Robert Hewitt, 2012/05/14

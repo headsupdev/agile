@@ -1,0 +1,62 @@
+<!--
+  ~ HeadsUp Agile
+  ~ Copyright 2009-2012 Heads Up Development Ltd.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<html>
+  <body>
+    <wicket:extend>
+
+      <form wicket:id="projectconfig" class="config">
+        <table class="listing">
+          <tr>
+            <th colspan="2">
+              Project Configuration for <select wicket:id="project"><option>All Projects</option></select>
+            </th>
+          </tr>
+          <wicket:enclosure child="alias">
+          <tr class="even">
+            <td>
+              <span class="title">Alias</span>
+              <span class="default">(<span wicket:id="defaultalias">title</span>)</span>
+            </td>
+            <td><input type="text" wicket:id="alias" /></td>
+          </tr>
+          <tr class="odd">
+            <td>
+              <span class="title">Disabled</span>
+              <span class="default">(<span>false</span>)</span>
+            </td>
+            <td><input type="checkbox" wicket:id="disabled" /></td>
+          </tr>
+          </wicket:enclosure>
+        </table>
+
+        <fieldset>
+          <legend>Time Tracking</legend>
+          <table class="listing">
+            <wicket:container wicket:id="timeenabled"></wicket:container>
+            <wicket:container wicket:id="timerequired"></wicket:container>
+            <wicket:container wicket:id="timeburndown"></wicket:container>
+            <wicket:container wicket:id="timeweekend"></wicket:container>
+          </table>
+        </fieldset>
+
+        <input type="submit" value="Save Project Configuration" />
+      </form>
+    </wicket:extend>
+  </body>
+</html>

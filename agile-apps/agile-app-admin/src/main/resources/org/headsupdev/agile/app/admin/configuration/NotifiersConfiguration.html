@@ -1,0 +1,59 @@
+<!--
+  ~ HeadsUp Agile
+  ~ Copyright 2009-2012 Heads Up Development Ltd.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<html>
+  <body>
+    <wicket:extend>
+      <h3>Notifiers for project <span wicket:id="project">project</span></h3>
+
+      <wicket:enclosure child="inherit">
+      <p>Inherited from parent projects:</p>
+      <ul>
+        <li wicket:id="inherit"><span wicket:id="id">notifier</span></li>
+      </ul>
+      </wicket:enclosure>
+
+      <div wicket:id="notifiers">
+        <span wicket:id="id">id</span><br />
+        <form wicket:id="edit">
+
+          <table>
+            <tr wicket:id="fields">
+              <th><span wicket:id="field">field</span></th>
+              <td>
+                <input type="text" wicket:id="value" />
+                <input type="password" wicket:id="password" />
+                <span wicket:id="requiressmtp">This notifier requires the smtp.host value to be set in the system configuration</span>
+              </td>
+            </tr>
+          </table>
+          <input type="submit" value="Save" />
+          <input type="submit" wicket:id="remove" value="Remove" />
+        </form>
+      </div>
+
+      <p>Add a new Notifier</p>
+      <form wicket:id="add">
+        <select wicket:id="id">
+          <option>foo</option>
+        </select>
+        <input type="submit" value="Add" />
+      </form>
+    </wicket:extend>
+  </body>
+</html>

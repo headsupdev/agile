@@ -1,0 +1,114 @@
+<!--
+  ~ HeadsUp Agile
+  ~ Copyright 2009-2012 Heads Up Development Ltd.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <relativePath>../agile-osgi-settings/</relativePath>
+    <groupId>org.headsupdev.agile</groupId>
+    <artifactId>agile-osgi-settings</artifactId>
+    <version>2.0-alpha-3-SNAPSHOT</version>
+  </parent>
+  <artifactId>agile-core</artifactId>
+  <name>HeadsUp Agile Core</name>
+  <packaging>bundle</packaging>
+
+  <properties>
+    <bundle.symbolicName>org.headsupdev.agile.core</bundle.symbolicName>
+    <bundle.namespace>org.headsupdev.agile.core</bundle.namespace>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.headsupdev.agile</groupId>
+      <artifactId>agile-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.headsupdev.agile</groupId>
+      <artifactId>agile-storage</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.headsupdev.support</groupId>
+      <artifactId>java-support</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>rome</groupId>
+      <artifactId>rome</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.headsupdev.irc</groupId>
+      <artifactId>irc-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.headsupdev.irc</groupId>
+      <artifactId>irc-core</artifactId>
+      <version>1.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.felix</groupId>
+      <artifactId>org.osgi.core</artifactId>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.felix</groupId>
+      <artifactId>org.osgi.compendium</artifactId>
+      <optional>true</optional>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <!--
+         | the following instructions build a simple set of public/private classes into an OSGi bundle
+        -->
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <configuration>
+          <instructions>
+            <Bundle-Activator>${bundle.namespace}.CoreActivator</Bundle-Activator>
+            <Import-Package><![CDATA[
+                org.headsupdev.agile.api.*,org.headsupdev.agile.storage.*,
+                org.headsupdev.agile.core.*,org.headsupdev.irc,org.headsupdev.support.java,
+                org.hibernate.*,javax.persistence.*,
+                !com.sun.*,javax.net.*,javax.xml.*,!javax.*,!oracle.xml.*,!org.jaxen.*,!org.w3c.*,
+                org.osgi.framework,org.osgi.util.tracker,org.xml.sax.*,!org.apache.xerces.*,org.apache.log4j
+            ]]></Import-Package>
+            <Private-Package>org.jdom.*</Private-Package>
+            <Export-Package>${bundle.namespace}.*</Export-Package>
+            <Embed-Transitive>true</Embed-Transitive>
+            <Embed-Dependency>*;artifactId=!jdom|license|irc-api|mail|
+                hibernate-annotations|commons-pool|hibernate-core|antlr|mysql-connector-java|commons-collections|
+                javassist|ejb3-persistence|lucene-core|persistence-api|commons-dbcp|hibernate-commons-annotations|
+                xml-apis|h2|commons-logging|dom4j|hibernate-search|log4j|slf4j-api|slf4j-log4j12|bcprov-jdk14|
+                jta|maven-model</Embed-Dependency>
+            <Bundle-ClassPath>.,{maven-dependencies}</Bundle-ClassPath>
+          </instructions>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>

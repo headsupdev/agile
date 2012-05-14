@@ -1,0 +1,76 @@
+<!--
+  ~ HeadsUp Agile
+  ~ Copyright 2009-2012 Heads Up Development Ltd.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<assembly>
+  <id>bin</id>
+  <formats>
+    <format>tar.gz</format>
+    <!-- removed as it is way slow to execute all the time -->
+    <!--format>tar.bz2</format-->
+    <format>zip</format>
+  </formats>
+  <fileSets>
+    <fileSet>
+      <directory>target/</directory>
+      <outputDirectory>bin</outputDirectory>
+      <includes>
+        <include>agile-runtime-${project.version}.jar</include>
+      </includes>
+      <excludes>
+        <exclude>framework/*</exclude>
+        <exclude>apps/*</exclude>
+        <exclude>debug/*</exclude>
+      </excludes>
+    </fileSet>
+    <fileSet>
+      <directory>target/framework</directory>
+      <outputDirectory>framework</outputDirectory>
+      <includes>
+        <include>**/*.jar</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>target/debug</directory>
+      <outputDirectory>debug</outputDirectory>
+      <includes>
+        <include>**/*.jar</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>target/apps</directory>
+      <outputDirectory>apps</outputDirectory>
+      <includes>
+        <include>**/*.jar</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>target/conf</directory>
+      <outputDirectory>conf</outputDirectory>
+    </fileSet>
+    <fileSet>
+      <directory>target/scripts</directory>
+      <outputDirectory>bin</outputDirectory>
+      <fileMode>0755</fileMode>
+    </fileSet>
+    <fileSet>
+      <directory>src/main/docs</directory>
+      <outputDirectory></outputDirectory>
+    </fileSet>
+  </fileSets>
+</assembly>
+

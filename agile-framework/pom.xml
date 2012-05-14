@@ -1,0 +1,228 @@
+<!--
+  ~ HeadsUp Agile
+  ~ Copyright 2009-2012 Heads Up Development Ltd.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <relativePath>../agile-osgi-settings/</relativePath>
+    <groupId>org.headsupdev.agile</groupId>
+    <artifactId>agile-osgi-settings</artifactId>
+    <version>2.0-alpha-3-SNAPSHOT</version>
+  </parent>
+  <artifactId>agile-framework</artifactId>
+  <name>HeadsUp Agile Framework</name>
+  <packaging>bundle</packaging>
+
+  <properties>
+    <bundle.symbolicName>org.headsupdev.agile.framework</bundle.symbolicName>
+    <bundle.namespace>org.headsupdev.agile.framework</bundle.namespace>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.headsupdev.agile</groupId>
+      <artifactId>agile-api</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.headsupdev.agile</groupId>
+      <artifactId>agile-storage</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.headsupdev.agile</groupId>
+      <artifactId>agile-security</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.headsupdev.agile</groupId>
+      <artifactId>agile-core</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.headsupdev.agile</groupId>
+      <artifactId>agile-web</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.headsupdev.agile</groupId>
+      <artifactId>agile-runtime-controller</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.headsupdev.irc</groupId>
+      <artifactId>irc-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.headsupdev.support</groupId>
+      <artifactId>java-compression</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.felix</groupId>
+      <artifactId>org.osgi.core</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.felix</groupId>
+      <artifactId>org.osgi.compendium</artifactId>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>org.ops4j.pax.web</groupId>
+      <artifactId>pax-web-extender-whiteboard</artifactId>
+      <version>0.7.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.wicket</groupId>
+      <artifactId>wicket</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.wicket</groupId>
+      <artifactId>wicket-extensions</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.wicket</groupId>
+      <artifactId>wicket-datetime</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>joda-time</groupId>
+      <artifactId>joda-time</artifactId>
+      <version>1.6</version>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <version>1.2.14</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.sun</groupId>
+      <artifactId>tools</artifactId>
+      <version>1.6.0</version>
+      <scope>system</scope>
+      <systemPath>${toolsjar}</systemPath>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <!--
+         | the following instructions build a simple set of public/private classes into an OSGi bundle
+        -->
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <configuration>
+          <instructions>
+            <Export-Package><![CDATA[
+              org.headsupdev.agile.images.*,
+              org.headsupdev.agile.web.*,
+              org.headsupdev.agile,
+              com.sun.syndication.*,
+              org.wicketstuff.*,
+              org.apache.wicket.datetime.*;version="1.4.18",
+              org.apache.wicket.extensions.*;version="1.4.18",
+              org.joda.time.*;version="1.6.0",
+              javax.servlet.*
+            ]]></Export-Package>
+            <Private-Package>org.jdom.*,org.headsupdev.agile,org.apache.commons.lang.*,org.apache.catalina.*,org.apache.tomcat.*,org.apache.naming.*,${bundle.namespace}.*</Private-Package>
+            <Import-Package><![CDATA[
+              org.headsupdev.agile.api.*,
+              org.headsupdev.agile.security.*,
+              org.headsupdev.agile.storage.*,
+              org.headsupdev.agile.web.*,
+              org.headsupdev.agile.core.*,
+              org.headsupdev.agile.runtime,
+              org.headsupdev.support.java,
+              org.headsupdev.support.java.compression,
+              org.headsupdev.irc,
+              com.sun.syndication.*,
+              org.apache.wicket.*,
+              org.ops4j.pax.web.extender.whiteboard,org.ops4j.pax.web.extender.whiteboard.runtime,
+              org.hibernate,org.hibernate.collection,org.hibernate.criterion,org.hibernate.classic,
+              org.hibernate.search.annotations,
+              javax.activation.*,
+              javax.persistence.*,
+              javax.servlet.*,
+              javax.naming.*,
+              javax.imageio,
+              org.xml.sax.*,org.w3c.*,!oracle.xml.*,!org.jaxen.*,!org.apache.xerces.*,!javax.xml.*,
+              !javax.imageio.stream,!javax.swing.tree,
+              org.osgi.framework,
+              org.osgi.util.tracker,
+              org.wicketstuff.*,
+              org.apache.wicket.datetime.*,
+              org.apache.wicket.extensions.*,
+              org.joda.time.*,
+              org.slf4j.*,
+              !junit.*,
+            ]]></Import-Package>
+            <!--
+             | each module can override these defaults in their osgi.bnd file
+            -->
+            <Embed-Transitive>true</Embed-Transitive>
+            <!-- embedding agile-web fixes the rome.properties lookup issue -->
+            <Embed-Dependency>*;artifactId=javautil-compression|tar|agile-web|jhighlight</Embed-Dependency>
+            <Bundle-ClassPath>.,{maven-dependencies}</Bundle-ClassPath>
+          </instructions>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+    <profile>
+      <id>windows_profile</id>
+      <activation>
+        <os>
+          <family>!mac</family>
+        </os>
+      </activation>
+      <properties>
+        <toolsjar>${java.home}/../lib/tools.jar</toolsjar>
+      </properties>
+    </profile>
+    <profile>
+      <id>osx_profile</id>
+      <activation>
+        <os>
+          <family>mac</family>
+        </os>
+      </activation>
+      <properties>
+        <toolsjar>${java.home}/../Classes/classes.jar</toolsjar>
+      </properties>
+    </profile>
+  </profiles>
+</project>

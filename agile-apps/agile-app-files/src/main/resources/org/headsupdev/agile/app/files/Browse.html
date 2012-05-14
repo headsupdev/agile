@@ -1,0 +1,57 @@
+<!--
+  ~ HeadsUp Agile
+  ~ Copyright 2009-2012 Heads Up Development Ltd.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<html>
+  <body>
+    <wicket:extend>
+      <h2 wicket:id="header">path</h2>
+
+      <table class="browse listing">
+        <tr>
+          <th class="icon">&nbsp;</th>
+          <th class="title">File</th>
+          <th class="author">Author</th>
+          <th class="comment">Comment</th>
+          <th class="revision">Revision</th>
+          <th class="size">Size</th>
+          <th class="date">Modified</th>
+        </tr>
+        <tr wicket:id="parent" class="odd">
+          <td class="icon"><a wicket:id="parent-icon-link"><img wicket:id="parent-icon" alt="parent" /></a></td>
+          <td class="title"><a wicket:id="parent-link">..</a></td>
+          <td colspan="5">&nbsp;</td>
+        </tr>
+        <tr wicket:id="browse-items">
+          <td class="icon"><a wicket:id="browse-icon-link"><img wicket:id="browse-icon" alt="file-icon" /></a></td>
+          <td class="title"><a wicket:id="browse-link"><span wicket:id="browse-label">title</span></a></td>
+          <td class="author">
+            <a wicket:id="author-link"><span wicket:id="author-label">author</span></a>
+            <span wicket:id="author-label">author</span>
+          </td>
+          <td class="comment"><span wicket:id="comment">comment</span></td>
+          <td class="revision">
+            <a wicket:id="revision-link"><span wicket:id="revision-label">rev</span></a>
+            <span wicket:id="revision-unknown" class="unknown">unknown</span>
+          </td>
+          <td class="size"><span wicket:id="size">size</span></td>
+          <td class="date"><span wicket:id="modified">modified</span></td>
+        </tr>
+      </table>
+    </wicket:extend>
+  </body>
+</html>

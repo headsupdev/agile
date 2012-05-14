@@ -1,0 +1,48 @@
+<!--
+  ~ HeadsUp Agile
+  ~ Copyright 2009-2012 Heads Up Development Ltd.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<wicket:panel>
+  <div class="history">
+    <div wicket:id="history">
+      <div class="history-date" wicket:id="history-date">
+        <span wicket:id="day" class="history-date-day"></span>
+        <span wicket:id="month" class="history-date-month"></span>
+        <span wicket:id="year" class="history-date-year"></span>
+      </div>
+      <div class="history-item">
+        <span wicket:id="history-time" class="history-time"></span>
+        <img wicket:id="history-icon" class="history-icon" alt="item icon" />
+
+        <wicket:enclosure child="project-link">
+        <span class="history-project">Project <a wicket:id="project-link" class="project-link">
+          <span wicket:id="history-project">MyProject</span>
+        </a></span>
+        </wicket:enclosure>
+        <a wicket:id="history-link" class="history-link">
+          <span wicket:id="history-title" class="history-title"></span>
+        </a>
+        <wicket:enclosure child="history-summary">
+        <div class="history-summary">
+          <span wicket:id="history-summary"></span>
+          <a class="history-more" wicket:id="history-more-link">read more</a>
+        </div>
+        </wicket:enclosure>
+      </div>
+    </div>
+  </div>
+</wicket:panel>

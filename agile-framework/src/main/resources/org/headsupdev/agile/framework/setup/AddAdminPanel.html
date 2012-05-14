@@ -1,0 +1,57 @@
+<!--
+  ~ HeadsUp Agile
+  ~ Copyright 2009-2012 Heads Up Development Ltd.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<wicket:panel>
+  <h3>Create Administrator</h3>
+
+  <p>You must create an admin account to manage this installation.
+    You can change the details and add more accounts later.</p>
+
+  <form wicket:id="create" class="adduser">
+    <table>
+      <tr>
+        <td><span class="label">Username</span></td>
+        <td><span wicket:id="username" /></td>
+      </tr>
+      <tr>
+        <td><label for="firstname">First Name</label></td>
+        <td><input type="text" id="firstname" wicket:id="firstname" /></td>
+      </tr>
+      <tr>
+        <td><label for="lastname">Last Name</label></td>
+        <td><input type="text" id="lastname" wicket:id="lastname" /></td>
+      </tr>
+      <tr>
+        <td><label for="email">Email</label></td>
+        <td><input type="text" id="email" wicket:id="email" /></td>
+      </tr>
+      <tr><td colspan="2">&nbsp;</td></tr>
+      <tr>
+        <td><label for="password">Password</label></td>
+        <td><input type="password" id="password" wicket:id="password" /></td>
+      </tr>
+      <tr>
+        <td><label for="password2">Repeat Password</label></td>
+        <td><input type="password" id="password2" wicket:id="password2" /></td>
+      </tr>
+      <tr>
+        <td colspan="2"><input type="submit" value="Create User" /></td>
+      </tr>
+    </table>
+  </form>
+</wicket:panel>

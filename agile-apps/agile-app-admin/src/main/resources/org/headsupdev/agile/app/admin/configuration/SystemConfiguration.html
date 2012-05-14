@@ -1,0 +1,86 @@
+<!--
+  ~ HeadsUp Agile
+  ~ Copyright 2009-2012 Heads Up Development Ltd.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<html>
+  <body>
+    <wicket:extend>
+      <h3>System Configuration</h3>
+
+      <wicket:enclosure>
+        <div class="error">
+          <span>System configuration changed, you will need to restart the system.</span>
+          <form wicket:id="restart" style="display: inline"><input type="submit" value="Restart" /></form>
+        </div>
+      </wicket:enclosure>
+
+      <form wicket:id="config" class="config">
+        <table class="listing">
+          <tr>
+            <th>Title</th>
+            <th>Value</th>
+            <th>&nbsp;</th>
+          </tr>
+          <wicket:container wicket:id="item">
+          <tr>
+            <td><span wicket:id="title" class="title">title</span></td>
+            <td>
+              <input type="text" wicket:id="field" />
+              <input type="password" wicket:id="passwordfield" />
+              <input type="checkbox" wicket:id="check" />
+            </td>
+            <td><img wicket:id="test" /></td>
+          </tr>
+          <tr>
+            <td colspan="3" class="pairedrow"><span wicket:id="description" class="description">description</span></td>
+          </tr>
+          </wicket:container>
+
+          <tr>
+            <td colspan="3" class="nobackground">
+                &nbsp;
+            </td>
+          </tr>
+          <tr>
+            <td colspan="3" class="nobackground">
+              <h3>Changing the following items requires a restart</h3>
+            </td>
+          </tr>
+
+          <tr>
+            <th>Title</th>
+            <th>Value</th>
+            <th>&nbsp;</th>
+          </tr>
+          <wicket:container wicket:id="restartitem">
+          <tr>
+            <td><span wicket:id="title" class="title">title</span></td>
+            <td><input type="text" wicket:id="field" /><span class="input" wicket:id="customfield">field</span></td>
+            <td><img wicket:id="test" /></td>
+          </tr>
+          <tr>
+            <td colspan="3" class="pairedrow"><span wicket:id="description" class="description">description</span></td>
+          </tr>
+          </wicket:container>
+        </table>
+
+        <input type="submit" value="Save Configuration" />
+      </form>
+
+    </wicket:extend>
+  </body>
+</html>

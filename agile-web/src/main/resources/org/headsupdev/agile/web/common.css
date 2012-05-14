@@ -1,0 +1,200 @@
+html {
+    margin: 0;
+}
+
+body {
+    margin: 0;
+    /* Center in older browsers */
+    text-align: center;
+
+    background-color: #EEEEEE;
+    font-family: "Myriad Pro", helvetica, sans-serif;
+}
+
+#page {
+    text-align: left;
+}
+
+#content, #tinymce {
+    font-size: 12pt;
+    text-align: justify;
+    display: block;
+    color: #555a5a;
+}
+
+#tinymce td {
+    font-size: 11pt;
+}
+
+a {
+    color: #1298c4;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #3ccfff;
+}
+
+a img {
+    text-decoration: none;
+}
+
+#content table a {
+    font-weight: normal;
+}
+
+#content table th a, #content table td.id, #content table td.id a,
+		#content table th a:hover, #content table td.id a {
+    font-weight: bold;
+}
+
+#content table a:hover {
+    color: #25b6e6;
+    font-weight: normal;
+    text-decoration: none;
+}
+
+table {
+    border-collapse: collapse;
+    font-size: 10pt;
+}
+
+table th {
+    border-top: 8px solid white;
+    border-left: 1px solid #c3c3c3;
+
+    padding: 5px 10px 5px 10px;
+    margin: 0;
+
+    text-align: left;
+    color: #9fa0a2;
+    font-weight: bold;
+}
+
+table td {
+    padding: 5px 10px;
+
+    border-top: 8px solid white;
+    border-left: 1px solid white;
+}
+
+table td.pairedrow {
+    border-top: none;
+}
+
+table.listing td {
+    background-color: #f7f8f3;
+}
+
+table.listing tr:hover td {
+    background-color: #f0fbfe;
+}
+
+table.listing td.nobackground {
+    background-color: transparent;
+}
+
+table.listing tr:hover td.nobackground {
+    background-color: transparent;
+}
+
+table.vertical th, th.vertical {
+    border-top: none;
+    border-left: none;
+
+    padding: 5px 10px 5px 10px;
+    margin: 0;
+
+    text-align: left;
+    color: #9fa0a2;
+    font-weight: normal;
+}
+
+table.vertical td, table td.vertical {
+    padding: 5px 10px 5px 25px;
+
+    border-top: none;
+    border-left: 1px solid #c3c3c3;
+    color: #565a5b;
+    font-weight: bold;
+}
+
+table.vertical td a, table td.vertical a,
+ table.vertical td a span, table td.vertical a span {
+    color: #565a5b;
+    font-weight: bold;
+    text-decoration: underline ;
+}
+
+table.vertical th.horizontal, th.horizontal {
+    border-bottom: none;
+    border-left: 1px solid #c3c3c3;
+}
+
+.comments .comment-title {
+    color: #9fa0a2;
+    padding-left: 0;
+}
+
+.comments td {
+    border-left: none !important;
+    font-weight: normal !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+    white-space: nowrap;
+}
+
+img {
+    border: 0;
+}
+
+div.error {
+    border: 1px solid #BF6060;
+    background-color: #FFDFDF;
+
+    padding: 10px;
+}
+
+/* button style */
+
+.button {
+    cursor: pointer;
+    color: #545A5A;
+
+    font-weight: bold;
+    height: 34px;
+    white-space: nowrap;
+
+    text-decoration: none;
+    padding: 10px 15px;
+
+    font-size: 12pt;
+    background-color: #ebecee;
+}
+
+.button:hover, .buttonpressed {
+/*    background-color: white; */
+    color: #25b6e6;
+}
+
+.switchformbuttonsok {
+    position: absolute;
+    left: 54.8%;
+
+    width: 150px;
+    margin-top: 5px;
+}
+
+.switchformbuttonscancel {
+    position: absolute;
+    left: 12.5%;
+
+    width: 150px;
+    margin-top: 5px;
+}
+.formbuttons {
+    height: 22px;
+}

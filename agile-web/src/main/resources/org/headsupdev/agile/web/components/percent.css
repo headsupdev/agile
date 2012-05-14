@@ -1,0 +1,27 @@
+span.percent {
+    width: 100%;
+    display: block;
+    border: 1px solid black;
+
+    height: 20px;
+    background-color: #ffffff;
+}
+
+span.percent span.done {
+    display: block;
+
+    height: 20px;
+    background-color: #c5FFb3;
+}
+
+.percent-text {
+    position: relative;
+    display: block;
+    width:50px;
+    margin-top: -22px;
+    padding: 2px;
+    height: 18px;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}

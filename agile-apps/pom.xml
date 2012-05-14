@@ -1,0 +1,147 @@
+<!--
+  ~ HeadsUp Agile
+  ~ Copyright 2009-2012 Heads Up Development Ltd.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.headsupdev.agile</groupId>
+    <artifactId>agile</artifactId>
+    <version>2.0-alpha-3-SNAPSHOT</version>
+  </parent>
+  <artifactId>agile-apps</artifactId>
+  <version>2.0-alpha-3-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>HeadsUp Agile Applications</name>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.headsupdev.agile</groupId>
+      <artifactId>agile-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.headsupdev.agile</groupId>
+      <artifactId>agile-storage</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.headsupdev.agile</groupId>
+      <artifactId>agile-security</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.headsupdev.agile</groupId>
+      <artifactId>agile-web</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.wicket</groupId>
+      <artifactId>wicket</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.wicket</groupId>
+      <artifactId>wicket-extensions</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.wicket</groupId>
+      <artifactId>wicket-datetime</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.wicketstuff</groupId>
+      <artifactId>wicketstuff-animator</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.wicketstuff</groupId>
+      <artifactId>progressbar</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.felix</groupId>
+      <artifactId>org.osgi.core</artifactId>
+      <optional>true</optional>
+      <scope>provided</scope>
+      <version>1.4.0</version>
+    </dependency>
+  </dependencies>
+
+  <modules>
+    <module>agile-app-dashboard</module>
+    <module>agile-app-history</module>
+    <module>agile-app-admin</module>
+    <module>agile-app-docs</module>
+    <module>agile-app-issues</module>
+    <module>agile-app-milestones</module>
+    <module>agile-app-files</module>
+    <module>agile-app-artifacts</module>
+    <module>agile-app-builds</module>
+    <module>agile-app-search</module>
+  </modules>
+
+  <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+      </resource>
+    </resources>
+    <plugins>
+      <plugin>
+        <groupId>org.ops4j</groupId>
+        <artifactId>maven-pax-plugin</artifactId>
+        <extensions>true</extensions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <version>2.3.7</version>
+        <configuration>
+          <instructions>
+            <Bundle-SymbolicName>${bundle.symbolicName}</Bundle-SymbolicName>
+            <Bundle-Version>${project.version}</Bundle-Version>
+            <!--
+             | assume public classes are in the top package, and private classes are under ".internal"
+            -->
+            <Export-Package>!${bundle.namespace}.internal.*,${bundle.namespace}.*;version="${project.version}"</Export-Package>
+            <Import-Package>
+                ${bundle.namespace}.*,
+                org.headsupdev.agile.api.*,
+                org.headsupdev.agile.web.*,
+                org.headsupdev.agile.storage.*,
+                org.headsupdev.agile.security.*,
+                org.headsupdev.support.java.*,
+                org.apache.wicket.*,
+                org.hibernate,org.hibernate.criterion,org.hibernate.transform,org.hibernate.classic,javax.persistence.*,
+                com.sun.syndication.feed.synd
+            </Import-Package>
+            <Private-Package>${bundle.namespace}.internal.*</Private-Package>
+            <!--
+             | each module can override these defaults in their osgi.bnd file
+            -->
+            <_include>-osgi.bnd</_include>
+          </instructions>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>

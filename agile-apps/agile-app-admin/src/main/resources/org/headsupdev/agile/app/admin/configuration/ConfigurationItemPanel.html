@@ -1,0 +1,57 @@
+<!--
+  ~ HeadsUp Agile
+  ~ Copyright 2009-2012 Heads Up Development Ltd.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<html>
+  <body>
+    <wicket:panel>
+      <tr wicket:id="set">
+        <td colspan="2" class="nobackground">
+          <a wicket:id="delete"><img wicket:id="delete-icon" alt="delete" class="delete" /></a>
+          <fieldset>
+            <legend wicket:id="title"></legend>
+            <table wicket:id="subitems">
+              <wicket:container wicket:id="item"></wicket:container>
+            </table>
+          </fieldset>
+        </td>
+      </tr>
+      <tr wicket:id="list">
+        <td colspan="2" class="nobackground">
+          <a wicket:id="delete"><img wicket:id="delete-icon" alt="delete" class="delete" /></a>
+          <table wicket:id="subitems">
+            <wicket:container wicket:id="item"></wicket:container>
+          </table>
+          <a wicket:id="add"><img wicket:id="add-icon" alt="add" class="add" /><span wicket:id="add-label">add</span></a>
+        </td>
+      </tr>
+      <wicket:container wicket:id="entry">
+      <tr wicket:id="row1">
+        <td>
+          <a wicket:id="delete"><img wicket:id="delete-icon" alt="delete" class="delete" /></a>
+          <span wicket:id="title" class="title">title</span>
+          <span class="default"><wicket:enclosure>(<span wicket:id="default">default</span>)</wicket:enclosure></span>
+        </td>
+        <td><input type="text" wicket:id="field" /><input type="checkbox" wicket:id="check" /></td>
+      </tr>
+      <tr wicket:id="row2">
+        <td colspan="2" class="pairedrow"><span wicket:id="description" class="description">description</span></td>
+      </tr>
+      </wicket:container>
+    </wicket:panel>
+  </body>
+</html>

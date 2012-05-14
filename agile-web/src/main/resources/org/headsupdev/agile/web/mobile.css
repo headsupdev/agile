@@ -1,0 +1,186 @@
+.hiddenonmobile {
+    display: none !important;
+}
+
+#header1 {
+    padding: 0 2px;
+}
+
+#header2 {
+    padding: 14px 2px;
+}
+
+#userpanel {
+    right: 0;
+    top: 34px;
+}
+
+#userpanel {
+    padding: 0;
+    list-style: none;
+
+    background-color: #404040;
+    border: 1px solid #F0F1EA;
+    overflow: hidden;
+
+    z-index: 250;
+}
+
+#userpanel li {
+    display: block;
+    padding: 1.5pt 5pt;
+}
+
+#userpanel .search {
+    display: inherit;
+}
+
+#userpanel.up {
+    height: 0;
+}
+
+#userpanel.down {
+    height: auto;
+}
+
+#userpanelbutton {
+    display: block;
+}
+
+#projectselect {
+    left: 0;
+    top: 38px;
+}
+
+#projectmenu {
+    left: 0;
+    top: 62px;
+}
+
+#footer {
+    padding: 5px 0;
+    height: 80px;
+}
+
+#footer .content {
+    padding: 0 2px;
+    background-color: #cecfca;
+}
+
+#footer .footer2 {
+    position: absolute;
+    bottom: 38px;
+    left: 2px;
+    line-height: 150%;
+}
+
+#footer .copyright {
+    position: absolute;
+    bottom: 5px;
+    left: 2px;
+}
+
+#footer .headsupdev {
+    display: none;
+}
+
+#mainmenu, #submenu {
+    overflow: hidden;
+    height: 30px;
+}
+
+#mainmenu ul, #submenu ul {
+    padding: 0;
+    top:  6px;
+    position:absolute;
+}
+
+#mainmenu .jspPane, #submenu .jspPane {
+    height: 8px;
+}
+
+#mainmenu li, #submenu li {
+    padding: 4px 15px;
+}
+
+#taskpanel {
+    display: none;
+}
+
+#submenu {
+    margin: 0;
+}
+
+#content {
+    padding: 2px 2px;
+    margin-bottom: 105px;
+}
+
+.dialog {
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    margin: 10px;
+}
+
+.dialog .dialogcontent {
+    width: 95%;
+
+    margin: auto;
+    padding: 0;
+
+    top: 32px;
+    overflow: hidden;
+}
+
+.dialog .dialogcontent form {
+    width: 100%;
+    margin: auto;
+    text-align: center;
+}
+
+.dialog .dialogcontent form .rememberme {
+    width: 100%;
+    display: block;
+    text-align: left;
+}
+
+.dialog .dialogcontent .textinput {
+    width: 90%;
+    -webkit-background-size: 100% 50px;
+    -moz-background-size: 100% 50px;
+    background-size: 100% 50px;
+}
+
+.dialog .switchformbuttonsok, .dialog .switchformbuttonscancel {
+    width:40%;
+}
+
+.dialog .switchformbuttonsok {
+    margin-right: 125%;
+}
+
+.dialog .switchformbuttonscancel {
+    margin-left: -8%;
+}
+
+#filterbutton {
+    right: 0px;
+    margin-top: -35px;
+
+    padding-right: 35px;
+
+    border-left: none;
+}
+
+/** little app hacks - make hooks for app specific mobile styles **/
+
+#content div.project, #content div.user {
+    margin-top: -100px;
+    margin-bottom: 99px;
+}
+
+form.search input.submit {
+    right: 2px;
+}

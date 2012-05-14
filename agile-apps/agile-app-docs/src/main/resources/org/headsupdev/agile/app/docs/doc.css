@@ -1,0 +1,60 @@
+table.docs, table.info, table.details, table.comments, table.attachments, textarea {
+    width: 100%;
+}
+
+table.docs th, table.issues td {
+    padding: 2px;
+}
+
+th.id, th.attachment {
+    width: 16px;
+}
+
+th.type, th.priority, th.status, th.project, td.project {
+    width: 80px;
+    white-space: nowrap;
+}
+
+table.details, table.comments, table.attachments {
+    margin-top: 1em;
+}
+
+table.key {
+    width: 100%;
+    margin-top: 1em;
+}
+
+table.key td {
+    width: 17%;
+    padding: 2px;
+    text-align: center;
+}
+
+pre {
+    padding: 5px;
+    border: 1px dashed black;
+    font-size: 85%;
+}
+
+.attachment-filename {
+    width: 50%;
+}
+
+.attachment-username, .attachment-created {
+    width: 25%;
+}
+
+.preview {
+    border: 1px dashed black;
+    background-image: url(previewbg.png);
+    margin: 10px 0;
+    padding: 5px;
+}
+
+.siteembed iframe {
+    width: 100%;
+}
+
+.comment-icon {
+    width: 16px;
+}

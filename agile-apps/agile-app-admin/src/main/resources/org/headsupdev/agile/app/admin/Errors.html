@@ -1,0 +1,50 @@
+<!--
+  ~ HeadsUp Agile
+  ~ Copyright 2009-2012 Heads Up Development Ltd.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<html>
+  <body>
+    <wicket:extend>
+      <wicket:container wicket:id="noerrors">
+      <p>No errors have been detected.</p>
+      </wicket:container>
+      <wicket:container wicket:id="someerrors">
+      <p>This is a list of the most recent errors that have been logged.</p>
+
+      <a wicket:id="previous" class="button">&larr; previous errors</a>&nbsp;&nbsp;
+      <a wicket:id="clear" class="button">Clear Log</a>
+      </wicket:container>
+
+      <div class="history">
+        <div wicket:id="errors">
+          <div class="history-date" wicket:id="history-date">
+            <span wicket:id="day" class="history-date-day"></span>
+            <span wicket:id="month" class="history-date-month"></span>
+            <span wicket:id="year" class="history-date-year"></span>
+          </div>
+          <div class="history-item">
+            <img wicket:id="error-icon" class="history-icon" alt="item icon" />
+            <span wicket:id="error-time" style="font-weight:bold"></span>
+            <span wicket:id="error-version"></span> -
+            <span wicket:id="error-title"></span>
+            <p wicket:id="error-summary" class="history-summary"></p>
+          </div>
+        </div>
+      </div>
+    </wicket:extend>
+  </body>
+</html>

@@ -1,0 +1,86 @@
+<!--
+  ~ HeadsUp Agile
+  ~ Copyright 2009-2012 Heads Up Development Ltd.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+  <session-factory>
+    <!-- hibernate.dialect, hibernate.connection.driver_class, hibernate.connection.url,
+        hibernate.connection.username and hibernate.connection.password are inserted at runtime -->
+    <property name="hibernate.connection.provider_class">org.hibernate.connection.DBCPConnectionProvider</property>
+    <property name="hibernate.jdbc.batch_size">0</property>
+    <property name="hibernate.show_sql">false</property>
+    <property name="hibernate.hbm2ddl.auto">update</property>
+
+    <!-- hibernate.search.default.indexBase is inserted at runtime -->
+    <property name="hibernate.search.default.directory_provider">org.hibernate.search.store.RAMDirectoryProvider</property>
+    <property name="hibernate.current_session_context_class">org.headsupdev.agile.storage.ScopedCurrentSession</property>
+
+    <!-- pooling configuration -->
+    <property name="hibernate.dbcp.maxActive">50</property>
+    <property name="hibernate.dbcp.maxIdle">10</property>
+    <property name="hibernate.dbcp.maxWait">120000</property>
+    <property name="hibernate.dbcp.whenExhaustedAction">2</property>
+    <property name="hibernate.dbcp.testOnBorrow">true</property>
+    <property name="hibernate.dbcp.testOnReturn">true</property>
+    <property name="hibernate.dbcp.validationQuery"></property>
+
+    <mapping class="org.headsupdev.agile.storage.StoredProject" />
+    <mapping class="org.headsupdev.agile.storage.StoredMavenTwoProject" />
+    <mapping class="org.headsupdev.agile.storage.StoredAntProject" />
+    <mapping class="org.headsupdev.agile.storage.StoredEclipseProject" />
+    <mapping class="org.headsupdev.agile.storage.StoredXCodeProject" />
+    <mapping class="org.headsupdev.agile.storage.StoredFileProject" />
+    <mapping class="org.headsupdev.agile.storage.StoredCommandLineProject" />
+    <mapping class="org.headsupdev.agile.storage.StoredRole" />
+    <mapping class="org.headsupdev.agile.storage.AdminRole" />
+    <mapping class="org.headsupdev.agile.storage.AnonymousRole" />
+    <mapping class="org.headsupdev.agile.storage.MemberRole" />
+    <mapping class="org.headsupdev.agile.storage.StoredUser" />
+    <mapping class="org.headsupdev.agile.storage.StoredEvent" />
+    <mapping class="org.headsupdev.agile.storage.StoredConfigurationItem" />
+
+    <mapping class="org.headsupdev.agile.storage.Attachment" />
+    <mapping class="org.headsupdev.agile.storage.ScmChange" />
+    <mapping class="org.headsupdev.agile.storage.ScmChangeSet" />
+    <mapping class="org.headsupdev.agile.storage.Comment" />
+    <mapping class="org.headsupdev.agile.storage.TransactionalScmChangeSet" />
+    <mapping class="org.headsupdev.agile.storage.ci.Build" />
+    <mapping class="org.headsupdev.agile.storage.ci.TestResultSet" />
+    <mapping class="org.headsupdev.agile.storage.ci.TestResult" />
+    <mapping class="org.headsupdev.agile.storage.docs.Document" />
+    <mapping class="org.headsupdev.agile.storage.files.File" />
+    <mapping class="org.headsupdev.agile.storage.hibernate.IdProjectId" />
+    <mapping class="org.headsupdev.agile.storage.hibernate.NameProjectId" />
+    <mapping class="org.headsupdev.agile.storage.issues.DurationWorked" />
+    <mapping class="org.headsupdev.agile.storage.issues.Issue" />
+    <mapping class="org.headsupdev.agile.storage.issues.IssueRelationship" />
+    <mapping class="org.headsupdev.agile.storage.issues.Milestone" />
+
+    <event type="post-update">
+      <listener class="org.hibernate.search.event.FullTextIndexEventListener" />
+    </event>
+    <event type="post-insert">
+      <listener class="org.hibernate.search.event.FullTextIndexEventListener" />
+    </event>
+    <event type="post-delete">
+      <listener class="org.hibernate.search.event.FullTextIndexEventListener" />
+    </event>
+  </session-factory>
+</hibernate-configuration>

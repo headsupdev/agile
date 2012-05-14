@@ -1,0 +1,50 @@
+table.browse {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table.browse .icon {
+  width: 16px;
+}
+
+table.browse .title {
+    white-space: nowrap;
+}
+
+table.browse td.size {
+    font-size: 75%;
+    color: #999999;
+    width:  80px;
+    white-space: nowrap;
+}
+
+table.browse .date {
+    width: 120px;
+    white-space: nowrap;
+}
+
+table.browse th {
+    border-bottom: 1px solid black;
+}
+
+table.browse td {
+    color: black;
+    font-size: 90%;
+}
+
+table.browse a {
+    text-decoration: none;
+    color: black;
+}
+
+table.browse img {
+    padding-right: 5px;
+}
+
+table.browse .missing {
+    color: #999999;
+    font-style: italic;
+    text-align: center;
+    display: block;
+    width: 100%;
+}

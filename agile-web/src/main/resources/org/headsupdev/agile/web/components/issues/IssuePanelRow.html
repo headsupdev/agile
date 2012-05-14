@@ -1,0 +1,56 @@
+<!--
+  ~ HeadsUp Agile
+  ~ Copyright 2009-2012 Heads Up Development Ltd.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<html>
+  <body>
+    <wicket:panel>
+        <tr>
+          <td wicket:id="id-cell" class="id">
+            <a wicket:id="id-link"><span wicket:id="id-label">id</span></a>
+            <span wicket:id="id-label">id</span>
+          </td>
+          <td wicket:id="summary-cell" class="summary">
+            <a wicket:id="summary-link"><span wicket:id="summary-label">summary</span></a>
+            <span wicket:id="summary-label">summary</span>
+          </td>
+          <td wicket:id="status" class="status">status</td>
+          <td wicket:id="type" class="type">
+            <img wicket:id="type-icon" />
+            <img wicket:id="priority-icon" />
+            <img wicket:id="attachment-icon" alt="attachment" title="attachment"/>
+            <img wicket:id="overworked-icon" alt="overworked" title="overworked" />
+          </td>
+          <td class="hours">
+            <span wicket:id="order" class="order"></span>
+          </td>
+          <td wicket:id="assigned-cell" class="assigned">
+            <a wicket:id="assigned-link"><span wicket:id="assigned-label">assigned</span></a>
+            <span wicket:id="assigned-label">assigned</span>
+          </td>
+          <td wicket:id="project" class="project">project</td>
+          <td wicket:id="milestone-cell" class="milestone">
+            <a wicket:id="milestone-link"><span wicket:id="milestone-label">milestone</span></a>
+            <span wicket:id="milestone-label">milestone</span>
+          </td>
+          <td wicket:id="hours-cell" class="hours">
+            <span wicket:id="hours" class="hours">0h</span>
+          </td>
+        </tr>
+    </wicket:panel>
+  </body>
+</html>

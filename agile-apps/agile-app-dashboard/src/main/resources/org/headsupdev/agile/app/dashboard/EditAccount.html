@@ -1,0 +1,52 @@
+<!--
+  ~ HeadsUp Agile
+  ~ Copyright 2009-2012 Heads Up Development Ltd.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<html>
+  <body>
+    <wicket:extend>
+      <form wicket:id="edituser">
+        <table class="details">
+          <tr>
+            <th class="vertical">First Name</th>
+            <td><input type="text" wicket:id="firstname" /></td>
+            <th class="vertical">Last Name</th>
+            <td><input type="text" wicket:id="lastname" /></td>
+          </tr>
+          <tr>
+            <th class="vertical">Email</th>
+            <td><input type="text" wicket:id="email" /></td>
+            <td class="vertical">Hide in Time Tracking</td>
+            <td><input type="checkbox" wicket:id="hiddenInTimeTracking" /></td>
+          </tr>
+        </table>
+        <table class="details">
+          <tr>
+            <th colspan="4">Description</th>
+          </tr>
+          <tr>
+            <td colspan="4"><textarea rows="8" cols="25" wicket:id="description">description</textarea></td>
+          </tr>
+          <tr>
+            <td colspan="4"><input type="submit" value="Save User" /></td>
+          </tr>
+        </table>
+      </form>
+
+    </wicket:extend>
+  </body>
+</html>

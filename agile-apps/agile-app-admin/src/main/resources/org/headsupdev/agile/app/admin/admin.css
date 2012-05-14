@@ -1,0 +1,123 @@
+table.importproject, table.importproject input,
+form.projectlist table.projects, form.projectlist table.projects input {
+    width: 100%;
+}
+
+table.importproject td {
+    overflow: hidden;
+}
+
+.importproject span.input {
+    width: 100%;
+    white-space: nowrap;
+    display: block;
+}
+
+.importproject span.input input {
+    width: 100%;
+}
+
+form.projectlist table.projects tr, form.projectlist table.projects td {
+    width: 50%;
+}
+
+td.username, td.permissionname, td.projectname {
+    text-align: left;
+    font-weight: bold;
+    border-right: 1px solid gray;
+    width: 180px;
+}
+
+td.rolecheck, td.permissioncheck, td.usercheck {
+    text-align: center;
+}
+
+th.permissionname, th.rolename, th.username {
+    border-left: 1px solid gray;
+    padding: 2px 3px;
+    text-align: center;
+}
+
+span.disabled {
+    color: gray;
+    text-decoration: line-through;
+}
+
+form.config table, table.config {
+    width: 100%;
+}
+
+form.config table td {
+    width: 50%;
+    overflow: hidden;
+}
+
+form.config table td img.delete, form.config table td img.add {
+    float: left;
+    margin-right: 3px;
+}
+
+form.config .default {
+    float: right;
+    padding-right: 5px;
+}
+
+form.config td input {
+    width: 100%;
+}
+
+form.config span.input {
+    width: 100%;
+    white-space: nowrap;
+    display: block;
+}
+
+form.config .description {
+    padding-left: 20px;
+    vertical-align: top;
+
+    color: gray;
+    font-size: 80%;
+}
+
+div.error {
+    margin-bottom: 10px;
+}
+
+span.projecttype {
+    font-weight: bold;
+}
+
+span.statsvalue {
+    font-weight: bold;
+}
+
+table.stats {
+    width: 100%;
+    margin-top: 3px;
+    margin-bottom: 15px;
+}
+
+table.stats td, table.stats th {
+    width:  25%;
+}
+
+table.stats td.wide, table.stats th.wide {
+    width: 75%;
+}
+
+table.stats td {
+    padding-left: 5px;
+}
+
+form.config table.listing {
+    margin: 0;
+    padding: 0;
+    border: none;
+    border-collapse: collapse;
+}
+
+form.config fieldset {
+    background: white;
+    margin: 0;
+}

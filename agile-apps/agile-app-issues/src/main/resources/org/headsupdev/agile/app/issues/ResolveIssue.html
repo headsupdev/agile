@@ -1,0 +1,42 @@
+<!--
+  ~ HeadsUp Agile
+  ~ Copyright 2009-2012 Heads Up Development Ltd.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<html>
+  <body>
+    <wicket:extend>
+      <table class="details">
+        <tr>
+          <th class="resolution vertical" width="25%">Resolution</th>
+          <td class="resolution" width="75%">
+            <select wicket:id="resolution" />
+            <wicket:enclosure child="duplicate">
+            of issue <input wicket:id="duplicate" /> in project <select wicket:id="duplicate-project" />
+            </wicket:enclosure>
+          </td>
+        </tr>
+        <tr wicket:id="time">
+          <th class="estimate vertical"><span wicket:id="total">total time required</span><span wicket:id="burndown">additional time worked</span></th>
+          <td class="estimate">
+            <wicket:panel wicket:id="timeWorked" />
+          </td>
+          <td colspan="2">&nbsp;</td>
+        </tr>
+      </table>
+    </wicket:extend>
+  </body>
+</html>

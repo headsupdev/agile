@@ -1,0 +1,79 @@
+table.milestones, table.info, table.details, table.comments, table.remaining {
+    width: 100%;
+}
+
+table.milestones td.issues, table.milestones td.bar, table.milestones td.open,
+ table.milestones td.project, table.milestones td.due {
+    width: 100px;
+    white-space: nowrap;
+}
+
+table.milestones td.open, table.milestones td.issues {
+    width: 50px;
+}
+
+table.milestones td.due {
+    font-weight: bold;
+}
+
+table.issues td.allcell {
+    text-align: left;
+    background-color: white;
+}
+
+.details textarea {
+    width: 100%;
+}
+
+table.details, table.comments, table.key, div.percent-bar {
+    margin-top: 1em;
+}
+
+table.comments {
+    margin-bottom: 1em;
+}
+
+table.key, div.percent-bar {
+    width: 100%;
+}
+
+table.key td {
+    width: 17%;
+    text-align: center;
+}
+
+.statusoverdue {
+    color: #e95622 !important;
+}
+
+.statusduesoon {
+    color: #ee8c0c !important;
+}
+
+.statusnotdue {
+    color: #5db008 !important;
+}
+
+.comment-icon {
+    width: 16px;
+}
+
+div.milestonegraph {
+    width: 100%;
+    text-align: center;
+}
+
+img.milestonegraph {
+    padding: 10px;
+
+    margin-left: auto;
+    margin-right: auto;
+}
+
+table.remaining td.number {
+    text-align: center;
+}
+
+.inlinevelocity td.dashheader, .inlinevelocity td.velnumber, .inlinevelocity td.dashfooter {
+    border-left: none;
+}

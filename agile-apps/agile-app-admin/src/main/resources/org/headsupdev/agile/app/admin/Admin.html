@@ -1,0 +1,40 @@
+<!--
+  ~ HeadsUp Agile
+  ~ Copyright 2009-2012 Heads Up Development Ltd.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<html>
+  <body>
+    <wicket:extend>
+      <p>Welcome to the admin pages - choose a task from the sections below.</p>
+
+      <p>You can <a href="admin/add-project">import</a> a new project to follow it in
+        <span wicket:id="productname">HeadsUp</span></p>
+
+      <h3>User Management</h3>
+      <ul>
+        <li><a href="admin/add-account">Create an account</a> to grant access to restricted resources</li>
+        <li>Manage user <a href="admin/permissions">roles and permissions</a> to control access to various features</li>
+      </ul>
+
+      <h3>System Administration</h3>
+      <ul>
+        <li>Change the <a href="admin/configuration">system configuration</a> including notifiers and updates</li>
+        <li>If you encounter problems you can find the details in the <a href="admin/errors">error log</a></li>
+      </ul>
+    </wicket:extend>
+  </body>
+</html>

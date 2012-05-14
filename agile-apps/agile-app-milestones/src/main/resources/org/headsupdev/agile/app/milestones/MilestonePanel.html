@@ -1,0 +1,76 @@
+<!--
+  ~ HeadsUp Agile
+  ~ Copyright 2009-2012 Heads Up Development Ltd.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<html>
+  <body>
+    <wicket:panel>
+      <h2>Milestone <span wicket:id="id">0</span></h2>
+
+      <table class="info vertical">
+        <tr>
+          <th class="name" style="width:18%">name</th>
+          <td wicket:id="name" class="name" style="width:23%">name</td>
+          <th class="project" style="width:18%">project</th>
+          <td wicket:id="project" class="project" style="width:23%">project</td>
+
+          <td rowspan="5" style="width:18%">
+            <table class="inlinevelocity">
+              <tbody>
+                <tr>
+                  <td class="dashheader">Milestone velocity</td>
+                </tr>
+                <tr>
+                  <td class="velnumber"><span wicket:id="velocity">5.3</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <th class="created">created</th>
+          <td wicket:id="created" class="created">created</td>
+          <th class="updated">updated</th>
+          <td wicket:id="updated" class="updated">updated</td>
+        </tr>
+        <tr>
+          <th class="issues">issues</th>
+          <td wicket:id="issues" class="issues">0</td>
+          <th class="openissues">open</th>
+          <td class="openissues"><span wicket:id="open">0</span> (<span wicket:id="percent">100% </span>complete)</td>
+        </tr>
+        <tr>
+          <th class="due">due</th>
+          <td wicket:id="due" class="due">due</td>
+          <th class="completed">completed</th>
+          <td wicket:id="completed" class="completed">completed</td>
+        </tr>
+      </table>
+
+      <div class="percent-bar" wicket:id="bar">bar</div>
+
+      <table class="details">
+        <tr>
+          <th class="description">description</th>
+        </tr>
+        <tr>
+          <td wicket:id="description" class="description">description</td>
+        </tr>
+      </table>
+    </wicket:panel>
+  </body>
+</html>

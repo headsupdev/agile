@@ -1,0 +1,79 @@
+<!--
+  ~ HeadsUp Agile
+  ~ Copyright 2009-2012 Heads Up Development Ltd.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<html>
+  <body>
+    <wicket:extend>
+      <table class="details vertical">
+        <tr>
+          <th>Tests</th>
+          <td><span wicket:id="tests">0</span></td>
+          <th>Project</th>
+          <td wicket:id="project">project</td>
+        </tr>
+        <tr>
+          <th>Failures</th>
+          <td wicket:id="failures">0</td>
+          <th>Errors</th>
+          <td wicket:id="errors">0</td>
+        </tr>
+      </table>
+
+      <table class="suites listing">
+        <wicket:container wicket:id="set">
+          <tr>
+            <th>Test Suite</th>
+            <th>Tests</th>
+            <th>Failures</th>
+            <th>Errors</th>
+            <th>Log</th>
+            <th>TIme</th>
+          </tr>
+          <tr class="even">
+            <td><img wicket:id="status" />&nbsp;<span wicket:id="name">name</span></td>
+            <td wicket:id="tests">0</td>
+            <td wicket:id="failures">0</td>
+            <td wicket:id="errors">0</td>
+            <td><a wicket:id="log-link"><img wicket:id="log-icon" alt="log icon" class="logicon" /></a></td>
+            <td wicket:id="time"></td>
+          </tr>
+          <tr wicket:id="log" class="even">
+            <td colspan="6"><pre wicket:id="output" class="testerror"></pre></td>
+          </tr>
+
+          <tr>
+            <th colspan="4">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Test</th>
+            <th>Log</th>
+            <th>Time</th>
+          </tr>
+          <wicket:container wicket:id="test">
+          <tr wicket:id="row1">
+            <td colspan="4">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img wicket:id="status" />&nbsp;<span wicket:id="name"></span></td>
+            <td><a wicket:id="log-link"><img wicket:id="log-icon" alt="log icon" class="logicon" /></a></td>
+            <td wicket:id="time"></td>
+          </tr>
+          <tr wicket:id="row2">
+            <td colspan="6" class="testerror"><pre wicket:id="output"></pre></td>
+          </tr>
+          </wicket:container>
+          <tr><td colspan="6" class="nobackground">&nbsp;</td></tr>
+        </wicket:container>
+      </table>
+    </wicket:extend>
+  </body>
+</html>

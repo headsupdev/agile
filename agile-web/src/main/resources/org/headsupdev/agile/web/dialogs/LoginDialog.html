@@ -1,0 +1,42 @@
+<!--
+  ~ HeadsUp Agile
+  ~ Copyright 2009-2012 Heads Up Development Ltd.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<html>
+  <body>
+    <wicket:panel>
+      <div class="dialog">
+        <div class="dialogcontent">
+          <span class="dialogtitle"><h3>Login to <span wicket:id="product">HeadsUp Agile</span></h3></span>
+          <br />
+          <form wicket:id="login" name="login">
+            <input type="text" wicket:id="username" name="username" class="textinput" placeholder="Username" />
+            <input type="password" wicket:id="password" name="password" class="textinput" placeholder="Password" />
+            <span class="rememberme">Remember me on this computer <input type="checkbox" wicket:id="remember" /></span>
+            <div class="formbuttons">
+              <input type="submit" value="Login" class="switchformbuttonsok" />
+              <input type="submit" value="Cancel" wicket:id="cancel" class="switchformbuttonscancel" />
+            </div>
+          </form>
+          <p class="dialogfooter" wicket:id="register">Don't have an account? <a href="admin/add-account" wicket:id="link">Sign up</a> for one now.</p>
+          <p class="dialogfooter" wicket:id="noregister">If you do not have an account please contact an administrator.</p>
+        </div>
+        <div class="dialogbackdrop">&nbsp;</div>
+      </div>
+    </wicket:panel>
+  </body>
+</html>

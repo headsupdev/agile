@@ -1,0 +1,28 @@
+ul.usertools {
+  list-style: none;
+  margin: 10px 0;
+  padding: 0;
+}
+
+ul.usertools li {
+  display: inline;
+  margin: 0;
+  padding: 3px;
+}
+
+table.details textarea, table.details input {
+  width: 100%;
+}
+
+img.graph {
+    width: 230px;
+    height: 150px;
+}
+
+table.details {
+    width: 100%;
+}
+
+table.details td {
+    overflow: hidden;
+}

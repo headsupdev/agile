@@ -1,0 +1,135 @@
+<!--
+  ~ HeadsUp Agile
+  ~ Copyright 2009-2012 Heads Up Development Ltd.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.headsupdev.agile</groupId>
+    <artifactId>agile-apps</artifactId>
+    <version>2.0-alpha-3-SNAPSHOT</version>
+  </parent>
+  <artifactId>agile-app-builds</artifactId>
+  <packaging>bundle</packaging>
+  <name>HeadsUp Agile Builds App</name>
+
+  <properties>
+    <bundle.symbolicName>org.headsupdev.agile.app.ci</bundle.symbolicName>
+    <bundle.namespace>org.headsupdev.agile.app.ci</bundle.namespace>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.headsupdev.agile</groupId>
+      <artifactId>agile-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.headsupdev.agile</groupId>
+      <artifactId>agile-storage</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.headsupdev.agile</groupId>
+      <artifactId>agile-security</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.headsupdev.agile</groupId>
+      <artifactId>agile-web</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.headsupdev.irc</groupId>
+      <artifactId>irc-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>jdom</groupId>
+      <artifactId>jdom</artifactId>
+      <version>1.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.headsupdev.support</groupId>
+      <artifactId>java-compression</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.maven.shared</groupId>
+      <artifactId>maven-invoker</artifactId>
+      <version>2.0.8</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+      <version>1.1</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.wicket</groupId>
+      <artifactId>wicket</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.opensymphony.quartz</groupId>
+      <artifactId>quartz</artifactId>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <configuration>
+          <instructions>
+            <Bundle-SymbolicName>${bundle.symbolicName}</Bundle-SymbolicName>
+            <Bundle-Activator>${bundle.namespace}.CIApplication</Bundle-Activator>
+            <Bundle-Version>${project.version}</Bundle-Version>
+            <Import-Package>
+                ${bundle.namespace}.*,org.osgi.framework,
+                org.headsupdev.agile.api.*,
+                org.headsupdev.agile.web.*,
+                org.headsupdev.agile.storage.*,
+                org.headsupdev.agile.security.*,
+                org.headsupdev.support.java,
+                org.headsupdev.support.java.compression,
+                org.headsupdev.irc,
+                org.apache.wicket.*,org.hibernate.*,org.codehaus.plexus.util.*,
+                javax.persistence,!javax.ejb,!javax.jms,!org.apache.avalon.*,!org.apache.log,!org.apache.log4j,
+                !org.apache.commons.beanutils,org.apache.commons.collections,org.apache.commons.logging,
+                !org.apache.commons.digester,!org.apache.commons.modeler, !org.apache.commons.dbcp,org.quartz.*,
+                !javax.mail.*,!javax.management,!javax.naming,!javax.rmi,javax.servlet.*,javax.sql,javax.transaction,
+                javax.xml.*,org.xml.sax.*,!oracle.xml.*,!org.jaxen.*,!org.w3c.dom,org.apache.xerces.*
+            </Import-Package>
+            <Private-Package>${bundle.namespace}.internal.*,org.jdom.*</Private-Package>
+            <Embed-Transitive>true</Embed-Transitive>
+            <Embed-Dependency>*;artifactId=maven-invoker</Embed-Dependency>
+            <Bundle-ClassPath>.,{maven-dependencies}</Bundle-ClassPath>
+          </instructions>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>

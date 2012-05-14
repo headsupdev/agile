@@ -1,0 +1,127 @@
+table.change {
+    width: 100%;
+}
+
+table.change tr.files {
+    background-color: #F7F8F3
+}
+
+th.author, th.date {
+    width: 20%;
+}
+
+td.author, td.date {
+    width: 30%;
+}
+
+.fileList {
+    padding: 0;
+    margin: 10px;
+    list-style: none;
+}
+
+.fileList a {
+    margin-left: 10px;
+}
+
+.diffs h3 {
+    padding-top: 10px;
+}
+
+.sign-add {
+    color: #60BF60;
+}
+
+.sign-rem {
+    color: #BF6060;
+}
+
+.diff td {
+    border: none;
+}
+
+.diff-add {
+    background-color: #DFFFDF;
+    border-left: 1px solid #60BF60 !important;
+    border-right: 1px solid #60BF60 !important;
+}
+
+.diff-rem {
+    background-color: #FFDFDF;
+    border-left: 1px solid #BF6060 !important;
+    border-right: 1px solid #BF6060 !important;
+}
+
+.diff-line {
+    background-color: #DFDFDF;
+}
+
+.diff-line, .diff-skip {
+    border-left: 1px solid #606060 !important;
+    border-right: 1px solid #606060 !important;
+}
+
+div.type {
+    width: 12px;
+    height: 12px;
+    float: left;
+}
+
+div.type1 {
+    background-color: #DFFFDF;
+    border: 1px solid #60BF60 !important;
+}
+
+div.type3 {
+    background-color: #FFDFDF;
+    border: 1px solid #BF6060 !important;
+}
+
+div.type2 {
+    background-color: #DFDFDF;
+    border: 1px solid #606060 !important;
+}
+
+.key {
+    width: 100%;
+    margin-top: 1em;
+}
+
+.key td.key {
+    width: 16px;
+}
+
+.key td.value {
+    width: 33%
+}
+
+.diff {
+    width: 100%;
+    border-top: 1px solid #606060;
+    border-bottom: 1px solid #606060;
+
+    border-collapse: collapse;
+    border-spacing: 0;
+    font-size: 90%;
+}
+
+
+.sign-add, .sign-rem, .sign-none {
+    width: 10px;
+    text-align: center;
+    vertical-align: top;
+    padding: 0 2px 2px 2px;
+}
+
+.linenum-old, .linenum-new {
+    font-size: 90%;
+    width: 30px;
+    text-align: right;
+    color: gray;
+    vertical-align: top;
+    padding: 1px 0;
+}
+
+.linenum-old {
+    border-left: 1px solid #606060 !important;
+}

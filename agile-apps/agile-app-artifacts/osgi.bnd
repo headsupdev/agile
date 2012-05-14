@@ -1,0 +1,2 @@
+Bundle-Activator: ${bundle.namespace}.RepositoryApplication
+Import-Package: org.headsupdev.agile.*, org.apache.wicket.*,org.headsupdev.support.java

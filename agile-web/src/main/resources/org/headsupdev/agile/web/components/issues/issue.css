@@ -1,0 +1,43 @@
+table.issues {
+    width: 100%;
+}
+
+th.id {
+    width: 16px;
+}
+
+th.type, td.type, th.assigned, td.assigned, th.milestone, td.milestone {
+    width: 75px;
+    white-space: nowrap;
+}
+
+th.hours, td.hours {
+    width: 20px;
+    white-space: nowrap;
+}
+
+table.issues tr.total td {
+    font-weight: bold;
+    text-align: right;
+    background-color: white;
+}
+
+table.issues tr.total td.allcell {
+    text-align: left;
+}
+
+.relatedstatus.status50, .relatedstatus.status60 {
+    text-decoration: line-through;
+}
+
+table.issues td.hours {
+    text-align: right;
+}
+
+.attachment-filename {
+    width: 50%;
+}
+
+.attachment-username, .attachment-created {
+    width: 25%;
+}

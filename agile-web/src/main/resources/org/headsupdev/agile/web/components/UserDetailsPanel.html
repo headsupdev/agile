@@ -1,0 +1,48 @@
+<!--
+  ~ HeadsUp Agile
+  ~ Copyright 2009-2012 Heads Up Development Ltd.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<html>
+  <body>
+    <wicket:panel>
+      <h2>Account <span wicket:id="username"></span></h2>
+
+      <table class="vertical">
+        <tr>
+          <th style="width: 200px">First Name</th>
+          <td wicket:id="firstname" style="width: 75%"></td>
+        </tr>
+        <tr>
+          <th style="width: 200px">Last Name</th>
+          <td wicket:id="lastname" style="width: 75%"></td>
+        </tr>
+        <tr>
+          <th style="width: 200px">Email</th>
+          <td wicket:id="email" style="width: 75%"></td>
+        </tr>
+        <tr>
+          <th style="width: 200px">Last Login</th>
+          <td wicket:id="last" style="width: 75%"></td>
+        </tr>
+      </table>
+      <br />
+
+      <h3>Description</h3>
+      <p wicket:id="description">description</p>
+    </wicket:panel>
+  </body>
+</html>

@@ -1,0 +1,61 @@
+<!--
+  ~ HeadsUp Agile
+  ~ Copyright 2009-2012 Heads Up Development Ltd.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<html>
+  <body>
+    <wicket:extend>
+      <form class="projectlist" wicket:id="projects">
+        <p>A <span wicket:id="type" class="projecttype">maven2</span> project was found at the given location.</p>
+        <p>Please check the listed projects and assign each a short code.
+          The project code is a short name used in URLs and to easily link to project artifacts.
+          Codes may only contain letters, numbers, underscores (_) or dashes (-).</p>
+        <p>Once you are happy click the "Confirm" button below.</p>
+        <table class="projects listing">
+          <tr>
+            <th>Project Title</th>
+            <th>Project Code</th>
+          </tr>
+          <wicket:container wicket:id="projects">projects</wicket:container>
+        </table>
+        <input type="submit" value="Confirm">
+        <input type="submit" value="Cancel" wicket:id="cancel">
+      </form>
+      <form wicket:id="scm" class="importproject">
+        <p>Enter the scm URL (and username and password if needed) for the project you wish to add.</p>
+        <table class="importproject vertical">
+          <tr>
+            <th>Scm url</th>
+            <td colspan="3"><span class="input">
+                scm:<select wicket:id="provider"><option>svn</option></select>:
+                <input type="text" wicket:id="scm" /></span></td>
+          </tr>
+          <tr>
+            <th>Username (optional)</th>
+            <td><input type="text" wicket:id="username" /></td>
+            <th>Password (optional)</th>
+            <td><input type="password" wicket:id="password" /></td>
+          </tr>
+        </table>
+        <input type="submit" value="Add Project" />
+      </form>
+
+      <div class="detail" wicket:id="detail">
+      </div>
+    </wicket:extend>
+  </body>
+</html>

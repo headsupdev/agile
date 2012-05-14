@@ -1,0 +1,39 @@
+<!--
+  ~ HeadsUp Agile
+  ~ Copyright 2009-2012 Heads Up Development Ltd.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<html>
+  <body>
+    <wicket:extend>
+      <wicket:container wicket:id="projectdetails">details</wicket:container>
+      <img wicket:id="activity-year" alt="monthly activity graph" class="activitygraph" />
+      <img wicket:id="activity-month" alt="yearly activity graph" class="activitygraph" />
+
+      <wicket:container wicket:id="m2">moredetails</wicket:container>
+
+      <br />
+      <wicket:enclosure child="projectlist">
+        <div class="projects subprojects">
+          <div wicket:id="projectlist" class="project">
+            <a wicket:id="project-link"><img wicket:id="activity" alt="activity graph" class="activitygraph" /><br />
+            <span wicket:id="name"></span></a>
+          </div>
+        </div>
+      </wicket:enclosure>
+    </wicket:extend>
+  </body>
+</html>

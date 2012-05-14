@@ -1,0 +1,241 @@
+<!--
+  ~ HeadsUp Agile
+  ~ Copyright 2009-2012 Heads Up Development Ltd.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <relativePath>../agile-osgi-settings/</relativePath>
+    <groupId>org.headsupdev.agile</groupId>
+    <artifactId>agile-osgi-settings</artifactId>
+    <version>2.0-alpha-3-SNAPSHOT</version>
+  </parent>
+  <artifactId>agile-api</artifactId>
+  <name>HeadsUp Agile API</name>
+  <packaging>bundle</packaging>
+
+  <properties>
+    <bundle.symbolicName>org.headsupdev.agile.api</bundle.symbolicName>
+    <bundle.namespace>org.headsupdev.agile.api</bundle.namespace>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.headsupdev.support</groupId>
+      <artifactId>java-support</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.headsupdev.support</groupId>
+      <artifactId>java-compression</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.headsupdev.irc</groupId>
+      <artifactId>irc-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-utils</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>javax.mail</groupId>
+      <artifactId>mail</artifactId>
+      <version>1.4</version>
+      <exclusions>
+        <exclusion>
+          <groupId>javax.activation</groupId>
+          <artifactId>activation</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.wicket</groupId>
+      <artifactId>wicket</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-annotations</artifactId>
+      <version>3.4.0.GA</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.hibernate</groupId>
+          <artifactId>hibernate</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+        <excludes>
+          <exclude>**/*.png</exclude>
+        </excludes>
+      </resource>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>false</filtering>
+        <includes>
+          <include>**/*.png</include>
+        </includes>
+      </resource>
+    </resources>
+
+    <filters>
+      <filter>${project.build.directory}/build.properties</filter>
+    </filters>
+
+    <plugins>
+      <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <dependencies>
+          <dependency>
+            <groupId>ant</groupId>
+            <artifactId>ant-nodeps</artifactId>
+            <version>1.6.5</version>
+          </dependency>
+        </dependencies>
+
+        <executions>
+          <execution>
+            <id>set-build-time</id>
+            <phase>generate-resources</phase>
+            <configuration>
+              <tasks>
+                <!-- Safety -->
+                <mkdir dir="${project.build.directory}" />
+
+                <!-- Get the current time in UTC -->
+                <tstamp>
+                  <format property="BUILD_DATE" pattern="yyyy/MM/dd HH:mm" timezone="UTC"/>
+                </tstamp>
+
+                <propertyfile file="${project.build.directory}/build.properties">
+                  <entry key="build.date" type="date" value="${BUILD_DATE}" />
+                </propertyfile>
+              </tasks>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>2.5</version>
+        <configuration>
+          <outputDirectory>${basedir}/target/processed-resources</outputDirectory>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <!--
+         | the following instructions build a simple set of public/private classes into an OSGi bundle
+        -->
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <configuration>
+          <instructions>
+            <Include-Resource>target/processed-resources</Include-Resource>
+            <Import-Package>javax.activation, javax.crypto, javax.crypto.interfaces, javax.crypto.spec, javax.naming, javax.naming.directory, javax.net, javax.net.ssl, javax.security.auth.callback, javax.security.auth.x500, javax.security.sasl,      org.apache.wicket.*,!junit.textui,!junit.framework,org.apache.wicket.*,
+
+            javax.imageio, !javax.portlet, javax.servlet, javax.servlet.http, !javax.swing.*, javax.xml.parsers, javax.xml.transform, javax.xml.transform.stream, org.slf4j, !org.w3c.dom, org.xml.sax, !sun.misc, !sun.reflect
+            </Import-Package>
+            <Export-Package><![CDATA[
+              org.headsupdev.agile.api.*,
+              org.headsupdev.support.java,
+              org.headsupdev.support.java.compression,
+
+              org.headsupdev.irc,
+              org.codehaus.plexus.util.*,
+
+              javax.mail.*,com.sun.mail.*
+            ]]></Export-Package>
+            <Private-Package>com.ice.tar</Private-Package>
+            <Embed-Transitive>true</Embed-Transitive>
+            <Embed-Dependency>*;artifactId=bcprov-jdk14</Embed-Dependency>
+            <Bundle-ClassPath>.,{maven-dependencies}</Bundle-ClassPath>
+          </instructions>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+    <profile>
+      <id>release-profile</id>
+
+      <activation>
+        <property>
+          <name>performRelease</name>
+          <value>true</value>
+        </property>
+      </activation>
+
+      <build>
+        <plugins>
+<!--
+          <plugin>
+            <inherited>true</inherited>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+
+            <executions>
+              <execution>
+                <id>attach-sources</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+-->
+          <plugin>
+            <inherited>true</inherited>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+
+            <executions>
+              <execution>
+                <id>attach-javadocs</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <inherited>true</inherited>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-deploy-plugin</artifactId>
+
+            <configuration>
+              <updateReleaseInfo>true</updateReleaseInfo>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+</project>

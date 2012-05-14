@@ -1,0 +1,154 @@
+table.projects, table.builds {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table.projects .status, table.builds .status, table.suites .status {
+    width: 16px;
+    height: 16px;
+}
+
+table.projects .title, table.builds .title {
+    white-space: nowrap;
+}
+
+table.projects .id, table.builds .id {
+    width: 20px;
+}
+
+table.projects .tests, table.builds .tests, table.projects .failures, table.builds .failures,
+table.projects .errors, table.builds .errors {
+    width: 20px;
+    text-align: center;
+}
+
+table.projects .date, table.projects .duration, table.builds .date, table.builds .duration {
+    width: 120px;
+    white-space: nowrap;
+}
+
+table.projects img, table.builds img {
+    padding-right: 5px;
+}
+
+table.details {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table.details th {
+    width: 20%;
+}
+
+table.details td {
+    width: 30%;
+}
+
+table.changes {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table.changes td {
+    color: black;
+    font-size: 90%;
+}
+
+table.suites {
+    margin-top: 1em;
+    width: 100%;
+}
+
+img.logicon {
+    cursor: pointer;
+}
+
+tr.loghidden {
+    display: none;
+}
+
+tr.logshown {
+    display: inline;
+}
+
+pre.testerror {
+    margin: 0 0 0 10px;
+}
+
+div.build .content {
+    padding: 5px;
+    border: 1px solid #606060
+
+    font-size: 85%;
+    white-space: pre-wrap;
+}
+
+a.status-queued, span.status-queued {
+    background-image: url( queued.png );
+    background-repeat: no-repeat;
+
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+}
+
+a.status-running, span.status-running {
+    background-image: url( running.png );
+    background-repeat: no-repeat;
+
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+}
+
+a.status-passed, span.status-passed {
+    background-image: url( passed.png );
+    background-repeat: no-repeat;
+
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+}
+
+a.status-failed, span.status-failed {
+    background-image: url( failed.png );
+    background-repeat: no-repeat;
+
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+}
+
+a.status-force:hover, span.status-force {
+    background-image: url( queue_add.png );
+    background-repeat: no-repeat;
+
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+}
+
+a.status-remove:hover, span.status-remove, a.status-remove-nohover, span.status-remove-nohover {
+    background-image: url( queue_remove.png );
+    background-repeat: no-repeat;
+
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+}
+
+.testfail {
+    background-color: #FFDFDF !important;
+}
+
+.testerror {
+    background-color: #FFDFDF !important;
+}
+
+.testwarn {
+    background-color: #FFFFDF !important;
+}
+
+.testpass {
+    background-color: #DFFFDF !important;
+}

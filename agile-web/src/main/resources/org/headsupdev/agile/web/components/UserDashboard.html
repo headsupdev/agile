@@ -1,0 +1,46 @@
+<!--
+  ~ HeadsUp Agile
+  ~ Copyright 2009-2012 Heads Up Development Ltd.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<wicket:panel>
+  <div class="dashheader">Outstanding issues assigned to me</div>
+  <div class="dashboard">
+    <table class="issues listing">
+    <wicket:container wicket:id="milestones">
+      <tr><td colspan="6" class="dashmilestone">
+        <wicket:enclosure>
+        <div class="project">Project: <span wicket:id="project" class="project">project</span></div>
+        </wicket:enclosure>
+        <div class="milestone">
+          <span wicket:id="id-cell" class="name"><a wicket:id="id-link"><span wicket:id="id-label">id</span></a></span>
+          <span wicket:id="due" class="due">due</span>
+        </div>
+      </td></tr>
+      <wicket:container wicket:id="issuelist">
+        <wicket:container wicket:id="issue"></wicket:container>
+      </wicket:container>
+    </wicket:container>
+    <tr><td class="dashmilestone" colspan="6">
+      <div class="project">Others</div>
+    </td></tr>
+    <wicket:container wicket:id="issuelist">
+      <wicket:container wicket:id="issue"></wicket:container>
+    </wicket:container>
+    </table>
+  </div>
+  <!--<div class="dashfooter">...see more information at <a href="/account">my account</a></div>-->
+</wicket:panel>

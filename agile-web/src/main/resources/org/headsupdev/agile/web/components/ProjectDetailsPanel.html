@@ -1,0 +1,76 @@
+<!--
+  ~ HeadsUp Agile
+  ~ Copyright 2009-2012 Heads Up Development Ltd.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<html>
+  <body>
+    <wicket:panel>
+      <h2>Project details for <span wicket:id="title">name</span></h2>
+      <table class="project-details vertical">
+        <tr class="odd">
+          <th>Name</th><td wicket:id="name">name</td>
+          <th>Type</th><td><img wicket:id="type-icon" alt="type icon" class="icon" /><span wicket:id="type">type</span></td>
+        </tr>
+        <wicket:enclosure child="groupId">
+          <tr class="even">
+            <th>ArtifactId</th><td wicket:id="artifactId">artifact</td>
+            <th>GroupId</th><td wicket:id="groupId">group</td>
+          </tr>
+          <tr class="odd">
+            <th>Version</th>
+            <td wicket:id="version">version</td>
+            <th>Packaging</th>
+            <td><img wicket:id="packaging-icon" alt="packaging icon" class="icon" /><span wicket:id="packaging">packaging</span></td>
+          </tr>
+        </wicket:enclosure>
+          <tr>
+              <th>Total Issues</th><td wicket:id="issuesTotal" />
+              <th>Open Issues</th><td wicket:id="issuesOpen" />
+          </tr>
+        <wicket:enclosure child="org">
+          <tr class="even">
+            <th>Module</th><td wicket:id="module">module</td>
+            <th>Organisation</th><td wicket:id="org">org</td>
+          </tr>
+          <tr class="odd">
+            <th>Revision</th>
+            <td wicket:id="revision">revision</td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+        </wicket:enclosure>
+        <wicket:enclosure child="xcode-version">
+          <tr class="even">
+            <th>Version</th><td wicket:id="xcode-version">version</td>
+            <th>Platform</th><td wicket:id="xcode-platform">Mac OSX</td>
+          </tr>
+          <tr class="odd">
+            <th>BundleId</th><td wicket:id="xcode-bundleid">bundle</td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+        </wicket:enclosure>
+        <tr wicket:id="urlrow">
+          <th>URL</th>
+          <td colspan="3" wicket:id="url">url</td>
+        </tr>
+        <tr wicket:id="scmrow">
+          <th>SCM URL</th>
+          <td colspan="3" wicket:id="scm">scm:svn</td>
+        </tr>
+      </table>
+    </wicket:panel>
+  </body>
+</html>

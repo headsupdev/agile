@@ -1,0 +1,115 @@
+<!--
+  ~ HeadsUp Agile
+  ~ Copyright 2009-2012 Heads Up Development Ltd.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<html>
+  <body>
+    <wicket:panel>
+      <form wicket:id="edit">
+        <table class="info vertical">
+          <tr>
+            <th class="type" style="width:20%">Type</th>
+            <td class="type" style="width:30%"><select wicket:id="type" /></td>
+            <th class="project" style="width:20%">Project</th>
+            <td wicket:id="project" class="project" style="width:30%">project</td>
+          </tr>
+          <tr>
+            <th class="priority">Priority</th>
+            <td class="priority"><select wicket:id="priority" /></td>
+            <th class="version">Version</th>
+            <td class="version"><input type="text" wicket:id="version" /></td>
+          </tr>
+          <tr>
+            <th class="status">Status</th>
+            <td wicket:id="status" class="status new">status</td>
+            <th class="milestone">Milestone</th>
+            <td class="milestone"><select wicket:id="milestone" /></td>
+          </tr>
+          <tr>
+            <th class="reporter">Reported By</th>
+            <td wicket:id="reporter" class="reporter">reporter</td>
+            <th class="assigned">Assigned To</th>
+            <td class="assigned">
+              <select wicket:id="assignee"><option>admin</option></select>
+              <input type="submit" wicket:id="assignToMe" value="Myself" />
+            </td>
+          </tr>
+          <tr>
+            <th class="watchers">Watched By</th>
+            <td class="watchers" wicket:id="watchers"></td>
+            <th class="order">Order</th>
+            <td class="order"><input type="text" wicket:id="order" /></td>
+          </tr>
+          <wicket:enclosure child="created">
+          <tr>
+            <th class="created">Created</th>
+            <td wicket:id="created" class="created">created</td>
+            <th class="updated">Updated</th>
+            <td wicket:id="updated" class="updated">updated</td>
+          </tr>
+          </wicket:enclosure>
+          <tr>
+            <th class="estimate">Time Estimate</th>
+            <td class="estimate">
+              <wicket:panel wicket:id="timeEstimated" />
+            </td>
+            <wicket:enclosure child="timeRequired">
+                <th class="required">Time Required</th>
+                <td class="required">
+                  <wicket:panel wicket:id="timeRequired" />
+                </td>
+            </wicket:enclosure>
+          </tr>
+          <tr>
+            <th>Include in initial estimates?</th>
+            <td>
+              <input type="checkbox" wicket:id="includeInInitialEstimates" />
+            </td>
+          </tr>
+        </table>
+
+        <table class="details">
+          <tr>
+            <th class="summary" colspan="2">Summary</th>
+          </tr>
+          <tr>
+            <td class="summary" colspan="2"><input type="text" wicket:id="summary" /></td>
+          </tr>
+          <tr>
+            <th class="environment" colspan="2">Environment</th>
+          </tr>
+          <tr>
+            <td class="environment" colspan="2"><input type="text" wicket:id="environment" /></td>
+          </tr>
+          <tr>
+            <th class="description" colspan="2">Description</th>
+          </tr><tr>
+            <td class="description" colspan="2"><textarea rows="8" cols="25" wicket:id="body"></textarea></td>
+          </tr>
+
+          <tr>
+            <wicket:panel wicket:id="attachment" />
+          </tr>
+
+          <tr>
+            <td colspan="2"><input type="submit" value="Save" /></td>
+          </tr>
+        </table>
+      </form>
+    </wicket:panel>
+  </body>
+</html>

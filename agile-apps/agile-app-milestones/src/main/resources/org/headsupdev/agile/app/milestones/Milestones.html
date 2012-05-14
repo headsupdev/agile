@@ -1,0 +1,60 @@
+<!--
+  ~ HeadsUp Agile
+  ~ Copyright 2009-2012 Heads Up Development Ltd.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<html>
+  <body>
+    <wicket:extend>
+      <div wicket:id="filter">filters</div>
+
+      <table class="milestones listing">
+        <thead>
+        <tr>
+            <td colspan="6" class="paging" wicket:id="headerPaging"></td>
+        </tr>
+        </thead>
+        <tr>
+          <th class="name" wicket:id="orderByName">Name</th>
+          <th class="percent">Progress</th>
+          <th class="issues">Issues</th>
+          <th class="open">Open</th>
+          <th class="project" wicket:id="orderByProject">Project</th>
+          <th class="due" wicket:id="orderByDue">Due</th>
+        </tr>
+        <tr wicket:id="milestones">
+          <td wicket:id="id-cell" class="name"><a wicket:id="id-link"><span wicket:id="id-label">id</span></a></td>
+          <td wicket:id="bar" class="bar">bar</td>
+          <td wicket:id="issues" class="issues">0</td>
+          <td wicket:id="open" class="open">0</td>
+          <td wicket:id="project" class="project">project</td>
+          <td wicket:id="due" class="due">due</td>
+        </tr>
+        <tfoor>
+        <tr>
+            <td colspan="6" class="paging" wicket:id="footerPaging"></td>
+        </tr>
+
+        <wicket:enclosure child="allCell">
+        <tr>
+          <td colspan="6" wicket:id="allCell" class="allcell"><a wicket:id="allLink">Show all...</a></td>
+        </tr>
+        </wicket:enclosure>
+        </tfoor>
+      </table>
+    </wicket:extend>
+  </body>
+</html>
