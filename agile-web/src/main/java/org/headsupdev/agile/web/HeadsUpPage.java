@@ -558,7 +558,7 @@ public abstract class HeadsUpPage
 
     private void renderMenuLinks()
     {
-        if ( linksRendered )
+        if ( linksRendered || submenu == null )
         {
             return;
         }
