@@ -3,7 +3,7 @@ form.search {
     height: 31px;
     margin-bottom: 10pt;
 
-    background: url(../com.headsupdev.agile.web.HeadsUpPage/images/search-left.png);
+    background: url(../org.headsupdev.agile.web.HeadsUpPage/images/search-left.png);
     background-position: left;
     background-repeat: no-repeat;
     overflow: hidden;
@@ -20,7 +20,7 @@ form.search .input {
     margin-right: -6px;
 
     outline: none !important;
-    background: url(../com.headsupdev.agile.web.HeadsUpPage/images/search-bg.png);
+    background: url(../org.headsupdev.agile.web.HeadsUpPage/images/search-bg.png);
     background-repeat: repeat-x;
 }
 
@@ -33,7 +33,7 @@ form.search .submit {
     cursor: pointer;
     padding: 0;
 
-    background: url(../com.headsupdev.agile.web.HeadsUpPage/images/search-right.png);
+    background: url(../org.headsupdev.agile.web.HeadsUpPage/images/search-right.png);
     background-position: right;
     background-repeat: no-repeat;
 
