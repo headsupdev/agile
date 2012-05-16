@@ -727,14 +727,14 @@ table.listing td.paging .page span {
 }
 
 table.listing th.wicket_orderUp a {
-    background-image: url(/resources/com.headsupdev.agile.web.HeadsUpPage/images/arrow_up.png);
+    background-image: url(/resources/org.headsupdev.agile.web.HeadsUpPage/images/arrow_up.png);
     background-repeat: no-repeat;
     background-position: right;
     padding-right: 16px;
 }
 
 table.listing th.wicket_orderDown a {
-    background-image: url(/resources/com.headsupdev.agile.web.HeadsUpPage/images/arrow_down.png);
+    background-image: url(/resources/org.headsupdev.agile.web.HeadsUpPage/images/arrow_down.png);
     background-repeat: no-repeat;
     background-position: right;
     padding-right: 16px;

@@ -27,7 +27,7 @@ import java.util.Map;
  * Usage as follows:
  * <code>Mime.get( "myfile.png" ).isWebImage()</code>
  * or
- * <code>getClass().getClassLoader().getResource( "com/headsupdev/agile/api/mime/" + Mime.get( "myfile.png" ) );</code>
+ * <code>getClass().getClassLoader().getResource( "org/headsupdev/agile/api/mime/" + Mime.get( "myfile.png" ) );</code>
  *
  * @author Andrew Williams
  * @version $Id$

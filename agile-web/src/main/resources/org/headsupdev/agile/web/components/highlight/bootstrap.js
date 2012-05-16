@@ -5,7 +5,7 @@ function highlightPath()
       ;
 
   for(var i = 0; i < args.length; i++)
-      result.push(args[i].replace('@', '/resources/com.headsupdev.agile.web.components.EmbeddedFilePanel/highlight/'));
+      result.push(args[i].replace('@', '/resources/org.headsupdev.agile.web.components.EmbeddedFilePanel/highlight/'));
 
   return result
 };

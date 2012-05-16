@@ -39,7 +39,7 @@ public class FaviconServlet
         throws IOException
     {
         InputStream in = getClass().getClassLoader().getResourceAsStream(
-            "/com/headsupdev/agile/web/favicon.ico" );
+            "/org/headsupdev/agile/web/favicon.ico" );
         OutputStream out = res.getOutputStream();
 
         res.setContentType( "image/ico" );
