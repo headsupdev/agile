@@ -558,7 +558,7 @@ public abstract class HeadsUpPage
 
     private void renderMenuLinks()
     {
-        if ( linksRendered || submenu == null )
+        if ( linksRendered )
         {
             return;
         }
@@ -569,8 +569,6 @@ public abstract class HeadsUpPage
             Link convertedLink = convertMenuLinkToLink( link );
             links.add( convertedLink );
         }
-
-        submenu.setVisible( links.size() > 0 );
     }
 
     /**
