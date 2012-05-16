@@ -40,18 +40,16 @@ public class IssueTotalHoursModel
     private Project root;
     private double totalHours;
 
-    public IssueTotalHoursModel( List<Issue> issues, Project root )
+    public IssueTotalHoursModel( List<? extends Issue> issues, Project root )
     {
         this.root = root;
-
-        calculateHours( issues.iterator() );
+        setIssues( issues.iterator() );
     }
 
-    public IssueTotalHoursModel( Iterator<Issue> issues, Project root )
+    public IssueTotalHoursModel( Iterator<? extends Issue> issues, Project root )
     {
         this.root = root;
-
-        calculateHours( issues );
+        setIssues( issues );
     }
     
     @Override
@@ -60,7 +58,12 @@ public class IssueTotalHoursModel
         return new Duration( totalHours ).toString();
     }
 
-    private void calculateHours( Iterator<Issue> issues )
+    public void setIssues( Iterator<? extends Issue> issues )
+    {
+        calculateHours( issues );
+    }
+
+    private void calculateHours( Iterator<? extends Issue> issues )
     {
         final boolean timeBurndown = Boolean.parseBoolean( root.getConfigurationValue(
                 StoredProject.CONFIGURATION_TIMETRACKING_BURNDOWN ) );

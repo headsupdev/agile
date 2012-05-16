@@ -92,10 +92,10 @@ public class IssueListPanel extends Panel
 
         pagingFooter = new StyledPagingNavigator( "footerPaging", dataView );
         pagingFooter.setOutputMarkupPlaceholderTag( true );
-        add( pagingFooter.add( colspanModifier).setVisible( issues.size() > ITEMS_PER_PAGE ) );
+        add( pagingFooter.add( colspanModifier ).setVisible( issues.size() > ITEMS_PER_PAGE ) );
         pagingHeader = new StyledPagingNavigator( "headerPaging", dataView );
         pagingHeader.setOutputMarkupPlaceholderTag( true );
-        add( pagingHeader.add( colspanModifier).setVisible( issues.size() > ITEMS_PER_PAGE ) );
+        add( pagingHeader.add( colspanModifier ).setVisible( issues.size() > ITEMS_PER_PAGE ) );
 
         add( new OrderByBorder( "orderById", "id.id", issues ) );
         add( new OrderByBorder( "orderBySummary", "summary", issues ) );
@@ -144,6 +144,16 @@ public class IssueListPanel extends Panel
 
         totalRow.add( new WebMarkupContainer( "requiredlabel" ).setVisible( timeEnabled ) );
         totalRow.add( new Label( "hours", new IssueTotalHoursModel( (Iterator<Issue>) issues.iterator( 0, issues.size() ),
-                page.getProject() ) ).setVisible( timeEnabled ) );
+                page.getProject() )
+        {
+            @Override
+            public String getObject()
+            {
+                setIssues( issues.iterator( 0, dataView.getItemCount() ) );
+// we could do this if the total is suppose to reflect the current page
+//                setIssues( issues.iterator( dataView.getCurrentPage() * dataView.getItemsPerPage(), dataView.getItemsPerPage() ) );
+                return super.getObject();
+            }
+        }).setVisible( timeEnabled ) );
     }
 }
