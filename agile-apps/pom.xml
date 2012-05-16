@@ -52,6 +52,12 @@
     </dependency>
 
     <dependency>
+      <groupId>org.headsupdev.support</groupId>
+      <artifactId>java-support</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
       <groupId>org.apache.wicket</groupId>
       <artifactId>wicket</artifactId>
       <scope>provided</scope>
