@@ -202,7 +202,7 @@ public abstract class HeadsUpPage
         });
 
         submenu = new WebMarkupContainer( "submenu-container" );
-        add( submenu.setVisible( links.size() > 0 ) );
+        add( submenu );
 
         submenu.add( new ListView<Link>( "submenu", links ) {
             protected void populateItem( ListItem<Link> listItem )
