@@ -79,8 +79,8 @@ public abstract class SortableEntityProvider<T> extends SortableDataProvider<T>
         return "id.id";
     }
 
-    public IModel model( Object o )
+    public IModel<T> model( Object o )
     {
-        return new CompoundPropertyModel( o );
+        return new CompoundPropertyModel<T>( o );
     }
 }
