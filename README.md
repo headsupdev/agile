@@ -26,6 +26,8 @@ Quickstart
 Support
 -------
 
+You can find the project [documentation](http://headsupdev.org/agile/docs/) and [issues](http://headsupdev.org/agile/issues/) hosted at http://headsupdev.org/agile/ .
+
 Should you have any questions or comments please join our mailing list:  
   `https://groups.google.com/forum/?#!forum/agile-users`.
 
