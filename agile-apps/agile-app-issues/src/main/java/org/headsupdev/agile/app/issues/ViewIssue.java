@@ -177,6 +177,25 @@ public class ViewIssue
                     date2 = ( (DurationWorked) o2 ).getDay();
                 }
 
+                if ( date1 == null || date2 == null )
+                {
+                    if ( date1 == null )
+                    {
+                        if ( date2 == null )
+                        {
+                            return 0;
+                        }
+                        else
+                        {
+                            return 1;
+                        }
+                    }
+                    else
+                    {
+                        return -1;
+                    }
+                }
+
                 return date1.compareTo(date2);
             }
         } );

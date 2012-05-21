@@ -543,6 +543,25 @@ public class DurationWorkedUtil
                     Date date1 = d1.getDay();
                     Date date2 = d2.getDay();
 
+                    if ( date1 == null || date2 == null )
+                    {
+                        if ( date1 == null )
+                        {
+                            if ( date2 == null )
+                            {
+                                return 0;
+                            }
+                            else
+                            {
+                                return 1;
+                            }
+                        }
+                        else
+                        {
+                            return -1;
+                        }
+                    }
+
                     if ( date1.equals( date2 ) )
                     {
                         double d1hours = 0;
@@ -583,7 +602,7 @@ public class DurationWorkedUtil
                     continue;
                 }
 
-                if ( worked.getUser().equals( user ) )
+                if ( worked.getUser().equals( user ) && worked.getDay() != null )
                 {
                     hoursWorked += worked.getWorked().getHours();
                     if ( worked.getUpdatedRequired() != null )
