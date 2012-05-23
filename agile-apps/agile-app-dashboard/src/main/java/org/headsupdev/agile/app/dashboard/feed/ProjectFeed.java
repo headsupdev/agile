@@ -46,7 +46,7 @@ public class ProjectFeed
 
     public String getTitle()
     {
-        String title = HeadsUpConfiguration.getProductName() + " Project Feed";
+        String title = Manager.getStorageInstance().getGlobalConfiguration().getProductName() + " Project Feed";
         if ( !getProject().equals( StoredProject.getDefault() ) )
         {
             title += " :: " + getProject().getAlias();
@@ -57,7 +57,7 @@ public class ProjectFeed
 
     public String getDescription()
     {
-        String description = HeadsUpConfiguration.getProductName() + " Project feed for ";
+        String description = Manager.getStorageInstance().getGlobalConfiguration().getProductName() + " Project feed for ";
         if ( getProject().equals( StoredProject.getDefault() ) )
         {
             description += "root projects";

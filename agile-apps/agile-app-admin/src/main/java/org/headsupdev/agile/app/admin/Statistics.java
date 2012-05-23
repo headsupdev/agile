@@ -57,7 +57,7 @@ public class Statistics
     {
         super.layout();
         add( CSSPackageResource.getHeaderContribution( getClass(), "admin.css" ) );
-        add( new Label( "productname", HeadsUpConfiguration.getProductName() ) );
+        add( new Label( "productname", getStorage().getGlobalConfiguration().getProductName() ) );
 
         OperatingSystemMXBean osBean = ManagementFactory.getOperatingSystemMXBean();
         RuntimeMXBean runtimeBean = ManagementFactory.getRuntimeMXBean();

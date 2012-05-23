@@ -85,7 +85,7 @@ public final class HeadsUpActivator
         error.setLocation( "/filenotfound" );
         bc.registerService( ErrorPageMapping.class.getName(), error, null );
 
-        System.out.println( "Started version " + HeadsUpConfiguration.getBuildVersion() + " at " +
+        System.out.println( "Started version " + Manager.getStorageInstance().getGlobalConfiguration().getBuildVersion() + " at " +
                 Manager.getStorageInstance().getGlobalConfiguration().getBaseUrl() );
         tracker = new HeadsUpTracker( bc );
         tracker.open();

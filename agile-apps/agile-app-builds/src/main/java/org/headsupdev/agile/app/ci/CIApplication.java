@@ -293,7 +293,7 @@ public class CIApplication
 
     public String getDescription()
     {
-        return "The " + HeadsUpConfiguration.getProductName() + " continuous integration application";
+        return "The " + Manager.getStorageInstance().getGlobalConfiguration().getProductName() + " continuous integration application";
     }
 
     public List<MenuLink> getLinks()

@@ -110,8 +110,8 @@ public class Setup
             }
 
             String body = renderAbout();
-            getHeadsUpApplication().addEvent( new SystemEvent( HeadsUpConfiguration.getProductName() + " installed :)",
-                HeadsUpConfiguration.getProductName() + " has been installed - congratulations", body ) );
+            getHeadsUpApplication().addEvent( new SystemEvent( getStorage().getGlobalConfiguration().getProductName() + " installed :)",
+                    getStorage().getGlobalConfiguration().getProductName() + " has been installed - congratulations", body ) );
             tabSelected[3] = true;
         }
 
@@ -121,7 +121,7 @@ public class Setup
     @Override
     public String getTitle()
     {
-        return "Welcome to " + HeadsUpConfiguration.getProductName() + " setup wizard";
+        return "Welcome to " + getStorage().getGlobalConfiguration().getProductName() + " setup wizard";
     }
 
     protected void drawTabs( final boolean[] tabSelected )

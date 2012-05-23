@@ -19,6 +19,7 @@
 package org.headsupdev.agile.web.dialogs;
 
 import org.headsupdev.agile.api.HeadsUpConfiguration;
+import org.headsupdev.agile.api.Manager;
 import org.headsupdev.agile.api.Page;
 import org.headsupdev.agile.api.util.HashUtil;
 import org.headsupdev.agile.security.permission.AccountCreatePermission;
@@ -58,7 +59,7 @@ public class LoginDialog
         this.owner = owner;
         popup = isDialog;
 
-        add( new Label( "product", HeadsUpConfiguration.getProductName() ) );
+        add( new Label( "product", Manager.getStorageInstance().getGlobalConfiguration().getProductName() ) );
         add( new LoginForm( "login" ) );
 
         Class<? extends Page> addUserClass = owner.getPageClass( "admin/add-account" );

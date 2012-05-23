@@ -128,7 +128,7 @@ public class WebUtil
             {
                 if ( !silent )
                 {
-                    response.addHeader( "WWW-Authenticate", "Basic realm=\"" + HeadsUpConfiguration.getProductName() +
+                    response.addHeader( "WWW-Authenticate", "Basic realm=\"" + Manager.getStorageInstance().getGlobalConfiguration().getProductName() +
                         "\"" );
                 }
                 throw new AbortWithWebErrorCodeException( 401, message );

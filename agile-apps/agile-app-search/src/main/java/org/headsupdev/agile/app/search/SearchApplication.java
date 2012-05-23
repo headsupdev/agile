@@ -55,7 +55,7 @@ public class SearchApplication
 
     public String getDescription()
     {
-        return "The " + HeadsUpConfiguration.getProductName() + " search application";
+        return "The " + Manager.getStorageInstance().getGlobalConfiguration().getProductName() + " search application";
     }
 
     public List<MenuLink> getLinks()

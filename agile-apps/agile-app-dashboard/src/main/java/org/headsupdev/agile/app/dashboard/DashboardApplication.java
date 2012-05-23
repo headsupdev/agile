@@ -67,7 +67,7 @@ public class DashboardApplication
 
     public String getDescription()
     {
-        return "The " + HeadsUpConfiguration.getProductName() + " dashboard application";
+        return "The " + Manager.getStorageInstance().getGlobalConfiguration().getProductName() + " dashboard application";
     }
 
     public List<MenuLink> getLinks()

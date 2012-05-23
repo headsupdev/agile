@@ -18,7 +18,6 @@
 
 package org.headsupdev.agile.framework;
 
-import org.headsupdev.agile.api.HeadsUpConfiguration;
 import org.headsupdev.agile.api.Permission;
 import org.headsupdev.agile.web.components.FormattedDateModel;
 import org.headsupdev.agile.web.HeadsUpPage;
@@ -49,7 +48,7 @@ public class About
         add( CSSPackageResource.getHeaderContribution( getClass(), "about.css" ) );
         add( new AboutPanel( "body" ) );
 
-        add( new Label( "productname", HeadsUpConfiguration.getProductName() ) );
+        add( new Label( "productname", getStorage().getGlobalConfiguration().getProductName() ) );
         add( new Label( "version", getStorage().getGlobalConfiguration().getBuildVersion() ) );
         add( new Label( "builddate", new FormattedDateModel( getStorage().getGlobalConfiguration().getBuildDate(),
                 getSession().getTimeZone() ) ) );
@@ -60,6 +59,6 @@ public class About
     @Override
     public String getPageTitle()
     {
-        return super.getPageTitle() + " :: About " + HeadsUpConfiguration.getProductName();
+        return super.getPageTitle() + " :: About " + getStorage().getGlobalConfiguration().getProductName();
     }
 }

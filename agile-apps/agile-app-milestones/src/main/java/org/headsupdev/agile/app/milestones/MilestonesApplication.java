@@ -83,7 +83,7 @@ public class MilestonesApplication
 
     public String getDescription()
     {
-        return "The " + HeadsUpConfiguration.getProductName() + " milestones application";
+        return "The " + Manager.getStorageInstance().getGlobalConfiguration().getProductName() + " milestones application";
     }
 
     public List<MenuLink> getLinks()

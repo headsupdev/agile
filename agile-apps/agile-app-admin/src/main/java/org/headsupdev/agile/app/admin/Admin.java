@@ -18,7 +18,6 @@
 
 package org.headsupdev.agile.app.admin;
 
-import org.headsupdev.agile.api.HeadsUpConfiguration;
 import org.headsupdev.agile.api.Permission;
 import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.security.permission.AdminPermission;
@@ -44,6 +43,6 @@ public class Admin
     {
         super.layout();
 
-        add( new Label( "productname", HeadsUpConfiguration.getProductName() ) );
+        add( new Label( "productname", getStorage().getGlobalConfiguration().getProductName() ) );
     }
 }

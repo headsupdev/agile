@@ -101,7 +101,7 @@ public class AdminApplication
 
     public String getDescription()
     {
-        return "The " + HeadsUpConfiguration.getProductName() + " admin application";
+        return "The " + Manager.getStorageInstance().getGlobalConfiguration().getProductName() + " admin application";
     }
 
     public List<MenuLink> getLinks()

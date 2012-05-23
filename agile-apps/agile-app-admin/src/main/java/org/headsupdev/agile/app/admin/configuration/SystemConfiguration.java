@@ -151,7 +151,7 @@ public class SystemConfiguration
             "This should be set to the password used to send notification emails" ) );
 
         restartConfig.add( new SystemConfigurationItem( "dataDir", "Data Directory",
-            "This is the location that " + HeadsUpConfiguration.getProductName() +
+            "This is the location that " + getStorage().getGlobalConfiguration().getProductName() +
                 " stores files and runs it's builds. " )
         {
             public boolean test( String value )
@@ -184,7 +184,7 @@ public class SystemConfiguration
             "The password for the SQL \"agile\" database " ) );
 
         // little hack here to make sure the defaults are copied in...
-        HeadsUpConfiguration global = Manager.getStorageInstance().getGlobalConfiguration();
+        HeadsUpConfiguration global = getStorage().getGlobalConfiguration();
         global.setBaseUrl( global.getBaseUrl() );
         global.setDataDir( global.getDataDir() );
         global.setLogErrors( global.getLogErrors() );
@@ -243,7 +243,7 @@ public class SystemConfiguration
                 }
             }
 
-            final HeadsUpConfiguration global = Manager.getStorageInstance().getGlobalConfiguration();
+            final HeadsUpConfiguration global = getStorage().getGlobalConfiguration();
             add( new ListView<ConfigurationItem>( "item", config )
             {
                 protected void populateItem( ListItem<ConfigurationItem> listItem )
@@ -535,13 +535,13 @@ public class SystemConfiguration
 
         private File getBootstrapPropertiesFile()
         {
-            File confDir = new File( Manager.getStorageInstance().getGlobalConfiguration().getInstallDir(), "conf" );
+            File confDir = new File( getStorage().getGlobalConfiguration().getInstallDir(), "conf" );
             File ret = new File( confDir, "config.properties" );
 
             // could be pax:runner which uses a different config file
             if ( !ret.exists() )
             {
-                File felixDir = new File( Manager.getStorageInstance().getGlobalConfiguration().getInstallDir(), "felix" );
+                File felixDir = new File( getStorage().getGlobalConfiguration().getInstallDir(), "felix" );
                 ret = new File( felixDir, "config.ini" );
             }
 

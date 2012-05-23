@@ -1165,7 +1165,7 @@ public class DefaultServlet
         sb.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"/resources/org.headsupdev.agile.web.HeadsUpPage/agile.css\" />");
         sb.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"/resources/org.headsupdev.agile.app.files.Browse/browse.css\" />");
         sb.append("<title>");
-        sb.append(HeadsUpConfiguration.getProductName());
+        sb.append(Manager.getStorageInstance().getGlobalConfiguration().getProductName());
         sb.append(" Repository :: ");
         sb.append(name);
         sb.append("</title>\r\n");
@@ -1177,7 +1177,7 @@ public class DefaultServlet
         sb.append("        <div id=\"header1\">\r\n");
         sb.append("          <img src=\"/resources/org.headsupdev.agile.web.HeadsUpPage/images/agile-title.png\" />\r\n");
         sb.append("          <!--<h1>");
-        sb.append(HeadsUpConfiguration.getProductName());
+        sb.append(Manager.getStorageInstance().getGlobalConfiguration().getProductName());
         sb.append(" </h1>-->\r\n");
 
         sb.append("          <div id=\"userpanel\">");

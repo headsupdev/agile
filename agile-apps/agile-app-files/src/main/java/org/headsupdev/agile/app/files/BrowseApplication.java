@@ -86,7 +86,7 @@ public class BrowseApplication
 
     public String getDescription()
     {
-        return "The " + HeadsUpConfiguration.getProductName() + " scm browse application";
+        return "The " + Manager.getStorageInstance().getGlobalConfiguration().getProductName() + " scm browse application";
     }
 
     public List<MenuLink> getLinks()

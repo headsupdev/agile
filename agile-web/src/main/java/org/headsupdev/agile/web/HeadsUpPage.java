@@ -511,7 +511,7 @@ public abstract class HeadsUpPage
         StringBuilder ret = new StringBuilder( "Time zone: " );
         ret.append( timeZone.getID() );
         ret.append( "<br />HeadsUp Agile is an open source project, <a href=\"" );
-        ret.append( HeadsUpConfiguration.getProductUrl() );
+        ret.append( Manager.getStorageInstance().getGlobalConfiguration().getProductUrl() );
         ret.append( "\">download</a> the latest release now!" );
 
         return ret.toString();
@@ -537,10 +537,10 @@ public abstract class HeadsUpPage
     {
         if ( getTitle() == null || getTitle().trim().length() == 0 )
         {
-            return HeadsUpConfiguration.getProductName() + " :: " + getHeadsUpApplication().getName();
+            return getStorage().getGlobalConfiguration().getProductName() + " :: " + getHeadsUpApplication().getName();
         }
 
-        return HeadsUpConfiguration.getProductName() + " :: " + getHeadsUpApplication().getName() + " :: " +
+        return getStorage().getGlobalConfiguration().getProductName() + " :: " + getHeadsUpApplication().getName() + " :: " +
             getTitle();
     }
 

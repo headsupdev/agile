@@ -52,8 +52,8 @@ public class PrivateConfiguration {
     private static final String KEY_UPDATES_CHECK = "updates.check";
     private static final String KEY_UPDATES_BETA_CHECK = "updates.beta.check";
 
-    public static final String UPDATE_FEED_URL = HeadsUpConfiguration.getProductUrl() + "releases/feed.xml";
-    public static final String BETA_UPDATE_FEED_URL = HeadsUpConfiguration.getProductUrl() + "releases/beta/feed.xml";
+    public static final String UPDATE_FEED_URL = Manager.getStorageInstance().getGlobalConfiguration().getProductUrl() + "releases/feed.xml";
+    public static final String BETA_UPDATE_FEED_URL = Manager.getStorageInstance().getGlobalConfiguration().getProductUrl() + "releases/beta/feed.xml";
 
     static
     {

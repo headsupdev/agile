@@ -69,8 +69,8 @@ public class IRCNotifier
         {
             return;
         }
-        manager.setServiceName( HeadsUpConfiguration.getProductName() + " IRC Bot");
-        manager.setDescription( HeadsUpConfiguration.getProductUrl() );
+        manager.setServiceName( Manager.getStorageInstance().getGlobalConfiguration().getProductName() + " IRC Bot");
+        manager.setDescription( Manager.getStorageInstance().getGlobalConfiguration().getProductUrl() );
 
         try
         {

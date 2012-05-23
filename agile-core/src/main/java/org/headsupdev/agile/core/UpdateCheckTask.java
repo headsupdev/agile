@@ -20,6 +20,7 @@ package org.headsupdev.agile.core;
 
 import org.headsupdev.agile.api.AbstractTask;
 import org.headsupdev.agile.api.HeadsUpConfiguration;
+import org.headsupdev.agile.api.Manager;
 
 import javax.persistence.Entity;
 import javax.persistence.DiscriminatorValue;
@@ -37,7 +38,7 @@ public class UpdateCheckTask
     extends AbstractTask
 {
     public UpdateCheckTask() {
-        super( "Checking for updates", "Checking for updated versions of the " + HeadsUpConfiguration.getProductName() +
-            " software" );
+        super( "Checking for updates", "Checking for updated versions of the " +
+            Manager.getStorageInstance().getGlobalConfiguration().getProductName() + " software" );
     }
 }

@@ -18,7 +18,6 @@
 
 package org.headsupdev.agile.app.dashboard;
 
-import org.headsupdev.agile.api.HeadsUpConfiguration;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.ResourceReference;
 import org.apache.wicket.markup.html.CSSPackageResource;
@@ -82,6 +81,6 @@ public class Welcome extends HeadsUpPage
     @Override
     public String getTitle()
     {
-        return "Welcome to " + HeadsUpConfiguration.getProductName();
+        return "Welcome to " + getStorage().getGlobalConfiguration().getProductName();
     }
 }

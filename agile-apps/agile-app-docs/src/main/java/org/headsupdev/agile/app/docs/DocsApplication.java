@@ -73,7 +73,7 @@ public class DocsApplication
 
     public String getDescription()
     {
-        return "The " + HeadsUpConfiguration.getProductName() + " documents application";
+        return "The " + Manager.getStorageInstance().getGlobalConfiguration().getProductName() + " documents application";
     }
 
     public List<MenuLink> getLinks()

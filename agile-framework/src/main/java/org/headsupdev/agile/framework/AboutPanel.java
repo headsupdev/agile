@@ -18,9 +18,9 @@
 
 package org.headsupdev.agile.framework;
 
-import org.headsupdev.agile.api.HeadsUpConfiguration;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.headsupdev.agile.api.Manager;
 
 /**
  * TODO document me
@@ -35,7 +35,7 @@ public class AboutPanel
     {
         super( id );
 
-        add( new Label( "productname", HeadsUpConfiguration.getProductName() ) );
-        add( new Label( "productname2", HeadsUpConfiguration.getProductName() ) );
+        add( new Label( "productname", Manager.getStorageInstance().getGlobalConfiguration().getProductName() ) );
+        add( new Label( "productname2", Manager.getStorageInstance().getGlobalConfiguration().getProductName() ) );
     }
 }

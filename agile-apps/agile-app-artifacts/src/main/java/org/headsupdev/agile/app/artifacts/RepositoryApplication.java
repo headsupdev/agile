@@ -18,10 +18,7 @@
 
 package org.headsupdev.agile.app.artifacts;
 
-import org.headsupdev.agile.api.HeadsUpConfiguration;
-import org.headsupdev.agile.api.MenuLink;
-import org.headsupdev.agile.api.SimpleMenuLink;
-import org.headsupdev.agile.api.Page;
+import org.headsupdev.agile.api.*;
 import org.headsupdev.agile.web.WebApplication;
 
 import java.util.List;
@@ -66,7 +63,7 @@ public class RepositoryApplication
 
     public String getDescription()
     {
-        return "The " + HeadsUpConfiguration.getProductName() + " repository browser application";
+        return "The " + Manager.getStorageInstance().getGlobalConfiguration().getProductName() + " repository browser application";
     }
 
     public List<MenuLink> getLinks()

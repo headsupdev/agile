@@ -61,7 +61,7 @@ public class HistoryApplication
 
     public String getDescription()
     {
-        return "The " + HeadsUpConfiguration.getProductName() + " activity application";
+        return "The " + Manager.getStorageInstance().getGlobalConfiguration().getProductName() + " activity application";
     }
 
     public List<MenuLink> getLinks()

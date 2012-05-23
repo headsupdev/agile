@@ -56,7 +56,7 @@ public class HistoryFeed
     }
 
     public String getTitle() {
-        String title = HeadsUpConfiguration.getProductName() + " Activity Feed";
+        String title = Manager.getStorageInstance().getGlobalConfiguration().getProductName() + " Activity Feed";
         if ( !getProject().equals( StoredProject.getDefault() ) )
         {
             title += " :: " + getProject().getAlias();
@@ -65,7 +65,7 @@ public class HistoryFeed
     }
 
     public String getDescription() {
-        String description = HeadsUpConfiguration.getProductName() + " Activity feed for ";
+        String description = Manager.getStorageInstance().getGlobalConfiguration().getProductName() + " Activity feed for ";
         if ( getProject().equals( StoredProject.getDefault() ) )
         {
             description += "all projects";

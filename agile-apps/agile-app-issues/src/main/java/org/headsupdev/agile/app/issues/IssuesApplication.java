@@ -101,7 +101,7 @@ public class IssuesApplication
 
     public String getDescription()
     {
-        return "The " + HeadsUpConfiguration.getProductName() + " issues application";
+        return "The " + Manager.getStorageInstance().getGlobalConfiguration().getProductName() + " issues application";
     }
 
     public List<MenuLink> getLinks()

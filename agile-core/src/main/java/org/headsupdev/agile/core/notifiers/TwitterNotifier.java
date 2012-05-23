@@ -60,7 +60,7 @@ public class TwitterNotifier
         {
             project = StoredProject.getDefault();
         }
-        String text = "[" + HeadsUpConfiguration.getProductName() + "] " + event.getTitle() + " (" + project.getAlias() +
+        String text = "[" + Manager.getStorageInstance().getGlobalConfiguration().getProductName() + "] " + event.getTitle() + " (" + project.getAlias() +
             ")";
 
         OutputStreamWriter out = null;

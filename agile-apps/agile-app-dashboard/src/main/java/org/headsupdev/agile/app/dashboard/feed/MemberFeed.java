@@ -51,12 +51,12 @@ public class MemberFeed
 
     public String getTitle()
     {
-        return HeadsUpConfiguration.getProductName() + " Member Feed";
+        return Manager.getStorageInstance().getGlobalConfiguration().getProductName() + " Member Feed";
     }
 
     public String getDescription()
     {
-        return HeadsUpConfiguration.getProductName() + " Member Feed";
+        return Manager.getStorageInstance().getGlobalConfiguration().getProductName() + " Member Feed";
     }
 
     protected void populateFeed( SyndFeed feed )

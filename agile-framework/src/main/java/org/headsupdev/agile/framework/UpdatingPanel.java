@@ -191,9 +191,9 @@ public class UpdatingPanel extends Panel
                             // add a system event before we start the moving
                             String version = new File( update.getFile() ).getName();
                             version = version.substring( 0, version.indexOf( ".tar.gz" ) );
-                            Event event = new SystemEvent( HeadsUpConfiguration.getProductName() + " upgraded to " +
-                                version, HeadsUpConfiguration.getProductName() + " has been upgraded to " + version +
-                                " - congratulations", "<h2>" + HeadsUpConfiguration.getProductName() + " version " +
+                            Event event = new SystemEvent( Manager.getStorageInstance().getGlobalConfiguration().getProductName() + " upgraded to " +
+                                version, Manager.getStorageInstance().getGlobalConfiguration().getProductName() + " has been upgraded to " + version +
+                                " - congratulations", "<h2>" + Manager.getStorageInstance().getGlobalConfiguration().getProductName() + " version " +
                                 version + "</h2>" + update.getDetails() );
                             Manager.getStorageInstance().addEvent( event );
                             Manager.getInstance().fireEventAdded(event);

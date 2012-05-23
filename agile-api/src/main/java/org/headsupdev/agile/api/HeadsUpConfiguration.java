@@ -83,13 +83,13 @@ public class HeadsUpConfiguration
         super( properties );
     }
 
-    public static String getProductName()
+    public String getProductName()
     {
         return "HeadsUp Agile";
     }
 
     // must have a trailing slash...
-    public static String getProductUrl()
+    public String getProductUrl()
     {
         return "http://headsupdev.github.com/agile/";
     }
@@ -300,12 +300,12 @@ public class HeadsUpConfiguration
         return getSubTree(KEY_PROJECTS).getSubTree( pid );
     }
 
-    public static String getBuildVersion()
+    public String getBuildVersion()
     {
         return buildProperties.getProperty(BUILD_KEY_VERSION);
     }
 
-    public static Date getBuildDate()
+    public Date getBuildDate()
     {
         if ( parsedBuildDate == null )
         {
