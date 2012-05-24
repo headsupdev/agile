@@ -113,7 +113,7 @@ public class HibernateUtil {
     {
         private final org.hibernate.classic.Session session;
 
-        public static org.hibernate.classic.Session newInstance( org.hibernate.classic.Session session )
+        public static org.hibernate.classic.Session newInstance( org.hibernate.classic.Session session, boolean trace )
         {
             Class[] ifaces = session.getClass().getInterfaces();
 
@@ -123,6 +123,10 @@ public class HibernateUtil {
             Class[] interfaces = new Class[ifacesSet.size()];
             ifacesSet.toArray( interfaces );
 
+            if ( trace )
+            {
+                sessions.put( session, new Exception() );
+            }
             return (org.hibernate.classic.Session) Proxy.newProxyInstance( session.getClass().getClassLoader(),
                     interfaces, new HibernateUtil.SessionProxyImpl( session ) );
         }
@@ -130,8 +134,6 @@ public class HibernateUtil {
         public SessionProxyImpl( org.hibernate.classic.Session session )
         {
             this.session = session;
-            //noinspection ThrowableInstanceNeverThrown,ThrowableResultOfMethodCallIgnored
-            sessions.put( session, new Exception() );
         }
 
         public Object invoke( Object o, Method method, Object[] args )
@@ -371,11 +373,11 @@ class HibernateThread extends Thread
     }
 
     public org.hibernate.classic.Session getCurrentSession() {
-        return HibernateUtil.SessionProxyImpl.newInstance( sessionFactory.getCurrentSession() );
+        return HibernateUtil.SessionProxyImpl.newInstance( sessionFactory.getCurrentSession(), false );
     }
 
     public org.hibernate.classic.Session openSession() {
-        return HibernateUtil.SessionProxyImpl.newInstance( sessionFactory.openSession() );
+        return HibernateUtil.SessionProxyImpl.newInstance( sessionFactory.openSession(), true );
     }
 
     public void shutdown() {
