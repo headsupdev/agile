@@ -74,10 +74,7 @@ public class DefaultManager
     {
         new DefaultIRCServiceManager().addCommand( new ProjectCommand() );
 
-        availableNotifiers = new HashMap<String,Class<? extends Notifier>>();
-        availableNotifiers.put( "irc", IRCNotifier.class );
-        availableNotifiers.put( "email", EmailNotifier.class );
-        availableNotifiers.put( "twitter", TwitterNotifier.class );
+        availableNotifiers = getNotifierList();
 
         initNotifiers( StoredProject.getDefault() );
         for ( Project project : Manager.getStorageInstance().getProjects() )
@@ -85,8 +82,23 @@ public class DefaultManager
             initNotifiers( project );
         }
 
-        updatesThread = new UpdatesThread();
+        updatesThread = newUpdatesThreadInstance();
         updatesThread.start();
+    }
+
+    protected UpdatesThread newUpdatesThreadInstance()
+    {
+        return new UpdatesThread();
+    }
+
+    protected Map<String, Class<? extends Notifier>> getNotifierList()
+    {
+        Map<String, Class<? extends Notifier>> notifiers = new HashMap<String, Class<? extends Notifier>>();
+        notifiers.put( "irc", IRCNotifier.class );
+        notifiers.put( "email", EmailNotifier.class );
+        notifiers.put( "twitter", TwitterNotifier.class );
+
+        return notifiers;
     }
 
     private Notifier loadNotifier( String id )
@@ -417,7 +429,7 @@ public class DefaultManager
         return availableUpdates.size() > 0;
     }
 
-    void addAvailableUpdate( UpdateDetails update )
+    public void addAvailableUpdate( UpdateDetails update )
     {
         for ( UpdateDetails stored : availableUpdates )
         {

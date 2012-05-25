@@ -60,27 +60,14 @@ public class UpdatesThread
         {
             // TODO should we list only the most recent update?
             // we should only return the first, most recent release - beta releases will need any stable updates first
-            boolean found = false;
             if ( PrivateConfiguration.getUpdatesEnabled() || PrivateConfiguration.getBetaUpdatesEnabled() )
             {
-                Task task = new UpdateCheckTask();
-                Manager.getInstance().addTask( task );
-
-                if ( PrivateConfiguration.getUpdatesEnabled() )
-                {
-                    found = checkForUpdates( PrivateConfiguration.UPDATE_FEED_URL, false );
-                }
-                if ( !found && PrivateConfiguration.getBetaUpdatesEnabled() )
-                {
-                    checkForUpdates( PrivateConfiguration.BETA_UPDATE_FEED_URL, true );
-                }
-
-                Manager.getInstance().removeTask( task );
+                checkForUpdates();
             }
 
             try
             {
-                Thread.sleep( 7 * 24 * 60 * 60 * 1000l );
+                Thread.sleep( getUpdateDelay() );
             }
             catch ( InterruptedException e )
             {
@@ -95,13 +82,50 @@ public class UpdatesThread
         interrupt();
     }
 
-    private static boolean checkForUpdates( String urlStr, boolean beta )
+    protected long getUpdateDelay()
+    {
+        return 7 * 24 * 60 * 60 * 1000l;
+    }
+
+    protected void checkForUpdates()
+    {
+        boolean found = false;
+        Task task = new UpdateCheckTask();
+        Manager.getInstance().addTask( task );
+
+        if ( PrivateConfiguration.getUpdatesEnabled() )
+        {
+            found = checkForUpdates( PrivateConfiguration.UPDATE_FEED_URL, false );
+        }
+        if ( !found && PrivateConfiguration.getBetaUpdatesEnabled() )
+        {
+            checkForUpdates( PrivateConfiguration.BETA_UPDATE_FEED_URL, true );
+        }
+
+        Manager.getInstance().removeTask( task );
+    }
+
+    protected static boolean checkForUpdates( String urlStr, boolean beta )
+    {
+        return checkForUpdates( urlStr, beta, null, null );
+    }
+
+    protected static boolean checkForUpdates( String urlStr, boolean beta, String username, String password )
     {
         try
         {
             URL url = new URL( urlStr );
 
             URLConnection conn = url.openConnection();
+
+            if ( username != null )
+            {
+                // handle authentication
+                String auth = "Basic " + new String( Base64.encodeBase64( ( username + ":" + password ).getBytes() ) );
+                conn.setDoInput( true );
+                conn.setRequestProperty( "Authorization", auth );
+                conn.setAllowUserInteraction( false );
+            }
             conn.connect();
 
             SyndFeedInput parser = new SyndFeedInput();

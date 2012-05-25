@@ -155,7 +155,12 @@ public class EmailNotifier
 
         body.append( "</div></div></body></html>" );
 
-        MailUtil.sendEmail( to, from, title, body.toString(), config.getSmtpHost(),
+        sendNotification( to, from, title, body.toString(), config );
+    }
+
+    private static void sendNotification( String to, String from, String title, String body, HeadsUpConfiguration config )
+    {
+        MailUtil.sendEmail( to, from, title, body, config.getSmtpHost(),
                 config.getSmtpUsername(), config.getSmtpPassword(), false );
     }
 
