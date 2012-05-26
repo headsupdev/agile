@@ -38,7 +38,7 @@ import org.osgi.framework.BundleContext;
 /**
  * Extension of the default OSGi bundle activator
  */
-public final class HeadsUpActivator
+public class HeadsUpActivator
     implements BundleActivator
 {
     private HeadsUpTracker tracker;

@@ -113,7 +113,7 @@ public class ErrorInternalPage
     }
 
     @SuppressWarnings({"ThrowableResultOfMethodCallIgnored"})
-    private String getStack()
+    protected String getStack()
     {
         if ( getError() == null )
         {

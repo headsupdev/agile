@@ -43,13 +43,14 @@ import org.osgi.framework.ServiceReference;
 public class HomeApplication
     extends AbstractApplication
 {
-    private Class[] pages = new Class[10];
+    private static Class<? extends Page>[] pages;
     private List<String> events = new LinkedList<String>();
 
     private static BundleContext context;
 
-    public HomeApplication()
+    static
     {
+        Class<? extends Page>[] pages = (Class<? extends Page>[]) new Class[10];
         pages[0] = LoadingPage.class;
         pages[1] = Login.class;
         pages[2] = Logout.class;
@@ -61,6 +62,16 @@ public class HomeApplication
         pages[8] = ErrorExpiredPage.class;
         pages[9] = ErrorInternalPage.class;
 
+        setPages( pages );
+    }
+
+    public static void setPages( Class<? extends Page>[] pages )
+    {
+        HomeApplication.pages = pages;
+    }
+
+    public HomeApplication()
+    {
         events.add( "system" );
     }
 
