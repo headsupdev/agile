@@ -135,7 +135,7 @@
           <instructions>
             <Export-Package><![CDATA[
             ]]></Export-Package>
-            <Private-Package>org.jdom.*,org.headsupdev.agile,org.apache.commons.lang.*,org.apache.catalina.*,org.apache.tomcat.*,org.apache.naming.*,${bundle.namespace}.*</Private-Package>
+            <Private-Package>org.jdom.*,org.apache.commons.lang.*,org.apache.catalina.*,org.apache.tomcat.*,org.apache.naming.*,${bundle.namespace}.*</Private-Package>
             <Import-Package><![CDATA[
               org.headsupdev.agile.api.*,
               org.headsupdev.agile.security.*,

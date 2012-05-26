@@ -154,6 +154,8 @@ public abstract class HeadsUpPage
         add( CSSPackageResource.getHeaderContribution( HeadsUpPage.class, "agile.css" ) );
         add( CSSPackageResource.getHeaderContribution( HeadsUpPage.class, "mobile.css", "handheld, only screen and (max-width: 767px)" ) );
 
+        add( new WebMarkupContainer( "headerlogo" ).add( new AttributeModifier( "src", true,
+            new PropertyModel<String>( WebManager.getInstance(), "headerLogo" ) ) ) );
         add( new ListView<Application>( "mainmenu", ApplicationPageMapper.get().getApplications( getSession().getUser() ) ) {
             protected void populateItem( ListItem<Application> listItem )
             {

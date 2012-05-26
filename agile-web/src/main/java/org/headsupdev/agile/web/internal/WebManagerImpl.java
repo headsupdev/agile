@@ -25,6 +25,7 @@ import org.headsupdev.agile.web.ErrorPage;
 import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.WebManager;
 
+import java.io.Serializable;
 import java.util.TimeZone;
 
 /**
@@ -37,10 +38,11 @@ import java.util.TimeZone;
  */
 public class WebManagerImpl
     extends WebManager
+    implements Serializable
 {
     @Override
     public String getHeaderLogo() {
-        return "/resources/com.headsupdev.agile.web.HeadsUpPage/images/agile-title.png";
+        return "/resources/org.headsupdev.agile.web.HeadsUpPage/images/agile-title.png";
     }
 
     @Override
