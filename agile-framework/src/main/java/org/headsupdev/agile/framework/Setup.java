@@ -152,11 +152,6 @@ public class Setup
         }
     }
 
-    protected boolean isSetupPage()
-    {
-        return true;
-    }
-
     private String renderAbout()
     {
         return new RenderUtil()

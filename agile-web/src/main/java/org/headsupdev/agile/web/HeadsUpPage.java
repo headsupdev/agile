@@ -115,13 +115,7 @@ public abstract class HeadsUpPage
 
     public void layout()
     {
-        /* install check */
-        if ( ( !PrivateConfiguration.isInstalled() ||
-            PrivateConfiguration.getSetupStep() < PrivateConfiguration.STEP_FINISHED )
-            && !isSetupPage() && !getClass().getName().endsWith( "Updates" ) && !( this instanceof ErrorPage ) )
-        {
-            throw new RestartResponseAtInterceptPageException( getPageClass( "setup" ) );
-        }
+        WebManager.getInstance().checkPermissions( this );
 
         Cookie remember = ( (WebRequest) getRequest() ).getCookie( REMEMBER_COOKIE_NAME );
         if ( remember != null ) {
@@ -490,10 +484,10 @@ public abstract class HeadsUpPage
         add( new Label( "pagetitle", new PropertyModel( this, "pageTitle" ) ) );
         add( new FeedbackPanel( "messages" ) );
 
-        add( new Label( "footer-text1", getFooter1Label( getSession().getTimeZone() ) ).setEscapeModelStrings( false ) );
-        add( new Label( "footer-text2", getFooter2Label() ).setEscapeModelStrings( false ) );
+        add( new Label( "footer-description", WebManager.getInstance().getFooterDescriptionHTML( getSession().getTimeZone() ) ).setEscapeModelStrings( false ) );
+        add( new Label( "footer-copyright", WebManager.getInstance().getFooterCopyrightHTML() ).setEscapeModelStrings( false ) );
 
-        String noteString = getFooterNoteLabel();
+        String noteString = WebManager.getInstance().getFooterNoteHTML();
         add( new Label( "footer-note", noteString ).setVisible( noteString != null ) );
 
         add( new BookmarkablePageLink( "footer-update", getPageClass( "updates" ) )
@@ -504,28 +498,6 @@ public abstract class HeadsUpPage
         dialog.setOutputMarkupId( true );
         dialog.setOutputMarkupPlaceholderTag( true );
         add( dialog );
-    }
-
-    public static String getFooter1Label( TimeZone timeZone )
-    {
-        StringBuilder ret = new StringBuilder( "Time zone: " );
-        ret.append( timeZone.getID() );
-        ret.append( "<br />HeadsUp Agile is an open source project, <a href=\"" );
-        ret.append( Manager.getStorageInstance().getGlobalConfiguration().getProductUrl() );
-        ret.append( "\">download</a> the latest release now!" );
-
-        return ret.toString();
-    }
-
-    public static String getFooter2Label()
-    {
-        return "Copyright &copy; 2009 - 2012 <a href=\"http://headsupdev.com/\" target=\"_blank\">" +
-            "Heads Up Development Ltd</a>.";
-    }
-
-    public static String getFooterNoteLabel()
-    {
-        return null;
     }
 
     public String getTitle()
@@ -765,12 +737,6 @@ public abstract class HeadsUpPage
         checkRemembers();
         rememberMap.remove( username );
         saveRemembers();
-    }
-
-    // TODO perhaps we can make this nicer, and hidden away?
-    protected boolean isSetupPage()
-    {
-        return false;
     }
 
     private void checkRemembers()

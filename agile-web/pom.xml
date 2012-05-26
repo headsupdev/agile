@@ -20,13 +20,20 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
+    <relativePath>../agile-osgi-settings/</relativePath>
     <groupId>org.headsupdev.agile</groupId>
-    <artifactId>agile</artifactId>
+    <artifactId>agile-osgi-settings</artifactId>
     <version>2.0-alpha-3-SNAPSHOT</version>
   </parent>
   <artifactId>agile-web</artifactId>
   <version>2.0-alpha-3-SNAPSHOT</version>
   <name>HeadsUp Agile Web</name>
+  <packaging>bundle</packaging>
+
+  <properties>
+    <bundle.symbolicName>org.headsupdev.agile.web</bundle.symbolicName>
+    <bundle.namespace>org.headsupdev.agile.web</bundle.namespace>
+  </properties>
 
   <dependencies>
     <dependency>
@@ -68,7 +75,10 @@
     <dependency>
       <groupId>org.apache.wicket</groupId>
       <artifactId>wicket-extensions</artifactId>
-      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.wicket</groupId>
+      <artifactId>wicket-datetime</artifactId>
     </dependency>
     <dependency>
       <groupId>org.wicketstuff</groupId>
@@ -102,6 +112,68 @@
 
   <build>
     <plugins>
+      <plugin>
+        <!--
+         | the following instructions build a simple set of public/private classes into an OSGi bundle
+        -->
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <configuration>
+          <instructions>
+            <Export-Package><![CDATA[
+              org.headsupdev.agile.images.*,
+              org.headsupdev.agile.web.*,
+              org.headsupdev.agile,
+              com.sun.syndication.*,
+              org.wicketstuff.*,
+              org.apache.wicket.datetime.*;version="1.4.18",
+              org.apache.wicket.extensions.*;version="1.4.18",
+              org.joda.time.*;version="1.6.0",
+              javax.servlet.*
+            ]]></Export-Package>
+            <Private-Package>org.jdom.*,org.headsupdev.agile,org.apache.commons.lang.*,org.apache.catalina.*,org.apache.tomcat.*,org.apache.naming.*,${bundle.namespace}.*</Private-Package>
+            <Import-Package><![CDATA[
+              org.headsupdev.agile.api.*,
+              org.headsupdev.agile.security.*,
+              org.headsupdev.agile.storage.*,
+              org.headsupdev.agile.web.*,
+              org.headsupdev.agile.core.*,
+              org.headsupdev.agile.runtime,
+              org.headsupdev.support.java,
+              org.headsupdev.support.java.compression,
+              org.headsupdev.irc,
+              com.sun.syndication.*,
+              org.apache.wicket.*,
+              org.ops4j.pax.web.extender.whiteboard,org.ops4j.pax.web.extender.whiteboard.runtime,
+              org.hibernate,org.hibernate.collection,org.hibernate.criterion,org.hibernate.classic,
+              org.hibernate.search.annotations,
+              javax.activation.*,
+              javax.persistence.*,
+              javax.servlet.*,
+              javax.naming.*,
+              javax.imageio,
+              org.xml.sax.*,org.w3c.*,!oracle.xml.*,!org.jaxen.*,!org.apache.xerces.*,!javax.xml.*,
+              !javax.imageio.stream,!javax.swing.tree,
+              org.osgi.framework,
+              org.osgi.util.tracker,
+              org.wicketstuff.*,
+              org.apache.wicket.datetime.*,
+              org.apache.wicket.extensions.*,
+              org.joda.time.*,
+              org.slf4j.*,
+              !junit.*,
+            ]]></Import-Package>
+            <!--
+             | each module can override these defaults in their osgi.bnd file
+            -->
+            <Embed-Transitive>true</Embed-Transitive>
+            <!-- embedding agile-web fixes the rome.properties lookup issue -->
+            <Embed-Dependency>*;artifactId=javautil-compression|tar|agile-web|jhighlight</Embed-Dependency>
+            <Bundle-ClassPath>.,{maven-dependencies}</Bundle-ClassPath>
+          </instructions>
+        </configuration>
+      </plugin>
+
       <plugin>
         <groupId>org.mortbay.jetty</groupId>
         <artifactId>maven-jetty-plugin</artifactId>

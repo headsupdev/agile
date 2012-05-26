@@ -84,7 +84,7 @@ body {min-height: 100%;} /* for proper browsers */
     padding:  20px 30px;
 }
 
-#footer .footer2 {
+#footer .description {
     position: absolute;
     bottom: 37px;
     left: 30px;
@@ -99,9 +99,9 @@ body {min-height: 100%;} /* for proper browsers */
 }
 
 #footer .headsupdev {
-	position: absolute;
-	right: 30px;
-	bottom: 28px;
+    position: absolute;
+    right: 30px;
+    bottom: 28px;
 }
 
 *html #footer {width: 100%}

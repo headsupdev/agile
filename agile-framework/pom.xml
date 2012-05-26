@@ -57,6 +57,7 @@
     <dependency>
       <groupId>org.headsupdev.agile</groupId>
       <artifactId>agile-web</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.headsupdev.agile</groupId>
@@ -91,19 +92,6 @@
       <groupId>org.ops4j.pax.web</groupId>
       <artifactId>pax-web-extender-whiteboard</artifactId>
       <version>0.7.0</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.wicket</groupId>
-      <artifactId>wicket</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.wicket</groupId>
-      <artifactId>wicket-extensions</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.wicket</groupId>
-      <artifactId>wicket-datetime</artifactId>
     </dependency>
     <dependency>
       <groupId>joda-time</groupId>
@@ -146,15 +134,6 @@
         <configuration>
           <instructions>
             <Export-Package><![CDATA[
-              org.headsupdev.agile.images.*,
-              org.headsupdev.agile.web.*,
-              org.headsupdev.agile,
-              com.sun.syndication.*,
-              org.wicketstuff.*,
-              org.apache.wicket.datetime.*;version="1.4.18",
-              org.apache.wicket.extensions.*;version="1.4.18",
-              org.joda.time.*;version="1.6.0",
-              javax.servlet.*
             ]]></Export-Package>
             <Private-Package>org.jdom.*,org.headsupdev.agile,org.apache.commons.lang.*,org.apache.catalina.*,org.apache.tomcat.*,org.apache.naming.*,${bundle.namespace}.*</Private-Package>
             <Import-Package><![CDATA[
@@ -186,15 +165,7 @@
               org.apache.wicket.extensions.*,
               org.joda.time.*,
               org.slf4j.*,
-              !junit.*,
             ]]></Import-Package>
-            <!--
-             | each module can override these defaults in their osgi.bnd file
-            -->
-            <Embed-Transitive>true</Embed-Transitive>
-            <!-- embedding agile-web fixes the rome.properties lookup issue -->
-            <Embed-Dependency>*;artifactId=javautil-compression|tar|agile-web|jhighlight</Embed-Dependency>
-            <Bundle-ClassPath>.,{maven-dependencies}</Bundle-ClassPath>
           </instructions>
         </configuration>
       </plugin>

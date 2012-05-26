@@ -44,6 +44,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.headsupdev.agile.web.WebManager;
 import org.headsupdev.support.java.StringUtil;
 import org.headsupdev.agile.api.HeadsUpConfiguration;
 import org.headsupdev.agile.api.Manager;
@@ -1401,28 +1402,31 @@ public class DefaultServlet
 
         sb.append("          </div>\r\n");
         sb.append("        </div>\r\n");
-        sb.append("        <div id=\"footer\">\r\n");
-        sb.append("          <div class=\"content\">\r\n");
-        sb.append("            <span class=\"copyright\">");
-        sb.append(HeadsUpPage.getFooter2Label());
-        sb.append("            </span>");
-        sb.append("            <span class=\"license\">");
 
         TimeZone timezone = Manager.getStorageInstance().getGlobalConfiguration().getDefaultTimeZone();
         if (user != null) {
             timezone = user.getTimeZone();
         }
-        sb.append(HeadsUpPage.getFooter1Label(timezone));
+
+        sb.append("        <div id=\"footer\">\r\n");
+        sb.append("          <div class=\"content\">\r\n");
+        sb.append("            <span class=\"description\">");
+        sb.append(WebManager.getInstance().getFooterDescriptionHTML(timezone));
+        sb.append("            </span>");
+        sb.append("            <span class=\"copyright\"><span>");
+        sb.append(WebManager.getInstance().getFooterCopyrightHTML());
         sb.append("</span>\r\n");
 
-        String expire = HeadsUpPage.getFooterNoteLabel();
-        if (expire != null) {
-            sb.append("              <span class=\"expire\">");
-            sb.append(expire);
+        String note = WebManager.getInstance().getFooterNoteHTML();
+        if (note != null) {
+            sb.append("              <span class=\"note\">");
+            sb.append(note);
             sb.append("</span>\n");
         }
 
-        sb.append("            <span class=\"expire\"></span>\r\n");
+        sb.append("            <span class=\"update\">");
+        // TODO we could link updates to here
+        sb.append("</span></span>\r\n");
         sb.append("          </div>\r\n");
         sb.append("        </div>\r\n");
         sb.append("      </div>\r\n");

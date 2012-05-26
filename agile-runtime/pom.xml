@@ -67,6 +67,10 @@
     </dependency>
     <dependency>
       <groupId>org.headsupdev.agile</groupId>
+      <artifactId>agile-web</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.headsupdev.agile</groupId>
       <artifactId>agile-framework</artifactId>
     </dependency>
 
@@ -254,7 +258,7 @@
               <excludeTransitive>true</excludeTransitive>
 
               <includeArtifactIds>
-                pax-web-extender-whiteboard,pax-web-jetty-bundle,agile-api,agile-storage,agile-security,agile-scm,agile-core,agile-framework,commons-logging,commons-collections,log4j,slf4j-api,slf4j-log4j12,org.opensymphony.quartz,org.apache.felix.scr,wicket
+                pax-web-extender-whiteboard,pax-web-jetty-bundle,agile-api,agile-storage,agile-security,agile-scm,agile-core,agile-web,agile-framework,commons-logging,commons-collections,log4j,slf4j-api,slf4j-log4j12,org.opensymphony.quartz,org.apache.felix.scr,wicket
               </includeArtifactIds>
             </configuration>
           </execution>
@@ -292,7 +296,7 @@
               <excludeTransitive>true</excludeTransitive>
 
               <excludeArtifactIds>
-                org.apache.felix.main,org.apache.felix.shell,org.apache.felix.shell.tui,junit,pax-web-extender-whiteboard,pax-web-jetty-bundle,org.apache.felix.main,agile-runtime-controller,junit,agile-api,agile-storage,agile-security,agile-scm,agile-core,agile-framework,java-support,commons-logging,commons-collections,log4j,slf4j-api,slf4j-log4j12,org.opensymphony.quartz,org.apache.felix.scr,wicket,wicket-extensions,wicket-datetime
+                org.apache.felix.main,org.apache.felix.shell,org.apache.felix.shell.tui,junit,pax-web-extender-whiteboard,pax-web-jetty-bundle,org.apache.felix.main,agile-runtime-controller,junit,agile-api,agile-storage,agile-security,agile-scm,agile-core,agile-web,agile-framework,java-support,commons-logging,commons-collections,log4j,slf4j-api,slf4j-log4j12,org.opensymphony.quartz,org.apache.felix.scr,wicket,wicket-extensions,wicket-datetime
               </excludeArtifactIds>
             </configuration>
           </execution>
