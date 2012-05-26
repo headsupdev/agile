@@ -131,18 +131,12 @@ public class Main
         String product4 = gray + " |___._|___  |__|__|_____|";
         String product5 = gray + "       |_____|            ";
 
-        String pro1 = "";
-        String pro2 = "";
-        String pro3 = "";
-        String pro4 = "";
-        String pro5 = "";
-
         // Print welcome banner.
-        System.out.println( yellow +        " /\\                   __                   " + product1 + pro1 );
-        System.out.println( yellow +         "|  |--.-----.---.-.--|  |-----.--.--.-----." + product2 + pro2 );
-        System.out.println( yellow +         "|     |  -__|  _  |  _  |__ --|  |  |  _  |" + product3 + pro3 );
-        System.out.println( yellow +         "|__|__|_____|___._|_____|_____|_____|   __|" + product4 + pro4 );
-        System.out.println( gray + "              "+mesg+ "       "+yellow+"      |__|   " + product5 + pro5 );
+        System.out.println( yellow +        " /\\                   __                   " + product1 );
+        System.out.println( yellow +         "|  |--.-----.---.-.--|  |-----.--.--.-----." + product2 );
+        System.out.println( yellow +         "|     |  -__|  _  |  _  |__ --|  |  |  _  |" + product3 );
+        System.out.println( yellow +         "|__|__|_____|___._|_____|_____|_____|   __|" + product4 );
+        System.out.println( gray + "              "+mesg+ "       "+yellow+"      |__|   " + product5 );
         System.out.println( blank );
 
         if ( help )
