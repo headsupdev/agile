@@ -168,7 +168,7 @@
             -->
             <Embed-Transitive>true</Embed-Transitive>
             <!-- embedding agile-web fixes the rome.properties lookup issue -->
-            <Embed-Dependency>*;artifactId=javautil-compression|tar|agile-web|jhighlight</Embed-Dependency>
+            <Embed-Dependency>*;artifactId=javautil-compression|tar|jhighlight</Embed-Dependency>
             <Bundle-ClassPath>.,{maven-dependencies}</Bundle-ClassPath>
           </instructions>
         </configuration>
