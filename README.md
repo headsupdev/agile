@@ -3,10 +3,15 @@
 HeadsUp Agile
 =============
 
-Thank you for downloading the HeadsUp Agile project source.
+HeadsUp Agile is everything you ever wanted in a software project management system.
+It is the member of the development team you will wonder how you ever lived without.
+HeadsUp Agile takes care of the monotony of monitoring software health and managing teams
+of developers and gives your team back the time they need to do their job.
 
-This file contains a quick start guide to building and running HeadsUp,
-more detailed information can be found at:
+![](http://headsupdev.com/agile/_images/dashboard.png)
+![](http://headsupdev.com/agile/_images/activity.png)
+
+More detailed information can be found at:
   http://headsupdev.github.com/agile/
 
 
