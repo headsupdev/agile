@@ -64,7 +64,7 @@ public class HistoryApplication
         return "The " + Manager.getStorageInstance().getGlobalConfiguration().getProductName() + " activity application";
     }
 
-    public List<MenuLink> getLinks()
+    public List<MenuLink> getLinks( Project project )
     {
         return links;
     }

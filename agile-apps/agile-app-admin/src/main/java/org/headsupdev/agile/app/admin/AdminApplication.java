@@ -104,7 +104,7 @@ public class AdminApplication
         return "The " + Manager.getStorageInstance().getGlobalConfiguration().getProductName() + " admin application";
     }
 
-    public List<MenuLink> getLinks()
+    public List<MenuLink> getLinks( Project project )
     {
         if ( Manager.getStorageInstance().getGlobalConfiguration().getLogErrors() )
         {

@@ -18,7 +18,6 @@
 
 package org.headsupdev.agile.app.issues;
 
-import org.headsupdev.agile.api.HeadsUpConfiguration;
 import org.headsupdev.agile.api.LinkProvider;
 import org.headsupdev.agile.api.Manager;
 import org.headsupdev.agile.api.MenuLink;
@@ -104,7 +103,7 @@ public class IssuesApplication
         return "The " + Manager.getStorageInstance().getGlobalConfiguration().getProductName() + " issues application";
     }
 
-    public List<MenuLink> getLinks()
+    public List<MenuLink> getLinks( Project project )
     {
         return links;
     }

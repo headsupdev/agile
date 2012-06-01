@@ -46,7 +46,7 @@ public interface Application
 
     String getDescription();
 
-    List<MenuLink> getLinks();
+    List<MenuLink> getLinks( Project project );
 
     List<String> getEventTypes();
 

@@ -89,7 +89,7 @@ public class BrowseApplication
         return "The " + Manager.getStorageInstance().getGlobalConfiguration().getProductName() + " scm browse application";
     }
 
-    public List<MenuLink> getLinks()
+    public List<MenuLink> getLinks( Project project )
     {
         return links;
     }

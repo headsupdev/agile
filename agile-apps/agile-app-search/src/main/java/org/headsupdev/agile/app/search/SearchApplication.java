@@ -58,7 +58,7 @@ public class SearchApplication
         return "The " + Manager.getStorageInstance().getGlobalConfiguration().getProductName() + " search application";
     }
 
-    public List<MenuLink> getLinks()
+    public List<MenuLink> getLinks( Project project )
     {
         return links;
     }

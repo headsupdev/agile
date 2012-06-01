@@ -66,7 +66,7 @@ public class RepositoryApplication
         return "The " + Manager.getStorageInstance().getGlobalConfiguration().getProductName() + " repository browser application";
     }
 
-    public List<MenuLink> getLinks()
+    public List<MenuLink> getLinks( Project project )
     {
         return links;
     }

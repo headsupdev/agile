@@ -141,7 +141,7 @@ public abstract class HeadsUpPage
             requirePermission( getRequiredPermission() );
         }
 
-        for ( MenuLink link : application.getLinks() )
+        for ( MenuLink link : application.getLinks( project ) )
         {
             addLink( link );
         }

@@ -70,7 +70,7 @@ public class DashboardApplication
         return "The " + Manager.getStorageInstance().getGlobalConfiguration().getProductName() + " dashboard application";
     }
 
-    public List<MenuLink> getLinks()
+    public List<MenuLink> getLinks( Project project )
     {
         return links;
     }

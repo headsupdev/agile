@@ -79,7 +79,7 @@ public class ShowEvent
         }
         add( new Label( "body", body ).setEscapeModelStrings( false ) );
 
-        addLinks( application.getLinks() );
+        addLinks( application.getLinks( project ) );
         for ( MenuLink link : event.getLinks() )
         {
             addLink( link );

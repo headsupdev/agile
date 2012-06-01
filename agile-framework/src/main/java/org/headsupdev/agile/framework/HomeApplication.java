@@ -118,7 +118,7 @@ public class HomeApplication
         return events;
     }
 
-    public List<MenuLink> getLinks()
+    public List<MenuLink> getLinks( Project project )
     {
         return new LinkedList<MenuLink>();
     }

@@ -296,7 +296,7 @@ public class CIApplication
         return "The " + Manager.getStorageInstance().getGlobalConfiguration().getProductName() + " continuous integration application";
     }
 
-    public List<MenuLink> getLinks()
+    public List<MenuLink> getLinks( Project project )
     {
         return links;
     }
