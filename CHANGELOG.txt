@@ -1,6 +1,7 @@
 2.0-alpha3
 
 * Made availabile under the AGPL v3 License
+* Better handling of 404 pages and typos in URLs
 * Add API documentation generation with doxygen
 
 
