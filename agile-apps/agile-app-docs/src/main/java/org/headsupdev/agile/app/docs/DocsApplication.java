@@ -25,6 +25,7 @@ import org.headsupdev.agile.app.docs.permission.DocViewPermission;
 import org.headsupdev.agile.app.docs.permission.DocListPermission;
 import org.headsupdev.agile.app.docs.permission.DocEditPermission;
 import org.headsupdev.agile.storage.Comment;
+import org.headsupdev.agile.storage.StoredProject;
 import org.headsupdev.agile.web.WebApplication;
 import org.headsupdev.agile.storage.HibernateStorage;
 import org.headsupdev.agile.storage.docs.Document;
@@ -33,6 +34,7 @@ import org.hibernate.Transaction;
 import org.hibernate.Query;
 import org.osgi.framework.BundleContext;
 
+import java.io.File;
 import java.util.List;
 import java.util.LinkedList;
 
@@ -50,15 +52,25 @@ public class DocsApplication
 
     List<MenuLink> links;
     List<String> eventTypes;
+    APIDocsBuilder builder;
 
     public DocsApplication()
     {
         links = new LinkedList<MenuLink>();
         links.add( new SimpleMenuLink( "contents" ) );
+        links.add( new SimpleMenuLink( "api" ) );
 
         eventTypes = new LinkedList<String>();
         eventTypes.add( "createdocument" );
         eventTypes.add( "updatedocument" );
+
+        builder = new APIDocsBuilder();
+        Manager.getInstance().addProjectListener( builder );
+    }
+
+    public APIDocsBuilder getBuilder()
+    {
+        return builder;
     }
 
     public String getName()
@@ -76,8 +88,15 @@ public class DocsApplication
         return "The " + Manager.getStorageInstance().getGlobalConfiguration().getProductName() + " documents application";
     }
 
-    public List<MenuLink> getLinks()
+    public List<MenuLink> getLinks( Project project )
     {
+        if ( project.equals( StoredProject.getDefault() ) )
+        {
+            List<MenuLink> allLinks = new LinkedList<MenuLink>( links );
+            allLinks.remove( allLinks.size() - 1 );
+            return allLinks;
+        }
+
         return links;
     }
 
@@ -100,7 +119,7 @@ public class DocsApplication
     public Class<? extends Page>[] getPages()
     {
         return new Class[]{ CreateAttachment.class, CreateComment.class, Edit.class, Index.class, MavenSite.class,
-            View.class };
+            View.class, APIDocs.class };
     }
 
     @Override
@@ -172,8 +191,15 @@ public class DocsApplication
         return (Comment) q.uniqueResult();
     }
 
-    public Class[] getPersistantClasses() {
+    public Class[] getPersistantClasses()
+    {
         return new Class[] { CreateDocumentEvent.class, UpdateDocumentEvent.class };
+    }
+
+    public static File getApiDir( Project project )
+    {
+        File siteRepository = new File( new File( Manager.getStorageInstance().getDataDirectory(), "repository" ), "site" );
+        return new File( new File( siteRepository, project.getId() ), "api" );
     }
 
     @Override

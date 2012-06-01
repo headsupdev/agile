@@ -86,6 +86,7 @@
                 org.headsupdev.agile.api.*,
                 org.headsupdev.agile.web.*,
                 org.headsupdev.agile.storage.*,
+                org.headsupdev.support.java.*,
                 org.apache.wicket.*,
                 org.apache.commons.collections.*,
                 org.hibernate,

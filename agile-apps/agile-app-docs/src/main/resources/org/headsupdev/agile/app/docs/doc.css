@@ -55,6 +55,11 @@ pre {
     width: 100%;
 }
 
+.siteembed apiframe {
+    height: 100%;
+    position: relative;
+}
+
 .comment-icon {
     width: 16px;
 }
