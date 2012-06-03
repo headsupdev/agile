@@ -36,7 +36,10 @@ if [ -x /etc/timezone ]; then
 
 #then try Mac OSX
 elif [ `which systemsetup` ]; then
-    TIMEZONE='-Dagile.runtime.timezone='`systemsetup -gettimezone | sed 's/^.*: //g'`
+    SYSTEMZONE=`systemsetup -gettimezone | sed 's/^.*: //g'`
+    if [[ "$SYSTEMZONE" !\= *"..."* ]]; then
+        TIMEZONE='-Dagile.runtime.timezone='$SYSTEMZONE
+    fi
 fi
 
 $JAVA_EXEC $JAVA_OPTS $COLORS $TIMEZONE \
