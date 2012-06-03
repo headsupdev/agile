@@ -82,7 +82,7 @@
     </dependency>
     <dependency>
       <groupId>org.wicketstuff</groupId>
-      <artifactId>wicketstuff-animator</artifactId>
+      <artifactId>animator</artifactId>
     </dependency>
     <dependency>
       <groupId>org.wicketstuff</groupId>

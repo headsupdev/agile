@@ -194,8 +194,8 @@
       </dependency>
       <dependency>
         <groupId>org.wicketstuff</groupId>
-        <artifactId>wicketstuff-animator</artifactId>
-        <version>1.4.18</version>
+        <artifactId>animator</artifactId>
+        <version>1.4.18-jquery</version>
       </dependency>
       <dependency>
         <groupId>org.wicketstuff</groupId>

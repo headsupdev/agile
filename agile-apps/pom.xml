@@ -74,7 +74,7 @@
     </dependency>
     <dependency>
       <groupId>org.wicketstuff</groupId>
-      <artifactId>wicketstuff-animator</artifactId>
+      <artifactId>animator</artifactId>
       <scope>provided</scope>
     </dependency>
     <dependency>
