@@ -124,9 +124,9 @@ public class ViewMilestone
 
         add( new IssueListPanel( "issuelist", getIssuesProvider(), this, true, true ) );
 
-        add( new Image( "graph", new ResourceReference( "burndown.png" ), getPageParameters() ) );
         boolean timeEnabled = Boolean.parseBoolean( milestone.getProject().getConfigurationValue(
                 StoredProject.CONFIGURATION_TIMETRACKING_ENABLED ) );
+        add( new Image( "graph", new ResourceReference( "burndown.png" ), getPageParameters() ).setVisible( timeEnabled ) );
         add( new WorkRemainingTable( "table", milestone ).setVisible( timeEnabled ) );
 
         ValueMap params = new ValueMap();

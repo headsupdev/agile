@@ -306,6 +306,7 @@ public class IssuePanel
         add( new Label( "updated", new FormattedDateModel( issue.getUpdated(),
                 ( (HeadsUpSession) getSession() ).getTimeZone() ) ) );
 
+        boolean useTime = Boolean.parseBoolean( issue.getProject().getConfigurationValue( StoredProject.CONFIGURATION_TIMETRACKING_ENABLED ) );
         add( new Label( "estimate", new IssueHoursEstimateModel( issue )
         {
             @Override
@@ -318,8 +319,8 @@ public class IssuePanel
                 }
                 return time;
             }
-        } ) );
-        add( new Label( "required", new IssueHoursRequiredModel( issue ) ) );
+        } ).setVisible( useTime ) );
+        add( new Label( "required", new IssueHoursRequiredModel( issue ) ).setVisible( useTime ) );
         if ( Boolean.parseBoolean( issue.getProject().getConfigurationValue(
                 StoredProject.CONFIGURATION_TIMETRACKING_BURNDOWN ) ) )
         {

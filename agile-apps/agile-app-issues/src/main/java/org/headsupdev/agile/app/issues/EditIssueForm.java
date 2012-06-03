@@ -205,20 +205,18 @@ class IssueForm
             }
         } ) );
 
-        add( new CheckBox( "includeInInitialEstimates" ) );
-
         add( new TextField( "summary" ).setRequired( true ) );
         add( new TextField( "environment" ) );
 
-        boolean required = Boolean.parseBoolean( issue.getProject().getConfigurationValue( StoredProject.CONFIGURATION_TIMETRACKING_REQUIRED ) );
-
+        boolean useTime = Boolean.parseBoolean( issue.getProject().getConfigurationValue( StoredProject.CONFIGURATION_TIMETRACKING_ENABLED ) );
+        boolean required = useTime && Boolean.parseBoolean( issue.getProject().getConfigurationValue( StoredProject.CONFIGURATION_TIMETRACKING_REQUIRED ) );
         Duration timeEstimated = issue.getTimeEstimate();
         if ( timeEstimated == null )
         {
             timeEstimated = new Duration( 0, Duration.UNIT_HOURS );
             issue.setTimeEstimate( timeEstimated );
         }
-        add( new DurationEditPanel( "timeEstimated", new Model<Duration>( issue.getTimeEstimate() ) ).setRequired( required ) );
+        add( new DurationEditPanel( "timeEstimated", new Model<Duration>( issue.getTimeEstimate() ) ).setRequired( required ).setVisible( useTime ) );
 
         boolean showRemain = !creating &&
                 Boolean.parseBoolean( issue.getProject().getConfigurationValue( StoredProject.CONFIGURATION_TIMETRACKING_BURNDOWN ) );
@@ -232,7 +230,9 @@ class IssueForm
         }
         add( new DurationEditPanel( "timeRequired", new Model<Duration>( timeRequired ) )
                 .setRequired( required )
-                .setVisible( resolved || showRemain ) );
+                .setVisible( useTime && ( resolved || showRemain ) ) );
+        add( new CheckBox( "includeInInitialEstimates" ).setVisible( useTime ) );
+
         add( new TextArea( "body" ) );
 
         // if we're creating allow adding of new attachments
