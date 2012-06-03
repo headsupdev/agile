@@ -50,7 +50,7 @@ public class HeadsUpClassResolver
         }
         catch ( ClassNotFoundException e )
         {
-            for ( Bundle bundle : HeadsUpTracker.getBundles() )
+            for ( Bundle bundle : AppTracker.getBundles() )
             {
                 try {
                     return bundle.loadClass( s );

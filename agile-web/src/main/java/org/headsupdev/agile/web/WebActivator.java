@@ -22,6 +22,9 @@ import org.headsupdev.agile.web.internal.WebManagerImpl;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
+import java.util.Dictionary;
+import java.util.Properties;
+
 /**
  * Extension of the default OSGi bundle activator
  */
@@ -34,7 +37,11 @@ public final class WebActivator
     public void start( BundleContext bc )
         throws Exception
     {
-        WebManager.setInstance( new WebManagerImpl() );
+        WebManager impl = new WebManagerImpl();
+        WebManager.setInstance( impl );
+
+        Dictionary props = new Properties();
+        bc.registerService( WebManager.class.getName(), impl, props );
     }
 
     /**

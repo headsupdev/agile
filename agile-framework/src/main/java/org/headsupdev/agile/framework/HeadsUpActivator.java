@@ -19,7 +19,6 @@
 package org.headsupdev.agile.framework;
 
 import org.headsupdev.agile.api.Application;
-import org.headsupdev.agile.api.HeadsUpConfiguration;
 import org.headsupdev.agile.api.Manager;
 import org.headsupdev.agile.framework.webdav.RepositoryServlet;
 
@@ -41,7 +40,8 @@ import org.osgi.framework.BundleContext;
 public class HeadsUpActivator
     implements BundleActivator
 {
-    private HeadsUpTracker tracker;
+    private WebTracker webTracker;
+    private AppTracker appTracker;
 
     /**
      * Called whenever the OSGi framework starts our bundle
@@ -87,8 +87,10 @@ public class HeadsUpActivator
 
         System.out.println( "Started version " + Manager.getStorageInstance().getGlobalConfiguration().getBuildVersion() + " at " +
                 Manager.getStorageInstance().getGlobalConfiguration().getBaseUrl() );
-        tracker = new HeadsUpTracker( bc );
-        tracker.open();
+        webTracker = new WebTracker( bc );
+        webTracker.open();
+        appTracker = new AppTracker( bc );
+        appTracker.open();
     }
 
     /**
@@ -97,7 +99,8 @@ public class HeadsUpActivator
     public void stop( BundleContext bc )
         throws Exception
     {
-        tracker.close();
+        appTracker.close();
+        webTracker.close();
         System.out.println( "Shutting down" );
     }
 }

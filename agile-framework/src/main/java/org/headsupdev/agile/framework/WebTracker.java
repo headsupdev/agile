@@ -18,38 +18,26 @@
 
 package org.headsupdev.agile.framework;
 
-import org.osgi.util.tracker.ServiceTracker;
 import org.osgi.framework.*;
-
-import java.util.Set;
-import java.util.HashSet;
-
-import org.headsupdev.agile.api.Application;
-import org.headsupdev.agile.api.Manager;
+import org.osgi.util.tracker.ServiceTracker;
 
 /**
- * A tracker to keep track of application services
+ * A tracker to keep track of providers of the web service
  *
  * @author Andrew Williams
- * @since 1.0
+ * @since 2.0
  */
-public class HeadsUpTracker
+public class WebTracker
     extends ServiceTracker
 {
-    private static Set<Bundle> bundles = new HashSet<Bundle>();
-    private BundleContext bc;
-
-    public HeadsUpTracker( BundleContext bundleContext )
+    public WebTracker(BundleContext bundleContext)
     {
         super( bundleContext, createFilter( bundleContext ), null );
-        this.bc = bundleContext;
-
-        bundles.add( bc.getBundle() );
     }
 
     private static Filter createFilter( final BundleContext bundleContext )
     {
-        final String filter = "(objectClass=org.headsupdev.agile.api.Application)";
+        final String filter = "(objectClass=org.headsupdev.agile.web.WebManager)";
         try
         {
             return bundleContext.createFilter( filter );
@@ -63,35 +51,25 @@ public class HeadsUpTracker
     @Override
     public Object addingService( ServiceReference serviceReference )
     {
-        Application app = (Application) bc.getService( serviceReference );
-        Manager.getLogger( getClass().getName() ).info( "Loading " + app.getApplicationId() );
-        bundles.add( serviceReference.getBundle() );
+        AppTracker.getBundles().add( serviceReference.getBundle() );
 
-        HeadsUpWebApplication.addApplication( app );
         return super.addingService( serviceReference );
     }
 
     @Override
     public void modifiedService( ServiceReference serviceReference, Object o )
     {
-        Manager.getLogger( getClass().getName() ).info( "Reloading " + ( (Application) o ).getApplicationId() );
-        HeadsUpWebApplication.removeApplication( (Application) o );
-        HeadsUpWebApplication.addApplication( (Application) o );
+        AppTracker.getBundles().remove( serviceReference.getBundle() );
+        AppTracker.getBundles().add( serviceReference.getBundle() );
+
         super.modifiedService( serviceReference, o );
     }
 
     @Override
     public void removedService( ServiceReference serviceReference, Object o )
     {
-        Manager.getLogger( getClass().getName() ).info( "Unloading " + ( (Application) o ).getApplicationId() );
-        bundles.remove( serviceReference.getBundle() );
+        AppTracker.getBundles().remove( serviceReference.getBundle() );
 
-        HeadsUpWebApplication.removeApplication( (Application) o );
         super.removedService( serviceReference, o );
-    }
-
-    public static Set<Bundle> getBundles()
-    {
-        return bundles;
     }
 }
