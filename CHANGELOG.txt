@@ -4,4 +4,5 @@
 * Better handling of 404 pages and typos in URLs
 * Add API documentation generation with doxygen
 
+* Fix issues with timezone in date/time pickers
 

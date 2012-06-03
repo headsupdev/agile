@@ -21,7 +21,7 @@ if [ !  -x $JAVA_EXEC ]; then
 
 fi
 
-JAVA_OPTS="-Xmx512m -Djava.awt.headless=true"
+JAVA_OPTS="-Xmx512m -Djava.awt.headless=true -Duser.timezone=UTC"
 
 COLORS=''
 COLOURCOUNT=$(tput colors 2> /dev/null)
@@ -29,6 +29,16 @@ if [ $? = 0 ] && [ $COLOURCOUNT -gt 2 ]; then
     COLORS='-Dagile.runtime.color=true'
 fi
 
-$JAVA_EXEC $JAVA_OPTS $COLORS \
+TIMEZONE=''
+# Detect timezone for various unix flavours
+if [ -x /etc/timezone ]; then
+    TIMEZONE='-Dagile.runtime.timezone='`cat /etc/timezone`
+
+#then try Mac OSX
+elif [ `which systemsetup` ]; then
+    TIMEZONE='-Dagile.runtime.timezone='`systemsetup -gettimezone | sed 's/^.*: //g'`
+fi
+
+$JAVA_EXEC $JAVA_OPTS $COLORS $TIMEZONE \
  -cp conf:bin/${project.artifactId}-${project.version}.jar \
  org.headsupdev.agile.runtime.Main $@ 2>&1 | tee -i logs/agile.log

@@ -49,11 +49,16 @@ public class HeadsUpActivator
     public void start( BundleContext bc )
         throws Exception
     {
-        Manager.getStorageInstance().getGlobalConfiguration().setDefaultTimeZone( TimeZone.getDefault() );
+        // UTC has been set by our boot script as the system timezone, set up a sensible user default
+        String defaultTimeZoneId = System.getProperty( "agile.runtime.timezone" );
+        if ( defaultTimeZoneId != null )
+        {
+            Manager.getLogger( getClass().getName() ).info( "Detected system timezone " + defaultTimeZoneId );
+            TimeZone defaultTimeZone = TimeZone.getTimeZone( defaultTimeZoneId );
+            Manager.getStorageInstance().getGlobalConfiguration().setDefaultTimeZone( defaultTimeZone );
+        }
         Manager.getLogger( getClass().getName() ).info( "Default timezone set to " +
-                TimeZone.getDefault().getID() );
-        // use UTC for all dates on the system - we will present to the user in their timezone
-        TimeZone.setDefault( TimeZone.getTimeZone( "UTC" ) );
+                Manager.getStorageInstance().getGlobalConfiguration().getDefaultTimeZone().getID() );
 
         // Register our webapp service implementation in the OSGi service registry
         Dictionary props = new Hashtable();
