@@ -25,6 +25,7 @@ import org.hibernate.search.annotations.*;
 import org.hibernate.annotations.Proxy;
 
 import javax.persistence.*;
+import java.io.PrintWriter;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.HashSet;
@@ -385,6 +386,14 @@ public class StoredProject
         String ret = getConfiguration().getProperty( item.getKey() );
         if ( ret == null )
         {
+            if ( getParent() != null )
+            {
+                return parent.getConfigurationValue( item );
+            }
+            else if ( !equals( StoredProject.getDefault() ) )
+            {
+                return StoredProject.getDefault().getConfigurationValue( item );
+            }
             return String.valueOf( item.getDefault() );
         }
 
