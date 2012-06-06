@@ -130,12 +130,16 @@ public class APIDocsBuilder
         Task apiTask = new APIDocBuildTask( project );
         Manager.getInstance().addTask( apiTask );
 
+        // TODO move to helper
+        File tmpDir = new File( Manager.getStorageInstance().getDataDirectory(), "temp" );
+        tmpDir.mkdirs();
+
         Writer out = null;
         File doxyFile = null, header = null, footer = null;
         File output = null;
         try
         {
-            doxyFile = File.createTempFile( "doxyFile", "" );
+            doxyFile = File.createTempFile( "doxyFile", "", tmpDir );
             out = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( doxyFile ) ) );
 
             Map<String, Object> params = new HashMap<String, Object>();
@@ -156,7 +160,7 @@ public class APIDocsBuilder
             params.put( "inputDir", Manager.getStorageInstance().getWorkingDirectory( project ).getAbsolutePath() );
             params.put( "date", new Date().toString() );
 
-            output = FileUtil.createTempDir( "html", "" );
+            output = FileUtil.createTempDir( "docs", "", tmpDir );
             params.put( "outputDir", output.getAbsolutePath() );
             params.put( "currentDir", doxyFile.getParentFile().getAbsolutePath() );
 
@@ -199,7 +203,8 @@ public class APIDocsBuilder
         Process p = null;
          try {
              log.debug( "Running doxygen with file: " + doxyFile.getAbsolutePath() );
-             p = Runtime.getRuntime().exec( "doxygen " + doxyFile.getAbsolutePath() );
+             String[] args = { "doxygen", doxyFile.getAbsolutePath() };
+             p = Runtime.getRuntime().exec( args );
 
              int ret = p.waitFor();
              if ( ret != 0 )
@@ -242,8 +247,18 @@ public class APIDocsBuilder
          }
          else
          {
-             apiDocs.mkdirs();
+             apiDocs.getParentFile().mkdirs();
+             log.debug( "installed to " + apiDocs.getAbsolutePath() );
              new File( outDir, "html" ).renameTo( apiDocs );
+         }
+             
+         try
+         {
+             FileUtil.delete( outDir, true );
+         }
+         catch ( IOException e )
+         {
+             log.error( "Error moving generated docs", e );
          }
     }
 
