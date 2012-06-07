@@ -231,25 +231,27 @@ public class Errors
 
         return errors;
     }
-}
 
-class HistoryTimeModel extends Model<String>
-{
     private static DateFormat format = new SimpleDateFormat( "hh:mm aa" );
-    private Date date;
 
-    public HistoryTimeModel( Date date )
+    class HistoryTimeModel extends Model<String>
     {
-        this.date = date;
-    }
+        private Date date;
 
-    public String getObject()
-    {
-        return formatDate( date );
-    }
+        public HistoryTimeModel( Date date )
+        {
+            this.date = date;
+        }
 
-    public static synchronized String formatDate( Date date )
-    {
-        return format.format( date );
+        public String getObject()
+        {
+            return formatDate( date );
+        }
+
+        public synchronized String formatDate( Date date )
+        {
+            format.setTimeZone( getSession().getTimeZone() );
+            return format.format( date );
+        }
     }
 }
