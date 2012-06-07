@@ -163,7 +163,7 @@ public class PrivateConfiguration {
 
     public static boolean getBetaUpdatesEnabled()
     {
-        return Boolean.parseBoolean( getProperty( KEY_UPDATES_BETA_CHECK, "false" ) );
+        return Boolean.parseBoolean( getProperty( KEY_UPDATES_BETA_CHECK, "true" ) );
     }
 
     public static void setBetaUpdatesEnabled( boolean enabled )
