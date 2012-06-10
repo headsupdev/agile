@@ -211,6 +211,10 @@
             <phase>process-resources</phase>
             <configuration>
               <outputDirectory>${project.build.directory}/conf</outputDirectory>
+              <useDefaultDelimiters>false</useDefaultDelimiters>
+              <delimiters>
+                <delimiter>${*}</delimiter>
+              </delimiters>
             </configuration>
           </execution>
         </executions>

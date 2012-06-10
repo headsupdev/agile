@@ -578,6 +578,7 @@ public class Main
             }
 
             BufferedReader in = null;
+            boolean delete = false;
             try
             {
                 in = new BufferedReader( new FileReader( location ) );
@@ -590,7 +591,7 @@ public class Main
 
                 if ( new File( jarFile ).getParentFile().getName().equals( "debug" ) )
                 {
-                    Main.delete( bundle );
+                    delete = true;
                 }
             }
             catch ( IOException e )
@@ -609,6 +610,18 @@ public class Main
                     {
                         // ignore
                     }
+                }
+            }
+
+            if ( delete )
+            {
+                try
+                {
+                    Main.delete( bundle );
+                }
+                catch ( IOException e )
+                {
+                    e.printStackTrace();
                 }
             }
         }
