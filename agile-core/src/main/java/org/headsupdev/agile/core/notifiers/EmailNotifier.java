@@ -57,7 +57,7 @@ public class EmailNotifier
         sendEventEmail( event, to, getFrom() );
     }
 
-    public static void sendEventEmail( Event event, String to, String from )
+    public void sendEventEmail( Event event, String to, String from )
     {
         HeadsUpConfiguration config = Manager.getStorageInstance().getGlobalConfiguration();
         String title = "[HeadsUp Agile] " + event.getTitle();
@@ -158,7 +158,7 @@ public class EmailNotifier
         sendNotification( to, from, title, body.toString(), config );
     }
 
-    private static void sendNotification( String to, String from, String title, String body, HeadsUpConfiguration config )
+    protected void sendNotification( String to, String from, String title, String body, HeadsUpConfiguration config )
     {
         MailUtil.sendEmail( to, from, title, body, config.getSmtpHost(),
                 config.getSmtpUsername(), config.getSmtpPassword(), false );

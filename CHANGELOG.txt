@@ -1,3 +1,9 @@
+2.0-beta1
+
+*
+
+* Fixed api doc generation for non root filesystems
+
 2.0-alpha3
 
 * Made availabile under the AGPL v3 License

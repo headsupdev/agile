@@ -41,12 +41,6 @@
     <org.osgi.service.http.port>8069</org.osgi.service.http.port>
     <org.ops4j.pax.web.session.timeout>60</org.ops4j.pax.web.session.timeout>
 
-    <headsup.db.url>jdbc:h2:file:${user.home}/.headsup/data;DB_CLOSE_ON_EXIT=FALSE</headsup.db.url>
-    <headsup.db.dialect>org.hibernate.dialect.H2Dialect</headsup.db.dialect>
-    <headsup.db.driver>org.h2.Driver</headsup.db.driver>
-    <headsup.db.username>sa</headsup.db.username>
-    <headsup.db.password />
-
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
   </properties>
