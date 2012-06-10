@@ -164,6 +164,11 @@ public class RepositoryBrowsePanel
         File _latestFile = null;
         for ( File file : files )
         {
+            if ( file.isHidden() )
+            {
+                continue;
+            }
+
             showLatest = showLatest && FileUtil.isFileNumeric( file );
             if ( showLatest )
             {

@@ -55,7 +55,7 @@ public class FileUtil
             {
                 String noExt = fileName.substring( 0, fileName.lastIndexOf( "." ) );
 
-                Integer.parseInt( noExt.replaceAll( "\\.", "" ) );
+                Integer.parseInt( noExt.replace( ".", "" ) );
             }
             else
             {
