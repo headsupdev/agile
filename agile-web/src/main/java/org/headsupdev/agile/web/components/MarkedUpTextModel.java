@@ -137,7 +137,7 @@ public class MarkedUpTextModel extends Model<String> {
     // TODO find the wicket encoding and use that instead - else centralise this...
     private static String encode( String in )
     {
-        String out = in.replaceAll( "&",  "&amp;" ).replaceAll( "<", "&lt;" ).replaceAll( ">", "&gt;" );
-        return out.replaceAll( "\"", "&quot;" ).replaceAll( "\n", "<br />" );
+        String out = in.replace( "&",  "&amp;" ).replace( "<", "&lt;" ).replace( ">", "&gt;" );
+        return out.replace( "\"", "&quot;" ).replace( "\n", "<br />" );
     }
 }

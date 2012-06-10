@@ -225,7 +225,7 @@ public class DocumentRenderer
 
     protected static String escapeString( String in )
     {
-        String out = in.replaceAll( "&",  "&amp;" ).replaceAll( "<", "&lt;" ).replaceAll( ">", "&gt;" );
-        return out.replaceAll( "\"", "&quot;" );
+        String out = in.replace( "&",  "&amp;" ).replace( "<", "&lt;" ).replace( ">", "&gt;" );
+        return out.replace( "\"", "&quot;" );
     }
 }

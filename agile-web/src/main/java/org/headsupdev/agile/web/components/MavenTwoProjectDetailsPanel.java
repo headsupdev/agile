@@ -81,7 +81,7 @@ public class MavenTwoProjectDetailsPanel
                 }
                 else
                 {
-                    String repoPath = dependency.getGroupId().replaceAll( "\\.", ":" );
+                    String repoPath = dependency.getGroupId().replace( ".", ":" );
                     Class repoClass = RenderUtil.getPageClass( "artifacts/" + foundRepo );
                     PageParameters params = new PageParameters();
                     params.add( "project", project.getId() );

@@ -113,7 +113,7 @@ public class EmbeddedFilePanel
                         {
                             filePath = URLEncoder.encode( filePath, "UTF-8" );
                             // funny little hack here, guess the decoding is not right
-                            filePath = filePath.replaceAll( "\\+", "%20" );
+                            filePath = filePath.replace( "+", "%20" );
                         }
                         catch ( UnsupportedEncodingException e )
                         {
@@ -157,7 +157,7 @@ public class EmbeddedFilePanel
         try
         {
             in = new FileInputStream( file );
-            content = IOUtil.toString( in ).replaceAll( "<", "&lt;" ).replaceAll( ">", "&gt;" );
+            content = IOUtil.toString( in ).replace( "<", "&lt;" ).replace( ">", "&gt;" );
         }
         catch ( IOException e )
         {

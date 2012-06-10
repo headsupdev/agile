@@ -142,7 +142,7 @@ public class DiffModel extends Model<String>
                         displaySpacer = true;
                     }
                     try {
-                        String numbers = line.replaceAll( "@", "" ).trim();
+                        String numbers = line.replace( "@", "" ).trim();
                         String oldRange = numbers.substring( 1, numbers.indexOf( " " ) );
                         String newRange = numbers.substring( numbers.indexOf( "+" ) + 1 );
 

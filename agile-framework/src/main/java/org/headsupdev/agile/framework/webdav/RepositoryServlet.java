@@ -409,7 +409,7 @@ public class RepositoryServlet
                 if ( repoApp != null )
                 {
                     String resName = resource.substring( 0, new File( resource ).getName().length() );
-                    String path = resource.substring( 0, resource.length() - resName.length() ).replaceAll( String.valueOf( File.separatorChar ), ":" );
+                    String path = resource.substring( 0, resource.length() - resName.length() ).replace( String.valueOf( File.separatorChar ), ":" );
                     repoApp.addEvent( new UploadArtifactEvent( groupId, artifactId, version, repository, path,
                             project ) );
                 }
@@ -435,7 +435,7 @@ public class RepositoryServlet
                     if ( repoApp != null )
                     {
                         String resName = resource.substring( 0, new File( resource ).getName().length() );
-                        String path = resource.substring( 0, resource.length() - resName.length() ).replaceAll( String.valueOf( File.separatorChar ), ":" );
+                        String path = resource.substring( 0, resource.length() - resName.length() ).replace( String.valueOf( File.separatorChar ), ":" );
                         repoApp.addEvent( new UploadArtifactEvent( org, module, version, repository, path,
                                 project ) );
                     }

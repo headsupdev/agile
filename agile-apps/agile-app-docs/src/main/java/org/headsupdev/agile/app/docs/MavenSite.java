@@ -59,7 +59,7 @@ public class MavenSite
 
         File siteRepo = new File( new File( Manager.getStorageInstance().getDataDirectory(), "repository" ), "site" );
         String sitePath = getSitePath( getProject() );
-        File siteFile = new File( new File( siteRepo, sitePath.replaceAll( "/", File.separator ) ), page );
+        File siteFile = new File( new File( siteRepo, sitePath.replace( "/", File.separator ) ), page );
         boolean exists = siteFile.exists();
 
         add( new WebMarkupContainer( "nosite" ).setVisible( !exists ) );

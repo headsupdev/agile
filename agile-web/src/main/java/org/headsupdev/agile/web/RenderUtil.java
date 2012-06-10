@@ -110,7 +110,7 @@ public abstract class RenderUtil
             }
         }
 
-        return out.toString().replaceAll( "\"resources/", "\"/resources/" );
+        return out.toString().replace( "\"resources/", "\"/resources/" );
     }
 
     public abstract Panel getPanel();

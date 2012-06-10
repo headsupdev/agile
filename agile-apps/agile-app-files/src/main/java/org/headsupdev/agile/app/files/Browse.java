@@ -220,7 +220,7 @@ public class Browse
                 {
                     filePath = URLEncoder.encode( filePath, "UTF-8" );
                     // funny little hack here, guess the decoding is not right
-                    filePath = filePath.replaceAll( "\\+", "%20" );
+                    filePath = filePath.replace( "+", "%20" );
                 }
                 catch ( UnsupportedEncodingException e )
                 {

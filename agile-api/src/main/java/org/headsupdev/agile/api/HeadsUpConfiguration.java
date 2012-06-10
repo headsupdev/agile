@@ -280,7 +280,7 @@ public class HeadsUpConfiguration
 
     private String encodeProjectId( String projectId )
     {
-        return projectId.replaceAll("\\.", "\\+");
+        return projectId.replace(".", "+");
     }
 
     public PropertyTree getApplicationConfigurationForProject( Application app, Project project )
