@@ -55,7 +55,7 @@ public class MavenTwoProjectDetailsPanel
                 super.populateItem( listItem );
                 MavenDependency dependency = listItem.getModelObject();
 
-                String path = dependency.getGroupId().replaceAll( "\\.", File.separator );
+                String path = dependency.getGroupId().replace( ".", File.separator );
                 path = path + File.separator + dependency.getArtifactId();
                 path = path + File.separator + dependency.getVersion();
 
