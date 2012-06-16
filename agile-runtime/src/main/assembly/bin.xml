@@ -23,6 +23,7 @@
     <!-- removed as it is way slow to execute all the time -->
     <!--format>tar.bz2</format-->
     <format>zip</format>
+    <format>dir</format>
   </formats>
   <fileSets>
     <fileSet>
