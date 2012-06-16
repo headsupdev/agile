@@ -152,10 +152,8 @@ public class UpdatingPanel extends Panel
                             long downloaded = 0;
                             InputStream in = conn.getInputStream();
 
-                            // little hack to get the temp dir, better or worse than reading the property?
-                            outFile = File.createTempFile( "blah", "" );
-                            outFile.delete();
-                            outFile = new File( outFile.getParentFile(), new File( update.getFile() ).getName() );
+                            outFile = new File( org.headsupdev.agile.api.util.FileUtil.getTempDir(),
+                                    new File( update.getFile() ).getName() );
                             OutputStream out = new FileOutputStream( outFile );
 
                             int chunk;

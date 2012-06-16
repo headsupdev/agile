@@ -81,7 +81,7 @@ public class EclipseBuildHandler
         File tmpWorkspace;
         try
         {
-            tmpWorkspace = FileUtil.createTempDir( "workspace", "" );
+            tmpWorkspace = org.headsupdev.agile.api.util.FileUtil.createTempDir( "workspace", "" );
             tmpWorkspace.deleteOnExit();
         }
         catch ( IOException e )

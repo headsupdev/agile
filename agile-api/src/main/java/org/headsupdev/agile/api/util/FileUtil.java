@@ -18,7 +18,10 @@
 
 package org.headsupdev.agile.api.util;
 
+import org.headsupdev.agile.api.Manager;
+
 import java.io.File;
+import java.io.IOException;
 
 /**
  * Utilities for file management and repository / url handling
@@ -101,5 +104,32 @@ public class FileUtil
         }
 
         return latest;
+    }
+
+    public static File getTempDir()
+    {
+        File temp = new File( Manager.getStorageInstance().getDataDirectory(), "temp" );
+        if ( !temp.exists() )
+        {
+            temp.mkdirs();
+        }
+
+        return temp;
+    }
+
+    public static File createTempDir( String prefix, String postfix )
+        throws IOException
+    {
+        File tmpDir = getTempDir();
+
+        return org.headsupdev.support.java.FileUtil.createTempDir( prefix, postfix, tmpDir );
+    }
+
+    public static File createTempFile( String prefix, String postfix )
+        throws IOException
+    {
+        File tmpDir = getTempDir();
+
+        return File.createTempFile( prefix, postfix, tmpDir );
     }
 }

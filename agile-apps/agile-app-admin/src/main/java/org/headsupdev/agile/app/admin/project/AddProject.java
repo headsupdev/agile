@@ -344,9 +344,7 @@ public class AddProject
                 repository.getProviderRepository().setPassword( password );
             }
 
-            File working = File.createTempFile( "checkout-", "", getStorage().getDataDirectory() );
-            working.delete();
-            working.mkdirs();
+            File working = FileUtil.createTempDir( "checkout-", "", getStorage().getDataDirectory() );
             CheckOutScmResult result = scmManager.checkOut( repository, new ScmFileSet( working ) );
 
             if ( !result.isSuccess() )

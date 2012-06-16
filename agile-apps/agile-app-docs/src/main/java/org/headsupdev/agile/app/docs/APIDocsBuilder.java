@@ -130,16 +130,12 @@ public class APIDocsBuilder
         Task apiTask = new APIDocBuildTask( project );
         Manager.getInstance().addTask( apiTask );
 
-        // TODO move to helper
-        File tmpDir = new File( Manager.getStorageInstance().getDataDirectory(), "temp" );
-        tmpDir.mkdirs();
-
         Writer out = null;
         File doxyFile = null, header = null, footer = null;
         File output = null;
         try
         {
-            doxyFile = File.createTempFile( "doxyFile", "", tmpDir );
+            doxyFile = org.headsupdev.agile.api.util.FileUtil.createTempFile( "doxyFile", "" );
             out = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( doxyFile ) ) );
 
             Map<String, Object> params = new HashMap<String, Object>();
@@ -160,7 +156,7 @@ public class APIDocsBuilder
             params.put( "inputDir", Manager.getStorageInstance().getWorkingDirectory( project ).getAbsolutePath() );
             params.put( "date", new Date().toString() );
 
-            output = FileUtil.createTempDir( "docs", "", tmpDir );
+            output = org.headsupdev.agile.api.util.FileUtil.createTempDir( "docs", "" );
             params.put( "outputDir", output.getAbsolutePath() );
             params.put( "currentDir", doxyFile.getParentFile().getAbsolutePath() );
 
