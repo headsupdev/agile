@@ -44,6 +44,7 @@ import org.wicketstuff.progressbar.ProgressBar;
 import org.wicketstuff.progressbar.ProgressionModel;
 import org.wicketstuff.progressbar.Progression;
 
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.io.*;
@@ -115,8 +116,17 @@ public class UpdatingPanel extends Panel
                     final UpdateDetails update = ( (DefaultManager) Manager.getInstance() ).getAvailableUpdates().get( 0 );
                     URL download = new URL( update.getFile() );
                     final long length = update.getLength();
-                    final URLConnection conn = download.openConnection();
+                    URLConnection conn = download.openConnection();
                     conn.connect();
+
+                    // follow redirects that Java does not handle (hhtp: -> https: for example)
+                    if ( ( (HttpURLConnection) conn).getResponseCode() == 301 || ( (HttpURLConnection) conn).getResponseCode() == 302 )
+                    {
+                        String newLocation = conn.getHeaderField( "Location" );
+                        download = new URL( newLocation );
+                        conn = download.openConnection();
+                        conn.connect();
+                    }
 
                     if ( length > -1 ) {
                         target.addComponent( this.setVisible( false ) );
@@ -146,11 +156,12 @@ public class UpdatingPanel extends Panel
                         }
                     };
 
+                    final URLConnection connection = conn;
                     new Thread() { public void run() {
                         try {
                             byte[] buffer = new byte[4096];
                             long downloaded = 0;
-                            InputStream in = conn.getInputStream();
+                            InputStream in = connection.getInputStream();
 
                             outFile = new File( org.headsupdev.agile.api.util.FileUtil.getTempDir(),
                                     new File( update.getFile() ).getName() );
