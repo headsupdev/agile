@@ -1,8 +1,9 @@
 2.0-beta1
 
-*
+* Added Windows support
 
 * Fixed api doc generation for non root filesystems
+* Fix updater to pull downloads from GitHub
 
 2.0-alpha3
 
