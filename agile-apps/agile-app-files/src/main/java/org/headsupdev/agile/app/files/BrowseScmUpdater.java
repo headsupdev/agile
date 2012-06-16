@@ -402,7 +402,8 @@ public class BrowseScmUpdater
                             }
 
                             ScmChange adding;
-                            String path = scmFile.getPath();
+                            // a small hack to match the maven-scm output
+                            String path = scmFile.getPath().replace( File.separatorChar, '/' );
                             String difference = null;
                             if ( diff != null && diff.getDifferences() != null && diff.getDifferences().containsKey( path ) )
                             {

@@ -62,7 +62,7 @@ public class GitScmVariant
 
     public ScmRevision getStartRevisionForDiff( String start, String end )
     {
-        return new ScmRevision( end + "^" );
+        return new ScmRevision( end + "~1" );
     }
 
     public ScmRevision getEndRevisionForDiff( String start, String end )
