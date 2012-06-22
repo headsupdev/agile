@@ -252,7 +252,7 @@ public class ExportDurationWorked
             ret.append( IssueUtils.getStatusName( issue.getStatus() ) );
 
             StringBuilder hourLog = new StringBuilder();
-            int totalHours = 0;
+            double totalHours = 0;
             for ( Date date : dates )
             {
                 hourLog.append( "," );
