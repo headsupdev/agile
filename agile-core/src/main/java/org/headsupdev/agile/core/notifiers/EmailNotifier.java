@@ -160,8 +160,9 @@ public class EmailNotifier
 
     protected void sendNotification( String to, String from, String title, String body, HeadsUpConfiguration config )
     {
+        boolean secure = "smtp.google.com".equalsIgnoreCase( config.getSmtpHost() )|| "smtp.gmail.com".equalsIgnoreCase( config.getSmtpHost() );
         MailUtil.sendEmail( to, from, title, body, config.getSmtpHost(),
-                config.getSmtpUsername(), config.getSmtpPassword(), false );
+                config.getSmtpUsername(), config.getSmtpPassword(), secure );
     }
 
     public PropertyTree getConfiguration()
