@@ -199,7 +199,7 @@ public class Account
             }
         }.setVisible( showTools && timeEnabled ) );
 
-        add( new Label( "history-name", ( user.getFirstname() == null ) ? user.getUsername() : user.getFirstname() ) );
+        add( new Label( "history-name", user.getFullnameOrUsername()) );
         add( new HistoryPanel( "events", getEventsForUser( user ), true ) );
     }
 
