@@ -41,7 +41,8 @@ public class CreateAttachment
     {
         setSubmitLabel( "Create Attachment" );
 
-        form.add( attachmentPanel = new AttachmentPanel( "attachmentPanel", this) );
+        form.add( attachmentPanel = new AttachmentPanel( "attachmentPanel", this ) );
+        attachmentPanel.setRequired( true );
     }
 
     protected UpdateDocumentEvent getUpdateEvent( Comment comment )

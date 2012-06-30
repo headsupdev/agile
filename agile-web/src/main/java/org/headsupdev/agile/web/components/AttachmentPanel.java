@@ -99,4 +99,14 @@ public class AttachmentPanel
     {
         return filename;
     }
+
+    public boolean isRequired()
+    {
+        return upload.isRequired();
+    }
+
+    public void setRequired( boolean required )
+    {
+        upload.setRequired( required );
+    }
 }

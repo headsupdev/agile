@@ -41,6 +41,8 @@ public class CreateAttachment
     protected void layoutChild( Form form )
     {
         form.add( attachmentPanel = new AttachmentPanel( "attachmentPanel", this ) );
+        attachmentPanel.setRequired( true );
+
         setSubmitLabel( "Create Attachment" );
     }
 
