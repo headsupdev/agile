@@ -64,7 +64,7 @@
     <dependency>
       <groupId>org.headsupdev.irc</groupId>
       <artifactId>irc-core</artifactId>
-      <version>1.0</version>
+      <version>1.1</version>
     </dependency>
 
     <dependency>

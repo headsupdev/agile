@@ -21,8 +21,8 @@ package org.headsupdev.agile.core.notifiers;
 import org.headsupdev.agile.api.*;
 import org.headsupdev.agile.storage.StoredProject;
 
-import org.headsupdev.irc.IRCServiceManager;
-import org.headsupdev.irc.IRCConnection;
+import org.headsupdev.irc.*;
+import org.headsupdev.irc.impl.DefaultIRCServiceManager;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -40,9 +40,40 @@ import java.util.Map;
 public class IRCNotifier
     implements Notifier
 {
-    private static IRCServiceManager manager = IRCServiceManager.getInstance();
+    private static IRCServiceManager manager;
+
     // provide a static source for the non-serializable irc connections
     private static final Map<IRCNotifier, IRCConnection> connections = new HashMap<IRCNotifier, IRCConnection>();
+
+    static
+    {
+        manager = IRCServiceManager.getInstance();
+        ( (DefaultIRCServiceManager) manager ).addListener( new AbstractIRCListener()
+        {
+            public void onDisconnected( IRCConnection connection )
+            {
+                IRCNotifier notifier = null;
+                System.out.println( "disconnected " + connection );
+                for ( IRCNotifier n : connections.keySet() )
+                {
+                    if ( connections.get( n ).equals( connection ) )
+                    {
+                        notifier = n;
+                        break;
+                    }
+                }
+
+                if ( notifier == null )
+                {
+                    return;
+                }
+
+                System.out.println( "notifier reconnecting " + notifier );
+                notifier.connected = false;
+                notifier.connect();
+            }
+        } );
+    }
 
     private boolean connected = false;
 
