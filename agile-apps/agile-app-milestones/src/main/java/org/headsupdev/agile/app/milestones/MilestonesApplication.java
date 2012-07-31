@@ -169,14 +169,14 @@ public class MilestonesApplication
 
                 Iterator<Milestone> iter = super.iterator( 0, size() );
                 List<Milestone> all = new ArrayList<Milestone>();
-                
+
                 while ( iter.hasNext() )
                 {
                     all.add( iter.next() );
                 }
-                
+
                 Collections.sort( all, new MilestoneComparator( getSort() == null || getSort().isAscending() ) );
-                return all.subList( start, limit ).iterator();
+                return all.subList( start, start + limit ).iterator();
             }
         };
     }
@@ -235,7 +235,7 @@ public class MilestonesApplication
                 }
 
                 Collections.sort( all, new MilestoneComparator() );
-                return all.subList( start, limit ).iterator();
+                return all.subList( start, start + limit ).iterator();
             }
         };
     }
