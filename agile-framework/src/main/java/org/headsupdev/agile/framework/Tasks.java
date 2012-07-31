@@ -70,6 +70,11 @@ public class Tasks
             protected void populateItem( ListItem<Task> listItem )
             {
                 Task task = listItem.getModelObject();
+                if ( task == null )
+                {
+                    setVisible( false );
+                    return;
+                }
 
                 listItem.add( new Label( "time", new FormattedDurationModel( task.getStartTime(), new Date() ) ) );
                 listItem.add( new Label( "title", task.getTitle() ) );
