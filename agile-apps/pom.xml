@@ -22,10 +22,10 @@
   <parent>
     <groupId>org.headsupdev.agile</groupId>
     <artifactId>agile</artifactId>
-    <version>2.0-alpha-5-SNAPSHOT</version>
+    <version>2.0-alpha-5</version>
   </parent>
   <artifactId>agile-apps</artifactId>
-  <version>2.0-alpha-5-SNAPSHOT</version>
+  <version>2.0-alpha-5</version>
   <packaging>pom</packaging>
   <name>HeadsUp Agile Applications</name>
 
