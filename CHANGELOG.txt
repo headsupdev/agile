@@ -1,4 +1,12 @@
-2.0-beta1
+2.0-alpha5
+
+* Update IRC bot to latest for flood prevention
+
+* Fix email notifications to gmail
+* Correct precision of hours in milestone export
+* Fix NPE in task render page
+
+2.0-alpha4
 
 * Added Windows support
 
