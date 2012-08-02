@@ -94,6 +94,11 @@ public class Document
     }
 
     public String getContent() {
+        if ( content == null )
+        {
+            return "";
+        }
+
         return content;
     }
 
