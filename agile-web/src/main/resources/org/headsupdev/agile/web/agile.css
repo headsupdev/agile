@@ -39,6 +39,7 @@ body {min-height: 100%;} /* for proper browsers */
 
 #header1 .headbutton {
     text-decoration: none;
+    white-space: nowrap;
     display: inline-block;
 
     cursor: pointer;
