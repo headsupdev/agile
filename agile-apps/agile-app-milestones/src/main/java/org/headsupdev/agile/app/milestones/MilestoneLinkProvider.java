@@ -19,6 +19,8 @@
 package org.headsupdev.agile.app.milestones;
 
 import org.headsupdev.agile.api.LinkProvider;
+import org.headsupdev.agile.api.Project;
+import org.headsupdev.agile.storage.issues.Milestone;
 
 /**
  * Docs link format for a milestone
@@ -43,5 +45,12 @@ public class MilestoneLinkProvider extends LinkProvider
     public String getParamName()
     {
         return "id";
+    }
+
+    @Override
+    public boolean isLinkBroken( String params, Project project )
+    {
+        Milestone milestone = MilestonesApplication.getMilestone( params, project );
+        return milestone == null;
     }
 }

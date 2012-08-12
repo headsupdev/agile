@@ -211,7 +211,7 @@ public class ViewIssue
     @Override
     public String getPageTitle()
     {
-        return super.getPageTitle() + " :: Issue " + issueId;
+        return super.getPageTitle() + " :: Issue:" + issueId;
     }
 
     public static List<MenuLink> getLinks( Issue issue )

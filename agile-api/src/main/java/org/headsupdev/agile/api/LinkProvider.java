@@ -57,4 +57,9 @@ public abstract class LinkProvider
 
         return "/" + projectId + "/" + getPageName() + "/" + getParamName() + "/" + encoded;
     }
+
+    public boolean isLinkBroken( String params, Project project )
+    {
+        return false;
+    }
 }
