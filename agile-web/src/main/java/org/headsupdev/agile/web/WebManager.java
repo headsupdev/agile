@@ -45,6 +45,7 @@ public abstract class WebManager
     }
 
     public abstract String getHeaderLogo();
+    public abstract String getLozengeLogo();
 
     public abstract String getFooterDescriptionHTML( TimeZone timeZone );
 

@@ -92,6 +92,7 @@ public class HeadsUpWebApplication
         getDebugSettings().setAjaxDebugModeEnabled( false );
         getMarkupSettings().setStripWicketTags( true );
 
+        mount( new HeadsUpPageRequestTargetUrlCodingStrategy( "/hosted", Hosted.class ) );
         instance = this;
         for ( Application app : toAdd )
         {

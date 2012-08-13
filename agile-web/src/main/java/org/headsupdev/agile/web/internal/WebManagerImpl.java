@@ -46,6 +46,11 @@ public class WebManagerImpl
     }
 
     @Override
+    public String getLozengeLogo() {
+        return "/resources/org.headsupdev.agile.web.HeadsUpPage/images/agile-lozenge.png";
+    }
+
+    @Override
     public String getFooterDescriptionHTML( TimeZone timeZone )
     {
         StringBuilder ret = new StringBuilder( "Time zone: " );
