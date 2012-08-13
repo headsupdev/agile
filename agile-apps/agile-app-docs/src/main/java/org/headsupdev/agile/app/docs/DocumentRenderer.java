@@ -138,6 +138,7 @@ public class DocumentRenderer
                         {
                             if ( token.length() == 1 )
                             {
+                                text.write( "&gt;" );
                                 continue;
                             }
                             else
