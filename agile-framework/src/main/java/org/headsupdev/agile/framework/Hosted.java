@@ -5,6 +5,7 @@ import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.CSSPackageResource;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.headsupdev.agile.api.Manager;
@@ -30,7 +31,7 @@ public class Hosted
     public Hosted( PageParameters params )
     {
         String projectId = (String) params.get( "project" );
-        add( CSSPackageResource.getHeaderContribution(getClass(), "hosted.css") );
+        add( CSSPackageResource.getHeaderContribution( getClass(), "hosted.css" ) );
 
         baseUrl = Manager.getStorageInstance().getGlobalConfiguration().getBaseUrl() + projectId + "/";
         downloadUrl = Manager.getStorageInstance().getGlobalConfiguration().getProductUrl();
@@ -47,8 +48,9 @@ public class Hosted
         add( new WebMarkupContainer( "download" ).add( new AttributeModifier( "href", true, new Model<String>(
                 Manager.getStorageInstance().getGlobalConfiguration().getProductUrl() ) ) ) );
 
-        add(new WebMarkupContainer("logo").add(new AttributeModifier("src", true,
-                new PropertyModel<String>(WebManager.getInstance(), "lozengeLogo"))));
+        add( new WebMarkupContainer( "logo" ).add( new AttributeModifier( "src", true,
+                new PropertyModel<String>( WebManager.getInstance(), "lozengeLogo" ) ) ) );
+        add( new Label( "name", Manager.getStorageInstance().getGlobalConfiguration().getProductName() ) );
 
     }
 }
