@@ -27,7 +27,7 @@ set JAVA_OPTS=-Xmx512m -Djava.awt.headless=true -Duser.timezone=UTC
 
 cd %AGILE_HOME%
 
-@start %START_PARAMS% cmd /c %JAVA_EXE% %JAVA_OPTS% -cp conf;bin\${project.artifactId}-${project.version}.jar org.headsupdev.agile.runtime.Main %CMD_LINE_ARGS%
+(echo. Y) | start %START_PARAMS% cmd /c %JAVA_EXE% %JAVA_OPTS% -cp conf;bin\${project.artifactId}-${project.version}.jar org.headsupdev.agile.runtime.Main %CMD_LINE_ARGS%
 
 set CMD_LINE_ARGS=
 set JAVA_EXE=
