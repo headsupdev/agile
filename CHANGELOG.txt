@@ -1,3 +1,10 @@
+2.0-alpha6
+
+* Add enquiry issue type
+
+* Improve interface speed and offline support
+
+
 2.0-alpha5
 
 * Update IRC bot to latest for flood prevention

@@ -72,6 +72,7 @@ public class Issue
     public static final int TYPE_ENHANCEMENT = 30;
     public static final int TYPE_TASK = 40;
     public static final int TYPE_SPEC = 50;
+    public static final int TYPE_ENQUIRY = 60;
 
     public static final int PRIORITY_BLOCKER = 110;
     public static final int PRIORITY_CRITICAL = 120;
