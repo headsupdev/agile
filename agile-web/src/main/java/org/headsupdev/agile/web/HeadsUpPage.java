@@ -146,11 +146,6 @@ public abstract class HeadsUpPage
             addLink( link );
         }
 
-        /* scrollpane */
-        add( CSSPackageResource.getHeaderContribution( HeadsUpPage.class, "scrollpane/jquery.jscrollpane.css" ) );
-        add( JavascriptPackageResource.getHeaderContribution( HeadsUpPage.class, "scrollpane/jquery.mousewheel.js" ) );
-        add( JavascriptPackageResource.getHeaderContribution( HeadsUpPage.class, "scrollpane/jquery.jscrollpane.min.js" ) );
-
         add( CSSPackageResource.getHeaderContribution( HeadsUpPage.class, "agile.css" ) );
         add( CSSPackageResource.getHeaderContribution( HeadsUpPage.class, "mobile.css", "handheld, only screen and (max-width: 767px)" ) );
 

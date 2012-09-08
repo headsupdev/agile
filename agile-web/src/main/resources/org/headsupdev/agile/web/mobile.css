@@ -95,10 +95,6 @@
     position:absolute;
 }
 
-#mainmenu .jspPane, #submenu .jspPane {
-    height: 8px;
-}
-
 #mainmenu li, #submenu li {
     padding: 4px 15px;
 }
