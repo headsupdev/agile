@@ -23,6 +23,7 @@ import org.headsupdev.agile.storage.Attachment;
 import org.headsupdev.agile.storage.HibernateStorage;
 import org.headsupdev.agile.storage.StoredProject;
 import org.headsupdev.agile.storage.issues.Duration;
+import org.headsupdev.agile.storage.issues.DurationWorked;
 import org.headsupdev.agile.storage.issues.Issue;
 import org.headsupdev.agile.storage.issues.Milestone;
 import org.headsupdev.agile.web.HeadsUpPage;
@@ -80,6 +81,7 @@ class IssueForm
 {
     private Issue issue;
     private User oldAssignee;
+    private Duration oldTimeRequired;
     private HeadsUpPage owner;
     private EditIssueForm parent;
     private boolean creating;
@@ -90,6 +92,7 @@ class IssueForm
         super( id );
         this.issue = issue;
         this.oldAssignee = issue.getAssignee();
+        this.oldTimeRequired = new Duration( issue.getTimeRequired() );
         this.owner = owner;
         this.parent = parent;
         this.creating = creating;
@@ -259,6 +262,17 @@ class IssueForm
 
         if ( !creating )
         {
+            if ( issue.getTimeRequired() != null && !issue.getTimeRequired().equals( oldTimeRequired ) )
+            {
+                DurationWorked simulate = new DurationWorked();
+                simulate.setUpdatedRequired( issue.getTimeRequired() );
+                simulate.setDay( new Date() );
+                simulate.setIssue( issue );
+                simulate.setUser( ( (HeadsUpSession) getSession() ).getUser() );
+
+                ( (HibernateStorage) owner.getStorage() ).save(simulate);
+                issue.getTimeWorked().add( simulate );
+            }
             issue = (Issue) ( (HibernateStorage) owner.getStorage() ).getHibernateSession().merge( issue );
         }
         else if ( Boolean.parseBoolean( issue.getProject().getConfigurationValue( StoredProject.CONFIGURATION_TIMETRACKING_BURNDOWN ) ) )
