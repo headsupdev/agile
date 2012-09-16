@@ -3,6 +3,7 @@
 * Add enquiry issue type
 
 * Improve interface speed and offline support
+* Log changes made to issue estimates
 
 
 2.0-alpha5
