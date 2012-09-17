@@ -91,11 +91,16 @@ class IssueForm
     {
         super( id );
         this.issue = issue;
-        this.oldAssignee = issue.getAssignee();
-        this.oldTimeRequired = new Duration( issue.getTimeRequired() );
         this.owner = owner;
         this.parent = parent;
         this.creating = creating;
+
+        this.oldAssignee = issue.getAssignee();
+        if ( issue.getTimeRequired() != null )
+        {
+            this.oldTimeRequired = new Duration( issue.getTimeRequired() );
+        }
+
         setModel( new CompoundPropertyModel<Issue>( issue ) );
 
         add( new Label( "project", issue.getProject().getAlias() ) );
@@ -262,6 +267,8 @@ class IssueForm
 
         if ( !creating )
         {
+            issue = (Issue) ( (HibernateStorage) owner.getStorage() ).getHibernateSession().merge( issue );
+
             if ( issue.getTimeRequired() != null && !issue.getTimeRequired().equals( oldTimeRequired ) )
             {
                 DurationWorked simulate = new DurationWorked();
@@ -273,7 +280,6 @@ class IssueForm
                 ( (HibernateStorage) owner.getStorage() ).save(simulate);
                 issue.getTimeWorked().add( simulate );
             }
-            issue = (Issue) ( (HibernateStorage) owner.getStorage() ).getHibernateSession().merge( issue );
         }
         else if ( Boolean.parseBoolean( issue.getProject().getConfigurationValue( StoredProject.CONFIGURATION_TIMETRACKING_BURNDOWN ) ) )
         {
