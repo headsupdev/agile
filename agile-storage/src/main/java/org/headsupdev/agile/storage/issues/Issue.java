@@ -104,7 +104,7 @@ public class Issue
 
     @Type(type = "text")
     @Field(index = Index.TOKENIZED)
-    private String summary, body;
+    private String summary, body, testNotes;
 
     @ManyToOne(targetEntity = StoredUser.class)
     private User reporter;
@@ -202,6 +202,16 @@ public class Issue
     public void setBody( String body )
     {
         this.body = body;
+    }
+
+    public String getTestNotes()
+    {
+        return testNotes;
+    }
+
+    public void setTestNotes( String testNotes )
+    {
+        this.testNotes = testNotes;
     }
 
     public User getReporter()

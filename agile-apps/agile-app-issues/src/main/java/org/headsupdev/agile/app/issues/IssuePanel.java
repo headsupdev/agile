@@ -335,6 +335,8 @@ public class IssuePanel
         add( new Label( "environment", issue.getEnvironment() ) );
         add( new Label( "description", new MarkedUpTextModel( issue.getBody(), issue.getProject() ) )
                 .setEscapeModelStrings( false ) );
+        add( new Label( "testNotes", new MarkedUpTextModel( issue.getTestNotes(), issue.getProject() ) )
+                .setEscapeModelStrings( false ).setVisible( issue.getTestNotes() != null ) );
     }
 
     protected PageParameters getProjectPageParameters( Project project )

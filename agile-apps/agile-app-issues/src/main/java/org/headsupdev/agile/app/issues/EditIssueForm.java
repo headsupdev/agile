@@ -242,6 +242,7 @@ class IssueForm
         add( new CheckBox( "includeInInitialEstimates" ).setVisible( useTime ) );
 
         add( new TextArea( "body" ) );
+        add( new TextArea( "testNotes" ) );
 
         // if we're creating allow adding of new attachments
         if ( creating )

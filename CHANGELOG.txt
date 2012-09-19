@@ -3,6 +3,7 @@
 * Add enquiry issue type
 
 * Improve interface speed and offline support
+* Add test notes to Issue entity
 * Log changes made to issue estimates
 
 
