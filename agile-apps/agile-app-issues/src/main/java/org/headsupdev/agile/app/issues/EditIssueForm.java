@@ -269,7 +269,9 @@ class IssueForm
         {
             issue = (Issue) ( (HibernateStorage) owner.getStorage() ).getHibernateSession().merge( issue );
 
-            if ( issue.getTimeRequired() != null && !issue.getTimeRequired().equals( oldTimeRequired ) )
+            // if we are updating our total on an issue already begun (having had time logged) we need to log the change
+            if ( issue.getTimeRequired() != null && !issue.getTimeRequired().equals( oldTimeRequired ) &&
+                    issue.getTimeWorked().size() > 0)
             {
                 DurationWorked simulate = new DurationWorked();
                 simulate.setUpdatedRequired( issue.getTimeRequired() );
