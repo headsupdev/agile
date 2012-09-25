@@ -130,6 +130,8 @@ public class CIApplication
         "", "Project SDK", "The SDK to build this project against - mainly used for testing (optional)" );
     public static final ConfigurationItem CONFIGURATION_XCODE_COPYSYMBOLS = new ConfigurationItem( "xcode.symbols",
         false, "Copy debugging symbols", "Make a copy of the debugging symbols for later use" );
+    public static final ConfigurationItem CONFIGURATION_ANALYZE = new ConfigurationItem( "analyze",
+        false, "Analyze", "Check for common coding errors" );
 
     public static final ConfigurationItem CONFIGURATION_CRON_EXPRESSION = new ConfigurationItem(
         ConfigurationItem.TYPE_CRON, "cron", "0 15 23 * * ?", "Cron Expression",
@@ -223,12 +225,14 @@ public class CIApplication
         items.add( CONFIGURATION_XCODE_CONFIG );
         items.add( CONFIGURATION_XCODE_TARGET );
         items.add( CONFIGURATION_XCODE_SDK ) ;
+        items.add( CONFIGURATION_ANALYZE );
         items.add( CONFIGURATION_XCODE_COPYSYMBOLS );
         xcodeProjectItems.add( new ConfigurationItem( "schedule.default", "Default Build Schedule", items ) );
         items = new LinkedList<ConfigurationItem>();
         items.add( CONFIGURATION_XCODE_CONFIG );
         items.add( CONFIGURATION_XCODE_TARGET );
         items.add( CONFIGURATION_XCODE_SDK );
+        items.add( CONFIGURATION_ANALYZE );
         items.add( CONFIGURATION_XCODE_COPYSYMBOLS );
         items.add( CONFIGURATION_CRON_EXPRESSION );
         xcodeProjectItems.add( new ConfigurationItem( "schedule", "Build Schedule",

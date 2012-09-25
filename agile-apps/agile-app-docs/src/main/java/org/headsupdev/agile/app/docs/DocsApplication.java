@@ -59,6 +59,7 @@ public class DocsApplication
         links = new LinkedList<MenuLink>();
         links.add( new SimpleMenuLink( "contents" ) );
         links.add( new SimpleMenuLink( "api" ) );
+        links.add( new SimpleMenuLink( "analyze" ) );
 
         eventTypes = new LinkedList<String>();
         eventTypes.add( "createdocument" );
@@ -119,7 +120,7 @@ public class DocsApplication
     public Class<? extends Page>[] getPages()
     {
         return new Class[]{ CreateAttachment.class, CreateComment.class, Edit.class, Index.class, MavenSite.class,
-            View.class, APIDocs.class };
+            View.class, APIDocs.class, AnalyzeResults.class };
     }
 
     @Override

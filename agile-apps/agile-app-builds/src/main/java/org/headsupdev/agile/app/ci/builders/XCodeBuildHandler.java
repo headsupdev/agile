@@ -31,6 +31,8 @@ import org.headsupdev.support.java.StringUtil;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * The main code for building an xcode project.
@@ -40,10 +42,15 @@ import java.util.Date;
  */
 public class XCodeBuildHandler
 {
+
+    public static final Pattern BUILD_LOG_PATTERN = Pattern.compile( "[0-9]*.txt" );
+    public static final Pattern BUILD_LOG_BUGS_COUNT_PATTERN = Pattern.compile( "scan-build: ([0-9]*) bugs found." );
+    public static final Pattern BUILD_LOG_OUTPUT_DIR_PATTERN = Pattern.compile( "scan-build: Run 'scan-view ([^ ']*)' to examine bug reports." );
+
     private static Logger log = Manager.getLogger( XCodeBuildHandler.class.getName() );
 
     protected static void runBuild( XCodeProject project, PropertyTree config, File dir, File output,
-                                               Build build, long buildId )
+                                    Build build, long buildId )
     {
         String confName = config.getProperty( CIApplication.CONFIGURATION_XCODE_CONFIG.getKey(),
                 (String) CIApplication.CONFIGURATION_XCODE_CONFIG.getDefault() );
@@ -54,7 +61,11 @@ public class XCodeBuildHandler
         String sdkName = config.getProperty( CIApplication.CONFIGURATION_XCODE_SDK.getKey(),
                 (String) CIApplication.CONFIGURATION_XCODE_SDK.getDefault() );
 
+        boolean analyze = Boolean.parseBoolean( config.getProperty( CIApplication.CONFIGURATION_ANALYZE.getKey(),
+                String.valueOf( CIApplication.CONFIGURATION_ANALYZE.getDefault() ) ) );
+
         int result = -1;
+
         Writer buildOut = null;
         Process process = null;
         StreamGobbler serr = null, sout = null;
@@ -78,20 +89,7 @@ public class XCodeBuildHandler
 
             if ( result == 0 )
             {
-                // defensively try to close the gobblers
-                // check that our gobblers are finished...
-                while ( !serr.isComplete() || !sout.isComplete() )
-                {
-                    log.debug( "waiting 1s to close gobbler" );
-                    try
-                    {
-                        Thread.sleep( 1000 );
-                    }
-                    catch ( InterruptedException e )
-                    {
-                        // we were just trying to tidy up...
-                    }
-                }
+                waitStreamGobblersToComplete( serr, sout );
 
                 IOUtil.close( process.getOutputStream() );
                 IOUtil.close( process.getErrorStream() );
@@ -129,6 +127,45 @@ public class XCodeBuildHandler
                 sout.start();
 
                 result = process.waitFor();
+
+                // if analyzing is desired
+                if ( analyze && ( result == 0 ) )
+                {
+                    waitStreamGobblersToComplete( serr, sout );
+
+
+                    IOUtil.close( process.getOutputStream() );
+                    IOUtil.close( process.getErrorStream() );
+                    IOUtil.close( process.getInputStream() );
+                    process.destroy();
+
+                    commands.clear();
+                    commands.add( "scan-build" );
+                    commands.add( "-o" );
+                    File siteRepository = new File( new File( new File( new File( Manager.getStorageInstance().getDataDirectory(), "repository" ), "site" ), project.getId() ), "analyze" );
+                    String outputPath = siteRepository.getPath();
+                    commands.add( outputPath );
+                    commands.add( "xcodebuild" );
+                    commands.add( "-configuration" );
+                    commands.add( "Debug" );
+                    commands.add( "-sdk" );
+                    commands.add( "iphonesimulator" );
+
+                    process = Runtime.getRuntime().exec( commands.toArray( new String[commands.size()] ), null, dir );
+
+                    serr = new StreamGobbler( new InputStreamReader( process.getErrorStream() ), buildOut );
+                    sout = new StreamGobbler( new InputStreamReader( process.getInputStream() ), buildOut );
+                    serr.start();
+                    sout.start();
+
+                    result = process.waitFor();
+
+                    if ( result == 0 )
+                    {
+                        waitStreamGobblersToComplete( serr, sout );
+
+                    }
+                }
             }
 
         }
@@ -148,21 +185,8 @@ public class XCodeBuildHandler
                 // defensively try to close the gobblers
                 if ( serr != null && sout != null )
                 {
-                    // check that our gobblers are finished...
-                    while ( !serr.isComplete() || !sout.isComplete() )
-                    {
-                        log.debug( "waiting 1s to close gobbler" );
-                        try
-                        {
-                            Thread.sleep( 1000 );
-                        }
-                        catch ( InterruptedException e )
-                        {
-                            // we were just trying to tidy up...
-                        }
-                    }
+                    waitStreamGobblersToComplete( serr, sout );
                 }
-
                 IOUtil.close( process.getOutputStream() );
                 IOUtil.close( process.getErrorStream() );
                 IOUtil.close( process.getInputStream() );
@@ -183,6 +207,120 @@ public class XCodeBuildHandler
         }
 
         IOUtil.close( buildOut );
+
+        if ( analyze )
+        {
+            try
+            {
+
+                BufferedReader input = new BufferedReader( new FileReader( output ) );
+                try
+                {
+                    String line = null;
+                    while ( ( line = input.readLine() ) != null )
+                    {
+                        Matcher mBugs = BUILD_LOG_BUGS_COUNT_PATTERN.matcher( line );
+                        if ( mBugs.find() )
+                        {
+                            String bugCount = mBugs.group( 1 );
+                            //log.error("bugCount:" + bugCount);
+                            int warnings = build.getWarnings() + Integer.parseInt( bugCount );
+                            //log.error("totalBugCount:" + warnings);
+                            build.setWarnings( warnings );
+                        }
+                        Matcher mOutDir = BUILD_LOG_OUTPUT_DIR_PATTERN.matcher( line );
+                        if ( mOutDir.find() )
+                        {
+                            File outputDir = new File( mOutDir.group( 1 ) );
+                            //log.error("outputDir:" + outputDir.getPath());
+
+                            File renamePath = new File( new File( new File( new File( new File( Manager.getStorageInstance().getDataDirectory(), "repository" ), "site" ), project.getId() ), "analyze" ), "" + build.getId() );
+                            //log.error("renameTo:" + renamePath.getPath());
+
+                            boolean success = outputDir.renameTo( renamePath );
+                            if ( !success )
+                            {
+                                log.error( "failed to rename:" + outputDir.getPath() + "To:" + renamePath.getPath() );
+                            }
+
+                            //rename build name within index file
+                            File indexFile = new File( renamePath, "index.html" );
+                            File indexTmpFile = new File( renamePath, "index.tmp.html" );
+                            String outputName = dir.getName();
+                            //log.error("outputName: "+outputName + " to " + build.getId());
+                            try
+                            {
+                                RenameBuildFromFileToFile( outputName + " -", "build: " + buildId + " -", indexFile, indexTmpFile );
+                            }
+                            catch ( IOException ex )
+                            {
+                                ex.printStackTrace();
+                            }
+
+                            success = indexTmpFile.renameTo( indexFile );
+                            if ( !success )
+                            {
+                                log.error( "failed to rename:" + indexTmpFile.getPath() + "To:" + indexFile.getPath() );
+                            }
+                        }
+                    }
+                }
+                finally
+                {
+                    input.close();
+                }
+            }
+            catch ( IOException ex )
+            {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    private static void RenameBuildFromFileToFile( String oldBuildName, String newBuildName, File oldFile, File newFile )
+            throws IOException
+    {
+        BufferedReader oldFileReader = new BufferedReader( new FileReader( oldFile ) );
+        FileWriter newFileWriter = new FileWriter( newFile );
+
+        try
+        {
+            renameBuildFromReaderToWriter( oldBuildName, newBuildName, oldFileReader, newFileWriter );
+        }
+        finally
+        {
+            oldFileReader.close();
+            newFileWriter.close();
+        }
+    }
+
+    private static void renameBuildFromReaderToWriter( String oldBuildName, String newBuildName, BufferedReader oldFileReader, FileWriter newFileWriter )
+            throws IOException
+    {
+        String oldLine = null;
+        while ( ( oldLine = oldFileReader.readLine() ) != null )
+        {
+            String newLine = oldLine.replaceAll( oldBuildName, newBuildName );
+            newFileWriter.write( newLine );
+        }
+    }
+
+    private static void waitStreamGobblersToComplete( StreamGobbler serr, StreamGobbler sout )
+    {
+        // defensively try to close the gobblers
+        // check that our gobblers are finished...
+        while ( !serr.isComplete() || !sout.isComplete() )
+        {
+            log.debug( "waiting 1s to close gobbler" );
+            try
+            {
+                Thread.sleep( 1000 );
+            }
+            catch ( InterruptedException e )
+            {
+                // we were just trying to tidy up...
+            }
+        }
     }
 
     protected static void parseDatFiles( File dir, Build build )
@@ -211,7 +349,7 @@ public class XCodeBuildHandler
     }
 
     protected static void parseDatFile( File dat, Build build )
-        throws IOException
+            throws IOException
     {
         BufferedReader reader = new BufferedReader( new FileReader( dat ) );
         String rootPath = Manager.getStorageInstance().getDataDirectory().getAbsolutePath();
