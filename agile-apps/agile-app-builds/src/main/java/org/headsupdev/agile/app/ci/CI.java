@@ -325,6 +325,8 @@ public class CI
                     .add( new CITestStatusModifier( "failures", build, "failures" ) ) );
             listItem.add( new Label( "errors", String.valueOf( build.getErrors() ) )
                     .add( new CITestStatusModifier( "errors", build, "errors" ) ) );
+            listItem.add( new Label( "warnings", String.valueOf( build.getWarnings() ) )
+                    .add( new CITestStatusModifier( "warnings", build, "warnings" ) ) );
 
             PageParameters params = new PageParameters();
             params.add( "project", project.getId() );
@@ -367,6 +369,7 @@ public class CI
             listItem.add( new Label( "tests", "" ) );
             listItem.add( new Label( "failures", "" ) );
             listItem.add( new Label( "errors", "" ) );
+            listItem.add( new Label( "warnings", "" ) );
 
             listItem.add( new WebMarkupContainer( "buildId-link" ).setVisible( false ) );
         }

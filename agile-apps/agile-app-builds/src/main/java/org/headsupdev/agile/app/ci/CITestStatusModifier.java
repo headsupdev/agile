@@ -61,6 +61,13 @@ public class CITestStatusModifier
                         return className + " testerror";
                     }
                 }
+                else if ( type.equals( "warnings" ) )
+                {
+                    if ( build.getWarnings() > 0 )
+                    {
+                        return className + " testwarn";
+                    }
+                }
 
                 return className + " testpass";
             }

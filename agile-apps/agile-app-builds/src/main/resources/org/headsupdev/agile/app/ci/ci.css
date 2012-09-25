@@ -16,8 +16,7 @@ table.projects .id, table.builds .id {
     width: 20px;
 }
 
-table.projects .tests, table.builds .tests, table.projects .failures, table.builds .failures,
-table.projects .errors, table.builds .errors {
+table.projects .tests, table.builds .tests, table.projects .failures, table.builds .failures, table.projects .errors, table.builds .errors, table.projects .warnings, table.builds .warnings {
     width: 20px;
     text-align: center;
 }

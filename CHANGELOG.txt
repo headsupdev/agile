@@ -1,11 +1,11 @@
 2.0-alpha6
 
 * Add enquiry issue type
+* Added scan-build - static code analysis for XCode projects
 
 * Improve interface speed and offline support
 * Add test notes to Issue entity
 * Log changes made to issue estimates
-
 
 2.0-alpha5
 
