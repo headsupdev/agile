@@ -46,6 +46,7 @@ public class IssueUtils
         types.add( Issue.TYPE_ENHANCEMENT );
         types.add( Issue.TYPE_TASK );
         types.add( Issue.TYPE_SPEC );
+        types.add( Issue.TYPE_ENQUIRY );
 
         priorities.add( Issue.PRIORITY_BLOCKER );
         priorities.add( Issue.PRIORITY_CRITICAL );
@@ -83,6 +84,8 @@ public class IssueUtils
                 return "task";
             case Issue.TYPE_SPEC:
                 return "spec";
+            case Issue.TYPE_ENQUIRY:
+                return "enquiry";
             default:
                 return "";
         }

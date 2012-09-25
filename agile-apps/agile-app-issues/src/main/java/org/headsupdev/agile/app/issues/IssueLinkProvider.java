@@ -19,6 +19,8 @@
 package org.headsupdev.agile.app.issues;
 
 import org.headsupdev.agile.api.LinkProvider;
+import org.headsupdev.agile.api.Project;
+import org.headsupdev.agile.storage.issues.Issue;
 
 /**
  * Docs link format for an issue
@@ -43,5 +45,20 @@ public class IssueLinkProvider extends LinkProvider
     public String getParamName()
     {
         return "id";
+    }
+
+    @Override
+    public boolean isLinkBroken( String params, Project project )
+    {
+        try
+        {
+            Issue issue = IssuesApplication.getIssue( Long.parseLong( params ), project );
+
+            return issue == null;
+        }
+        catch ( NumberFormatException e )
+        {
+            return true;
+        }
     }
 }

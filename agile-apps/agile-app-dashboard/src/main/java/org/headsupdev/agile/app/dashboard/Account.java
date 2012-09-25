@@ -206,7 +206,7 @@ public class Account
     @Override
     public String getPageTitle()
     {
-        return super.getPageTitle() + " :: " + username;
+        return super.getPageTitle() + " :: Account:" + username;
     }
 
     public SortableEntityProvider<Issue> getIssuesWatchedBy( final org.headsupdev.agile.api.User user )

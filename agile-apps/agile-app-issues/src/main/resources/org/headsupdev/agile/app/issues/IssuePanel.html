@@ -19,7 +19,7 @@
 <html>
   <body>
     <wicket:panel>
-      <h2>Issue <span wicket:id="id">0</span>: <span wicket:id="summary" class="summary" colspan="3">summary</span></h2>
+      <h2>Issue:<span wicket:id="id">0</span> <span wicket:id="summary" class="summary" colspan="3">summary</span></h2>
 
       <table class="info vertical">
         <tr>
@@ -90,35 +90,60 @@
         </th></tr>
 
         <tr class="details">
-          <th class="description" colspan="3">Description</th>
-          <th class="relationships sidebar">Relationships</th>
-        </tr>
-        <tr class="details">
-          <td wicket:id="description" class="description" colspan="3" rowspan="3">description</td>
-          <td class="sidebar">
-            <div wicket:id="relationship">
-              <span class="relationship" wicket:id="name">relationship</span>
-              <a wicket:id="issue-link"><span class="relatedissue" wicket:id="issue">issue</span></a>
-              <span class="relatedissue" wicket:id="summary">summary</span>
-            </div>
-            <div wicket:id="reverse-relationship">
-              <span class="relationship" wicket:id="name">relationship</span>
-              <a wicket:id="issue-link"><span class="relatedissue" wicket:id="issue">issue</span></a>
-              <span class="relatedissue" wicket:id="summary">summary</span>
-            </div>
+          <td class="description" style="padding: 0" colspan="3">
+            <table class="info vertical" style="margin: 0">
+              <tr>
+                <th>Description</th>
+              </tr>
+              <tr>
+                <td class="description">
+                  <span wicket:id="description">description</span>
+                </td>
+              </tr>
+              <wicket:enclosure>
+              <tr>
+                <th>Test Notes</th>
+              </tr>
+              <tr>
+                <td class="testnotes">
+                  <span wicket:id="testNotes">testNotes</span>
+                </td>
+              </tr>
+              </wicket:enclosure>
+            </table>
           </td>
-        </tr>
-
-        <tr class="details">
-          <th class="changesets sidebar">Change Sets</th>
-        </tr>
-        <tr class="details">
           <td class="sidebar">
-            <div wicket:id="changeset">
-              <span class="changeset">is related to changeset</span>
-              <a wicket:id="set-link"><span class="relatedset" wicket:id="set">set</span></a>
-              <span class="relatedset" wicket:id="summary">summary</span>
-            </div>
+            <table class="info vertical" style="margin: 0">
+              <tr>
+                <th class="relationships">Relationships</th>
+              </tr>
+              <tr>
+                <td class="relationships">
+                  <div wicket:id="relationship">
+                    <span class="relationship" wicket:id="name">relationship</span>
+                    <a wicket:id="issue-link"><span class="relatedissue" wicket:id="issue">issue</span></a>
+                    <span class="relatedissue" wicket:id="summary">summary</span>
+                  </div>
+                  <div wicket:id="reverse-relationship">
+                    <span class="relationship" wicket:id="name">relationship</span>
+                    <a wicket:id="issue-link"><span class="relatedissue" wicket:id="issue">issue</span></a>
+                    <span class="relatedissue" wicket:id="summary">summary</span>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <th class="changesets">Change Sets</th>
+              </tr>
+              <tr>
+                <td>
+                  <div wicket:id="changeset">
+                    <span class="changeset">is related to changeset</span>
+                    <a wicket:id="set-link"><span class="relatedset" wicket:id="set">set</span></a>
+                    <span class="relatedset" wicket:id="summary">summary</span>
+                  </div>
+                </td>
+              </tr>
+            </table>
           </td>
         </tr>
       </table>

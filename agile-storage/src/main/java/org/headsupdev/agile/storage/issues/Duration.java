@@ -300,4 +300,20 @@ public class Duration
 
         return Duration.UNIT_HOURS;
     }
+
+    @Override
+    public boolean equals( Object o )
+    {
+        return o instanceof Duration && equals( (Duration) o );
+    }
+
+    public boolean equals( Duration duration )
+    {
+        if ( duration == null )
+        {
+            return false;
+        }
+
+        return getHours() == duration.getHours();
+    }
 }

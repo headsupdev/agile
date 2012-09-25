@@ -36,6 +36,24 @@ a:hover {
     color: #3ccfff;
 }
 
+a.brokenlink {
+    font-weight: normal;
+    color: #555a5a;
+
+    text-decoration: none;
+    border-bottom: 1px dashed red;
+}
+
+a.brokenlink:hover {
+    color: #3ccfff;
+}
+
+span.brokenlinkhint {
+    vertical-align: top;
+    font-size: 75%;
+    color: #1298c4;
+}
+
 a img {
     text-decoration: none;
 }

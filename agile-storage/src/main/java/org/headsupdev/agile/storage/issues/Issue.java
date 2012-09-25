@@ -72,6 +72,7 @@ public class Issue
     public static final int TYPE_ENHANCEMENT = 30;
     public static final int TYPE_TASK = 40;
     public static final int TYPE_SPEC = 50;
+    public static final int TYPE_ENQUIRY = 60;
 
     public static final int PRIORITY_BLOCKER = 110;
     public static final int PRIORITY_CRITICAL = 120;
@@ -103,7 +104,7 @@ public class Issue
 
     @Type(type = "text")
     @Field(index = Index.TOKENIZED)
-    private String summary, body;
+    private String summary, body, testNotes;
 
     @ManyToOne(targetEntity = StoredUser.class)
     private User reporter;
@@ -201,6 +202,16 @@ public class Issue
     public void setBody( String body )
     {
         this.body = body;
+    }
+
+    public String getTestNotes()
+    {
+        return testNotes;
+    }
+
+    public void setTestNotes( String testNotes )
+    {
+        this.testNotes = testNotes;
     }
 
     public User getReporter()

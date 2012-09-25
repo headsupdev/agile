@@ -71,6 +71,7 @@ public class MarkedUpTextModel extends Model<String> {
             if ( next.indexOf( ':' ) != -1 )
             {
                 String link = getLink( next, project, providers );
+                boolean broken = isLinkBroken( next, project, providers );
                 if ( link == null )
                 {
                     ret.append( encode( next ) );
@@ -79,9 +80,18 @@ public class MarkedUpTextModel extends Model<String> {
                 {
                     ret.append( "<a href=\"" );
                     ret.append( link );
-                    ret.append( "\">" );
+                    ret.append( "\"" );
+                    if ( broken )
+                    {
+                        ret.append( " class=\"brokenlink\"" );
+                    }
+                    ret.append( ">" );
                     ret.append( encode( next ) );
                     ret.append( "</a>" );
+                }
+                if ( broken )
+                {
+                    ret.append( "<span class=\"brokenlinkhint\">[?]</span>" );
                 }
             }
             else
@@ -132,6 +142,47 @@ public class MarkedUpTextModel extends Model<String> {
         }
 
         return null;
+    }
+
+    public static boolean isLinkBroken( String text, Project fallback, Map<String, LinkProvider> providers )
+    {
+        if ( text == null )
+        {
+            return false;
+        }
+
+        int pos = text.indexOf( ':' );
+        if ( pos == -1 )
+        {
+            return false;
+        }
+
+        String module = text.substring( 0, pos ).toLowerCase();
+        String name = text.substring( pos + 1 );
+
+        if ( module.equals( "wiki" ) )
+        {
+            module = "doc";
+        }
+
+        if ( providers.containsKey( module ) )
+        {
+            pos = name.indexOf( ":" );
+            if ( pos != -1 )
+            {
+                String projectId = name.substring( 0, pos );
+                Project project = Manager.getStorageInstance().getProject( projectId );
+                if ( project != null )
+                {
+                    fallback = project;
+                }
+
+                name = name.substring( pos + 1 );
+            }
+            return providers.get( module ).isLinkBroken( name, fallback );
+        }
+
+        return false;
     }
 
     // TODO find the wicket encoding and use that instead - else centralise this...

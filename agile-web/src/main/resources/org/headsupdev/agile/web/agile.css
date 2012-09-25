@@ -39,6 +39,7 @@ body {min-height: 100%;} /* for proper browsers */
 
 #header1 .headbutton {
     text-decoration: none;
+    white-space: nowrap;
     display: inline-block;
 
     cursor: pointer;
@@ -113,7 +114,7 @@ body {min-height: 100%;} /* for proper browsers */
 
 #mainmenu, #submenu {
     font-weight: bold;
-    height: 34px;
+    height: 18px;
     white-space: nowrap;
 }
 
@@ -898,58 +899,3 @@ div.filterborder {
     border-bottom-width: 35px;
 }
 
-/* internal scrollbars */
-
-#mainmenu .jspVerticalBar, #submenu .jspVerticalBar
-{
-    display: none;
-}
-
-.jspHorizontalBar,
-.jspVerticalBar,
-.jspTrack
-{
-    background: transparent;
-}
-
-.jspHorizontalBar
-{
-    height: 4px;
-}
-
-.jspVerticalBar
-{
-    width: 4px;
-}
-
-.jspDrag
-{
-    background:  #666;
-
-    height: 6px;
-    margin-top: -1px;
-    -moz-border-radius: 2px;
-    -webkit-border-radius: 2px;
-    border-radius: 2px;
-}
-
-jspTrack .jspActive,
-.jspTrack .jspHover,
-.jspDrag:hover
-{
-    background: #000;
-}
-
-
-.jspArrow
-{
-    display: none;
-}
-
-.jspVerticalBar>.jspDisabled,
-.jspVerticalBar>.jspDisabled:hover,
-.jspHorizontalBar>.jspDisabled,
-.jspHorizontalBar>.jspDisabled:hover
-{
-    background-color: transparent;
-}

@@ -22,7 +22,9 @@ import org.headsupdev.agile.app.docs.event.UpdateDocumentEvent;
 import org.headsupdev.agile.storage.Comment;
 import org.headsupdev.agile.web.MountPoint;
 import org.headsupdev.agile.web.components.AttachmentPanel;
+
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.util.lang.Bytes;
 
 /**
  * Add an attachment to a doc
@@ -41,8 +43,10 @@ public class CreateAttachment
     {
         setSubmitLabel( "Create Attachment" );
 
+        form.setMultiPart(true);
         form.add( attachmentPanel = new AttachmentPanel( "attachmentPanel", this ) );
         attachmentPanel.setRequired( true );
+        form.setMaxSize(Bytes.megabytes(100));
     }
 
     protected UpdateDocumentEvent getUpdateEvent( Comment comment )

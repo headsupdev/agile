@@ -3,7 +3,7 @@
 }
 
 #header1 {
-    padding: 0 2px;
+    padding: 0 8px;
 }
 
 #header2 {
@@ -48,7 +48,7 @@
 }
 
 #projectselect {
-    left: 0;
+    left: 8px;
     top: 38px;
 }
 
@@ -59,7 +59,15 @@
 
 #footer {
     padding: 5px 0;
-    height: 80px;
+    height: 62px;
+}
+
+#footer .description {
+    position: absolute;
+    bottom: 22px;
+    left: 2px;
+    
+    line-height: 150%;
 }
 
 #footer .content {
@@ -86,21 +94,15 @@
 
 #mainmenu, #submenu {
     overflow: hidden;
-    height: 30px;
+    padding: 6px 0;
 }
 
 #mainmenu ul, #submenu ul {
     padding: 0;
-    top:  6px;
-    position:absolute;
-}
-
-#mainmenu .jspPane, #submenu .jspPane {
-    height: 8px;
 }
 
 #mainmenu li, #submenu li {
-    padding: 4px 15px;
+    padding: 6px 8px;
 }
 
 #taskpanel {
@@ -113,7 +115,7 @@
 
 #content {
     padding: 2px 2px;
-    margin-bottom: 105px;
+    margin-bottom: 65px;
 }
 
 .dialog {

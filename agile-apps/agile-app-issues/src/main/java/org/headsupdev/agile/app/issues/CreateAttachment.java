@@ -23,7 +23,9 @@ import org.headsupdev.agile.app.issues.event.UpdateIssueEvent;
 import org.headsupdev.agile.storage.Comment;
 import org.headsupdev.agile.web.MountPoint;
 import org.headsupdev.agile.web.components.AttachmentPanel;
+
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.util.lang.Bytes;
 
 /**
  * Add an attachment to an issue
@@ -40,8 +42,10 @@ public class CreateAttachment
 
     protected void layoutChild( Form form )
     {
+        form.setMultiPart(true);
         form.add( attachmentPanel = new AttachmentPanel( "attachmentPanel", this ) );
         attachmentPanel.setRequired( true );
+        form.setMaxSize(Bytes.megabytes(100));
 
         setSubmitLabel( "Create Attachment" );
     }

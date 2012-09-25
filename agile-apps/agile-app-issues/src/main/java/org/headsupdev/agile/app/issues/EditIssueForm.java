@@ -23,6 +23,7 @@ import org.headsupdev.agile.storage.Attachment;
 import org.headsupdev.agile.storage.HibernateStorage;
 import org.headsupdev.agile.storage.StoredProject;
 import org.headsupdev.agile.storage.issues.Duration;
+import org.headsupdev.agile.storage.issues.DurationWorked;
 import org.headsupdev.agile.storage.issues.Issue;
 import org.headsupdev.agile.storage.issues.Milestone;
 import org.headsupdev.agile.web.HeadsUpPage;
@@ -80,6 +81,7 @@ class IssueForm
 {
     private Issue issue;
     private User oldAssignee;
+    private Duration oldTimeRequired;
     private HeadsUpPage owner;
     private EditIssueForm parent;
     private boolean creating;
@@ -89,10 +91,16 @@ class IssueForm
     {
         super( id );
         this.issue = issue;
-        this.oldAssignee = issue.getAssignee();
         this.owner = owner;
         this.parent = parent;
         this.creating = creating;
+
+        this.oldAssignee = issue.getAssignee();
+        if ( issue.getTimeRequired() != null )
+        {
+            this.oldTimeRequired = new Duration( issue.getTimeRequired() );
+        }
+
         setModel( new CompoundPropertyModel<Issue>( issue ) );
 
         add( new Label( "project", issue.getProject().getAlias() ) );
@@ -234,6 +242,7 @@ class IssueForm
         add( new CheckBox( "includeInInitialEstimates" ).setVisible( useTime ) );
 
         add( new TextArea( "body" ) );
+        add( new TextArea( "testNotes" ) );
 
         // if we're creating allow adding of new attachments
         if ( creating )
@@ -260,6 +269,20 @@ class IssueForm
         if ( !creating )
         {
             issue = (Issue) ( (HibernateStorage) owner.getStorage() ).getHibernateSession().merge( issue );
+
+            // if we are updating our total on an issue already begun (having had time logged) we need to log the change
+            if ( issue.getTimeRequired() != null && !issue.getTimeRequired().equals( oldTimeRequired ) &&
+                    issue.getTimeWorked().size() > 0)
+            {
+                DurationWorked simulate = new DurationWorked();
+                simulate.setUpdatedRequired( issue.getTimeRequired() );
+                simulate.setDay( new Date() );
+                simulate.setIssue( issue );
+                simulate.setUser( ( (HeadsUpSession) getSession() ).getUser() );
+
+                ( (HibernateStorage) owner.getStorage() ).save(simulate);
+                issue.getTimeWorked().add( simulate );
+            }
         }
         else if ( Boolean.parseBoolean( issue.getProject().getConfigurationValue( StoredProject.CONFIGURATION_TIMETRACKING_BURNDOWN ) ) )
         {

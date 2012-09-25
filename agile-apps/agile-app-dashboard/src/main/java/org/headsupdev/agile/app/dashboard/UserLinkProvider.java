@@ -19,6 +19,9 @@
 package org.headsupdev.agile.app.dashboard;
 
 import org.headsupdev.agile.api.LinkProvider;
+import org.headsupdev.agile.api.Manager;
+import org.headsupdev.agile.api.Project;
+import org.headsupdev.agile.api.User;
 
 /**
  * Docs link format for a users profile
@@ -43,5 +46,13 @@ public class UserLinkProvider extends LinkProvider
     public String getParamName()
     {
         return "username";
+    }
+
+    @Override
+    public boolean isLinkBroken( String params, Project project )
+    {
+        User user = Manager.getSecurityInstance().getUserByUsername( params );
+
+        return user == null;
     }
 }

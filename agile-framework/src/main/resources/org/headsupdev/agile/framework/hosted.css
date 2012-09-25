@@ -1,0 +1,64 @@
+body, html {
+    margin: 0;
+
+    font-family: "Myriad Pro", Helvetica, Arial, sans-serif;
+    font-weight: lighter;
+    height: 100%;
+
+    background-color: #929292;
+    color: #504c5a;
+    font-size: 14pt;
+    background-color: transparent;
+}
+
+div.hosted {
+    background-image: url(/img/_images/bg1.png);
+    background-repeat: repeat-x;
+
+    width: 228px;
+    height: 228px;
+    padding: 10px;
+
+    background: -o-linear-gradient(top, #Dfe0e0 0px, #f5f5ef 112px);
+    background: -ms-linear-gradient(top, #Dfe0e0 0px, #f5f5ef 112px);
+    background: -moz-linear-gradient(top, #Dfe0e0 0px, #f5f5ef 112px);
+    background: -webkit-linear-gradient(top, #Dfe0e0 0px, #f5f5ef 112px);
+    background: linear-gradient(top, #Dfe0e0 0px, #f5f5ef 112px);
+
+    -o-border-radius: 5px;
+    -ms-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+
+    font-size: 11pt;
+    border: 1px solid #504c5a;
+}
+
+div.header img {
+    padding-top: 5px;
+    width: 100%;
+}
+
+div.entry {
+    padding: 5px 0;
+}
+
+div.footer {
+    border-top: 1px solid #504c5a;
+    position: relative;
+    bottom: -18px;
+
+    padding: 10px 0;
+    text-align: right;
+}
+
+a {
+    color: #00abd1;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}

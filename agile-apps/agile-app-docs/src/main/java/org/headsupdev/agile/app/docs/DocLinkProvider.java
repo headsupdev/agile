@@ -19,6 +19,8 @@
 package org.headsupdev.agile.app.docs;
 
 import org.headsupdev.agile.api.LinkProvider;
+import org.headsupdev.agile.api.Project;
+import org.headsupdev.agile.storage.docs.Document;
 
 /**
  * Doc link format for another document
@@ -43,5 +45,12 @@ public class DocLinkProvider extends LinkProvider
     public String getParamName()
     {
         return "page";
+    }
+
+    @Override
+    public boolean isLinkBroken( String params, Project project )
+    {
+        Document doc = DocsApplication.getDocument( params, project );
+        return doc == null;
     }
 }

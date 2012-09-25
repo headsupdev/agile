@@ -18,9 +18,9 @@
 
 package org.headsupdev.agile.app.docs;
 
-import org.headsupdev.agile.api.Manager;
 import org.headsupdev.agile.api.Project;
 import org.headsupdev.agile.api.LinkProvider;
+import org.headsupdev.agile.web.components.MarkedUpTextModel;
 
 import javax.swing.text.MutableAttributeSet;
 import javax.swing.text.html.HTML;
@@ -138,6 +138,7 @@ public class DocumentRenderer
                         {
                             if ( token.length() == 1 )
                             {
+                                text.write( "&gt;" );
                                 continue;
                             }
                             else
@@ -150,7 +151,15 @@ public class DocumentRenderer
                         {
                             if ( !inlink )
                             {
-                                text.write( markupLink( token, project, linkProviders ) );
+                                String link = MarkedUpTextModel.markUp( token, project );
+                                if ( link == null )
+                                {
+                                    text.write( escapeString( token ) );
+                                }
+                                else
+                                {
+                                    text.write( link );
+                                }
                             }
                             else
                             {
@@ -178,48 +187,6 @@ public class DocumentRenderer
         catch ( IOException e )
         {
             return "(unable to parse document)";
-        }
-    }
-
-    protected static String markupLink( String text, Project project, Map<String, LinkProvider> linkProviders )
-    {
-        String name = text;
-
-        String module = "doc";
-        int pos = name.indexOf( ':' );
-        if ( pos != -1 )
-        {
-            module = name.substring( 0, pos ).toLowerCase();
-            name = name.substring( pos + 1 );
-
-            if ( module.equals( "wiki" ) )
-            {
-                module = "doc";
-            }
-        }
-
-        if ( linkProviders.containsKey( module ) )
-        {
-            Project linkProject = project;
-            pos = name.indexOf( ":" );
-            if ( pos != -1 )
-            {
-                String projectId = name.substring( 0, pos );
-                Project p2 = Manager.getStorageInstance().getProject( projectId );
-                if ( p2 != null )
-                {
-                    linkProject = p2;
-                }
-                name = name.substring( pos + 1 );
-            }
-
-            String link = linkProviders.get( module ).getLink( name, linkProject );
-
-            return "<a href=\"" + link + "\">" + escapeString( text ) + "</a>";
-        }
-        else
-        {
-            return escapeString( text );
         }
     }
 
