@@ -74,6 +74,7 @@ public class Build
     private Integer tests = 0;
     private Integer failures = 0;
     private Integer errors = 0;
+    private Integer warnings = 0;
 
     Build()
     {
@@ -138,6 +139,16 @@ public class Build
     public void setErrors( int errors )
     {
         this.errors = errors;
+    }
+
+    public int getWarnings()
+    {
+        return warnings == null ? 0 : warnings;
+    }
+
+    public void setWarnings( int warnings )
+    {
+        this.warnings = warnings;
     }
 
     public Date getStartTime()

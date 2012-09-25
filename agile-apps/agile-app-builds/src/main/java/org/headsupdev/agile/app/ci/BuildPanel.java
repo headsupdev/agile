@@ -86,6 +86,12 @@ public class BuildPanel
         add( new Label( "failures", String.valueOf( build.getFailures() ) ).add( new CITestStatusModifier( "failures", build, "failures" ) ) );
         add( new Label( "errors", String.valueOf( build.getErrors() ) ).add( new CITestStatusModifier( "errors", build, "errors" ) ) );
 
+        params = new PageParameters();
+        params.add( "project", build.getProject().getId() );
+        params.add( "id", ""+build.getId() );
+        Link warningLink = new BookmarkablePageLink( "warning-link", RenderUtil.getPageClass( "docs/analyze" ), params );
+        add( warningLink.add( new Label( "warnings", String.valueOf( build.getWarnings() ) ).add( new CITestStatusModifier( "warnings", build, "warnings" ) ) ) );
+
         Project root = build.getProject();
         while ( root.getParent() != null )
         {
