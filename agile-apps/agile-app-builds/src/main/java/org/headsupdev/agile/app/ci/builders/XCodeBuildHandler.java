@@ -21,6 +21,7 @@ package org.headsupdev.agile.app.ci.builders;
 import org.headsupdev.agile.storage.HibernateStorage;
 import org.headsupdev.agile.storage.ci.TestResult;
 import org.headsupdev.agile.storage.ci.TestResultSet;
+import org.headsupdev.support.java.FileUtil;
 import org.headsupdev.support.java.IOUtil;
 import org.headsupdev.agile.api.*;
 import org.headsupdev.agile.api.logging.Logger;
@@ -52,15 +53,6 @@ public class XCodeBuildHandler
     protected static void runBuild( XCodeProject project, PropertyTree config, File dir, File output,
                                     Build build, long buildId )
     {
-        String confName = config.getProperty( CIApplication.CONFIGURATION_XCODE_CONFIG.getKey(),
-                (String) CIApplication.CONFIGURATION_XCODE_CONFIG.getDefault() );
-
-        String targetName = config.getProperty( CIApplication.CONFIGURATION_XCODE_TARGET.getKey(),
-                (String) CIApplication.CONFIGURATION_XCODE_TARGET.getDefault() );
-
-        String sdkName = config.getProperty( CIApplication.CONFIGURATION_XCODE_SDK.getKey(),
-                (String) CIApplication.CONFIGURATION_XCODE_SDK.getDefault() );
-
         boolean analyze = Boolean.parseBoolean( config.getProperty( CIApplication.CONFIGURATION_ANALYZE.getKey(),
                 String.valueOf( CIApplication.CONFIGURATION_ANALYZE.getDefault() ) ) );
 
@@ -97,27 +89,7 @@ public class XCodeBuildHandler
                 process.destroy();
 
                 commands.clear();
-                commands.add( "xcodebuild" );
-                // build the specified configuration, or default if none specified
-                if ( !StringUtil.isEmpty( confName ) )
-                {
-                    commands.add( "-configuration" );
-                    commands.add( confName );
-                }
-
-                // build the specified target if specified
-                if ( !StringUtil.isEmpty( targetName ) )
-                {
-                    commands.add( "-target" );
-                    commands.add( targetName );
-                }
-
-                // link to the specified sdk if specified
-                if ( !StringUtil.isEmpty( sdkName ) )
-                {
-                    commands.add( "-sdk" );
-                    commands.add( sdkName );
-                }
+                appendXcodeCommands( config, commands );
 
                 process = Runtime.getRuntime().exec( commands.toArray( new String[commands.size()] ), null, dir );
 
@@ -133,37 +105,41 @@ public class XCodeBuildHandler
                 {
                     waitStreamGobblersToComplete( serr, sout );
 
-
                     IOUtil.close( process.getOutputStream() );
                     IOUtil.close( process.getErrorStream() );
                     IOUtil.close( process.getInputStream() );
                     process.destroy();
 
-                    commands.clear();
-                    commands.add( "scan-build" );
-                    commands.add( "-o" );
-                    File siteRepository = new File( new File( new File( new File( Manager.getStorageInstance().getDataDirectory(), "repository" ), "site" ), project.getId() ), "analyze" );
-                    String outputPath = siteRepository.getPath();
-                    commands.add( outputPath );
-                    commands.add( "xcodebuild" );
-                    commands.add( "-configuration" );
-                    commands.add( "Debug" );
-                    commands.add( "-sdk" );
-                    commands.add( "iphonesimulator" );
-
-                    process = Runtime.getRuntime().exec( commands.toArray( new String[commands.size()] ), null, dir );
-
-                    serr = new StreamGobbler( new InputStreamReader( process.getErrorStream() ), buildOut );
-                    sout = new StreamGobbler( new InputStreamReader( process.getInputStream() ), buildOut );
-                    serr.start();
-                    sout.start();
-
-                    result = process.waitFor();
-
-                    if ( result == 0 )
+                    if ( !canFindScanBuild() )
                     {
-                        waitStreamGobblersToComplete( serr, sout );
+                        buildOut.write( "scan-build not found, please read http://clang-analyzer.llvm.org/installation" );
+                        analyze = false;
+                        build.setWarnings( build.getWarnings() + 1 );
+                    }
+                    else
+                    {
+                        commands.clear();
+                        commands.add( "scan-build" );
+                        commands.add( "-o" );
+                        File siteRepository = new File( new File( new File( new File( Manager.getStorageInstance().getDataDirectory(), "repository" ), "site" ), project.getId() ), "analyze" );
+                        String outputPath = siteRepository.getPath();
+                        commands.add( outputPath );
 
+                        appendXcodeCommands( config, commands );
+
+                        process = Runtime.getRuntime().exec( commands.toArray( new String[commands.size()] ), null, dir );
+
+                        serr = new StreamGobbler( new InputStreamReader( process.getErrorStream() ), buildOut );
+                        sout = new StreamGobbler( new InputStreamReader( process.getInputStream() ), buildOut );
+                        serr.start();
+                        sout.start();
+
+                        result = process.waitFor();
+
+                        if ( result == 0 )
+                        {
+                            waitStreamGobblersToComplete( serr, sout );
+                        }
                     }
                 }
             }
@@ -274,6 +250,48 @@ public class XCodeBuildHandler
             {
                 ex.printStackTrace();
             }
+        }
+    }
+
+    public static boolean canFindScanBuild()
+    {
+        // try and find a binary called scan-build.
+        File scanBuild = FileUtil.lookupInPath( "scan-build" );
+
+        return scanBuild != null;
+    }
+
+    protected static void appendXcodeCommands( PropertyTree config, ArrayList<String> commands ) {
+        String confName = config.getProperty( CIApplication.CONFIGURATION_XCODE_CONFIG.getKey(),
+                (String) CIApplication.CONFIGURATION_XCODE_CONFIG.getDefault() );
+
+        String targetName = config.getProperty( CIApplication.CONFIGURATION_XCODE_TARGET.getKey(),
+                (String) CIApplication.CONFIGURATION_XCODE_TARGET.getDefault() );
+
+        String sdkName = config.getProperty( CIApplication.CONFIGURATION_XCODE_SDK.getKey(),
+                (String) CIApplication.CONFIGURATION_XCODE_SDK.getDefault() );
+
+        commands.add( "xcodebuild" );
+
+        // build the specified configuration, or default if none specified
+        if ( !StringUtil.isEmpty( confName ) )
+        {
+            commands.add( "-configuration" );
+            commands.add( confName );
+        }
+
+        // build the specified target if specified
+        if ( !StringUtil.isEmpty( targetName ) )
+        {
+            commands.add( "-target" );
+            commands.add( targetName );
+        }
+
+        // link to the specified sdk if specified
+        if ( !StringUtil.isEmpty( sdkName ) )
+        {
+            commands.add( "-sdk" );
+            commands.add( sdkName );
         }
     }
 
