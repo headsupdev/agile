@@ -89,8 +89,12 @@ public class BuildPanel
         params = new PageParameters();
         params.add( "project", build.getProject().getId() );
         params.add( "id", ""+build.getId() );
+
+        WebMarkupContainer warningCell = new WebMarkupContainer( "warning-cell" );
         Link warningLink = new BookmarkablePageLink( "warning-link", RenderUtil.getPageClass( "docs/analyze" ), params );
-        add( warningLink.add( new Label( "warnings", String.valueOf( build.getWarnings() ) ).add( new CITestStatusModifier( "warnings", build, "warnings" ) ) ) );
+        warningCell.add( warningLink.add( new Label( "warnings", String.valueOf( build.getWarnings() ) ) ) );
+        add( warningCell.add( new CITestStatusModifier( "warnings", build, "warnings" ) ) );
+
 
         Project root = build.getProject();
         while ( root.getParent() != null )
