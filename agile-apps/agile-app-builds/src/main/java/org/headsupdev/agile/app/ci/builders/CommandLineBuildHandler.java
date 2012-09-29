@@ -18,6 +18,7 @@
 
 package org.headsupdev.agile.app.ci.builders;
 
+import org.headsupdev.agile.api.Project;
 import org.headsupdev.support.java.IOUtil;
 import org.headsupdev.agile.api.CommandLineProject;
 import org.headsupdev.agile.api.PropertyTree;
@@ -36,12 +37,18 @@ import java.util.Date;
  * @since 1.0
  */
 public class CommandLineBuildHandler
+    implements BuildHandler
 {
     private static Logger log = Manager.getLogger( CommandLineBuildHandler.class.getName() );
 
-    protected static void runBuild( CommandLineProject project, PropertyTree config, File dir, File output,
-                                               Build build, long buildId )
+    public void runBuild( Project project, PropertyTree config, PropertyTree appConfig, File dir, File output,
+                                               Build build )
     {
+        if ( !( project instanceof CommandLineProject ) )
+        {
+            return;
+        }
+
         int result = -1;
         Writer buildOut = null;
         Process process = null;
@@ -114,10 +121,24 @@ public class CommandLineBuildHandler
         if ( result != 0 )
         {
             build.setStatus( Build.BUILD_FAILED );
+            onBuildFailed( project, config, appConfig, dir, output, build );
         }
         else
         {
             build.setStatus( Build.BUILD_SUCCEEDED );
+            onBuildPassed( project, config, appConfig, dir, output, build );
         }
+    }
+
+    public void onBuildPassed( Project project, PropertyTree config, PropertyTree appConfig, File dir, File output,
+                               Build build )
+    {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void onBuildFailed( Project project, PropertyTree config, PropertyTree appConfig, File dir, File output,
+                               Build build )
+    {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 }

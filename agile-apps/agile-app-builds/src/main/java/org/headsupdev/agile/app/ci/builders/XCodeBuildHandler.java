@@ -42,6 +42,7 @@ import java.util.regex.Pattern;
  * @since 1.0
  */
 public class XCodeBuildHandler
+    implements BuildHandler
 {
 
     public static final Pattern BUILD_LOG_PATTERN = Pattern.compile( "[0-9]*.txt" );
@@ -50,11 +51,13 @@ public class XCodeBuildHandler
 
     private static Logger log = Manager.getLogger( XCodeBuildHandler.class.getName() );
 
-    protected static void runBuild( XCodeProject project, PropertyTree config, File dir, File output,
-                                    Build build, long buildId )
+    public void runBuild( Project project, PropertyTree config, PropertyTree appConfig, File dir, File output,
+                                    Build build )
     {
-        boolean analyze = Boolean.parseBoolean( config.getProperty( CIApplication.CONFIGURATION_ANALYZE.getKey(),
-                String.valueOf( CIApplication.CONFIGURATION_ANALYZE.getDefault() ) ) );
+        if ( !( project instanceof XCodeProject ) )
+        {
+            return;
+        }
 
         int result = -1;
 
@@ -89,7 +92,7 @@ public class XCodeBuildHandler
                 process.destroy();
 
                 commands.clear();
-                appendXcodeCommands( config, commands );
+                appendXcodeCommands( config, commands, null );
 
                 process = Runtime.getRuntime().exec( commands.toArray( new String[commands.size()] ), null, dir );
 
@@ -99,51 +102,7 @@ public class XCodeBuildHandler
                 sout.start();
 
                 result = process.waitFor();
-
-                // if analyzing is desired
-                if ( analyze && ( result == 0 ) )
-                {
-                    waitStreamGobblersToComplete( serr, sout );
-
-                    IOUtil.close( process.getOutputStream() );
-                    IOUtil.close( process.getErrorStream() );
-                    IOUtil.close( process.getInputStream() );
-                    process.destroy();
-
-                    if ( !canFindScanBuild() )
-                    {
-                        buildOut.write( "scan-build not found, please read http://clang-analyzer.llvm.org/installation" );
-                        analyze = false;
-                        build.setWarnings( build.getWarnings() + 1 );
-                    }
-                    else
-                    {
-                        commands.clear();
-                        commands.add( "scan-build" );
-                        commands.add( "-o" );
-                        File siteRepository = new File( new File( new File( new File( Manager.getStorageInstance().getDataDirectory(), "repository" ), "site" ), project.getId() ), "analyze" );
-                        String outputPath = siteRepository.getPath();
-                        commands.add( outputPath );
-
-                        appendXcodeCommands( config, commands );
-
-                        process = Runtime.getRuntime().exec( commands.toArray( new String[commands.size()] ), null, dir );
-
-                        serr = new StreamGobbler( new InputStreamReader( process.getErrorStream() ), buildOut );
-                        sout = new StreamGobbler( new InputStreamReader( process.getInputStream() ), buildOut );
-                        serr.start();
-                        sout.start();
-
-                        result = process.waitFor();
-
-                        if ( result == 0 )
-                        {
-                            waitStreamGobblersToComplete( serr, sout );
-                        }
-                    }
-                }
             }
-
         }
         catch ( InterruptedException e )
         {
@@ -169,6 +128,7 @@ public class XCodeBuildHandler
                 process.destroy();
             }
         }
+        IOUtil.close( buildOut );
 
         parseDatFiles( dir, build );
 
@@ -176,80 +136,12 @@ public class XCodeBuildHandler
         if ( result != 0 )
         {
             build.setStatus( Build.BUILD_FAILED );
+            onBuildFailed( project, config, appConfig, dir, output, build );
         }
         else
         {
             build.setStatus( Build.BUILD_SUCCEEDED );
-        }
-
-        IOUtil.close( buildOut );
-
-        if ( analyze )
-        {
-            try
-            {
-
-                BufferedReader input = new BufferedReader( new FileReader( output ) );
-                try
-                {
-                    String line = null;
-                    while ( ( line = input.readLine() ) != null )
-                    {
-                        Matcher mBugs = BUILD_LOG_BUGS_COUNT_PATTERN.matcher( line );
-                        if ( mBugs.find() )
-                        {
-                            String bugCount = mBugs.group( 1 );
-                            //log.error("bugCount:" + bugCount);
-                            int warnings = build.getWarnings() + Integer.parseInt( bugCount );
-                            //log.error("totalBugCount:" + warnings);
-                            build.setWarnings( warnings );
-                        }
-                        Matcher mOutDir = BUILD_LOG_OUTPUT_DIR_PATTERN.matcher( line );
-                        if ( mOutDir.find() )
-                        {
-                            File outputDir = new File( mOutDir.group( 1 ) );
-                            //log.error("outputDir:" + outputDir.getPath());
-
-                            File renamePath = new File( new File( new File( new File( new File( Manager.getStorageInstance().getDataDirectory(), "repository" ), "site" ), project.getId() ), "analyze" ), "" + build.getId() );
-                            //log.error("renameTo:" + renamePath.getPath());
-
-                            boolean success = outputDir.renameTo( renamePath );
-                            if ( !success )
-                            {
-                                log.error( "failed to rename:" + outputDir.getPath() + "To:" + renamePath.getPath() );
-                            }
-
-                            //rename build name within index file
-                            File indexFile = new File( renamePath, "index.html" );
-                            File indexTmpFile = new File( renamePath, "index.tmp.html" );
-                            String outputName = dir.getName();
-                            //log.error("outputName: "+outputName + " to " + build.getId());
-                            try
-                            {
-                                RenameBuildFromFileToFile( outputName + " -", "build: " + buildId + " -", indexFile, indexTmpFile );
-                            }
-                            catch ( IOException ex )
-                            {
-                                ex.printStackTrace();
-                            }
-
-                            success = indexTmpFile.renameTo( indexFile );
-                            if ( !success )
-                            {
-                                log.error( "failed to rename:" + indexTmpFile.getPath() + "To:" + indexFile.getPath() );
-                            }
-                        }
-                    }
-                }
-                finally
-                {
-                    input.close();
-                }
-            }
-            catch ( IOException ex )
-            {
-                ex.printStackTrace();
-            }
+            onBuildPassed(project, config, appConfig, dir, output, build);
         }
     }
 
@@ -261,10 +153,8 @@ public class XCodeBuildHandler
         return scanBuild != null;
     }
 
-    protected static void appendXcodeCommands( PropertyTree config, ArrayList<String> commands ) {
-        String confName = config.getProperty( CIApplication.CONFIGURATION_XCODE_CONFIG.getKey(),
-                (String) CIApplication.CONFIGURATION_XCODE_CONFIG.getDefault() );
-
+    protected static void appendXcodeCommands( PropertyTree config, ArrayList<String> commands, String overrideConfig )
+    {
         String targetName = config.getProperty( CIApplication.CONFIGURATION_XCODE_TARGET.getKey(),
                 (String) CIApplication.CONFIGURATION_XCODE_TARGET.getDefault() );
 
@@ -273,11 +163,22 @@ public class XCodeBuildHandler
 
         commands.add( "xcodebuild" );
 
-        // build the specified configuration, or default if none specified
-        if ( !StringUtil.isEmpty( confName ) )
+        if ( overrideConfig != null )
         {
             commands.add( "-configuration" );
-            commands.add( confName );
+            commands.add( overrideConfig );
+        }
+        else
+        {
+            String confName = config.getProperty( CIApplication.CONFIGURATION_XCODE_CONFIG.getKey(),
+                    (String) CIApplication.CONFIGURATION_XCODE_CONFIG.getDefault() );
+
+            // build the specified configuration, or default if none specified
+            if ( !StringUtil.isEmpty( confName ) )
+            {
+                commands.add( "-configuration" );
+                commands.add( confName );
+            }
         }
 
         // build the specified target if specified
@@ -460,5 +361,132 @@ public class XCodeBuildHandler
         }
 
         IOUtil.close( reader );
+    }
+
+    public void onBuildPassed( Project project, PropertyTree config, PropertyTree appConfig, File dir, File output,
+                               Build build )
+    {
+        boolean analyze = Boolean.parseBoolean( config.getProperty( CIApplication.CONFIGURATION_ANALYZE.getKey(),
+                String.valueOf( CIApplication.CONFIGURATION_ANALYZE.getDefault() ) ) );
+
+        // if analyzing is desired
+        if ( analyze )
+        {
+            Writer buildOut = null;
+            try
+            {
+                buildOut = new FileWriter( output, true );
+                if ( !canFindScanBuild() )
+                {
+                    build.setWarnings( build.getWarnings() + 1 );
+
+                    buildOut.write( "scan-build not found, please read http://clang-analyzer.llvm.org/installation" );
+                    return;
+                }
+                else
+                {
+                    ArrayList<String> commands = new ArrayList<String>();
+                    commands.add( "scan-build" );
+                    commands.add( "-o" );
+                    File siteRepository = new File( new File( new File( new File( Manager.getStorageInstance().getDataDirectory(), "repository" ), "site" ), project.getId() ), "analyze" );
+                    String outputPath = siteRepository.getPath();
+                    commands.add( outputPath );
+
+                    appendXcodeCommands( config, commands, "Debug" );
+
+                    Process process = Runtime.getRuntime().exec( commands.toArray( new String[commands.size()] ), null, dir );
+
+                    StreamGobbler serr = new StreamGobbler( new InputStreamReader( process.getErrorStream() ), buildOut );
+                    StreamGobbler sout = new StreamGobbler( new InputStreamReader( process.getInputStream() ), buildOut );
+                    serr.start();
+                    sout.start();
+
+                    process.waitFor();
+                    waitStreamGobblersToComplete( serr, sout );
+
+                    IOUtil.close( process.getOutputStream() );
+                    IOUtil.close( process.getErrorStream() );
+                    IOUtil.close( process.getInputStream() );
+                    process.destroy();
+                }
+            }
+            catch ( InterruptedException e )
+            {
+                // here we are done executing, parse what was written as normal
+            }
+            catch ( IOException e )
+            {
+                e.printStackTrace( new PrintWriter( buildOut ) );
+                log.error( "Unable to write to build output file - reported in build log", e );
+            }
+            finally
+            {
+                IOUtil.close( buildOut );
+            }
+
+            try
+            {
+
+                BufferedReader input = new BufferedReader( new FileReader( output ) );
+                try
+                {
+                    String line = null;
+                    while ( ( line = input.readLine() ) != null )
+                    {
+                        Matcher mBugs = BUILD_LOG_BUGS_COUNT_PATTERN.matcher( line );
+                        if ( mBugs.find() )
+                        {
+                            String bugCount = mBugs.group( 1 );
+                            int warnings = build.getWarnings() + Integer.parseInt( bugCount );
+                            build.setWarnings( warnings );
+                        }
+                        Matcher mOutDir = BUILD_LOG_OUTPUT_DIR_PATTERN.matcher( line );
+                        if ( mOutDir.find() )
+                        {
+                            File outputDir = new File( mOutDir.group( 1 ) );
+                            File renamePath = new File( new File( new File( new File( new File( Manager.getStorageInstance().getDataDirectory(), "repository" ), "site" ), project.getId() ), "analyze" ), "" + build.getId() );
+                            boolean success = outputDir.renameTo( renamePath );
+                            if ( !success )
+                            {
+                                log.error( "failed to rename:" + outputDir.getPath() + "To:" + renamePath.getPath() );
+                            }
+
+                            //rename build name within index file
+                            File indexFile = new File( renamePath, "index.html" );
+                            File indexTmpFile = new File( renamePath, "index.tmp.html" );
+                            String outputName = dir.getName();
+                            try
+                            {
+                                RenameBuildFromFileToFile( outputName + " -", "build: " + build.getId() + " -", indexFile, indexTmpFile );
+                            }
+                            catch ( IOException ex )
+                            {
+                                ex.printStackTrace();
+                            }
+
+                            success = indexTmpFile.renameTo( indexFile );
+                            if ( !success )
+                            {
+                                log.error( "failed to rename:" + indexTmpFile.getPath() + "To:" + indexFile.getPath() );
+                            }
+                        }
+                    }
+                }
+                finally
+                {
+                    input.close();
+                }
+            }
+            catch ( IOException ex )
+            {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    public void onBuildFailed( Project project, PropertyTree config, PropertyTree appConfig, File dir, File output,
+                               Build build )
+    {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 }

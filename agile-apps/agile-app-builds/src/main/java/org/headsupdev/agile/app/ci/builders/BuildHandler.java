@@ -29,37 +29,14 @@ import java.io.*;
  * @author Andrew Williams
  * @since 1.0
  */
-public class BuildHandler
+public interface BuildHandler
 {
-    public static boolean supportsBuilding( Project project )
-    {
-        return project instanceof MavenTwoProject || project instanceof AntProject ||
-            project instanceof EclipseProject || project instanceof XCodeProject ||
-            project instanceof CommandLineProject;
-    }
+    public void runBuild( Project project, PropertyTree config, PropertyTree appConfig, File dir, File output,
+                          Build build );
 
-    public static void runBuild( Project project, PropertyTree config, PropertyTree appConfig, File dir, File output,
-                                 Build build, long buildId )
-    {
-        if ( project instanceof MavenTwoProject )
-        {
-            MavenTwoBuildHandler.runBuild( (MavenTwoProject) project, config, appConfig, dir, output, build, buildId );
-        }
-        else if ( project instanceof AntProject )
-        {
-            AntBuildHandler.runBuild( (AntProject) project, config, appConfig, dir, output, build, buildId );
-        }
-        else if ( project instanceof EclipseProject )
-        {
-            EclipseBuildHandler.runBuild( (EclipseProject) project, config, appConfig, dir, output, build, buildId );
-        }
-        else if ( project instanceof XCodeProject )
-        {
-            XCodeBuildHandler.runBuild( (XCodeProject) project, config, dir, output, build, buildId );
-        }
-        else if ( project instanceof CommandLineProject )
-        {
-            CommandLineBuildHandler.runBuild( (CommandLineProject) project, config, dir, output, build, buildId );
-        }
-    }
+    public void onBuildPassed( Project project, PropertyTree config, PropertyTree appConfig, File dir, File output,
+                               Build build );
+
+    public void onBuildFailed( Project project, PropertyTree config, PropertyTree appConfig, File dir, File output,
+                               Build build );
 }

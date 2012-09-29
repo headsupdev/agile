@@ -18,12 +18,12 @@
 
 package org.headsupdev.agile.app.ci;
 
+import org.headsupdev.agile.app.ci.builders.BuildHandlerFactory;
 import org.headsupdev.support.java.FileUtil;
 import org.headsupdev.agile.api.logging.Logger;
 import org.headsupdev.agile.api.*;
 import org.headsupdev.agile.app.ci.event.BuildFailedEvent;
 import org.headsupdev.agile.app.ci.event.BuildSucceededEvent;
-import org.headsupdev.agile.app.ci.builders.BuildHandler;
 import org.headsupdev.agile.storage.HibernateStorage;
 import org.headsupdev.agile.storage.ci.Build;
 
@@ -62,7 +62,7 @@ public class CIBuilder
 
     public void queueProject( Project project, String id, PropertyTree config, boolean notify )
     {
-        if ( !BuildHandler.supportsBuilding( project ) )
+        if ( !BuildHandlerFactory.supportsBuilding( project ) )
         {
             return;
         }
@@ -80,7 +80,7 @@ public class CIBuilder
 
     public void dequeueProject( Project project )
     {
-        if ( !BuildHandler.supportsBuilding( project ))
+        if ( !BuildHandlerFactory.supportsBuilding( project ))
         {
             return;
         }
@@ -216,7 +216,8 @@ public class CIBuilder
             long buildId = application.addBuild( build );
             File output = new File( projectDir, buildId + ".txt" );
 
-            BuildHandler.runBuild( project, config, application.getConfiguration(), base, output, build, buildId );
+            BuildHandlerFactory.getBuildHandler( project ).runBuild( project, config, application.getConfiguration(),
+                    base, output, build );
 
             Event event;
             if ( build.getStatus() != Build.BUILD_SUCCEEDED )

@@ -18,10 +18,9 @@
 
 package org.headsupdev.agile.app.ci;
 
-import org.headsupdev.agile.security.permission.ProjectListPermission;
+import org.headsupdev.agile.app.ci.builders.BuildHandlerFactory;
 import org.headsupdev.agile.app.ci.permission.BuildForcePermission;
 import org.headsupdev.agile.app.ci.permission.BuildListPermission;
-import org.headsupdev.agile.app.ci.builders.BuildHandler;
 import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.HeadsUpSession;
 import org.headsupdev.agile.web.DynamicMenuLink;
@@ -29,6 +28,7 @@ import org.headsupdev.agile.web.components.FormattedDateModel;
 import org.headsupdev.agile.web.components.FormattedDurationModel;
 import org.headsupdev.agile.web.components.StripedListView;
 import org.headsupdev.agile.web.components.ProjectTreeListView;
+import org.headsupdev.agile.security.permission.ProjectListPermission;
 import org.headsupdev.agile.storage.StoredProject;
 import org.headsupdev.agile.storage.HibernateStorage;
 import org.headsupdev.agile.storage.ci.Build;
@@ -130,7 +130,7 @@ public class CI
             add( queued.setVisible( CIBuilder.isProjectQueued( getProject() ) ) );
 
             if ( userHasPermission( ( (HeadsUpSession) getPage().getSession() ).getUser(),
-                    new BuildForcePermission(), getProject() ) && BuildHandler.supportsBuilding( getProject() ) )
+                    new BuildForcePermission(), getProject() ) && BuildHandlerFactory.supportsBuilding( getProject() ) )
             {
                 if ( status != Build.BUILD_RUNNING && !CIBuilder.isProjectQueued( getProject() ) )
                 {
@@ -229,7 +229,7 @@ public class CI
         }
 
         final boolean canForce = projectList && userHasPermission( ( (HeadsUpSession) getPage().getSession() ).getUser(),
-            new BuildForcePermission(), project ) && BuildHandler.supportsBuilding( project );
+            new BuildForcePermission(), project ) && BuildHandlerFactory.supportsBuilding( project );
         WebMarkupContainer statusLink = new Link( "status-link" )
         {
             public void onClick()

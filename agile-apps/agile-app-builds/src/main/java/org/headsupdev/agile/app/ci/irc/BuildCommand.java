@@ -19,6 +19,7 @@
 package org.headsupdev.agile.app.ci.irc;
 
 import org.headsupdev.agile.app.ci.CIApplication;
+import org.headsupdev.agile.app.ci.builders.BuildHandlerFactory;
 import org.headsupdev.agile.storage.HibernateStorage;
 import org.headsupdev.irc.AbstractIRCCommand;
 import org.headsupdev.irc.IRCUser;
@@ -91,7 +92,7 @@ public class BuildCommand
                     }
                     else
                     {
-                        if ( !BuildHandler.supportsBuilding( project ) )
+                        if ( !BuildHandlerFactory.supportsBuilding(project) )
                         {
                             conn.sendMessage( channel, "Project '" + message + "' does not support building" );
                         }

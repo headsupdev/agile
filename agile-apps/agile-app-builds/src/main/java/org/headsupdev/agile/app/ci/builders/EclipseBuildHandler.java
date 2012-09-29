@@ -18,6 +18,7 @@
 
 package org.headsupdev.agile.app.ci.builders;
 
+import org.headsupdev.agile.api.Project;
 import org.headsupdev.support.java.FileUtil;
 import org.headsupdev.support.java.IOUtil;
 import org.headsupdev.agile.api.EclipseProject;
@@ -39,12 +40,18 @@ import java.util.Date;
  * @since 1.0
  */
 public class EclipseBuildHandler
+    implements BuildHandler
 {
     final static String PLUGIN_FILE_NAME = "org.headsupdev.agile.build.eclipse_1.0.0.jar";
 
-    protected static void runBuild( EclipseProject project, PropertyTree config, PropertyTree appConfig, File dir,
-                                    File output, Build build, long buildId )
+    public void runBuild( Project project, PropertyTree config, PropertyTree appConfig, File dir, File output,
+                          Build build )
     {
+        if ( !( project instanceof EclipseProject) )
+        {
+            return;
+        }
+
         Logger log = Manager.getLogger( EclipseBuildHandler.class.getName() );
 
         URL plugin = EclipseBuildHandler.class.getResource( "eclipse/" + PLUGIN_FILE_NAME );
@@ -183,10 +190,24 @@ public class EclipseBuildHandler
         if ( result != 0 )
         {
             build.setStatus( Build.BUILD_FAILED );
+            onBuildFailed( project, config, appConfig, dir, output, build );
         }
         else
         {
             build.setStatus( Build.BUILD_SUCCEEDED );
+            onBuildPassed(project, config, appConfig, dir, output, build);
         }
+    }
+
+    public void onBuildPassed( Project project, PropertyTree config, PropertyTree appConfig, File dir, File output,
+                               Build build )
+    {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void onBuildFailed( Project project, PropertyTree config, PropertyTree appConfig, File dir, File output,
+                               Build build )
+    {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 }

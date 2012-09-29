@@ -18,10 +18,8 @@
 
 package org.headsupdev.agile.app.ci.builders;
 
+import org.headsupdev.agile.api.*;
 import org.headsupdev.support.java.IOUtil;
-import org.headsupdev.agile.api.AntProject;
-import org.headsupdev.agile.api.Manager;
-import org.headsupdev.agile.api.PropertyTree;
 import org.headsupdev.agile.api.logging.Logger;
 import org.headsupdev.agile.app.ci.CIApplication;
 import org.headsupdev.agile.storage.ci.Build;
@@ -40,9 +38,14 @@ public class AntBuildHandler
 {
     private static Logger log = Manager.getLogger( XCodeBuildHandler.class.getName() );
 
-    protected static void runBuild( AntProject project, PropertyTree config, PropertyTree appConfig, File dir,
-                                    File output, Build build, long buildId )
+    public void runBuild( Project project, PropertyTree config, PropertyTree appConfig, File dir, File output,
+                          Build build )
     {
+        if ( !( project instanceof AntProject) )
+        {
+            return;
+        }
+
         int result = -1;
         Writer buildOut = null;
         Process process = null;
@@ -114,22 +117,37 @@ public class AntBuildHandler
             IOUtil.close( buildOut );
         }
 
-        parseTests( project, findJUnitReports( dir ), build, buildId,
-            Manager.getStorageInstance() );
+        parseTests( project, findJUnitReports( dir ), build, Manager.getStorageInstance() );
 
         build.setEndTime( new Date() );
         if ( result != 0 )
         {
             build.setStatus( Build.BUILD_FAILED );
+            onBuildFailed(project, config, appConfig, dir, output, build);
         }
         else
         {
             build.setStatus( Build.BUILD_SUCCEEDED );
+            onBuildPassed(project, config, appConfig, dir, output, build);
         }
     }
 
     protected static File findJUnitReports( File inDir )
     {
         return new File( new File( inDir, "target" ), "surefire-reports" );
+    }
+
+    @Override
+    public void onBuildFailed( Project project, PropertyTree config, PropertyTree appConfig, File dir, File output,
+                               Build build )
+    {
+        // don't execute the inherited maven callbacks
+    }
+
+    @Override
+    public void onBuildPassed( Project project, PropertyTree config, PropertyTree appConfig, File dir, File output,
+                               Build build )
+    {
+        // don't execute the inherited maven callbacks
     }
 }

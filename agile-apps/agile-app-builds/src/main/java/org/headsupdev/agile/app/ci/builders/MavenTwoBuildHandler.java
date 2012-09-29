@@ -44,12 +44,18 @@ import org.jdom.JDOMException;
  * @since 1.0
  */
 public class MavenTwoBuildHandler
+    implements BuildHandler
 {
     private static Logger log = Manager.getLogger( MavenTwoBuildHandler.class.getName() );
 
-    protected static void runBuild( MavenTwoProject project, PropertyTree config, PropertyTree appConfig, File dir,
-                                    File logFile, Build build, long buildId )
+    public void runBuild( Project project, PropertyTree config, PropertyTree appConfig, File dir, File logFile,
+                          Build build )
     {
+        if ( !( project instanceof MavenTwoProject ) )
+        {
+            return;
+        }
+
         FileOutputHandler buildOut = null;
         Storage storage = Manager.getStorageInstance();
 
@@ -108,15 +114,17 @@ public class MavenTwoBuildHandler
         }
 
         File testReportDir = new File( new File( dir, "target" ), "surefire-reports" );
-        parseTests( project, testReportDir, build, buildId, storage );
+        parseTests( project, testReportDir, build, storage );
 
         if ( result == null || result.getExitCode() != 0 )
         {
             build.setStatus( Build.BUILD_FAILED );
+            onBuildFailed( project, config, appConfig, dir, logFile, build );
         }
         else
         {
             build.setStatus( Build.BUILD_SUCCEEDED );
+            onBuildPassed(project, config, appConfig, dir, logFile, build);
         }
 
         build.setEndTime( new Date() );
@@ -126,10 +134,10 @@ public class MavenTwoBuildHandler
         }
     }
 
-    protected static void parseTests( Project project, File reportDir, Build build, long buildId, Storage storage )
+    protected static void parseTests( Project project, File reportDir, Build build, Storage storage )
     {
         File projectDir = CIApplication.getProjectDir( project );
-        File testdir = new File( projectDir, "tests-" + buildId );
+        File testdir = new File( projectDir, "tests-" + build.getId() );
         testdir.mkdirs();
 
         int tests = 0, failures = 0, errors = 0;
@@ -279,5 +287,17 @@ public class MavenTwoBuildHandler
         }
 
         return exe;
+    }
+
+    public void onBuildPassed( Project project, PropertyTree config, PropertyTree appConfig, File dir, File output,
+                               Build build )
+    {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void onBuildFailed( Project project, PropertyTree config, PropertyTree appConfig, File dir, File output,
+                               Build build )
+    {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 }
