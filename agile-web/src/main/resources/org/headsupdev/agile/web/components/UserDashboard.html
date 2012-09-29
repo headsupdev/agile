@@ -34,12 +34,14 @@
         <wicket:container wicket:id="issue"></wicket:container>
       </wicket:container>
     </wicket:container>
+    <wicket:enclosure child="issuelist">
     <tr><td class="dashmilestone" colspan="6">
       <div class="project">Others</div>
     </td></tr>
     <wicket:container wicket:id="issuelist">
       <wicket:container wicket:id="issue"></wicket:container>
     </wicket:container>
+    </wicket:enclosure>
     </table>
   </div>
   <!--<div class="dashfooter">...see more information at <a href="/account">my account</a></div>-->

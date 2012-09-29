@@ -121,7 +121,8 @@ public class UserDashboard extends Panel
             }
         } );
 
-        add( new ListView<Issue>( "issuelist", getIssuesInMilestoneAssignedTo( null, user ) )
+        List<Issue> noMilestone = getIssuesInMilestoneAssignedTo( null, user );
+        add( new ListView<Issue>( "issuelist", noMilestone )
         {
             protected void populateItem( ListItem<Issue> listItem )
             {
@@ -129,7 +130,7 @@ public class UserDashboard extends Panel
 
                 listItem.add( new IssuePanelRow( "issue", issue, page, true, true, true ) );
             }
-        });
+        }.setVisible( noMilestone.size() > 0 ) );
     }
 
     private void initIssueList( User user )
