@@ -18,7 +18,6 @@
 
 package org.headsupdev.agile.app.ci;
 
-import org.headsupdev.agile.app.ci.builders.BuildHandlerFactory;
 import org.headsupdev.agile.app.ci.permission.BuildForcePermission;
 import org.headsupdev.agile.app.ci.permission.BuildListPermission;
 import org.headsupdev.agile.web.HeadsUpPage;
@@ -130,7 +129,7 @@ public class CI
             add( queued.setVisible( CIBuilder.isProjectQueued( getProject() ) ) );
 
             if ( userHasPermission( ( (HeadsUpSession) getPage().getSession() ).getUser(),
-                    new BuildForcePermission(), getProject() ) && BuildHandlerFactory.supportsBuilding( getProject() ) )
+                    new BuildForcePermission(), getProject() ) && CIApplication.getHandlerFactory().supportsBuilding( getProject() ) )
             {
                 if ( status != Build.BUILD_RUNNING && !CIBuilder.isProjectQueued( getProject() ) )
                 {
@@ -229,7 +228,7 @@ public class CI
         }
 
         final boolean canForce = projectList && userHasPermission( ( (HeadsUpSession) getPage().getSession() ).getUser(),
-            new BuildForcePermission(), project ) && BuildHandlerFactory.supportsBuilding( project );
+            new BuildForcePermission(), project ) && CIApplication.getHandlerFactory().supportsBuilding( project );
         WebMarkupContainer statusLink = new Link( "status-link" )
         {
             public void onClick()

@@ -18,6 +18,7 @@
 
 package org.headsupdev.agile.app.ci;
 
+import org.headsupdev.agile.app.ci.builders.BuildHandlerFactory;
 import org.headsupdev.support.java.FileUtil;
 import org.headsupdev.agile.app.ci.irc.BuildCommand;
 import org.headsupdev.agile.storage.StoredProject;
@@ -44,7 +45,7 @@ import java.util.LinkedList;
 import java.io.File;
 
 /**
- * The application descritor for continuous integration
+ * The application descriptor for continuous integration
  *
  * @author Andrew Williams
  * @version $Id$
@@ -54,6 +55,7 @@ public class CIApplication
     extends WebApplication
 {
     public static final String ID = "builds";
+    protected static BuildHandlerFactory handlerFactory = new BuildHandlerFactory();
 
     public static final ConfigurationItem CONFIGURATION_NOTIFY_REPEAT_PASS = new ConfigurationItem(
             "notify.pass.repeat", false, "Send notifications for continual success",
@@ -128,8 +130,6 @@ public class CIApplication
         "", "Project Target", "The xcode target to build this project (optional)" );
     public static final ConfigurationItem CONFIGURATION_XCODE_SDK = new ConfigurationItem( "xcode.sdk",
         "", "Project SDK", "The SDK to build this project against - mainly used for testing (optional)" );
-    public static final ConfigurationItem CONFIGURATION_XCODE_COPYSYMBOLS = new ConfigurationItem( "xcode.symbols",
-        false, "Copy debugging symbols", "Make a copy of the debugging symbols for later use" );
     public static final ConfigurationItem CONFIGURATION_ANALYZE = new ConfigurationItem( "analyze",
         false, "Analyze", "Check for common coding errors" );
 
@@ -140,14 +140,14 @@ public class CIApplication
     private List<MenuLink> links;
     private List<String> eventTypes;
 
-    private List<ConfigurationItem> globalItems = new LinkedList<ConfigurationItem>();
+    protected List<ConfigurationItem> globalItems = new LinkedList<ConfigurationItem>();
 
-    private List<ConfigurationItem> mavenProjectItems = new LinkedList<ConfigurationItem>();
-    private List<ConfigurationItem> antProjectItems = new LinkedList<ConfigurationItem>();
-    private List<ConfigurationItem> eclipseProjectItems = new LinkedList<ConfigurationItem>();
-    private List<ConfigurationItem> cmdProjectItems = new LinkedList<ConfigurationItem>();
-    private List<ConfigurationItem> xcodeProjectItems = new LinkedList<ConfigurationItem>();
-    private List<ConfigurationItem> otherProjectItems = new LinkedList<ConfigurationItem>();
+    protected List<ConfigurationItem> mavenProjectItems = new LinkedList<ConfigurationItem>();
+    protected List<ConfigurationItem> antProjectItems = new LinkedList<ConfigurationItem>();
+    protected List<ConfigurationItem> eclipseProjectItems = new LinkedList<ConfigurationItem>();
+    protected List<ConfigurationItem> cmdProjectItems = new LinkedList<ConfigurationItem>();
+    protected List<ConfigurationItem> xcodeProjectItems = new LinkedList<ConfigurationItem>();
+    protected List<ConfigurationItem> otherProjectItems = new LinkedList<ConfigurationItem>();
 
     private static CIBuilder builder = new CIBuilder();
 
@@ -156,6 +156,15 @@ public class CIApplication
     public static CIBuilder getBuilder()
     {
         return builder;
+    }
+
+    public static BuildHandlerFactory getHandlerFactory()
+    {
+        return handlerFactory;
+    }
+
+    public static void setHandlerFactory(BuildHandlerFactory handlerFactory) {
+        CIApplication.handlerFactory = handlerFactory;
     }
 
     public static CIScheduler getScheduler()
@@ -226,14 +235,12 @@ public class CIApplication
         items.add( CONFIGURATION_XCODE_TARGET );
         items.add( CONFIGURATION_XCODE_SDK ) ;
         items.add( CONFIGURATION_ANALYZE );
-        items.add( CONFIGURATION_XCODE_COPYSYMBOLS );
         xcodeProjectItems.add( new ConfigurationItem( "schedule.default", "Default Build Schedule", items ) );
         items = new LinkedList<ConfigurationItem>();
         items.add( CONFIGURATION_XCODE_CONFIG );
         items.add( CONFIGURATION_XCODE_TARGET );
         items.add( CONFIGURATION_XCODE_SDK );
         items.add( CONFIGURATION_ANALYZE );
-        items.add( CONFIGURATION_XCODE_COPYSYMBOLS );
         items.add( CONFIGURATION_CRON_EXPRESSION );
         xcodeProjectItems.add( new ConfigurationItem( "schedule", "Build Schedule",
                 new ConfigurationItem( "schedule", "Build Schedule", items ) ) );

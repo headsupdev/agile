@@ -62,7 +62,7 @@ public class CIBuilder
 
     public void queueProject( Project project, String id, PropertyTree config, boolean notify )
     {
-        if ( !BuildHandlerFactory.supportsBuilding( project ) )
+        if ( !CIApplication.getHandlerFactory().supportsBuilding( project ) )
         {
             return;
         }
@@ -80,7 +80,7 @@ public class CIBuilder
 
     public void dequeueProject( Project project )
     {
-        if ( !BuildHandlerFactory.supportsBuilding( project ))
+        if ( !CIApplication.getHandlerFactory().supportsBuilding( project ))
         {
             return;
         }
@@ -216,8 +216,8 @@ public class CIBuilder
             long buildId = application.addBuild( build );
             File output = new File( projectDir, buildId + ".txt" );
 
-            BuildHandlerFactory.getBuildHandler( project ).runBuild( project, config, application.getConfiguration(),
-                    base, output, build );
+            CIApplication.getHandlerFactory().getBuildHandler( project ).runBuild( project, config,
+                    application.getConfiguration(), base, output, build );
 
             Event event;
             if ( build.getStatus() != Build.BUILD_SUCCEEDED )

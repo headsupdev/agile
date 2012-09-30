@@ -12,14 +12,14 @@ import org.headsupdev.agile.api.*;
  */
 public class BuildHandlerFactory
 {
-    public static boolean supportsBuilding( Project project )
+    public boolean supportsBuilding( Project project )
     {
         return project instanceof MavenTwoProject || project instanceof AntProject ||
                 project instanceof EclipseProject || project instanceof XCodeProject ||
                 project instanceof CommandLineProject;
     }
 
-    public static BuildHandler getBuildHandler( Project project )
+    public BuildHandler getBuildHandler( Project project )
     {
         if ( project instanceof MavenTwoProject)
         {

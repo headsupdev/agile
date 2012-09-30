@@ -19,7 +19,6 @@
 package org.headsupdev.agile.app.ci.irc;
 
 import org.headsupdev.agile.app.ci.CIApplication;
-import org.headsupdev.agile.app.ci.builders.BuildHandlerFactory;
 import org.headsupdev.agile.storage.HibernateStorage;
 import org.headsupdev.irc.AbstractIRCCommand;
 import org.headsupdev.irc.IRCUser;
@@ -31,7 +30,6 @@ import org.headsupdev.agile.web.HeadsUpSession;
 import org.headsupdev.agile.storage.ci.Build;
 import org.headsupdev.agile.storage.HibernateUtil;
 import org.headsupdev.agile.app.ci.CIBuilder;
-import org.headsupdev.agile.app.ci.builders.BuildHandler;
 import org.headsupdev.agile.app.ci.permission.BuildForcePermission;
 import org.headsupdev.agile.api.Manager;
 import org.headsupdev.agile.api.Project;
@@ -92,7 +90,7 @@ public class BuildCommand
                     }
                     else
                     {
-                        if ( !BuildHandlerFactory.supportsBuilding(project) )
+                        if ( !CIApplication.getHandlerFactory().supportsBuilding(project) )
                         {
                             conn.sendMessage( channel, "Project '" + message + "' does not support building" );
                         }

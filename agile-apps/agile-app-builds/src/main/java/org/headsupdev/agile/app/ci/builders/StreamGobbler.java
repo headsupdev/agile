@@ -33,7 +33,7 @@ public class StreamGobbler extends Thread
 
     private boolean complete = false;
 
-    StreamGobbler( Reader in, Writer out )
+    public StreamGobbler( Reader in, Writer out )
     {
         this.in = in;
         this.out = out;
