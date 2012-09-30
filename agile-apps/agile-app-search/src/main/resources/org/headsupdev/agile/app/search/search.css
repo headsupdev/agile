@@ -36,6 +36,7 @@ form.search .submit {
     background: url(../org.headsupdev.agile.web.HeadsUpPage/images/search-right.png);
     background-position: right;
     background-repeat: no-repeat;
+    background-color: #fff;
 
     font-size: 12pt;
     vertical-align: top;
