@@ -62,6 +62,7 @@ public class AdminApplication
         links.add( new SimpleMenuLink( "add-project" ) );
         links.add( new SimpleMenuLink( "add-account" ) );
         links.add( new SimpleMenuLink( "permissions" ) );
+        links.add( new SimpleMenuLink( "membership" ) );
         links.add( new SimpleMenuLink( "configuration" ) );
         links.add( new SimpleMenuLink( "stats" ) );
 
@@ -127,7 +128,7 @@ public class AdminApplication
 
     @Override
     public Class<? extends Page>[] getPages() {
-        return new Class[]{ AddAccount.class, Admin.class, Errors.class, Permissions.class,
+        return new Class[]{ AddAccount.class, Admin.class, Errors.class, Permissions.class, Membership.class,
             Statistics.class, AddProject.class, AddRole.class, ApplicationsConfiguration.class,
             ProjectConfiguration.class, NotifiersConfiguration.class, SystemConfiguration.class,
             UpdatesConfiguration.class, Export.class };

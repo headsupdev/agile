@@ -1,0 +1,36 @@
+<!--
+  ~ HeadsUp Agile
+  ~ Copyright 2009-2012 Heads Up Development Ltd.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<html>
+  <body>
+    <wicket:extend>
+      <p>Members of a project will be allocated the permissions associated with the "member" role.
+        Note that only the users who currently have the "member" role are available to configure here.</p>
+      <form wicket:id="projects">
+        <table class="listing">
+          <tr>
+            <th>Permission</th>
+            <th wicket:id="usernames" class="username"><span wicket:id="username"></span></th>
+          </tr>
+          <wicket:container wicket:id="projectlist">children</wicket:container>
+        </table>
+        <input type="submit" value="Save" />
+      </form>
+    </wicket:extend>
+  </body>
+</html>

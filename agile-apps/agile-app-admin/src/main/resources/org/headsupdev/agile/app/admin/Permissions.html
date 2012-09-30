@@ -59,21 +59,6 @@
         </table>
         <input type="submit" value="Save" />
       </form>
-      <br />
-
-      <h2>Manage Project Members</h2>
-      <p>Members of a project will be allocated the permissions associated with the "member" role.
-        Note that only the users who currently have the "member" role are available to configure here.</p>
-      <form wicket:id="projects">
-        <table class="listing">
-          <tr>
-            <th>Permission</th>
-            <th wicket:id="usernames" class="username"><span wicket:id="username"></span></th>
-          </tr>
-          <wicket:container wicket:id="projectlist">children</wicket:container>
-        </table>
-        <input type="submit" value="Save" />
-      </form>
     </wicket:extend>
   </body>
 </html>
