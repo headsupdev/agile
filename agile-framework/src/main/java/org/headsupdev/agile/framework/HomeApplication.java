@@ -104,7 +104,8 @@ public class HomeApplication
     public Permission[] getPermissions()
     {
         return new Permission[] { new AdminPermission(), new ProjectListPermission(), new RepositoryReadPermission(),
-            new RepositoryWritePermission(), new TaskListPermission(), new AccountCreatePermission() };
+            new RepositoryWritePermission(), new RepositoryReadAppPermission(), new RepositoryWriteAppPermission(),
+            new TaskListPermission(), new AccountCreatePermission() };
     }
 
     public String getDescription()

@@ -19,7 +19,7 @@
 package org.headsupdev.agile.app.artifacts;
 
 import org.headsupdev.agile.api.Permission;
-import org.headsupdev.agile.security.permission.RepositoryReadPermission;
+import org.headsupdev.agile.security.permission.RepositoryReadAppPermission;
 import org.headsupdev.agile.web.MountPoint;
 
 /**
@@ -35,8 +35,7 @@ public class AppsRepository
 {
     public Permission getRequiredPermission()
     {
-        // TODO make an AppDownloadPermission...
-        return new RepositoryReadPermission();
+        return new RepositoryReadAppPermission();
     }
 
     public String getRepositoryName()

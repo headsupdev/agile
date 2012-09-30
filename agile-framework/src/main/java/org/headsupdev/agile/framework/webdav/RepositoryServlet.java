@@ -19,6 +19,8 @@
 package org.headsupdev.agile.framework.webdav;
 
 import org.headsupdev.agile.api.util.HashUtil;
+import org.headsupdev.agile.security.permission.RepositoryReadAppPermission;
+import org.headsupdev.agile.security.permission.RepositoryWriteAppPermission;
 import org.headsupdev.support.java.Base64;
 import org.headsupdev.support.java.FileUtil;
 import org.headsupdev.support.java.StringUtil;
@@ -624,7 +626,7 @@ public class RepositoryServlet
         {
             if ( repository != null && repository.equals( "apps" ) )
             {
-                // TODO return new AppUploadPermission();
+                return new RepositoryWriteAppPermission();
             }
             return new RepositoryWritePermission();
         }
@@ -632,7 +634,7 @@ public class RepositoryServlet
         {
             if ( repository != null && repository.equals( "apps" ) )
             {
-                // TODO return new AppDownloadPermission();
+                return new RepositoryReadAppPermission();
             }
             return new RepositoryReadPermission();
         }
