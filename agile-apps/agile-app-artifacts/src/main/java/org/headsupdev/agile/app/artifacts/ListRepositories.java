@@ -59,11 +59,16 @@ public class ListRepositories
             new BookmarkablePageLink( "projects-icon-link", ProjectsRepository.class, getProjectPageParameters() );
         projects.add( new Image( "projects-icon", new ResourceReference( Mime.class, folder.getIconName() ) ) );
         add( projects );
+        BookmarkablePageLink apps =
+                new BookmarkablePageLink( "apps-icon-link", AppsRepository.class, getProjectPageParameters() );
+        apps.add( new Image( "apps-icon", new ResourceReference( Mime.class, folder.getIconName() ) ) );
+        add( apps );
 
         add( new BookmarkablePageLink( "release-link", ReleaseRepository.class, getProjectPageParameters() ) );
         add( new BookmarkablePageLink( "snapshot-link", SnapshotRepository.class, getProjectPageParameters() ) );
         add( new BookmarkablePageLink( "external-link", ExternalRepository.class, getProjectPageParameters() ) );
         add( new BookmarkablePageLink( "projects-link", ProjectsRepository.class, getProjectPageParameters() ) );
+        add( new BookmarkablePageLink( "apps-link", AppsRepository.class, getProjectPageParameters() ) );
     }
 
     @Override

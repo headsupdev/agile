@@ -80,7 +80,7 @@ public class RepositoryApplication
     public Class<? extends Page>[] getPages()
     {
         return new Class[] { ExternalRepository.class, ListRepositories.class, ReleaseRepository.class,
-            SnapshotRepository.class, ProjectsRepository.class };
+            SnapshotRepository.class, ProjectsRepository.class, AppsRepository.class };
     }
 
     @Override

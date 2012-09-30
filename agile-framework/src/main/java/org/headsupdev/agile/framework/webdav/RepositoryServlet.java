@@ -108,6 +108,7 @@ public class RepositoryServlet
             configureRepository( repoRoot, "external" );
             configureRepository( repoRoot, "site" );
 
+            configureRepository( repoRoot, "apps" );
             configureRepository( repoRoot, "accounts" );
             configureRepository( repoRoot, "projects" );
         }
@@ -215,7 +216,7 @@ public class RepositoryServlet
 
             String encodedPass = HashUtil.getMD5Hex( password );
 
-                    User user = securityManager.getUserByUsername(username);
+            User user = securityManager.getUserByUsername(username);
             if ( user != null )
             {
                 if ( !user.getPassword().equals( encodedPass ) )
@@ -455,7 +456,14 @@ public class RepositoryServlet
         resource = stripSlashes( resource );
         if ( resource != null )
         {
-            project = getProjectDepthFirst( resource, repo );
+            if ( repoName.equals( "apps" ) || repoName.equals( "site" ) )
+            {
+                project = getProjectUsingId( resource );
+            }
+            else
+            {
+                project = getProjectDepthFirst( resource, repo );
+            }
         }
 
         // there are actually no matches - return "all" project
@@ -465,6 +473,19 @@ public class RepositoryServlet
         }
 
         return project;
+    }
+
+    private Project getProjectUsingId( String path )
+    {
+        int firstSeparator = path.indexOf( File.separatorChar );
+        if ( firstSeparator != -1 )
+        {
+            return storage.getProject( path.substring( 0, firstSeparator ) );
+        }
+        else
+        {
+            return storage.getProject( path );
+        }
     }
 
     private Project getProjectDepthFirst( String path, File root )
@@ -597,13 +618,22 @@ public class RepositoryServlet
     protected Permission getPermission( HttpServletRequest request )
     {
         boolean write = isWriteMethod( request.getMethod() );
+        String repository = getRepositoryName(request);
 
         if ( write )
         {
+            if ( repository != null && repository.equals( "apps" ) )
+            {
+                // TODO return new AppUploadPermission();
+            }
             return new RepositoryWritePermission();
         }
         else
         {
+            if ( repository != null && repository.equals( "apps" ) )
+            {
+                // TODO return new AppDownloadPermission();
+            }
             return new RepositoryReadPermission();
         }
     }
