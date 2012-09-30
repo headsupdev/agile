@@ -52,7 +52,7 @@ public class AdminApplication
 
     private static BundleContext context;
 
-    private List<MenuLink> links;
+    protected List<MenuLink> links;
     private List<String> eventTypes;
 
     public AdminApplication()
