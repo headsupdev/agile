@@ -102,8 +102,7 @@ public class Account
                 getSecurityManager().userHasPermission( getSession().getUser(), new AdminPermission(), null );
         final boolean timeEnabled = Boolean.parseBoolean( StoredProject.getDefault().getConfigurationValue(
                 StoredProject.CONFIGURATION_TIMETRACKING_ENABLED ) );
-        final boolean showVelocity = timeEnabled &&
-                getSecurityManager().userHasPermission( getSession().getUser(), new AdminPermission(), null );
+        final boolean showVelocity = timeEnabled && showTools;
 
         WebMarkupContainer velocityPanel = new WebMarkupContainer( "velocity" );
         add( velocityPanel.setVisible( showVelocity ) );
