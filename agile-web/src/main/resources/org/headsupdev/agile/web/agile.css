@@ -114,7 +114,7 @@ body {min-height: 100%;} /* for proper browsers */
 
 #mainmenu, #submenu {
     font-weight: bold;
-    height: 18px;
+    height: 16px;
     white-space: nowrap;
 }
 
@@ -132,7 +132,7 @@ body {min-height: 100%;} /* for proper browsers */
 
 #mainmenu li, #submenu li {
     display: inline;
-    padding: 10px 15px;
+    padding: 11px 15px 10px 15px;
 }
 
 #mainmenu {
