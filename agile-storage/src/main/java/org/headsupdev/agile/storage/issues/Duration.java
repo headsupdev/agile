@@ -256,6 +256,56 @@ public class Duration
         return ret.toString().trim();
     }
 
+    public String toHoursWithFractionString()
+    {
+        int hours = getWholeHours();
+        int minuteType = 0;
+
+        int minutes = getWholeMinutes();
+        if ( minutes != 0 )
+        {
+            if ( minutes < 8 )
+            {
+                minuteType = 0;
+            }
+            else if ( minutes < 23 )
+            {
+                minuteType = 1;
+            }
+            else if ( minutes < 38 )
+            {
+                minuteType = 2;
+            }
+            else if ( minutes < 53 )
+            {
+                minuteType = 3;
+            }
+            else
+            {
+                minuteType = 4;
+            }
+        }
+
+        if ( minuteType == 4 )
+        {
+            hours++;
+        }
+
+        String ret = String.valueOf( hours );
+        switch ( minuteType )
+        {
+            case 1:
+                ret = ret + "\u00bc";
+                break;
+            case 2:
+                ret = ret + "\u00bd";
+                break;
+            case 3:
+                ret = ret + "\u00be";
+        }
+        return ret + "h";
+    }
+
     public static double getMultiplier( String name )
     {
         if ( StringUtil.isEmpty( name ) )
