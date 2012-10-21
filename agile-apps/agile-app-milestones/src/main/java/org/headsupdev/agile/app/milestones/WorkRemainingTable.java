@@ -82,7 +82,7 @@ public class WorkRemainingTable
                     return;
                 }
 
-                listItem.add( new Label( "user", user.getFullname() ) );
+                listItem.add( new Label( "user", user.getFullnameOrUsername() ) );
 
                 int estimate = 0;
                 int worked = 0;
