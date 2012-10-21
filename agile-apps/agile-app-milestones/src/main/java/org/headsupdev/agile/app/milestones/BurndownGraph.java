@@ -36,6 +36,7 @@ import org.apache.wicket.protocol.http.WebResponse;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -49,9 +50,10 @@ import java.util.Date;
 public class BurndownGraph
         extends CachedImageResource
 {
-    final int HEIGHT = 360, WIDTH = 588, PAD = 15;
+    final int HEIGHT = 360, WIDTH = 588, PAD = 15, MONTH_PAD = 20;
 
-    private SimpleDateFormat dateFormat = new SimpleDateFormat( "EEE dd" );
+    private SimpleDateFormat dateFormat = new SimpleDateFormat( "dd" );
+    private SimpleDateFormat monthFormat = new SimpleDateFormat( "MMMM" );
 
     protected Project getProject()
     {
@@ -149,12 +151,16 @@ public class BurndownGraph
 
         g.drawLine( PAD - 1, PAD + HEIGHT, PAD - 1, PAD + HEIGHT + 5 );
 
+        final boolean ignoreWeekend = Boolean.parseBoolean( getMilestone().getProject().getConfigurationValue(
+                StoredProject.CONFIGURATION_TIMETRACKING_IGNOREWEEKEND ) );
         java.util.List<Date> dates = DurationWorkedUtil.getMilestoneDates( getMilestone(), true );
 
-        drawString( g, "time", getHeight(), 13, PAD, Component.CENTER_ALIGNMENT, -Math.PI / 2 );
-        drawString( g, "0", getHeight(), 13, PAD, Component.LEFT_ALIGNMENT, -Math.PI / 2 );
+        drawString( g, "time", getHeight() - MONTH_PAD, 13, PAD, Component.CENTER_ALIGNMENT, -Math.PI / 2 );
+        drawString( g, "0", getHeight() - MONTH_PAD, 13, PAD, Component.LEFT_ALIGNMENT, -Math.PI / 2 );
         drawString( g, new Duration( total ).toHoursString(), getHeight(), 13, PAD, Component.RIGHT_ALIGNMENT, -Math.PI / 2 );
 
+        int oldMonth = -1;
+        Calendar cal = Calendar.getInstance();
         int i = 0;
         for ( Date date : dates )
         {
@@ -169,27 +175,40 @@ public class BurndownGraph
             g.fillRect( x + 5, y, x2 - x - 10, HEIGHT + PAD - y );
 
             // draw pips on x-axis
+            cal.setTime(date);
+            boolean newWeek = cal.get( Calendar.DAY_OF_WEEK ) == 1 ||
+                    (ignoreWeekend && cal.get( Calendar.DAY_OF_WEEK ) == 6 );
+            if ( newWeek )
+            {
+                g.setColor( Color.BLACK );
+                g.fillRect( x2, PAD + HEIGHT, 2, 10 );
+            }
+            else
+            {
+                g.setColor( Color.GRAY );
+                g.drawLine( x2, PAD + HEIGHT, x2, PAD + HEIGHT + 5 );
+            }
             g.setColor( Color.BLACK );
-            g.drawLine( x2, PAD + HEIGHT, x2, PAD + HEIGHT + 5 );
 
             String dateStr;
             if ( i == 0 )
             {
-                if ( burndown )
-                {
-                    dateStr = "Estimate";
-                }
-                else
-                {
-                    dateStr = "Initial";
-                }
+                dateStr = "Initial";
             }
             else
             {
                 dateStr = dateFormat.format( date );
             }
             int strW = g.getFontMetrics().stringWidth( dateStr );
-            g.drawString( dateStr, xc - ( strW / 2 ), HEIGHT + PAD + 14 );
+            int textX = xc - ( strW / 2 );
+            g.drawString( dateStr, textX, HEIGHT + PAD + 14 );
+
+            if ( i != 0 && cal.get( Calendar.MONTH ) != oldMonth )
+            {
+                g.drawString( monthFormat.format(date), textX, HEIGHT + PAD + 27 );
+
+                oldMonth = cal.get( Calendar.MONTH );
+            }
             i++;
         }
 
@@ -274,7 +293,7 @@ public class BurndownGraph
     @Override
     protected int getHeight()
     {
-        return HEIGHT + PAD * 2;
+        return HEIGHT + PAD * 2 + MONTH_PAD;
     }
 
     protected String getTitle()
