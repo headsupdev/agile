@@ -119,7 +119,22 @@ public class ApplicationPageMapper
 
     public void removeApplication( Application app )
     {
-        applications.remove( app );
+        if ( app.getApplicationId().equals( "admin" ) )
+        {
+            adminApp = null;
+        }
+        else if ( app.getApplicationId().equals( "support" ) )
+        {
+            supportApp = null;
+        }
+        else if ( app.getApplicationId().equals( "search" ) )
+        {
+            searchApp = null;
+        }
+        else
+        {
+            applications.remove( app );
+        }
         applicationMap.remove( app.getApplicationId() );
 
         pageApplications.remove( app.getHomePage() );
