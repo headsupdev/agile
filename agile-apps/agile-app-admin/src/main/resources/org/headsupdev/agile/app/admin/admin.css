@@ -121,3 +121,25 @@ form.config fieldset {
     background: white;
     margin: 0;
 }
+
+.projectmember {
+    padding: 2pt;
+    margin: 4px 1px;
+    width: 150pt;
+    float: left;
+
+    background-color: #F7F8F3;
+    font-size: 10pt;
+}
+
+.projectmember .usercheck, .projectmember .project {
+    display: inline;
+}
+
+.projectmembership .buttons {
+    clear: both;
+    display: block;
+}
+.projectmembership input {
+    margin-top: 6px;
+}

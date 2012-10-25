@@ -21,15 +21,12 @@
     <wicket:extend>
       <p>Members of a project will be allocated the permissions associated with the "member" role.
         Note that only the users who currently have the "member" role are available to configure here.</p>
-      <form wicket:id="projects">
-        <table class="listing">
-          <tr>
-            <th>Project</th>
-            <th wicket:id="usernames" class="username"><span wicket:id="username"></span></th>
-          </tr>
-          <wicket:container wicket:id="projectlist">children</wicket:container>
-        </table>
-        <input type="submit" value="Save" />
+      <form wicket:id="projects" class="projectmembership">
+        <h3>Project membership for <select wicket:id="user">
+          <option>username</option>
+        </select></h3>
+        <wicket:container wicket:id="projectlist">projects</wicket:container>
+        <div class="buttons"><input type="submit" value="Save" /></div>
       </form>
     </wicket:extend>
   </body>

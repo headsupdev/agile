@@ -17,12 +17,10 @@
   -->
 
 <wicket:panel>
-  <tr wicket:id="project">
-    <td wicket:id="projectname" style="border-right: 1px solid gray;">name</td>
-    <wicket:container wicket:id="userlist"><td class="usercheck" wicket:id="usergroup">
+  <div wicket:id="project" class="projectmember">
+    <div class="usercheck">
       <input type="checkbox" wicket:id="user" />
-    </td></wicket:container>
-
-    <wicket:container wicket:id="childProjects">children</wicket:container>
-  </tr>
+    </div>
+    <div wicket:id="projectname" class="project">name</div>
+  </div>
 </wicket:panel>

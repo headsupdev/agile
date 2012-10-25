@@ -20,20 +20,17 @@ package org.headsupdev.agile.app.admin;
 
 import org.apache.wicket.markup.html.CSSPackageResource;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.Check;
-import org.apache.wicket.markup.html.form.CheckGroup;
-import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.*;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.model.PropertyModel;
 import org.headsupdev.agile.api.*;
 import org.headsupdev.agile.security.permission.AdminPermission;
 import org.headsupdev.agile.storage.*;
 import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.MountPoint;
-import org.headsupdev.agile.web.components.StripedListView;
 import org.hibernate.Session;
 
 import java.util.*;
@@ -74,12 +71,13 @@ public class Membership
     {
         private List<Project> projects;
         private List<User> users;
+        private User currentUser;
 
         public ProjectPermissionsForm( String id )
         {
             super( id );
 
-            projects = new LinkedList<Project>( getStorage().getRootProjects() );
+            projects = new LinkedList<Project>( getStorage().getProjects() );
             projects.add( StoredProject.getDefault() );
 
             users = getSecurityManager().getUsers();
@@ -92,14 +90,30 @@ public class Membership
                     userIter.remove();
                 }
             }
-
-            add( new ListView<User>( "usernames", users )
+            if ( users.size() > 0 )
             {
-                protected void populateItem( ListItem<User> listItem )
-                {
-                    final User user = listItem.getModelObject();
+                currentUser = users.get( 0 );
+            }
 
-                    listItem.add( new Label( "username", user.getUsername() ) );
+            add( new DropDownChoice<User>( "user", new PropertyModel<User>( this, "currentUser" ), users, new IChoiceRenderer<User>()
+            {
+                @Override
+                public Object getDisplayValue( User user )
+                {
+                    return user.getFullnameOrUsername();
+                }
+
+                @Override
+                public String getIdValue( User user, int i )
+                {
+                    return user.getUsername();
+                }
+            } )
+            {
+                @Override
+                protected boolean wantOnSelectionChangedNotifications()
+                {
+                    return true;
                 }
             } );
 
@@ -152,68 +166,61 @@ public class Membership
             extends Panel
         {
             private static final String INDENT = "&nbsp;&nbsp;&nbsp;";
-            private int myRow;
 
             public ProjectPermissionsListView( String id, List<Project> projects )
             {
-                this( id, projects, "", 0 );
-            }
-
-            public ProjectPermissionsListView( String id, List<Project> projects, final String indent, final int row )
-            {
                 super( id );
-                myRow = row;
-                Collections.sort( projects );
 
-                add( new StripedListView<Project>( "project", projects ) {
+                add( new ListView<Project>( "project", projects ) {
                     @Override
                     protected void populateItem( ListItem<Project> listItem )
                     {
-                        super.populateItem( listItem );
                         final Project project = listItem.getModelObject();
-
-                        listItem.add( new Label( "projectname", indent + Strings.escapeMarkup( project.getAlias() ) )
-                                .setEscapeModelStrings( false ) );
-                        CheckGroup group = new CheckGroup<User>( "userlist",  project.getUsers() );
-                        group.add( new ListView<User>( "usergroup", users )
-                        {
-                            protected void populateItem( ListItem<User> listItem )
-                            {
-                                final User user = listItem.getModelObject();
-
-                                listItem.add( new Check<User>( "user", new Model<User>()
-                                {
-                                    public User getObject()
-                                    {
-                                        return user;
-                                    }
-                                } ) );
-                            }
-                        } );
-                        listItem.add( group );
-
-                        List<Project> children = new LinkedList<Project>( project.getChildProjects() );
-                        listItem.add( new ProjectPermissionsListView( "childProjects", children, INDENT + indent, myRow + 1 ) );
-
-                        // increment row by number that will appear
-                        myRow += countProjects( project );
+                        listItem.add( new Label( "projectname", indentedName( project ) ).setEscapeModelStrings( false ) );
+                        listItem.add( new ProjectUserCheckBox( "user", project ) );
                     }
                 } );
             }
-        }
 
-        private int countProjects( Project project )
-        {
-            int ret = 1;
-            if ( project.getChildProjects() != null )
+            private String indentedName( Project project )
             {
-                for ( Project child : project.getChildProjects() )
+                String prefix = "";
+                Project parent = project.getParent();
+                while ( parent != null )
                 {
-                    ret += countProjects( child );
+                    prefix += INDENT;
+                    parent = parent.getParent();
                 }
+
+                return prefix + project.getAlias();
             }
 
-            return ret;
+            public class ProjectUserCheckBox extends CheckBox
+            {
+                public ProjectUserCheckBox( final String id, final Project project )
+                {
+                    super( id, new Model<Boolean>()
+                    {
+                        public Boolean getObject()
+                        {
+                            return project.getUsers().contains( currentUser );
+                        }
+
+                        @Override
+                        public void setObject( Boolean member )
+                        {
+                            if ( member )
+                            {
+                                project.getUsers().add( currentUser );
+                            }
+                            else
+                            {
+                                project.getUsers().remove( currentUser );
+                            }
+                        }
+                    } );
+                }
+            }
         }
     }
 }
