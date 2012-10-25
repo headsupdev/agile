@@ -80,7 +80,7 @@ public class Membership
             projects = new LinkedList<Project>( getStorage().getProjects() );
             projects.add( StoredProject.getDefault() );
 
-            users = getSecurityManager().getUsers();
+            users = getSecurityManager().getRealUsers();
             Iterator<User> userIter = users.iterator();
             while ( userIter.hasNext() )
             {
