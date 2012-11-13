@@ -350,7 +350,7 @@ public class DefaultManager
                     getLoggerForComponent( getClass().getName() ).info( "Emailing event to user " + user.getUsername() + " at " + user.getEmail() );
                     try
                     {
-                        ( (EmailNotifier) getNotifierList().get( "email" ).newInstance() ).sendEventEmail( event, user.getEmail(), from );
+                        ( (EmailNotifier) getNotifierList().get( "email" ).newInstance() ).sendEventEmail( event, user.getEmail(), from, EmailNotifier.FooterType.Subscription );
                     }
                     catch ( Exception e )
                     {
