@@ -1,3 +1,11 @@
+2.0-beta1
+
+* Add footer text for email notifications - fixes issue:20
+* Update membership and permission screens
+* Better styling to burndown legends and headings
+* Add an hours with fraction string formatter
+* Show accounts their own velocity info
+
 2.0-alpha6
 
 * Add enquiry issue type
