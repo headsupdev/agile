@@ -142,7 +142,6 @@ public class CIApplication
 
     protected List<ConfigurationItem> globalItems = new LinkedList<ConfigurationItem>();
 
-    protected List<ConfigurationItem> mavenProjectItems = new LinkedList<ConfigurationItem>();
     protected List<ConfigurationItem> antProjectItems = new LinkedList<ConfigurationItem>();
     protected List<ConfigurationItem> eclipseProjectItems = new LinkedList<ConfigurationItem>();
     protected List<ConfigurationItem> cmdProjectItems = new LinkedList<ConfigurationItem>();
@@ -191,21 +190,6 @@ public class CIApplication
         globalItems.add( CONFIGURATION_NOTIFY_REPEAT_PASS );
 
         List<ConfigurationItem> items = new LinkedList<ConfigurationItem>();
-        items.add( CONFIGURATION_MAVEN_GOALS );
-        items.add( CONFIGURATION_MAVEN_PROFILES );
-        items.add( CONFIGURATION_MAVEN_HOME_OVERRIDE );
-        items.add( CONFIGURATION_ANALYZE );
-        mavenProjectItems.add( new ConfigurationItem( "schedule.default", "Default Build Schedule", items ) );
-        items = new LinkedList<ConfigurationItem>();
-        items.add( CONFIGURATION_MAVEN_GOALS );
-        items.add( CONFIGURATION_MAVEN_PROFILES );
-        items.add( CONFIGURATION_MAVEN_HOME_OVERRIDE );
-        items.add( CONFIGURATION_ANALYZE );
-        items.add( CONFIGURATION_CRON_EXPRESSION );
-        mavenProjectItems.add( new ConfigurationItem( "schedule", "Build Schedule",
-                new ConfigurationItem( "schedule", "Build Schedule", items ) ) );
-
-        items = new LinkedList<ConfigurationItem>();
         items.add( CONFIGURATION_ANT_HOME_OVERRIDE );
         antProjectItems.add( new ConfigurationItem( "schedule.default", "Default Build Schedule", items ) );
         items = new LinkedList<ConfigurationItem>();
@@ -353,15 +337,45 @@ public class CIApplication
     }
 
     @Override
-    public List<ConfigurationItem> getConfigurationItems() {
+    public List<ConfigurationItem> getConfigurationItems()
+    {
         return globalItems;
     }
 
+    protected List<ConfigurationItem> getMavenProjectConfiguration( String type )
+    {
+        List<ConfigurationItem> mavenItems = new LinkedList<ConfigurationItem>();
+
+        List<ConfigurationItem> items = new LinkedList<ConfigurationItem>();
+        items.add( CONFIGURATION_MAVEN_GOALS );
+        items.add( CONFIGURATION_MAVEN_PROFILES );
+        items.add( CONFIGURATION_MAVEN_HOME_OVERRIDE );
+        if ( type.startsWith( "apk" ) )
+        {
+            items.add( CONFIGURATION_ANALYZE );
+        }
+        mavenItems.add( new ConfigurationItem( "schedule.default", "Default Build Schedule", items ) );
+        items = new LinkedList<ConfigurationItem>();
+        items.add( CONFIGURATION_MAVEN_GOALS );
+        items.add( CONFIGURATION_MAVEN_PROFILES );
+        items.add( CONFIGURATION_MAVEN_HOME_OVERRIDE );
+        if ( type.startsWith( "apk" ) )
+        {
+            items.add( CONFIGURATION_ANALYZE );
+        }
+        items.add( CONFIGURATION_CRON_EXPRESSION );
+        mavenItems.add( new ConfigurationItem( "schedule", "Build Schedule",
+                new ConfigurationItem( "schedule", "Build Schedule", items ) ) );
+
+        return mavenItems;
+    }
+
     @Override
-    public List<ConfigurationItem> getProjectConfigurationItems( Project project ) {
+    public List<ConfigurationItem> getProjectConfigurationItems( Project project )
+    {
         if ( project instanceof MavenTwoProject )
         {
-            return mavenProjectItems;
+            return getMavenProjectConfiguration( ((MavenTwoProject) project).getPackaging() );
         }
         else if ( project instanceof AntProject )
         {
