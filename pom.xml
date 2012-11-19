@@ -27,7 +27,7 @@
 
   <groupId>org.headsupdev.agile</groupId>
   <artifactId>agile</artifactId>
-  <version>2.0-beta-1-SNAPSHOT</version>
+  <version>2.0-beta-2-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>HeadsUp Agile</name>
 
@@ -64,105 +64,105 @@
       <dependency>
         <groupId>org.headsupdev.agile</groupId>
         <artifactId>agile-api</artifactId>
-        <version>2.0-beta-1-SNAPSHOT</version>
+        <version>2.0-beta-2-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.headsupdev.agile</groupId>
         <artifactId>agile-scm</artifactId>
-        <version>2.0-beta-1-SNAPSHOT</version>
+        <version>2.0-beta-2-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.headsupdev.agile</groupId>
         <artifactId>agile-core</artifactId>
-        <version>2.0-beta-1-SNAPSHOT</version>
+        <version>2.0-beta-2-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.headsupdev.agile</groupId>
         <artifactId>agile-security</artifactId>
-        <version>2.0-beta-1-SNAPSHOT</version>
+        <version>2.0-beta-2-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.headsupdev.agile</groupId>
         <artifactId>agile-storage</artifactId>
-        <version>2.0-beta-1-SNAPSHOT</version>
+        <version>2.0-beta-2-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.headsupdev.agile</groupId>
         <artifactId>agile-web</artifactId>
-        <version>2.0-beta-1-SNAPSHOT</version>
+        <version>2.0-beta-2-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.headsupdev.agile</groupId>
         <artifactId>agile-framework</artifactId>
-        <version>2.0-beta-1-SNAPSHOT</version>
+        <version>2.0-beta-2-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.headsupdev.agile</groupId>
         <artifactId>agile-runtime-controller</artifactId>
-        <version>2.0-beta-1-SNAPSHOT</version>
+        <version>2.0-beta-2-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.headsupdev.agile</groupId>
         <artifactId>agile-runtime</artifactId>
-        <version>2.0-beta-1-SNAPSHOT</version>
+        <version>2.0-beta-2-SNAPSHOT</version>
       </dependency>
 
       <dependency>
         <groupId>org.headsupdev.agile</groupId>
         <artifactId>agile-app-dashboard</artifactId>
-        <version>2.0-beta-1-SNAPSHOT</version>
+        <version>2.0-beta-2-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.headsupdev.agile</groupId>
         <artifactId>agile-app-admin</artifactId>
-        <version>2.0-beta-1-SNAPSHOT</version>
+        <version>2.0-beta-2-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.headsupdev.agile</groupId>
         <artifactId>agile-app-history</artifactId>
-        <version>2.0-beta-1-SNAPSHOT</version>
+        <version>2.0-beta-2-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.headsupdev.agile</groupId>
         <artifactId>agile-app-files</artifactId>
-        <version>2.0-beta-1-SNAPSHOT</version>
+        <version>2.0-beta-2-SNAPSHOT</version>
       </dependency> 
       <dependency>
         <groupId>org.headsupdev.agile</groupId>
         <artifactId>agile-app-artifacts</artifactId>
-        <version>2.0-beta-1-SNAPSHOT</version>
+        <version>2.0-beta-2-SNAPSHOT</version>
       </dependency> 
       <dependency>
         <groupId>org.headsupdev.agile</groupId>
         <artifactId>agile-app-docs</artifactId>
-        <version>2.0-beta-1-SNAPSHOT</version>
+        <version>2.0-beta-2-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.headsupdev.agile</groupId>
         <artifactId>agile-app-issues</artifactId>
-        <version>2.0-beta-1-SNAPSHOT</version>
+        <version>2.0-beta-2-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.headsupdev.agile</groupId>
         <artifactId>agile-app-milestones</artifactId>
-        <version>2.0-beta-1-SNAPSHOT</version>
+        <version>2.0-beta-2-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.headsupdev.agile</groupId>
         <artifactId>agile-app-builds</artifactId>
-        <version>2.0-beta-1-SNAPSHOT</version>
+        <version>2.0-beta-2-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.headsupdev.agile</groupId>
         <artifactId>agile-app-search</artifactId>
-        <version>2.0-beta-1-SNAPSHOT</version>
+        <version>2.0-beta-2-SNAPSHOT</version>
       </dependency>
 
       <dependency>
         <groupId>org.headsupdev.agile</groupId>
         <artifactId>agile-framework</artifactId>
         <type>bundle</type>
-        <version>2.0-beta-1-SNAPSHOT</version>
+        <version>2.0-beta-2-SNAPSHOT</version>
       </dependency>
 
       <dependency>

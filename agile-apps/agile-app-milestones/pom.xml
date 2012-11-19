@@ -22,7 +22,7 @@
   <parent>
     <groupId>org.headsupdev.agile</groupId>
     <artifactId>agile-apps</artifactId>
-    <version>2.0-beta-1-SNAPSHOT</version>
+    <version>2.0-beta-2-SNAPSHOT</version>
   </parent>
   <artifactId>agile-app-milestones</artifactId>
   <packaging>bundle</packaging>

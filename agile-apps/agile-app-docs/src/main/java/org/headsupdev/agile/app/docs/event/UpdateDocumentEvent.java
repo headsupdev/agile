@@ -78,6 +78,11 @@ public class UpdateDocumentEvent
 
     private String renderComment( final Comment comment )
     {
+        if ( comment == null )
+        {
+            return "";
+        }
+
         String content = new RenderUtil()
         {
             public Panel getPanel()
