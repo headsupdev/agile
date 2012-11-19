@@ -45,7 +45,6 @@ public class XCodeBuildHandler
     implements BuildHandler
 {
 
-    public static final Pattern BUILD_LOG_PATTERN = Pattern.compile( "[0-9]*.txt" );
     public static final Pattern BUILD_LOG_BUGS_COUNT_PATTERN = Pattern.compile( "scan-build: ([0-9]*) bugs found." );
     public static final Pattern BUILD_LOG_OUTPUT_DIR_PATTERN = Pattern.compile( "scan-build: Run 'scan-view ([^ ']*)' to examine bug reports." );
 
@@ -201,6 +200,14 @@ public class XCodeBuildHandler
     {
         BufferedReader oldFileReader = new BufferedReader( new FileReader( oldFile ) );
         FileWriter newFileWriter = new FileWriter( newFile );
+
+        File parentDir = newFile.getParentFile();
+        if (parentDir.exists() == false)
+        {
+            if (parentDir.mkdirs() == false) {
+                log.error( "Unable to mkdirs:" + parentDir.getPath() );
+            }
+        }
 
         try
         {
@@ -391,6 +398,7 @@ public class XCodeBuildHandler
                     File siteRepository = new File( new File( new File( new File( Manager.getStorageInstance().getDataDirectory(), "repository" ), "site" ), project.getId() ), "analyze" );
                     String outputPath = siteRepository.getPath();
                     commands.add( outputPath );
+                    log.debug( "Running scan-build in dir:" + dir + " with output path:" + outputPath );
 
                     appendXcodeCommands( config, commands, "Debug" );
 
@@ -445,10 +453,11 @@ public class XCodeBuildHandler
                         {
                             File outputDir = new File( mOutDir.group( 1 ) );
                             File renamePath = new File( new File( new File( new File( new File( Manager.getStorageInstance().getDataDirectory(), "repository" ), "site" ), project.getId() ), "analyze" ), "" + build.getId() );
+                            log.debug( "Renaming:" + outputDir.getPath() + " To:" + renamePath.getPath() );
                             boolean success = outputDir.renameTo( renamePath );
                             if ( !success )
                             {
-                                log.error( "failed to rename:" + outputDir.getPath() + "To:" + renamePath.getPath() );
+                                log.error( "failed to rename:" + outputDir.getPath() + " To:" + renamePath.getPath() );
                             }
 
                             //rename build name within index file

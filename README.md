@@ -23,7 +23,7 @@ Quickstart
 1. Execute the following commands:
 
         mvn install
-        ./agile-runtime/target/agile-2.0-alpha-6-SNAPSHOT.dir/agile-2.0-alpha-6-SNAPSHOT/bin/agile.sh
+        ./agile-runtime/target/agile-2.0-beta-1-SNAPSHOT.dir/agile-2.0-beta-1-SNAPSHOT/bin/agile.sh
 
 1. Open a web browser at http://localhost:8069/
 
