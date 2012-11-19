@@ -24,6 +24,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.Model;
 import org.headsupdev.agile.api.Manager;
 import org.headsupdev.agile.api.Permission;
+import org.headsupdev.agile.api.logging.Logger;
 import org.headsupdev.agile.app.docs.permission.DocViewPermission;
 import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.MountPoint;
@@ -40,7 +41,7 @@ import java.io.File;
 public class AnalyzeResults
         extends HeadsUpPage
 {
-    //private static Logger log = Manager.getLogger("analyze");
+    private static Logger log = Manager.getLogger("analyze");
 
     public Permission getRequiredPermission()
     {
@@ -64,6 +65,7 @@ public class AnalyzeResults
 
         File dataDir = Manager.getStorageInstance().getDataDirectory();
         File analyzeDir = new File( new File( new File( new File( dataDir, "repository" ), "site" ), getProject().getId() ), "analyze" );
+        log.debug("dataDir: " + dataDir.getPath() + ", analyzeDir:" + analyzeDir.getPath());
 
         String buildId = getPageParameters().getString( "id" );
         if ( buildId != null && buildId.length() > 0 )
@@ -71,7 +73,7 @@ public class AnalyzeResults
             analyzeDir = new File( analyzeDir, buildId );
             index = new File( analyzeDir, page );
             exists = index.exists();
-            //log.debug("build id: " + buildId + ", index:" + index + ", exists: " + exists);
+            log.debug("build id: " + buildId + ", index:" + index + ", exists: " + exists);
         }
         else
         {
@@ -82,7 +84,7 @@ public class AnalyzeResults
                 index = new File( analyzeDir, page );
                 exists = index.exists();
             }
-            //log.debug("index:" + index + ", exists: " + exists);
+            log.debug("index:" + index + ", exists: " + exists);
         }
 
         WebMarkupContainer frame = new WebMarkupContainer( "frame" );

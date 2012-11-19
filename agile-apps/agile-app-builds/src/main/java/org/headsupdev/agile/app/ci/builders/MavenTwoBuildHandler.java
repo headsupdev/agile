@@ -19,6 +19,7 @@
 package org.headsupdev.agile.app.ci.builders;
 
 import org.headsupdev.support.java.FileUtil;
+import org.headsupdev.support.java.IOUtil;
 import org.headsupdev.support.java.StringUtil;
 import org.headsupdev.agile.api.*;
 import org.headsupdev.agile.api.logging.Logger;
@@ -30,6 +31,8 @@ import org.headsupdev.agile.storage.HibernateStorage;
 
 import java.io.*;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.maven.shared.invoker.*;
 import org.jdom.input.SAXBuilder;
@@ -44,8 +47,13 @@ import org.jdom.JDOMException;
  * @since 1.0
  */
 public class MavenTwoBuildHandler
-    implements BuildHandler
+        implements BuildHandler
 {
+    public static final Pattern LINT_URL_SEPERATOR_PATTERN = Pattern.compile( "/" );
+    public static final Pattern LINT_LINE_WITH_URL_PATTERN = Pattern.compile( "(.*)<a href=\"file:([^ ']*)build-(\\d*)/([^ ']*)\">([^ ']*)</a>(.*)" );
+    public static final Pattern LINT_LINE_WITH_NUMBERED_URL_PATTERN = Pattern.compile( "(.*)<a href=\"file:([^ ']*)build-(\\d*)/([^ ']*)\">([^ ']*)</a>:(\\d*)(.*)" );
+    public static final Pattern LINT_ERROR_WARNING_COUNTS_PATTERN = Pattern.compile( "<br/>(\\d*) errors and (\\d*) warnings found:<br/>" );
+
     private static Logger log = Manager.getLogger( MavenTwoBuildHandler.class.getName() );
 
     public void runBuild( Project project, PropertyTree config, PropertyTree appConfig, File dir, File logFile,
@@ -124,7 +132,7 @@ public class MavenTwoBuildHandler
         else
         {
             build.setStatus( Build.BUILD_SUCCEEDED );
-            onBuildPassed(project, config, appConfig, dir, logFile, build);
+            onBuildPassed( project, config, appConfig, dir, logFile, build );
         }
 
         build.setEndTime( new Date() );
@@ -145,7 +153,8 @@ public class MavenTwoBuildHandler
         {
             FilenameFilter reportFilter = new FilenameFilter()
             {
-                public boolean accept( File dir, String name ) {
+                public boolean accept( File dir, String name )
+                {
                     return name.startsWith( "TEST-" ) && name.endsWith( ".xml" );
                 }
             };
@@ -289,10 +298,247 @@ public class MavenTwoBuildHandler
         return exe;
     }
 
+    private static void waitStreamGobblersToComplete( StreamGobbler serr, StreamGobbler sout )
+    {
+        // defensively try to close the gobblers
+        // check that our gobblers are finished...
+        while ( !serr.isComplete() || !sout.isComplete() )
+        {
+            log.debug( "waiting 1s to close gobbler" );
+            try
+            {
+                Thread.sleep( 1000 );
+            }
+            catch ( InterruptedException e )
+            {
+                // we were just trying to tidy up...
+            }
+        }
+    }
+
+    public static boolean canFindLint()
+    {
+        // try and find a binary called lint.
+        File lint = FileUtil.lookupInPath( "lint" );
+
+        return lint != null;
+    }
+
     public void onBuildPassed( Project project, PropertyTree config, PropertyTree appConfig, File dir, File output,
                                Build build )
     {
-        //To change body of implemented methods use File | Settings | File Templates.
+        boolean analyze = Boolean.parseBoolean( config.getProperty( CIApplication.CONFIGURATION_ANALYZE.getKey(),
+                String.valueOf( CIApplication.CONFIGURATION_ANALYZE.getDefault() ) ) );
+
+        // if analyzing is desired
+        if ( analyze )
+        {
+            Writer buildOut = null;
+            try
+            {
+                buildOut = new FileWriter( output, true );
+                if ( !canFindLint() )
+                {
+                    build.setWarnings( build.getWarnings() + 1 );
+
+                    buildOut.write( "lint not found, something wrong with your setup?" );
+                    return;
+                }
+                else
+                {
+                    RunLint( project, dir, build, buildOut );
+                }
+            }
+            catch ( InterruptedException e )
+            {
+                // here we are done executing, parse what was written as normal
+            }
+            catch ( IOException e )
+            {
+                e.printStackTrace( new PrintWriter( buildOut ) );
+                log.error( "Unable to write to build output file - reported in build log", e );
+            }
+            finally
+            {
+                IOUtil.close( buildOut );
+            }
+
+            try
+            {
+                File analyzeDir = new File( new File( new File( new File( new File( Manager.getStorageInstance().getDataDirectory(), "repository" ), "site" ), project.getId() ), "analyze" ), "" + build.getId() );
+                log.debug( "analyzeDir:" + analyzeDir.getPath() );
+
+                File dirList[] = analyzeDir.listFiles();
+                for ( int index = 0; index < dirList.length; index++ )
+                {
+                    File htmlFile = dirList[index];
+                    File htmlTmpFile = new File( htmlFile.getPath() + ".tmp" );
+                    log.debug( "dir index:" + index + ", htmlFile: " + htmlFile );
+
+                    if ( htmlFile.isFile() )
+                    {
+                        BufferedReader input = new BufferedReader( new FileReader( htmlFile ) );
+                        Writer tmpOutput = null;
+                        try
+                        {
+                            tmpOutput = new FileWriter( htmlTmpFile, true );
+
+                            String line = null;
+                            while ( ( line = input.readLine() ) != null )
+                            {
+                                matchErrorWarningCounts( build, line );
+
+                                matchAndProcessUrlsInLine( project, dir, tmpOutput, line );
+                            }
+                            tmpOutput.close();
+
+                            boolean success = htmlTmpFile.renameTo( htmlFile );
+                            if ( !success )
+                            {
+                                log.error( "failed to rename:" + htmlTmpFile.getPath() + "To:" + htmlFile.getPath() );
+                            }
+                        }
+                        finally
+                        {
+                            input.close();
+                        }
+                    }
+                }
+            }
+            catch ( IOException ex )
+            {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    private void matchAndProcessUrlsInLine( Project project, File dir, Writer tmpOutput, String line )
+            throws IOException
+    {
+        Matcher mNumberedUrl = LINT_LINE_WITH_NUMBERED_URL_PATTERN.matcher( line );
+        Matcher mUrl = LINT_LINE_WITH_URL_PATTERN.matcher( line );
+        if ( mNumberedUrl.find() )
+        {
+            String newLine = updatePathInLineWithLineNumbers( project, line, mNumberedUrl );
+            tmpOutput.write( newLine + "\n" );
+        }
+        else if ( mUrl.find() )
+        {
+            String newLine = updatePathInLine( project, dir, line, mUrl );
+            tmpOutput.write( newLine );
+        }
+        else
+        {
+            tmpOutput.write( line + "\n" );
+        }
+    }
+
+    private void matchErrorWarningCounts( Build build, String line )
+    {
+        Matcher mBugs = LINT_ERROR_WARNING_COUNTS_PATTERN.matcher( line );
+        if ( mBugs.find() )
+        {
+            updateErrorWarningCounts( build, mBugs );
+        }
+    }
+
+    private void updateErrorWarningCounts( Build build, Matcher mBugs )
+    {
+        String bugCountErrors = mBugs.group( 1 );
+        String bugCountWarnings = mBugs.group( 2 );
+
+        int warnings = build.getWarnings() + Integer.parseInt( bugCountErrors ) + Integer.parseInt( bugCountWarnings );
+        build.setWarnings( warnings );
+    }
+
+    private String updatePathInLine( Project project, File dir, String line, Matcher mUrl )
+    {
+        log.debug( "line: " + line );
+        String lineStart = mUrl.group( 1 );
+        String linkedPath = mUrl.group( 4 );
+        File linkedFile = new File( dir.getPath() + "/" + linkedPath );
+        String viewExtra = "";
+        if ( linkedFile.isFile() )
+        {
+            viewExtra = "/view";
+        }
+        String colonPath = replaceUrlSeperatorsWithColons( linkedPath );
+        String filePath = mUrl.group( 5 );
+        String lineEnd = mUrl.group( 6 );
+        String newLine = lineStart
+                + "<a href=\"" + "/" + project.getId()
+                + "/files" + viewExtra + "/path/" + colonPath
+                + "\">" + filePath + "</a>" + lineEnd;
+        log.debug( "newline:" + newLine );
+        return newLine;
+    }
+
+    private String updatePathInLineWithLineNumbers( Project project, String line, Matcher mNumberedUrl )
+    {
+        log.debug( "line: " + line );
+        String lineStart = mNumberedUrl.group( 1 );
+        String colonPath = replaceUrlSeperatorsWithColons( mNumberedUrl.group( 4 ) );
+        String lineNumber = mNumberedUrl.group( 6 );
+        String filePath = mNumberedUrl.group( 5 );
+        String lineEnd = mNumberedUrl.group( 7 );
+        String newLine = lineStart
+                + "<a href=\"" + "/" + project.getId()
+                + "/files/view/path/" + colonPath
+                + "#" + lineNumber + "\">"
+                + filePath + "</a>"
+                + ":" + lineNumber
+                + lineEnd;
+        log.debug( "newline: " + newLine );
+        return newLine;
+    }
+
+    private void RunLint( Project project, File dir, Build build, Writer buildOut )
+            throws IOException, InterruptedException
+    {
+        log.debug( "Running Lint" );
+
+        ArrayList<String> commands = new ArrayList<String>();
+        commands.add( "lint" );
+        commands.add( dir.getPath() );
+        commands.add( "--html" );
+        File outputDir = new File( new File( new File( new File( new File( Manager.getStorageInstance().getDataDirectory(), "repository" ), "site" ), project.getId() ), "analyze" ), "" + build.getId() );
+        String outputPath = outputDir.getPath();
+        commands.add( outputPath );
+
+        if ( !outputDir.exists() )
+        {
+            if ( !outputDir.mkdirs() )
+            {
+                log.error( "Unable to mkdirs:" + outputDir.getPath() );
+            }
+        }
+
+        log.debug( "Running Lint:" + dir.getPath() + " withOutput:" + outputPath );
+
+        Process process = Runtime.getRuntime().exec( commands.toArray( new String[commands.size()] ), null, dir );
+
+        StreamGobbler serr = new StreamGobbler( new InputStreamReader( process.getErrorStream() ), buildOut );
+        StreamGobbler sout = new StreamGobbler( new InputStreamReader( process.getInputStream() ), buildOut );
+        serr.start();
+        sout.start();
+
+        process.waitFor();
+        waitStreamGobblersToComplete( serr, sout );
+
+        IOUtil.close( process.getOutputStream() );
+        IOUtil.close( process.getErrorStream() );
+        IOUtil.close( process.getInputStream() );
+        process.destroy();
+    }
+
+    private String replaceUrlSeperatorsWithColons( String colonedPath )
+    {
+        Matcher mUrlSeperators = LINT_URL_SEPERATOR_PATTERN.matcher( colonedPath );
+        if ( mUrlSeperators.find() )
+        {
+            colonedPath = mUrlSeperators.replaceAll( ":" );
+        }
+        return colonedPath;
     }
 
     public void onBuildFailed( Project project, PropertyTree config, PropertyTree appConfig, File dir, File output,

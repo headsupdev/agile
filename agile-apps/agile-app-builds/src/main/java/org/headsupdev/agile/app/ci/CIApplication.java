@@ -194,11 +194,13 @@ public class CIApplication
         items.add( CONFIGURATION_MAVEN_GOALS );
         items.add( CONFIGURATION_MAVEN_PROFILES );
         items.add( CONFIGURATION_MAVEN_HOME_OVERRIDE );
+        items.add( CONFIGURATION_ANALYZE );
         mavenProjectItems.add( new ConfigurationItem( "schedule.default", "Default Build Schedule", items ) );
         items = new LinkedList<ConfigurationItem>();
         items.add( CONFIGURATION_MAVEN_GOALS );
         items.add( CONFIGURATION_MAVEN_PROFILES );
         items.add( CONFIGURATION_MAVEN_HOME_OVERRIDE );
+        items.add( CONFIGURATION_ANALYZE );
         items.add( CONFIGURATION_CRON_EXPRESSION );
         mavenProjectItems.add( new ConfigurationItem( "schedule", "Build Schedule",
                 new ConfigurationItem( "schedule", "Build Schedule", items ) ) );
