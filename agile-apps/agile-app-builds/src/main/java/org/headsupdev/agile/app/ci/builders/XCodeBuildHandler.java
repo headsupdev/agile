@@ -46,7 +46,7 @@ public class XCodeBuildHandler
 {
 
     public static final Pattern BUILD_LOG_BUGS_COUNT_PATTERN = Pattern.compile( "scan-build: ([0-9]*) bugs found." );
-    public static final Pattern BUILD_LOG_OUTPUT_DIR_PATTERN = Pattern.compile( "scan-build: Run 'scan-view ([^ ']*)' to examine bug reports." );
+    public static final Pattern BUILD_LOG_OUTPUT_DIR_PATTERN = Pattern.compile( "scan-build: Run 'scan-view ([^']*)' to examine bug reports." );
 
     private static Logger log = Manager.getLogger( XCodeBuildHandler.class.getName() );
 
