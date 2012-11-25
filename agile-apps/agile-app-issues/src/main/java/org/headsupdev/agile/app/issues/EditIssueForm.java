@@ -31,6 +31,7 @@ import org.headsupdev.agile.web.HeadsUpSession;
 import org.headsupdev.agile.web.components.AttachmentPanel;
 import org.headsupdev.agile.web.components.DurationEditPanel;
 import org.headsupdev.agile.web.components.FormattedDateModel;
+import org.headsupdev.agile.web.components.UserDropDownChoice;
 import org.headsupdev.agile.web.components.issues.IssueListPanel;
 import org.headsupdev.agile.web.components.issues.IssueUtils;
 import org.apache.wicket.PageParameters;
@@ -161,17 +162,7 @@ class IssueForm
         add( status );
 
         add( new Label( "reporter", issue.getReporter().getFullnameOrUsername() ) );
-        List<User> users;
-        if ( issue.getAssignee() != null )
-        {
-            users = owner.getSecurityManager().getRealUsersIncluding( issue.getAssignee() );
-        }
-        else
-        {
-            users = owner.getSecurityManager().getRealUsers();
-        }
-
-        final DropDownChoice<User> assignees = new DropDownChoice<User>( "assignee", users );
+        final DropDownChoice<User> assignees = new UserDropDownChoice( "assignee", issue.getAssignee() );
         assignees.setNullValid( true );
         add( assignees );
         Button assignToMe = new Button( "assignToMe" )
@@ -189,7 +180,9 @@ class IssueForm
                 super.onSubmit();
             }
         };
-        add( assignToMe.setDefaultFormProcessing( false ).setVisible( issue.getStatus() < Issue.STATUS_RESOLVED ) );
+        assignToMe.setVisible( issue.getStatus() < Issue.STATUS_RESOLVED &&
+                !( (HeadsUpSession) getSession() ).getUser().equals( issue.getAssignee() ) );
+        add( assignToMe.setDefaultFormProcessing( false ) );
 
         if ( creating )
         {

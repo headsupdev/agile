@@ -228,13 +228,10 @@ public class ViewIssue
             links.add( new BookmarkableMenuLink( RenderUtil.getPageClass( "issues/attach" ), pageParams, "attach" ) );
             links.add( new BookmarkableMenuLink( RenderUtil.getPageClass( "issues/relate" ), pageParams, "relate" ) );
 
+            links.add( new BookmarkableMenuLink( RenderUtil.getPageClass( "issues/assign" ), pageParams, "assign" ) );
+
             if ( issue.getStatus() < Issue.STATUS_RESOLVED )
             {
-                if ( issue.getAssignee() == null )
-                {
-                    links.add( new BookmarkableMenuLink( RenderUtil.getPageClass( "issues/accept" ), pageParams, "accept" ) );
-                }
-
                 if ( issue.getStatus() >= Issue.STATUS_INPROGRESS )
                 {
                     if ( Boolean.parseBoolean( issue.getProject().getConfigurationValue( StoredProject.CONFIGURATION_TIMETRACKING_ENABLED ) ) )
@@ -250,7 +247,7 @@ public class ViewIssue
             }
             else
             {
-                links.add( new BookmarkableMenuLink( RenderUtil.getPageClass( "issues/reopen" ), pageParams, "reopen" ) );
+                links.add( new BookmarkableMenuLink( RenderUtil.getPageClass( "issues/reopen" ), pageParams, "unresolve" ) );
             }
 
             links.add( new BookmarkableMenuLink( RenderUtil.getPageClass( "issues/close" ), pageParams, "close" ) );

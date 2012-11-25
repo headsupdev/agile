@@ -114,7 +114,7 @@ public class IssuesApplication
 
     @Override
     public Class<? extends Page>[] getPages() {
-        return new Class[]{ AcceptIssue.class, CloseIssue.class, CreateAttachment.class, CreateComment.class,
+        return new Class[]{ AssignIssue.class, CloseIssue.class, CreateAttachment.class, CreateComment.class,
             CreateIssue.class, CreateRelationship.class, EditIssue.class, Issues.class, ReopenIssue.class,
             ResolveIssue.class, BeginIssue.class, ProgressIssue.class, ViewIssue.class };
     }

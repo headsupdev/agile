@@ -65,7 +65,7 @@ public class UpdateIssueEvent
 
     public UpdateIssueEvent( Issue issue, Project project, User user, Comment comment, String type )
     {
-        super( user.getFullnameOrUsername() + " " + type + " issue " + issue.getId() + " \"" + issue.getSummary() + "\"",
+        super( user.getFullnameOrUsername() + " " + type + " issue:" + issue.getId() + " \"" + issue.getSummary() + "\"",
                comment.getComment(), issue.getUpdated() );
 
         setApplicationId( IssuesApplication.ID );

@@ -18,60 +18,56 @@
 
 package org.headsupdev.agile.app.issues;
 
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.util.lang.Bytes;
+import org.headsupdev.agile.api.Event;
+import org.headsupdev.agile.api.User;
 import org.headsupdev.agile.app.issues.event.UpdateIssueEvent;
+import org.headsupdev.agile.storage.Comment;
 import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.MountPoint;
 import org.headsupdev.agile.api.Permission;
 import org.headsupdev.agile.app.issues.permission.IssueEditPermission;
 import org.headsupdev.agile.storage.issues.Issue;
 import org.apache.wicket.markup.html.CSSPackageResource;
+import org.headsupdev.agile.web.components.AttachmentPanel;
+import org.headsupdev.agile.web.components.UserDropDownChoice;
 
 import java.util.*;
 
 /**
- * Issue accept page - sets the issue's assigned user to the current user
+ * Issue assign page - set the issue's assigned user to any active user in the system
  *
  * @author Andrew Williams
  * @version $Id$
- * @since 1.0
+ * @since 2.0
  */
-@MountPoint( "accept" )
-public class AcceptIssue
-    extends HeadsUpPage
+@MountPoint( "assign" )
+public class AssignIssue
+    extends CreateComment
 {
-    public Permission getRequiredPermission() {
-        return new IssueEditPermission();
-    }
+    private UserDropDownChoice userChoice;
 
-    public void layout()
+    protected void layoutChild( Form form )
     {
-        super.layout();
-        add( CSSPackageResource.getHeaderContribution( getClass(), "issue.css" ) );
+        form.add( userChoice = new UserDropDownChoice( "userChoice", getIssue().getAssignee() ) );
+        userChoice.setModel( new PropertyModel<User>( getIssue(),  "assignee" ) );
+        userChoice.setNullValid( true );
+        userChoice.setRequired( false );
 
-        long id;
-        try
-        {
-            id = getPageParameters().getLong("id");
-        }
-        catch ( NumberFormatException e )
-        {
-            notFoundError();
-            return;
-        }
-
-        Issue issue = IssuesApplication.getIssue( id, getProject() );
-        if ( issue == null )
-        {
-            notFoundError();
-            return;
-        }
-
-        issue.setAssignee( getSession().getUser() );
-        issue.getWatchers().add( getSession().getUser() );
-        issue.setUpdated( new Date() );
-        getHeadsUpApplication().addEvent( new UpdateIssueEvent( issue, issue.getProject(), getSession().getUser(),
-            "accepted" ) );
-
-        setResponsePage( getPageClass( "issues/view" ), getPageParameters() );
+        setSubmitLabel( "Assign Issue" );
     }
+
+    protected void submitChild()
+    {
+        getIssue().setStatus( Issue.STATUS_ASSIGNED );
+    }
+
+    protected Event getUpdateEvent( Comment comment )
+    {
+        return new UpdateIssueEvent( getIssue(), getIssue().getProject(), getSession().getUser(), comment,
+                "asigned" );
+    }
+
 }
