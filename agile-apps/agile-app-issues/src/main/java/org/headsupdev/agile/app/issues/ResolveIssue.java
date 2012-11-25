@@ -96,13 +96,11 @@ public class ResolveIssue
             }
         }.setChoiceRenderer( new IChoiceRenderer<Integer>()
         {
-            @Override
             public Object getDisplayValue( Integer integer )
             {
                 return IssueUtils.getResolutionName( integer );
             }
 
-            @Override
             public String getIdValue( Integer integer, int i )
             {
                 return integer.toString();
