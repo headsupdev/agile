@@ -48,10 +48,10 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
+import org.headsupdev.agile.web.components.issues.MilestoneDropDownChoice;
 
 import java.util.Date;
 import java.util.LinkedList;
-import java.util.List;
 
 /**
  * The form used when editing / creating an issue
@@ -142,13 +142,7 @@ class IssueForm
             }
         } ) );
         add( new TextField( "version" ) );
-        List<Milestone> milestones = ( (IssuesApplication) owner.getHeadsUpApplication() )
-                .getMilestonesForProjectOrParent( issue.getProject() );
-        if ( issue.getMilestone() != null && !milestones.contains( issue.getMilestone() ) )
-        {
-            milestones.add( issue.getMilestone() );
-        }
-        add( new DropDownChoice<Milestone>( "milestone", milestones ).setNullValid( true ) );
+        add( new MilestoneDropDownChoice( "milestone", issue.getProject(), issue.getMilestone() ).setNullValid( true ) );
 
         Label status = new Label( "status", new Model<String>()
         {

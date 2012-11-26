@@ -32,6 +32,10 @@ a {
     text-decoration: none;
 }
 
+a.subtlelink {
+    color: #dddddd;
+}
+
 a:hover {
     color: #3ccfff;
 }

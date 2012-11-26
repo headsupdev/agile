@@ -219,60 +219,6 @@ public class IssuesApplication
         tx.commit();
     }
 
-    public List<Milestone> getMilestones()
-    {
-        Session session = ( (HibernateStorage) Manager.getStorageInstance() ).getHibernateSession();
-
-        Transaction tx = session.beginTransaction();
-        Query q = session.createQuery( "from Milestone m where completed is null" );
-        List<Milestone> list = q.list();
-        tx.commit();
-
-        return list;
-    }
-
-    public List<Milestone> getMilestonesForProjectOrParent( Project project )
-    {
-        StringBuffer projectIds = new StringBuffer( "(" );
-        Project p = project;
-        while ( p != null )
-        {
-            projectIds.append( "'" );
-            projectIds.append( p.getId() );
-            projectIds.append( "'" );
-
-            p = p.getParent();
-            if ( p != null )
-            {
-                projectIds.append( "," );
-            }
-        }
-        projectIds.append( ")" );
-
-        Session session = ( (HibernateStorage) Manager.getStorageInstance() ).getHibernateSession();
-
-        Transaction tx = session.beginTransaction();
-        Query q = session.createQuery( "from Milestone m where id.project.id in " + projectIds.toString() +
-                " and completed is null" );
-        List<Milestone> list = q.list();
-        tx.commit();
-
-        return list;
-    }
-
-    public List<Milestone> getMilestonesForProject( Project project )
-    {
-        Session session = ( (HibernateStorage) Manager.getStorageInstance() ).getHibernateSession();
-
-        Transaction tx = session.beginTransaction();
-        Query q = session.createQuery( "from Milestone m where id.project.id = :pid and completed is null" );
-        q.setString( "pid", project.getId() );
-        List<Milestone> list = q.list();
-        tx.commit();
-
-        return list;
-    }
-
     public Class[] getPersistantClasses() {
         return new Class[] { CloseIssueEvent.class, CreateIssueEvent.class, UpdateIssueEvent.class };
     }

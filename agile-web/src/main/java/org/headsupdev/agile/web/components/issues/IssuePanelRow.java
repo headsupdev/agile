@@ -19,8 +19,13 @@
 package org.headsupdev.agile.web.components.issues;
 
 
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.markup.html.form.DropDownChoice;
+import org.apache.wicket.model.PropertyModel;
 import org.headsupdev.agile.api.Manager;
 import org.headsupdev.agile.api.Page;
+import org.headsupdev.agile.api.User;
 import org.headsupdev.agile.storage.HibernateStorage;
 import org.headsupdev.agile.storage.StoredProject;
 import org.headsupdev.agile.storage.issues.DurationWorked;
@@ -38,6 +43,9 @@ import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
+import org.headsupdev.agile.web.components.UserDropDownChoice;
+
+import java.util.List;
 
 /**
  * A single row from an issue list table
@@ -50,12 +58,14 @@ import org.apache.wicket.model.Model;
 public class IssuePanelRow
     extends Panel
 {
+    private Issue issue;
     public IssuePanelRow( String id, Issue issue, final HeadsUpPage page, final boolean hideProject,
                           final boolean hideMilestone, boolean hideAssignee )
     {
         super( id );
         issue = (Issue) ((HibernateStorage) Manager.getStorageInstance() ).getHibernateSession().load( Issue.class,
             issue.getInternalId() );
+        this.issue = issue;
         add( CSSPackageResource.getHeaderContribution( getClass(), "issue.css" ) );
 
         final boolean timeEnabled = Boolean.parseBoolean( page.getProject().getConfigurationValue(
@@ -198,30 +208,73 @@ public class IssuePanelRow
         type.add( attachImage.setVisible( attachments ) );
 
         cell = new WebMarkupContainer( "assigned-cell" );
-        if ( issue.getAssignee() != null && !hideAssignee )
+        if ( !hideAssignee )
         {
-            params = new PageParameters();
-            params.add( "project", issue.getProject().getId() );
-            params.add( "username", issue.getAssignee().getUsername() );
-
-            Class<? extends Page> userClass = page.getPageClass( "account" );
-            if ( userClass != null )
+            if ( issue.getAssignee() != null )
             {
-                Link assignedLink = new BookmarkablePageLink( "assigned-link", userClass, params );
-                assignedLink.add( new Label( "assigned-label", issue.getAssignee().getFullnameOrUsername() ) );
-                cell.add( assignedLink );
-                cell.add( new WebMarkupContainer( "assigned-label" ).setVisible( false ) );
+                params = new PageParameters();
+                params.add( "project", issue.getProject().getId() );
+                params.add( "username", issue.getAssignee().getUsername() );
+
+                Class<? extends Page> userClass = page.getPageClass( "account" );
+                if ( userClass != null )
+                {
+                    Link assignedLink = new BookmarkablePageLink( "assigned-link", userClass, params );
+                    assignedLink.add( new Label( "assigned-label", issue.getAssignee().getFullnameOrUsername() ) );
+                    cell.add( assignedLink );
+                    cell.add( new WebMarkupContainer( "assigned-label" ).setVisible( false ) );
+                    cell.add( new WebMarkupContainer( "assign-link" ).setVisible( false ) );
+                    cell.add( new WebMarkupContainer( "assign-choice" ).setVisible( false ) );
+                }
+                else
+                {
+                    cell.add( new WebMarkupContainer( "assigned-link" ).setVisible( false ) );
+                    cell.add( new Label( "assigned-label", issue.getAssignee().getFullnameOrUsername() ) );
+                    cell.add( new WebMarkupContainer( "assign-link" ).setVisible( false ) );
+                    cell.add( new WebMarkupContainer( "assign-choice" ).setVisible( false ) );
+                }
             }
             else
             {
+                final UserDropDownChoice assignChoice = new UserDropDownChoice( "assign-choice" ) {
+                    @Override
+                    protected boolean wantOnSelectionChangedNotifications()
+                    {
+                        return true;
+                    }
+
+                    @Override
+                    protected void onSelectionChanged( User newSelection )
+                    {
+                        IssuePanelRow.this.issue = (Issue) ( (HibernateStorage) Manager.getStorageInstance() ).getHibernateSession().merge( IssuePanelRow.this.issue );
+
+                        IssuePanelRow.this.issue.setAssignee( newSelection );
+                    }
+                };
+                assignChoice.setModel( new PropertyModel<User>( issue, "assignee" ) );
+                Link assignLink = new AjaxFallbackLink( "assign-link" )
+                {
+                    @Override
+                    public void onClick( AjaxRequestTarget ajaxRequestTarget )
+                    {
+                        this.setVisible( false );
+                        ajaxRequestTarget.addComponent( this );
+                        assignChoice.setVisible( true );
+                        ajaxRequestTarget.addComponent( assignChoice );
+                    }
+                };
+                cell.add( assignLink.setOutputMarkupId( true ) );
+                cell.add( assignChoice.setOutputMarkupId( true ).setOutputMarkupPlaceholderTag( true ).setVisible( false ) );
+                cell.add( new WebMarkupContainer( "assigned-label" ).setVisible( false ) );
                 cell.add( new WebMarkupContainer( "assigned-link" ).setVisible( false ) );
-                cell.add( new Label( "assigned-label", issue.getAssignee().getFullnameOrUsername() ) );
             }
         }
         else
         {
             cell.add( new WebMarkupContainer( "assigned-link" ).setVisible( false ) );
             cell.add( new WebMarkupContainer( "assigned-label" ).setVisible( false ) );
+            cell.add( new WebMarkupContainer( "assign-link" ).setVisible( false ) );
+            cell.add( new WebMarkupContainer( "assign-choice" ).setVisible( false ) );
         }
         add( cell.setVisible( !hideAssignee ) );
 
@@ -231,6 +284,38 @@ public class IssuePanelRow
         {
             cell.add( new WebMarkupContainer( "milestone-link" ).setVisible( false ) );
             cell.add( new WebMarkupContainer( "milestone-label" ).setVisible( false ) );
+
+            final MilestoneDropDownChoice milestoneChoice = new MilestoneDropDownChoice( "setmilestone-choice", issue.getProject() )
+            {
+                @Override
+                protected boolean wantOnSelectionChangedNotifications()
+                {
+                    return true;
+                }
+
+                @Override
+                protected void onSelectionChanged( Milestone newSelection )
+                {
+                    IssuePanelRow.this.issue = (Issue) ( (HibernateStorage) Manager.getStorageInstance() ).getHibernateSession().merge( IssuePanelRow.this.issue );
+
+                    Milestone newMilestone = (Milestone) ( (HibernateStorage) Manager.getStorageInstance() ).getHibernateSession().merge( newSelection );
+                    IssuePanelRow.this.issue.setMilestone( newMilestone );
+                }
+            };
+            milestoneChoice.setModel( new PropertyModel<Milestone>( issue, "milestone" ) );
+            Link setMilestoneLink = new AjaxFallbackLink( "setmilestone-link" )
+            {
+                @Override
+                public void onClick( AjaxRequestTarget ajaxRequestTarget )
+                {
+                    this.setVisible( false );
+                    ajaxRequestTarget.addComponent( this );
+                    milestoneChoice.setVisible( true );
+                    ajaxRequestTarget.addComponent( milestoneChoice );
+                }
+            };
+            cell.add( setMilestoneLink.setOutputMarkupId( true ) );
+            cell.add( milestoneChoice.setOutputMarkupId( true ).setOutputMarkupPlaceholderTag( true ).setVisible( false ) );
         }
         else
         {
@@ -251,6 +336,9 @@ public class IssuePanelRow
                 cell.add( new WebMarkupContainer( "milestone-link" ).setVisible( false ) );
                 cell.add( new Label( "milestone-label", milestone.toString() ) );
             }
+
+            cell.add( new WebMarkupContainer( "setmilestone-link" ).setVisible( false ) );
+            cell.add( new WebMarkupContainer( "setmilestone-choice" ).setVisible( false ) );
         }
         add(cell.setVisible(!hideMilestone));
 
