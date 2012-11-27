@@ -321,6 +321,11 @@ public class HeadsUpConfiguration
         return parsedBuildDate;
     }
 
+    public static void setDebug( boolean debug )
+    {
+        HeadsUpConfiguration.debug = debug;
+    }
+
     public static boolean isDebug()
     {
         return debug;

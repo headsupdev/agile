@@ -2,6 +2,7 @@
 
 * Added lint - static code analysis for Android Maven projects
 * Add inline setting of milestone and assignee in issue lists
+* Allow setting debug option at runtime from admin configuration
 
 * Fix issues with animations not working offline
 * Fix issue where disabled child projects were still being shown in menu

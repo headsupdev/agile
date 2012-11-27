@@ -18,6 +18,7 @@
 
 package org.headsupdev.agile.app.admin.configuration;
 
+import org.apache.wicket.model.Model;
 import org.headsupdev.agile.api.HeadsUpConfiguration;
 import org.headsupdev.agile.api.ConfigurationItem;
 import org.headsupdev.agile.api.Manager;
@@ -243,6 +244,20 @@ public class SystemConfiguration
                 }
             }
 
+            add( new CheckBox( "debug", new Model<Boolean>()
+            {
+                @Override
+                public Boolean getObject()
+                {
+                    return HeadsUpConfiguration.isDebug();
+                }
+
+                @Override
+                public void setObject( Boolean debug )
+                {
+                    HeadsUpConfiguration.setDebug( debug );
+                }
+            }) );
             final HeadsUpConfiguration global = getStorage().getGlobalConfiguration();
             add( new ListView<ConfigurationItem>( "item", config )
             {
