@@ -314,123 +314,107 @@ public class DurationWorkedUtilTest
         assertEquals( new Integer( 3 ), duration.getTime() );
     }
 
-
     private Project getProject( final String ignoreWeekend )
     {
         return new Project()
         {
-            @Override
             public String getId()
             {
                 return null;
             }
 
-            @Override
             public String getName()
             {
                 return null;
             }
 
-            @Override
             public String getAlias()
             {
                 return null;
             }
 
-            @Override
             public void setAlias( String alias )
             {
             }
 
-            @Override
             public String getScm()
             {
                 return null;
             }
 
-            @Override
             public String getScmUsername()
             {
                 return null;
             }
 
-            @Override
             public String getScmPassword()
             {
                 return null;
             }
 
-            @Override
             public Set<Project> getChildProjects()
             {
                 return null;
             }
 
-            @Override
+            public Set<Project> getChildProjects( boolean withDisabled )
+            {
+                return null;
+            }
+
             public Project getParent()
             {
                 return null;
             }
 
-            @Override
             public String getRevision()
             {
                 return null;
             }
 
-            @Override
             public void setRevision( String revision )
             {
             }
 
-            @Override
             public Date getImported()
             {
                 return null;
             }
 
-            @Override
             public Date getUpdated()
             {
                 return null;
             }
 
-            @Override
             public Set<User> getUsers()
             {
                 return null;
             }
 
-            @Override
             public String getTypeName()
             {
                 return null;
             }
 
-            @Override
             public void fileModified( String path, File file )
             {
             }
 
-            @Override
             public boolean foundMetadata( File directory )
             {
                 return false;
             }
 
-            @Override
             public PropertyTree getConfiguration()
             {
                 return null;
             }
 
-            @Override
             public String getConfigurationValue( ConfigurationItem item )
             {
                 return ignoreWeekend;
             }
 
-            @Override
             public int compareTo( Project project )
             {
                 return 0;

@@ -58,7 +58,7 @@ public class ProjectTreeDropDownChoice
         for ( Project project : Manager.getStorageInstance().getRootProjects( withDisabled ) )
         {
             tree.add( project );
-            addChildIds( tree, project );
+            addChildIds( tree, project, withDisabled );
         }
         if ( showDefault )
         {
@@ -85,13 +85,13 @@ public class ProjectTreeDropDownChoice
         setModel( model );
     }
 
-    private void addChildIds( List<Project> tree, Project parent )
+    private void addChildIds( List<Project> tree, Project parent, boolean withDisabled )
     {
-        for ( Project project : parent.getChildProjects() )
+        for ( Project project : parent.getChildProjects( withDisabled ) )
         {
             tree.add( project );
 
-            addChildIds( tree, project );
+            addChildIds( tree, project, withDisabled );
         }
     }
 }

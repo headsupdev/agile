@@ -25,11 +25,7 @@ import org.hibernate.search.annotations.*;
 import org.hibernate.annotations.Proxy;
 
 import javax.persistence.*;
-import java.io.PrintWriter;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.Date;
+import java.util.*;
 import java.io.File;
 
 /**
@@ -341,8 +337,38 @@ public class StoredProject
         children.add( child );
     }
 
-    public Set<Project> getChildProjects() {
-        return children;
+    public Set<Project> getChildProjects()
+    {
+        return getChildProjects( false );
+    }
+
+    public Set<Project> getChildProjects( boolean withDisabled )
+    {
+        if ( withDisabled )
+        {
+            return children;
+        }
+
+        Set<Project> toRemove = new HashSet<Project>();
+
+        for ( Project project : children )
+        {
+            if ( ( (StoredProject) project ).isDisabled() )
+            {
+                toRemove.add( project );
+            }
+        }
+
+        if ( toRemove.isEmpty() )
+        {
+            return children;
+        }
+
+        Set<Project> notDisabled = new HashSet<Project>( children.size() );
+        notDisabled.addAll( children );
+        notDisabled.removeAll( toRemove );
+
+        return notDisabled;
     }
 
     public void setParent( Project parent )

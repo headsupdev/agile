@@ -50,6 +50,7 @@ public interface Project
     String getScmPassword();
 
     Set<Project> getChildProjects();
+    Set<Project> getChildProjects( boolean withDisabled );
 
     Project getParent();
 
