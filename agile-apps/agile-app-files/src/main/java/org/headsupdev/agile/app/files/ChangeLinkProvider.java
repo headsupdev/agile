@@ -19,6 +19,7 @@
 package org.headsupdev.agile.app.files;
 
 import org.headsupdev.agile.api.LinkProvider;
+import org.headsupdev.agile.api.Project;
 
 /**
  * Docs link format for a changeset in the scm browser
@@ -43,5 +44,11 @@ public class ChangeLinkProvider extends LinkProvider
     public String getParamName()
     {
         return "id";
+    }
+
+    @Override
+    public boolean isLinkBroken( String params, Project project )
+    {
+        return !BrowseApplication.getChangeSetExists( project, params );
     }
 }

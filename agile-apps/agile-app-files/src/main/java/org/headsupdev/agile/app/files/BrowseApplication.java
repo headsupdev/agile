@@ -150,6 +150,18 @@ public class BrowseApplication
         return ret;
     }
 
+    public static boolean getFileExists( Project project, String fileName )
+    {
+        Session session = ( (HibernateStorage) Manager.getStorageInstance() ).getHibernateSession();
+
+        Query q = session.createQuery(
+                "select count(*) from File f where f.name.project = :project and f.name.name = :name" );
+        q.setEntity( "project", project );
+        q.setString( "name", fileName );
+
+        return ( (Long) q.uniqueResult() ) > 0;
+    }
+
     public static List<ScmChange> getChanges( Project project, String path )
     {
         Session session = ( (HibernateStorage) Manager.getStorageInstance() ).getHibernateSession();
@@ -169,6 +181,31 @@ public class BrowseApplication
         q.setString( "path", prefix + path );
 
         return q.list();
+    }
+
+    public static boolean getChangeSetExists( Project project, String changeId )
+    {
+        Session session = ( (HibernateStorage) Manager.getStorageInstance() ).getHibernateSession();
+
+        Query q = session.createQuery(
+                "select count(*) from ScmChangeSet s where s.id.project = :project and s.revision = :rev" );
+        q.setEntity( "project", project );
+        q.setString( "rev", changeId );
+
+        return ( (Long) q.uniqueResult() ) > 0;
+    }
+
+    public static boolean getChangeExists( Project project, String changeId )
+    {
+        Session session = ( (HibernateStorage) Manager.getStorageInstance() ).getHibernateSession();
+
+        // TODO should we check name?
+        Query q = session.createQuery(
+                "select count(*) from ScmChange c where c.set.id.project = :project and c.revision = :rev" );
+        q.setEntity( "project", project );
+        q.setString( "rev", changeId );
+
+        return ( (Long) q.uniqueResult() ) > 0;
     }
 
     public Class[] getPersistantClasses() {

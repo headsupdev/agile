@@ -19,6 +19,7 @@
 package org.headsupdev.agile.app.files;
 
 import org.headsupdev.agile.api.LinkProvider;
+import org.headsupdev.agile.api.Project;
 
 /**
  * Docs link format for a file in the scm browser
@@ -43,5 +44,11 @@ public class FileLinkProvider extends LinkProvider
     public String getParamName()
     {
         return "path";
+    }
+
+    @Override
+    public boolean isLinkBroken( String params, Project project )
+    {
+        return !BrowseApplication.getFileExists( project, params );
     }
 }

@@ -19,7 +19,8 @@
 package org.headsupdev.agile.web;
 
 import org.apache.wicket.markup.html.CSSPackageResource;
-import org.apache.wicket.markup.html.JavascriptPackageResource;
+import org.headsupdev.agile.api.logging.Logger;
+import org.headsupdev.agile.web.components.MarkedUpTextModel;
 import org.headsupdev.support.java.Base64;
 import org.headsupdev.agile.web.components.AccountSummaryPanel;
 import org.headsupdev.agile.web.components.UserDashboard;
@@ -91,6 +92,8 @@ public abstract class HeadsUpPage
     private String searchQuery;
     private ArrayList<MenuLink> menuLinks = new ArrayList<MenuLink>();
     private boolean linksRendered = false;
+
+    private Logger log = Manager.getLogger( getClass().getName() );
 
     public HeadsUpPage()
     {
@@ -421,6 +424,14 @@ public abstract class HeadsUpPage
             protected void onSubmit() {
                 super.onSubmit();
 
+                String quickLink = getQuickSearchResponse( searchQuery );
+                if ( quickLink != null )
+                {
+                    getRequestCycle().getResponse().redirect( quickLink );
+
+                    throw new RedirectToUrlException( quickLink );
+                }
+
                 PageParameters params = getProjectPageParameters();
                 params.add( "query", searchQuery );
                 setResponsePage( getPageClass( "search" ), params );
@@ -611,6 +622,38 @@ public abstract class HeadsUpPage
         {
             addLink( link );
         }
+    }
+
+    public String getQuickSearchResponse( String search )
+    {
+        String returnURL = null;
+
+        Map<String, LinkProvider> providers = Manager.getInstance().getLinkProviders();
+        for ( LinkProvider provider : providers.values() )
+        {
+            if ( provider.isLinkBroken( search, getProject() ) )
+            {
+                continue;
+            }
+
+            if ( returnURL != null )
+            {
+                log.debug( "QuickSearch also matched \"" + searchQuery + "\" in " + provider.getId() + ", running search" );
+                return null;
+            }
+
+            log.debug( "QuickSearch matched \"" + searchQuery + "\" in " + provider.getId() );
+            returnURL = provider.getLink( search, getProject() );
+        }
+
+        if ( returnURL == null && searchQuery.contains( ":" ) )
+        {
+            if ( !MarkedUpTextModel.isLinkBroken( searchQuery, getProject(), providers ) )
+            {
+                returnURL = MarkedUpTextModel.getLink( searchQuery, getProject(), providers );
+            }
+        }
+        return returnURL;
     }
 
     public void userError( String reason )
