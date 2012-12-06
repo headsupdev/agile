@@ -61,7 +61,7 @@ public class MarkedUpTextModel extends Model<String> {
         }
 
         StringBuilder ret = new StringBuilder( in.length() );
-        StringTokenizer tokenizer = new StringTokenizer( in, " \t\n\r\f<>(){}&.,!?;", true );
+        StringTokenizer tokenizer = new StringTokenizer( in, " \t\n\r\f<>(){}&,!?;", true );
 
         Map<String, LinkProvider> providers = Manager.getInstance().getLinkProviders();
         while ( tokenizer.hasMoreTokens() )
@@ -118,6 +118,11 @@ public class MarkedUpTextModel extends Model<String> {
 
         String module = text.substring( 0, pos ).toLowerCase();
         String name = text.substring( pos + 1 );
+        // compensate from not splitting on "." we still want to split ". "
+        if ( name.endsWith( "." ) )
+        {
+            name = name.substring( 0, name.length() - 1 );
+        }
 
         if ( module.equals( "wiki" ) )
         {
