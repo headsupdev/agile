@@ -62,4 +62,9 @@ public abstract class LinkProvider
     {
         return false;
     }
+
+    public boolean supportsQuickLink()
+    {
+        return true;
+    }
 }

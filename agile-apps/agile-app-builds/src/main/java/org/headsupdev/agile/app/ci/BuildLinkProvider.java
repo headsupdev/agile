@@ -60,4 +60,10 @@ public class BuildLinkProvider extends LinkProvider
             return true;
         }
     }
+
+    @Override
+    public boolean supportsQuickLink()
+    {
+        return false;
+    }
 }

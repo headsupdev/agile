@@ -631,6 +631,11 @@ public abstract class HeadsUpPage
         Map<String, LinkProvider> providers = Manager.getInstance().getLinkProviders();
         for ( LinkProvider provider : providers.values() )
         {
+            if ( !provider.supportsQuickLink() )
+            {
+                continue;
+            }
+
             if ( provider.isLinkBroken( search, getProject() ) )
             {
                 continue;

@@ -51,4 +51,10 @@ public class ChangeLogLinkProvider extends LinkProvider
     {
         return !BrowseApplication.getFileExists( project, params );
     }
+
+    @Override
+    public boolean supportsQuickLink()
+    {
+        return false;
+    }
 }
