@@ -144,13 +144,11 @@ public class DurationEditPanel
             }
         }, Duration.OPTIONS_MINUTE, new IChoiceRenderer<Integer>()
         {
-            @Override
             public Object getDisplayValue( Integer integer )
             {
                 return getClosestMinuteValueAsString( integer );
             }
 
-            @Override
             public String getIdValue( Integer integer, int i )
             {
                 return integer.toString();
