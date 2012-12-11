@@ -21,16 +21,10 @@ package org.headsupdev.agile.storage.issues;
 import org.headsupdev.agile.api.Project;
 import org.headsupdev.agile.api.SearchResult;
 import org.headsupdev.agile.storage.Comment;
-import org.headsupdev.agile.storage.DurationWorkedUtil;
 import org.headsupdev.agile.storage.hibernate.NameProjectBridge;
 import org.headsupdev.agile.storage.hibernate.NameProjectId;
 import org.hibernate.annotations.Type;
-import org.hibernate.search.annotations.DocumentId;
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.FieldBridge;
-import org.hibernate.search.annotations.Index;
-import org.hibernate.search.annotations.Indexed;
-import org.hibernate.search.annotations.IndexedEmbedded;
+import org.hibernate.search.annotations.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -39,16 +33,16 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * A simple milestone to gather info on target releases.
+ * A simple grouping of milestones used to report on a selection of milestones
  *
  * @author Andrew Williams
  * @version $Id$
- * @since 1.0
+ * @since 2.0
  */
 @Entity
-@Table(name = "Milestones")
-@Indexed(index = "Milestones")
-public class Milestone
+@Table(name = "MilestoneGroups")
+@Indexed(index = "MilestoneGroups")
+public class MilestoneGroup
         implements Serializable, SearchResult
 {
     @EmbeddedId
@@ -62,23 +56,20 @@ public class Milestone
     String description;
 
     @Temporal(TemporalType.TIMESTAMP)
-    Date created, updated, start, due, completed;
+    Date created, updated;
 
-    @OneToMany(mappedBy = "milestone")
-    private Set<Issue> issues = new HashSet<Issue>();
-
-    @ManyToOne
-    private MilestoneGroup group;
+    @OneToMany(mappedBy = "group")
+    private Set<Milestone> milestones = new HashSet<Milestone>();
 
     @OneToMany
     @IndexedEmbedded
     private Set<Comment> comments = new HashSet<Comment>();
 
-    public Milestone()
+    public MilestoneGroup()
     {
     }
 
-    public Milestone( String name, Project project )
+    public MilestoneGroup( String name, Project project )
     {
         this.name = new NameProjectId( name, project );
     }
@@ -140,41 +131,85 @@ public class Milestone
 
     public Date getStartDate()
     {
-        return start;
-    }
+        if ( milestones.size() == 0 )
+        {
+            return null;
+        }
 
-    public void setStartDate( Date start )
-    {
-        this.start = start;
+        Date earliest = null;
+        for ( Milestone milestone : milestones )
+        {
+            if ( earliest == null || ( milestone.getStartDate() != null && earliest.after( milestone.getStartDate() ) ) )
+            {
+                earliest = milestone.getStartDate();
+            }
+        }
+
+        return earliest;
     }
 
     public Date getDueDate()
     {
-        return due;
-    }
+        if ( milestones.size() == 0 )
+        {
+            return null;
+        }
 
-    public void setDueDate( Date due )
-    {
-        this.due = due;
+        Date latest = null;
+        for ( Milestone milestone : milestones )
+        {
+            if ( latest == null || ( milestone.getStartDate() != null && latest.before(milestone.getDueDate()) ) )
+            {
+                latest = milestone.getDueDate();
+            }
+        }
+
+        return latest;
     }
 
     public Date getCompletedDate()
     {
-        return completed;
-    }
+        if ( milestones.size() == 0 )
+        {
+            return null;
+        }
 
-    public void setCompletedDate( Date completed )
-    {
-        this.completed = completed;
+        Date latest = null;
+        for ( Milestone milestone : milestones )
+        {
+            if ( milestone.getCompletedDate() == null )
+            {
+                return null;
+            }
+
+            if ( latest == null || latest.before( milestone.getDueDate() ) )
+            {
+                latest = milestone.getDueDate();
+            }
+        }
+
+        return latest;
     }
 
     public boolean isCompleted()
     {
-        return completed != null;
+        return getCompletedDate() != null;
+    }
+
+    public Set<Milestone> getMilestones()
+    {
+        return milestones;
     }
 
     public Set<Issue> getIssues()
     {
+        Set<Issue> issues = new HashSet<Issue>();
+
+        for ( Milestone milestone : getMilestones() )
+        {
+            issues.addAll( milestone.getIssues() );
+        }
+
         return issues;
     }
 
@@ -206,16 +241,6 @@ public class Milestone
         return ret;
     }
 
-    public MilestoneGroup getGroup()
-    {
-        return group;
-    }
-
-    public void setGroup( MilestoneGroup group )
-    {
-        this.group = group;
-    }
-
     public Set<Comment> getComments()
     {
         return comments;
@@ -228,7 +253,7 @@ public class Milestone
 
     public String getLink()
     {
-        return "/" + getProject().getId() + "/milestones/view/id/" + getName();
+        return "/" + getProject().getId() + "/milestones/viewgroup/id/" + getName();
     }
 
     public String toString()
@@ -238,10 +263,10 @@ public class Milestone
 
     public boolean equals( Object o )
     {
-        return o instanceof Milestone && equals( (Milestone) o );
+        return o instanceof MilestoneGroup && equals( (MilestoneGroup) o );
     }
 
-    public boolean equals( Milestone m )
+    public boolean equals( MilestoneGroup m )
     {
         return m.getName().equals( getName() ) && m.getProject().equals( getProject() );
     }
@@ -259,6 +284,17 @@ public class Milestone
 
     public double getCompleteness()
     {
-        return DurationWorkedUtil.getMilestoneCompleteness( this );
+        if ( milestones.size() == 0 )
+        {
+            return 0.0;
+        }
+
+        double completeness = 0.0;
+        for ( Milestone milestone : milestones )
+        {
+            completeness += milestone.getCompleteness();
+        }
+
+        return completeness / milestones.size();
     }
 }

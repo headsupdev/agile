@@ -73,6 +73,7 @@ public class DurationWorked
     @ManyToOne( fetch = FetchType.LAZY )
     private Issue issue;
 
+    // TODO see if we can always require old duration required for later comparison
     public long getId()
     {
         return id;

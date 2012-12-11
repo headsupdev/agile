@@ -19,16 +19,15 @@
 package org.headsupdev.agile.app.milestones;
 
 import org.headsupdev.agile.api.*;
+import org.headsupdev.agile.app.milestones.event.*;
 import org.headsupdev.agile.storage.issues.Milestone;
 import org.headsupdev.agile.storage.HibernateStorage;
 import org.headsupdev.agile.storage.issues.MilestoneComparator;
+import org.headsupdev.agile.storage.issues.MilestoneGroup;
 import org.headsupdev.agile.web.WebApplication;
 import org.headsupdev.agile.app.milestones.permission.MilestoneViewPermission;
 import org.headsupdev.agile.app.milestones.permission.MilestoneListPermission;
 import org.headsupdev.agile.app.milestones.permission.MilestoneEditPermission;
-import org.headsupdev.agile.app.milestones.event.UpdateMilestoneEvent;
-import org.headsupdev.agile.app.milestones.event.CreateMilestoneEvent;
-import org.headsupdev.agile.app.milestones.event.CompleteMilestoneEvent;
 import org.headsupdev.agile.web.wicket.SortableEntityProvider;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -64,11 +63,14 @@ public class MilestonesApplication
     {
         links = new LinkedList<MenuLink>();
         links.add( new SimpleMenuLink( "create" ) );
+        links.add( new SimpleMenuLink( "creategroup" ) );
 
         eventTypes = new LinkedList<String>();
         eventTypes.add( "completemilestone" );
         eventTypes.add( "createmilestone" );
         eventTypes.add( "updatemilestone" );
+        eventTypes.add( "createmilestonegroup" );
+        eventTypes.add( "updatemilestonegroup" );
     }
 
     public String getName()
@@ -103,13 +105,14 @@ public class MilestonesApplication
     @Override
     public Class<? extends Page>[] getPages() {
         return new Class[]{ CompleteMilestone.class, CreateComment.class, CreateMilestone.class, EditMilestone.class,
-            Milestones.class, ViewMilestone.class };
+                Milestones.class, ViewMilestone.class, CreateMilestoneGroup.class, EditMilestoneGroup.class,
+                ViewMilestoneGroup.class };
     }
 
     @Override
     public Class[] getResources()
     {
-        return new Class[]{ ExportDurationWorked.class, BurndownGraph.class };
+        return new Class[]{ ExportDurationWorked.class, BurndownGraph.class, GroupBurndownGraph.class };
     }
 
     @Override
@@ -124,7 +127,7 @@ public class MilestonesApplication
         return new LinkProvider[]{ new MilestoneLinkProvider() };
     }
 
-    public static SortableEntityProvider<Milestone> getMilestoneProvider( final MilestoneFilterPanel filter )
+    public static SortableEntityProvider<Milestone> getMilestoneProvider( final MilestoneFilter filter )
     {
         return new SortableEntityProvider<Milestone>() {
             @Override
@@ -182,7 +185,7 @@ public class MilestonesApplication
     }
 
     public static SortableEntityProvider<Milestone> getMilestoneProviderForProject( final Project project,
-                                                                                    final MilestoneFilterPanel filter )
+                                                                                    final MilestoneFilter filter )
     {
         return new SortableEntityProvider<Milestone>() {
             @Override
@@ -251,9 +254,15 @@ public class MilestonesApplication
         return (Milestone) q.uniqueResult();
     }
 
-    public static Date getDueSoonDate()
+    public static MilestoneGroup getMilestoneGroup( String name, Project project )
     {
-        return new Date( System.currentTimeMillis() + (1000L * 60 * 60 * 24 * 14 ) );
+        Session session = ( (HibernateStorage) Manager.getStorageInstance() ).getHibernateSession();
+
+        Query q = session.createQuery( "from MilestoneGroup g where name.name = :name and name.project.id = :pid" );
+        q.setString( "name", name );
+        q.setString( "pid", project.getId() );
+
+        return (MilestoneGroup) q.uniqueResult();
     }
 
     public void addMilestone( Milestone milestone )
@@ -265,8 +274,17 @@ public class MilestonesApplication
         tx.commit();
     }
 
+    public void addMilestoneGroup( MilestoneGroup group )
+    {
+        Session session = ( (HibernateStorage) Manager.getStorageInstance() ).getHibernateSession();
+
+        Transaction tx = session.beginTransaction();
+        session.save( group );
+        tx.commit();
+    }
 
     public Class[] getPersistantClasses() {
-        return new Class[] { CompleteMilestoneEvent.class, CreateMilestoneEvent.class, UpdateMilestoneEvent.class };
+        return new Class[] { CompleteMilestoneEvent.class, CreateMilestoneEvent.class, UpdateMilestoneEvent.class,
+                CreateMilestoneGroupEvent.class, UpdateMilestoneGroupEvent.class };
     }
 }

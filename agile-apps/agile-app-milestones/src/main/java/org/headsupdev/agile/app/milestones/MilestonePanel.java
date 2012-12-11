@@ -19,78 +19,52 @@
 package org.headsupdev.agile.app.milestones;
 
 import org.headsupdev.agile.storage.DurationWorkedUtil;
-import org.headsupdev.agile.storage.issues.DurationWorked;
 import org.headsupdev.agile.storage.issues.Issue;
-import org.headsupdev.agile.web.HeadsUpSession;
-import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.markup.html.basic.Label;
 import org.headsupdev.agile.storage.issues.Milestone;
-import org.headsupdev.agile.web.components.FormattedDateModel;
-import org.headsupdev.agile.web.components.PercentagePanel;
-import org.headsupdev.agile.web.components.MarkedUpTextModel;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 
 /**
- * TODO document me
+ * Panel to render the details of a milestone.
  *
  * @author Andrew Williams
  * @since 1.0
  */
 public class MilestonePanel
-        extends Panel
+        extends IssueSetPanel
 {
+    private Milestone milestone;
+
     public MilestonePanel( String id, Milestone milestone )
     {
         super( id );
+        this.milestone = milestone;
 
-        add( new Label( "id", milestone.getName() ) );
-        add( new Label( "name", milestone.getName() ) );
-        add( new Label( "project", milestone.getProject().toString() ) );
+        layout( milestone.getName(), milestone.getDescription(), milestone.getProject(), milestone.getCreated(), milestone.getUpdated(),
+                milestone.getStartDate(), milestone.getDueDate(), milestone.getCompletedDate() );
+    }
 
-        add( new Label( "created", new FormattedDateModel( milestone.getCreated(),
-                ( (HeadsUpSession) getSession() ).getTimeZone() ) ) );
-        add( new Label( "updated", new FormattedDateModel( milestone.getUpdated(),
-                ( (HeadsUpSession) getSession() ).getTimeZone() ) ) );
+    @Override
+    protected double getCompleteness()
+    {
+        return DurationWorkedUtil.getMilestoneCompleteness( milestone );
+    }
 
-        int total = milestone.getIssues().size();
-        int open = milestone.getOpenIssues().size();
-        int reopened = milestone.getReOpenedIssues().size();
-        double part = DurationWorkedUtil.getMilestoneCompleteness( milestone );
-        int percent = (int) ( part * 100 );
-        add( new Label( "issues", reopened == 0 ? String.valueOf( total )  : String.format( "%d (%d reopened)", total, reopened ) ) );
-        add( new Label( "open", String.valueOf( open ) ) );
+    @Override
+    protected Set<Issue> getReOpenedIssues()
+    {
+        return milestone.getReOpenedIssues();
+    }
 
-        String percentStr = "";
-        if ( milestone.getCompletedDate() == null )
-        {
-            percentStr = percent + "% ";
-        }
-        add( new Label( "percent", percentStr ) );
+    @Override
+    protected Set<Issue> getOpenIssues()
+    {
+        return milestone.getOpenIssues();
+    }
 
-        add( new Label( "due", new FormattedDateModel( milestone.getDueDate(),
-                ( (HeadsUpSession) getSession() ).getTimeZone() ) ).add( new MilestoneStatusModifier( "due", milestone ) ) );
-        add( new Label( "completed", new FormattedDateModel( milestone.getCompletedDate(),
-                ( (HeadsUpSession) getSession() ).getTimeZone() ) ) );
-
-        add( new PercentagePanel( "bar", percent ) );
-
-        add( new Label( "description", new MarkedUpTextModel( milestone.getDescription(), milestone.getProject() ) )
-                .setEscapeModelStrings( false ) );
-
-        List<DurationWorked> worked = new ArrayList<DurationWorked>();
-        for ( Issue issue : milestone.getIssues() )
-        {
-            worked.addAll( issue.getTimeWorked() );
-        }
-
-        Double velocity = DurationWorkedUtil.getVelocity( worked, milestone );
-        String velocityStr = "-";
-        if ( !velocity.equals( Double.NaN ) )
-        {
-            velocityStr = String.format( "%.1f", velocity );
-        }
-        add( new Label( "velocity", velocityStr ) );
+    @Override
+    protected Set<Issue> getIssues()
+    {
+        return milestone.getIssues();
     }
 }

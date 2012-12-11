@@ -16,11 +16,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.headsupdev.agile.app.milestones;
+package org.headsupdev.agile.web.components.milestones;
 
 import org.headsupdev.agile.storage.issues.Milestone;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.model.Model;
+import org.headsupdev.agile.storage.issues.MilestoneGroup;
 
 import java.util.Date;
 
@@ -31,27 +32,38 @@ import java.util.Date;
  * @version $Id$
  * @since 1.0
  */
-class MilestoneStatusModifier
+public class MilestoneStatusModifier
     extends AttributeModifier
 {
-    public MilestoneStatusModifier(final String className, final Milestone milestone)
+    public MilestoneStatusModifier( final String className, final Milestone milestone )
     {
-        super ( "class", true, new Model<String>() {
+        this( className, milestone.getDueDate(), milestone.getCompletedDate() );
+    }
+
+    public MilestoneStatusModifier( final String className, final MilestoneGroup group )
+    {
+        this( className, group.getDueDate(), group.getCompletedDate() );
+    }
+
+    public MilestoneStatusModifier(final String className, final Date due, final Date completed )
+    {
+        super ( "class", true, new Model<String>()
+        {
             public String getObject()
             {
-                if ( milestone.getCompletedDate() != null )
+                if ( completed != null )
                 {
                     return className + " statuscomplete";
                 }
 
-                if ( milestone.getDueDate() != null )
+                if ( due != null )
                 {
-                    if ( milestone.getDueDate().before( new Date() ) )
+                    if ( due.before( new Date() ) )
                     {
                         return className + " statusoverdue";
                     }
 
-                    if ( milestone.getDueDate().before( MilestonesApplication.getDueSoonDate() ) )
+                    if ( due.before( getDueSoonDate() ) )
                     {
                         return className + " statusduesoon";
                     }
@@ -62,4 +74,8 @@ class MilestoneStatusModifier
         } );
     }
 
+    public static Date getDueSoonDate()
+    {
+        return new Date( System.currentTimeMillis() + (1000L * 60 * 60 * 24 * 14 ) );
+    }
 }

@@ -23,10 +23,7 @@ import org.headsupdev.agile.api.Project;
 import org.headsupdev.agile.app.milestones.permission.MilestoneViewPermission;
 import org.headsupdev.agile.storage.DurationWorkedUtil;
 import org.headsupdev.agile.storage.StoredProject;
-import org.headsupdev.agile.storage.issues.Duration;
-import org.headsupdev.agile.storage.issues.DurationWorked;
-import org.headsupdev.agile.storage.issues.Issue;
-import org.headsupdev.agile.storage.issues.Milestone;
+import org.headsupdev.agile.storage.issues.*;
 import org.headsupdev.agile.web.HeadsUpSession;
 import org.headsupdev.agile.web.MountPoint;
 import org.headsupdev.agile.web.WebUtil;
@@ -99,6 +96,23 @@ public class ExportDurationWorked
             if ( milestone != null )
             {
                 exportMilestone( milestone, ret );
+
+                return ret.toString();
+            }
+            // here we could throw some error I guess...
+        }
+
+        String groupId = getParameters().getString( "groupId" );
+        if ( groupId != null && groupId.length() > 0 )
+        {
+            MilestoneGroup group = MilestonesApplication.getMilestoneGroup( groupId, getProject() );
+
+            if ( group != null )
+            {
+                for ( Milestone milestone : group.getMilestones() )
+                {
+                    exportMilestone( milestone, ret );
+                }
 
                 return ret.toString();
             }

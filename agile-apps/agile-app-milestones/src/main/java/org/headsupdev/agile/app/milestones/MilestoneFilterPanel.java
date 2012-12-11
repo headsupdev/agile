@@ -28,6 +28,7 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
+import org.headsupdev.agile.web.components.milestones.MilestoneStatusModifier;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 
@@ -41,7 +42,9 @@ import java.util.Date;
  * @version $Id$
  * @since 2.0
  */
-public class MilestoneFilterPanel extends Panel
+public class MilestoneFilterPanel
+    extends Panel
+    implements MilestoneFilter
 {
     private int dues = 0;
 
@@ -167,9 +170,9 @@ public class MilestoneFilterPanel extends Panel
         switch ( dues )
         {
             case MilestonesApplication.QUERY_DUE_DEFINED:
-                return Restrictions.ge( "due", MilestonesApplication.getDueSoonDate() );
+                return Restrictions.ge( "due", MilestoneStatusModifier.getDueSoonDate() );
             case MilestonesApplication.QUERY_DUE_SOON:
-                return Restrictions.and( Restrictions.lt( "due", MilestonesApplication.getDueSoonDate() ),
+                return Restrictions.and( Restrictions.lt( "due", MilestoneStatusModifier.getDueSoonDate() ),
                         Restrictions.ge( "due", new Date() ) );
             case MilestonesApplication.QUERY_DUE_OVERDUE:
                 return Restrictions.lt( "due", new Date() );

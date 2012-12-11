@@ -48,7 +48,7 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
-import org.headsupdev.agile.web.components.issues.MilestoneDropDownChoice;
+import org.headsupdev.agile.web.components.milestones.MilestoneDropDownChoice;
 
 import java.util.Date;
 import java.util.LinkedList;

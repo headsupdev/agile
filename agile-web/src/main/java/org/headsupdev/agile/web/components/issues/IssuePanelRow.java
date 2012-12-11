@@ -21,7 +21,6 @@ package org.headsupdev.agile.web.components.issues;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
-import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.model.PropertyModel;
 import org.headsupdev.agile.api.Manager;
 import org.headsupdev.agile.api.Page;
@@ -44,8 +43,7 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 import org.headsupdev.agile.web.components.UserDropDownChoice;
-
-import java.util.List;
+import org.headsupdev.agile.web.components.milestones.MilestoneDropDownChoice;
 
 /**
  * A single row from an issue list table
