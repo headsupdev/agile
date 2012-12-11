@@ -51,4 +51,10 @@ public class ChangeLinkProvider extends LinkProvider
     {
         return !BrowseApplication.getChangeSetExists( project, params );
     }
+
+    @Override
+    public boolean supportsQuickLink()
+    {
+        return false;
+    }
 }
