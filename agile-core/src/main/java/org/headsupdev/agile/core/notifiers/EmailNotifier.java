@@ -157,17 +157,17 @@ public class EmailNotifier
             body.append( content );
         }
 
-        body.append( "</div></div>" );
+        body.append( "</div>" );
         body.append( "<div class=\"footer\" style=\"position:absolute;\n" +
                 "            left:0;\n" +
-                "            top:0;\n" +
+                "            bottom:0;\n" +
                 "            width:100%;\n" +
                 "            padding: 5px 30px;\n" +
                 "            background-color: #cecfca;" +
                 "            color: gray;\n" +
                 "            font-size: 75%;\">" );
         body.append( getFooterText( footerType ) );
-        body.append( "</div></body></html>" );
+        body.append( "</div></div></body></html>" );
 
         sendNotification( to, from, title, body.toString(), config );
     }
