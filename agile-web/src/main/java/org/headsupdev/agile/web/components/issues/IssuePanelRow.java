@@ -246,6 +246,12 @@ public class IssuePanelRow
                     {
                         IssuePanelRow.this.issue = (Issue) ( (HibernateStorage) Manager.getStorageInstance() ).getHibernateSession().merge( IssuePanelRow.this.issue );
 
+                        // if we have an assignee that is not watching then add them to the watchers
+                        if ( newSelection != null && !IssuePanelRow.this.issue.getWatchers().contains( newSelection ) )
+                        {
+                            IssuePanelRow.this.issue.getWatchers().add( newSelection );
+                        }
+
                         IssuePanelRow.this.issue.setAssignee( newSelection );
                     }
                 };
