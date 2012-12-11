@@ -24,6 +24,7 @@ import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.model.PropertyModel;
 import org.headsupdev.agile.api.Manager;
 import org.headsupdev.agile.api.Page;
+import org.headsupdev.agile.api.Permission;
 import org.headsupdev.agile.api.User;
 import org.headsupdev.agile.storage.HibernateStorage;
 import org.headsupdev.agile.storage.StoredProject;
@@ -42,8 +43,11 @@ import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
+import org.headsupdev.agile.web.HeadsUpSession;
 import org.headsupdev.agile.web.components.UserDropDownChoice;
 import org.headsupdev.agile.web.components.milestones.MilestoneDropDownChoice;
+
+import java.util.List;
 
 /**
  * A single row from an issue list table
@@ -267,7 +271,7 @@ public class IssuePanelRow
                         ajaxRequestTarget.addComponent( assignChoice );
                     }
                 };
-                cell.add( assignLink.setOutputMarkupId( true ) );
+                cell.add( assignLink.setOutputMarkupId( true ).setVisible( canEditIssue() ) );
                 cell.add( assignChoice.setOutputMarkupId( true ).setOutputMarkupPlaceholderTag( true ).setVisible( false ) );
                 cell.add( new WebMarkupContainer( "assigned-label" ).setVisible( false ) );
                 cell.add( new WebMarkupContainer( "assigned-link" ).setVisible( false ) );
@@ -318,7 +322,7 @@ public class IssuePanelRow
                     ajaxRequestTarget.addComponent( milestoneChoice );
                 }
             };
-            cell.add( setMilestoneLink.setOutputMarkupId( true ) );
+            cell.add( setMilestoneLink.setOutputMarkupId( true ).setVisible( canEditIssue() ) );
             cell.add( milestoneChoice.setOutputMarkupId( true ).setOutputMarkupPlaceholderTag( true ).setVisible( false ) );
         }
         else
@@ -349,5 +353,29 @@ public class IssuePanelRow
         cell = new WebMarkupContainer( "hours-cell" );
         cell.add( new Label( "hours", new IssueHoursRemainingModel( issue ) ) );
         add( cell.setVisible( timeEnabled ) );
+    }
+
+    private static Permission editIssuePerm = new Permission()
+    {
+        public String getId()
+        {
+            return "ISSUE-EDIT";
+        }
+
+        public String getDescription()
+        {
+            return null;
+        }
+
+        public List<String> getDefaultRoles()
+        {
+            return null;
+        }
+    };
+
+    protected boolean canEditIssue()
+    {
+        return Manager.getSecurityInstance().userHasPermission( ( (HeadsUpSession) getSession() ).getUser(),
+                editIssuePerm, issue.getProject() );
     }
 }
