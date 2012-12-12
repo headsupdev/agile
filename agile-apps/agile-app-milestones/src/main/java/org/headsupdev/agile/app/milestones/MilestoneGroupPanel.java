@@ -69,4 +69,10 @@ public class MilestoneGroupPanel
     {
         return group.getIssues();
     }
+
+    @Override
+    protected String getType()
+    {
+        return "MilestoneGroup";
+    }
 }

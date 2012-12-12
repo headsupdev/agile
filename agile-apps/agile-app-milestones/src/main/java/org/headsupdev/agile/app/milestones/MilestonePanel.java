@@ -67,4 +67,10 @@ public class MilestonePanel
     {
         return milestone.getIssues();
     }
+
+    @Override
+    protected String getType()
+    {
+        return "Milestone";
+    }
 }

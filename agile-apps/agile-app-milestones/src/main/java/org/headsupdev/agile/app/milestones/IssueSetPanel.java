@@ -52,6 +52,7 @@ abstract class IssueSetPanel
     public void layout( String name, String description, Project project, Date created, Date updated,
                           Date start, Date due, Date completed )
     {
+        add( new Label( "type", getType() ) );
         add( new Label( "id", name ) );
         add( new Label( "name", name ) );
         add( new Label( "project", project.toString() ) );
@@ -102,4 +103,5 @@ abstract class IssueSetPanel
     protected abstract Set<Issue> getReOpenedIssues();
 
     protected abstract double getCompleteness();
+    protected abstract String getType();
 }
