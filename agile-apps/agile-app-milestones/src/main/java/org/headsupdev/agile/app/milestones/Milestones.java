@@ -18,6 +18,15 @@
 
 package org.headsupdev.agile.app.milestones;
 
+import org.apache.wicket.PageParameters;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
+import org.headsupdev.agile.app.milestones.entityproviders.GroupedMilestoneProvider;
+import org.headsupdev.agile.storage.issues.MilestoneGroup;
+import org.headsupdev.agile.web.BookmarkableMenuLink;
 import org.headsupdev.agile.web.components.milestones.MilestoneListPanel;
 import org.headsupdev.agile.web.wicket.SortableEntityProvider;
 import org.apache.wicket.markup.html.CSSPackageResource;
@@ -27,6 +36,8 @@ import org.headsupdev.agile.api.Permission;
 import org.headsupdev.agile.storage.StoredProject;
 import org.headsupdev.agile.storage.issues.Milestone;
 import org.headsupdev.agile.app.milestones.permission.MilestoneListPermission;
+
+import java.util.List;
 
 /**
  * Milestones home page
@@ -52,22 +63,45 @@ public class Milestones
         }
         add( CSSPackageResource.getHeaderContribution( getClass(), "milestone.css" ) );
 
-        MilestoneFilterPanel filter = new MilestoneFilterPanel( "filter", getSession().getUser() );
+        final MilestoneFilterPanel filter = new MilestoneFilterPanel( "filter", getSession().getUser() );
         add( filter );
 
         final boolean hideProject = !getProject().equals( StoredProject.getDefault() );
 
+        List<MilestoneGroup> groups = MilestonesApplication.getMilestoneGroups( getProject() );
+        boolean hasGroups = groups.size() > 0;
+
+        add( new ListView<MilestoneGroup>( "group", groups )
+        {
+            @Override
+            protected void populateItem( ListItem<MilestoneGroup>listItem )
+            {
+                MilestoneGroup group = listItem.getModelObject();
+                PageParameters params = getProjectPageParameters();
+                params.add( "id", group.getName() );
+                BookmarkablePageLink nameLink = new BookmarkablePageLink<ViewMilestoneGroup>( "grouplink",
+                        ViewMilestoneGroup.class, params );
+                nameLink.add( new Label( "name", group.getName() ) );
+                listItem.add( nameLink );
+
+                SortableEntityProvider<Milestone> provider = new GroupedMilestoneProvider( group, filter );
+                listItem.add( new MilestoneListPanel( "milestones", provider, Milestones.this, hideProject ) );
+            }
+        } );
+
         final SortableEntityProvider<Milestone> provider;
         if ( getProject().equals( StoredProject.getDefault() ) )
         {
-            provider = MilestonesApplication.getMilestoneProvider( filter );
+            provider = new GroupedMilestoneProvider( null, filter );
         }
         else
         {
-            provider = MilestonesApplication.getMilestoneProviderForProject( getProject(), filter );
+            provider = new GroupedMilestoneProvider( null, getProject(), filter );
         }
 
-        add( new MilestoneListPanel( "milestones", provider, this, hideProject ) );
+        boolean hasUngrouped = provider.size() > 0;
+        add( new WebMarkupContainer( "ungrouped" ).setVisible( hasUngrouped && hasGroups ) );
+        add( new MilestoneListPanel( "milestones", provider, this, hideProject ).setVisible( hasUngrouped ) );
     }
 
     @Override

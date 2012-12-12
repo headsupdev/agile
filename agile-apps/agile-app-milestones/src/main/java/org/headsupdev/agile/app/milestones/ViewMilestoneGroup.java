@@ -29,6 +29,7 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.util.value.ValueMap;
 import org.headsupdev.agile.api.MenuLink;
 import org.headsupdev.agile.api.Permission;
+import org.headsupdev.agile.app.milestones.entityproviders.MilestoneProvider;
 import org.headsupdev.agile.app.milestones.permission.MilestoneViewPermission;
 import org.headsupdev.agile.storage.Comment;
 import org.headsupdev.agile.storage.StoredProject;
@@ -140,12 +141,12 @@ public class ViewMilestoneGroup
         final SortableEntityProvider<Milestone> provider;
         if ( getProject().equals( StoredProject.getDefault() ) )
         {
-            provider = MilestonesApplication.getMilestoneProvider( filter );
+            provider = new MilestoneProvider( filter );
             hideProject = false;
         }
         else
         {
-            provider = MilestonesApplication.getMilestoneProviderForProject( getProject(), filter );
+            provider = new MilestoneProvider( getProject(), filter );
         }
 
         add( new MilestoneListPanel( "milestonelist", provider, this, hideProject ) );

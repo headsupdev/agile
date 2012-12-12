@@ -20,6 +20,7 @@ package org.headsupdev.agile.app.milestones;
 
 import org.headsupdev.agile.api.Manager;
 import org.headsupdev.agile.api.Project;
+import org.headsupdev.agile.app.milestones.entityproviders.MilestoneProvider;
 import org.headsupdev.agile.app.milestones.permission.MilestoneViewPermission;
 import org.headsupdev.agile.storage.DurationWorkedUtil;
 import org.headsupdev.agile.storage.StoredProject;
@@ -121,8 +122,7 @@ public class ExportDurationWorked
 
         MilestoneFilterPanel filter = new MilestoneFilterPanel( "dummy", HeadsUpSession.ANONYMOUS_USER );
         filter.setFilters( MilestonesApplication.QUERY_DUE_ALL, true, true );
-        SortableEntityProvider<Milestone> provider = MilestonesApplication.getMilestoneProviderForProject( getProject(),
-                filter );
+        SortableEntityProvider<Milestone> provider = new MilestoneProvider( getProject(), filter );
 
         // fall back to listing all milestones
         Iterator<Milestone> milestones = provider.iterator( 0, provider.size() );

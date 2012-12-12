@@ -22,20 +22,14 @@ import org.headsupdev.agile.api.*;
 import org.headsupdev.agile.app.milestones.event.*;
 import org.headsupdev.agile.storage.issues.Milestone;
 import org.headsupdev.agile.storage.HibernateStorage;
-import org.headsupdev.agile.storage.issues.MilestoneComparator;
 import org.headsupdev.agile.storage.issues.MilestoneGroup;
 import org.headsupdev.agile.web.WebApplication;
 import org.headsupdev.agile.app.milestones.permission.MilestoneViewPermission;
 import org.headsupdev.agile.app.milestones.permission.MilestoneListPermission;
 import org.headsupdev.agile.app.milestones.permission.MilestoneEditPermission;
-import org.headsupdev.agile.web.wicket.SortableEntityProvider;
-import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.Query;
-import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
 
 import java.util.*;
 
@@ -127,122 +121,6 @@ public class MilestonesApplication
         return new LinkProvider[]{ new MilestoneLinkProvider() };
     }
 
-    public static SortableEntityProvider<Milestone> getMilestoneProvider( final MilestoneFilter filter )
-    {
-        return new SortableEntityProvider<Milestone>() {
-            @Override
-            protected Criteria createCriteria() {
-                Session session = ( (HibernateStorage) Manager.getStorageInstance() ).getHibernateSession();
-
-                Criteria c = session.createCriteria( Milestone.class );
-                c.setResultTransformer( Criteria.DISTINCT_ROOT_ENTITY );
-
-                Criterion completed = filter.getCompletedCriterion();
-                if ( completed != null )
-                {
-                    c.add( completed );
-                }
-
-                Criterion dueQuery = filter.getDueCriterion();
-                if ( dueQuery != null )
-                {
-                    c.add( dueQuery );
-                }
-
-                return c;
-            }
-
-            @Override
-            protected List<Order> getDefaultOrder() {
-                return Arrays.asList( Order.asc( "due" ), Order.desc( "name.name" ) );
-            }
-
-            @Override
-            public String getCountProperty() {
-                return "name.name";
-            }
-
-            @Override
-            public Iterator<Milestone> iterator( int start, int limit )
-            {
-                if ( getSort() != null && !getSort().getProperty().equals( "due" ) )
-                {
-                    return super.iterator( start, limit );
-                }
-
-                Iterator<Milestone> iter = super.iterator( 0, size() );
-                List<Milestone> all = new ArrayList<Milestone>();
-
-                while ( iter.hasNext() )
-                {
-                    all.add( iter.next() );
-                }
-
-                Collections.sort( all, new MilestoneComparator( getSort() == null || getSort().isAscending() ) );
-                return all.subList( start, start + limit ).iterator();
-            }
-        };
-    }
-
-    public static SortableEntityProvider<Milestone> getMilestoneProviderForProject( final Project project,
-                                                                                    final MilestoneFilter filter )
-    {
-        return new SortableEntityProvider<Milestone>() {
-            @Override
-            protected Criteria createCriteria() {
-                Session session = ( (HibernateStorage) Manager.getStorageInstance() ).getHibernateSession();
-
-                Criteria c = session.createCriteria( Milestone.class );
-                c.setResultTransformer( Criteria.DISTINCT_ROOT_ENTITY );
-
-                Criterion completed = filter.getCompletedCriterion();
-                if ( completed != null )
-                {
-                    c.add( completed );
-                }
-
-                Criterion dueQuery = filter.getDueCriterion();
-                if ( dueQuery != null )
-                {
-                    c.add( dueQuery );
-                }
-
-                c.add( Restrictions.eq( "name.project", project ) );
-                return c;
-            }
-
-            @Override
-            protected List<Order> getDefaultOrder() {
-                return Arrays.asList( Order.asc( "due" ), Order.desc( "name.name" ) );
-            }
-
-            @Override
-            public String getCountProperty() {
-                return "name.name";
-            }
-
-            @Override
-            public Iterator<Milestone> iterator( int start, int limit )
-            {
-                if ( getSort() != null && !getSort().getProperty().equals( "due" ) )
-                {
-                    return super.iterator( start, limit );
-                }
-
-                Iterator<Milestone> iter = super.iterator( 0, size() );
-                List<Milestone> all = new ArrayList<Milestone>();
-
-                while ( iter.hasNext() )
-                {
-                    all.add( iter.next() );
-                }
-
-                Collections.sort( all, new MilestoneComparator() );
-                return all.subList( start, start + limit ).iterator();
-            }
-        };
-    }
-
     public static Milestone getMilestone( String name, Project project )
     {
         Session session = ( (HibernateStorage) Manager.getStorageInstance() ).getHibernateSession();
@@ -252,6 +130,16 @@ public class MilestonesApplication
         q.setString( "pid", project.getId() );
 
         return (Milestone) q.uniqueResult();
+    }
+
+    public static List<MilestoneGroup> getMilestoneGroups( Project project )
+    {
+        Session session = ( (HibernateStorage) Manager.getStorageInstance() ).getHibernateSession();
+
+        Query q = session.createQuery( "from MilestoneGroup g where name.project.id = :pid" );
+        q.setString( "pid", project.getId() );
+
+        return (List<MilestoneGroup>) q.list();
     }
 
     public static MilestoneGroup getMilestoneGroup( String name, Project project )

@@ -26,6 +26,7 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.headsupdev.agile.api.Project;
+import org.headsupdev.agile.app.milestones.entityproviders.MilestoneProvider;
 import org.headsupdev.agile.storage.DurationWorkedUtil;
 import org.headsupdev.agile.storage.HibernateUtil;
 import org.headsupdev.agile.storage.StoredProject;
@@ -36,7 +37,6 @@ import org.headsupdev.agile.web.HeadsUpSession;
 import org.headsupdev.agile.web.components.*;
 import org.headsupdev.agile.web.wicket.SortableEntityProvider;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 
@@ -141,7 +141,6 @@ class MilestoneGroupForm
     public void onSubmit()
     {
         Session session = HibernateUtil.getCurrentSession();
-//        Transaction tx = session.beginTransaction();
 
         for ( Milestone milestone : milestones )
         {
@@ -154,7 +153,7 @@ class MilestoneGroupForm
                 milestone.setGroup( null );
             }
 
-            milestone = (Milestone) session.merge( milestone );
+            session.merge( milestone );
         }
 
         if ( !creating )
@@ -164,7 +163,6 @@ class MilestoneGroupForm
         group.setUpdated( new Date() );
 
         parent.onSubmit();
-//        tx.commit();
 
         PageParameters params = new PageParameters();
         params.add( "project", group.getProject().getId() );
@@ -207,11 +205,11 @@ class MilestoneGroupForm
         };
         if ( project.equals( StoredProject.getDefault() ) )
         {
-            return MilestonesApplication.getMilestoneProvider( filter );
+            return new MilestoneProvider( filter );
         }
         else
         {
-            return MilestonesApplication.getMilestoneProviderForProject( project, filter );
+            return new MilestoneProvider( project, filter );
         }
     }
 }
