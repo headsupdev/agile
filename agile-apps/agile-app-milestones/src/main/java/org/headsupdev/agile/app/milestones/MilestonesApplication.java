@@ -118,7 +118,7 @@ public class MilestonesApplication
     @Override
     public LinkProvider[] getLinkProviders()
     {
-        return new LinkProvider[]{ new MilestoneLinkProvider() };
+        return new LinkProvider[]{ new MilestoneLinkProvider(), new MilestoneGroupLinkProvider() };
     }
 
     public static Milestone getMilestone( String name, Project project )
