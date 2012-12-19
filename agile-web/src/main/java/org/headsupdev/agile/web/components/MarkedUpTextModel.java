@@ -70,6 +70,12 @@ public class MarkedUpTextModel extends Model<String> {
 
             if ( next.indexOf( ':' ) != -1 )
             {
+                // compensate from not splitting on "." we still want to split ". "
+                if ( next.endsWith( "." ) )
+                {
+                    next = next.substring( 0, next.length() - 1 );
+                }
+
                 String link = getLink( next, project, providers );
                 boolean broken = isLinkBroken( next, project, providers );
                 if ( link == null )
@@ -118,12 +124,6 @@ public class MarkedUpTextModel extends Model<String> {
 
         String module = text.substring( 0, pos ).toLowerCase();
         String name = text.substring( pos + 1 );
-        // compensate from not splitting on "." we still want to split ". "
-        if ( name.endsWith( "." ) )
-        {
-            name = name.substring( 0, name.length() - 1 );
-        }
-
         if ( module.equals( "wiki" ) )
         {
             module = "doc";
