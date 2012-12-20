@@ -73,7 +73,7 @@ public class AssignIssue
     protected Event getUpdateEvent( Comment comment )
     {
         return new UpdateIssueEvent( getIssue(), getIssue().getProject(), getSession().getUser(), comment,
-                "asigned" );
+                "assigned" );
     }
 
 }
