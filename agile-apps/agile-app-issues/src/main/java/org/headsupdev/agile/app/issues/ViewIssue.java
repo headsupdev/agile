@@ -230,10 +230,6 @@ public class ViewIssue
 
             links.add( new BookmarkableMenuLink( RenderUtil.getPageClass( "issues/assign" ), pageParams, "assign" ) );
 
-            // TODO Only show the drop link if the user is assigned to the issue.
-            //      A bit problematic as this method is static and called from a few places.
-            links.add( new BookmarkableMenuLink( RenderUtil.getPageClass( "issues/drop" ), pageParams, "drop" ) );
-
             if ( issue.getStatus() < Issue.STATUS_RESOLVED )
             {
                 if ( issue.getStatus() >= Issue.STATUS_INPROGRESS )
