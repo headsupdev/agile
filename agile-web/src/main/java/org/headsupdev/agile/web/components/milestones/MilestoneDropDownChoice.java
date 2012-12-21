@@ -1,4 +1,4 @@
-package org.headsupdev.agile.web.components.issues;
+package org.headsupdev.agile.web.components.milestones;
 
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.headsupdev.agile.api.Manager;

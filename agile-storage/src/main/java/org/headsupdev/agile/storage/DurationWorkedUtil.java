@@ -19,12 +19,10 @@
 package org.headsupdev.agile.storage;
 
 import org.headsupdev.agile.api.Manager;
+import org.headsupdev.agile.api.Project;
 import org.headsupdev.agile.api.User;
 import org.headsupdev.agile.api.logging.Logger;
-import org.headsupdev.agile.storage.issues.Duration;
-import org.headsupdev.agile.storage.issues.DurationWorked;
-import org.headsupdev.agile.storage.issues.Issue;
-import org.headsupdev.agile.storage.issues.Milestone;
+import org.headsupdev.agile.storage.issues.*;
 import org.headsupdev.support.java.DateUtil;
 import org.hibernate.Criteria;
 import org.hibernate.ObjectNotFoundException;
@@ -161,13 +159,21 @@ public class DurationWorkedUtil
 
     public static Date getMilestoneStartDate( Milestone milestone )
     {
-        Date startSet = milestone.getStartDate();
-        if ( startSet != null )
+        return getIssueSetStartDate( milestone.getIssues(), milestone.getStartDate(), milestone.getDueDate() );
+    }
+
+    public static Date getMilestoneGroupStartDate( MilestoneGroup group )
+    {
+        return getIssueSetStartDate( group.getIssues(), group.getStartDate(), group.getDueDate() );
+    }
+
+    private static Date getIssueSetStartDate( Set<Issue> issues, Date start, Date due )
+    {
+        if ( start != null )
         {
-            return startSet;
+            return start;
         }
 
-        Date due = milestone.getDueDate();
         if ( due == null )
         {
             due = new Date();
@@ -177,9 +183,9 @@ public class DurationWorkedUtil
         cal.setTime( due );
 
         cal.add( Calendar.DATE, -14 );
-        Date start = cal.getTime();
+        Date first = cal.getTime();
 
-        for ( Issue issue : milestone.getIssues() )
+        for ( Issue issue : issues )
         {
             for ( DurationWorked worked : issue.getTimeWorked() )
             {
@@ -188,32 +194,42 @@ public class DurationWorkedUtil
                     continue;
                 }
 
-                if ( start.after( worked.getDay() ) )
+                if ( first.after( worked.getDay() ) )
                 {
-                    start = worked.getDay();
+                    first = worked.getDay();
                 }
             }
         }
 
-        return start;
+        return first;
     }
 
     public static List<Date> getMilestoneDates( Milestone milestone, boolean includeDayBefore )
     {
+        return getIssueSetDates(  DurationWorkedUtil.getMilestoneStartDate( milestone ), milestone.getDueDate(),
+                milestone.getProject(), includeDayBefore );
+    }
+
+    public static List<Date> getMilestoneGroupDates( MilestoneGroup group, boolean includeDayBefore )
+    {
+        return getIssueSetDates(  DurationWorkedUtil.getMilestoneGroupStartDate( group ), group.getDueDate(),
+                group.getProject(), includeDayBefore );
+    }
+
+    private static List<Date> getIssueSetDates( Date start, Date due, Project project, boolean includeDayBefore )
+    {
         // some prep work to make sure we have valid dates for start and end of milestone
-        Date dateEndMilestone = milestone.getDueDate();
-        Date dateStartMilestone = DurationWorkedUtil.getMilestoneStartDate( milestone );
         List<Date> dates = new LinkedList<Date>();
-        if ( dateEndMilestone == null || dateStartMilestone == null )
+        if ( due == null || start == null )
         {
             return dates;
         }
 
         Calendar calendar = Calendar.getInstance();
-        Date confirmedEnd = DateUtil.getEndOfDate( calendar, dateEndMilestone );
-        Date confirmedStart = DateUtil.getStartOfDate( calendar, dateStartMilestone );
+        Date confirmedEnd = DateUtil.getEndOfDate( calendar, due );
+        Date confirmedStart = DateUtil.getStartOfDate( calendar, start );
 
-        final boolean ignoreWeekend = Boolean.parseBoolean( milestone.getProject().getConfigurationValue(
+        final boolean ignoreWeekend = Boolean.parseBoolean( project.getConfigurationValue(
                 StoredProject.CONFIGURATION_TIMETRACKING_IGNOREWEEKEND ) );
 
         Calendar cal = GregorianCalendar.getInstance();
@@ -225,7 +241,7 @@ public class DurationWorkedUtil
             // a lower value at the end of the first day
             cal.add( Calendar.DATE, -1 );
         }
-        boolean estimateDay = Boolean.parseBoolean( milestone.getProject().getConfigurationValue(
+        boolean estimateDay = Boolean.parseBoolean( project.getConfigurationValue(
                 StoredProject.CONFIGURATION_TIMETRACKING_BURNDOWN ) );
         for ( Date date = cal.getTime(); date.before( confirmedEnd ); date = cal.getTime() )
         {
@@ -260,6 +276,29 @@ public class DurationWorkedUtil
         }
 
         List<Date> milestoneDates = getMilestoneDates( milestone, false );
+        return getIssueSetEffortRequired( milestone.getIssues(), milestoneDates );
+    }
+
+    /**
+     * this will return an array of durations that match to the dates on the milestone group in date order.
+     * index 0 will show the effort remaining at end of day 1 , etc.
+     *
+     * @param group
+     * @return
+     */
+    public static Duration[] getMilestoneGroupEffortRequired( MilestoneGroup group )
+    {
+        if ( group == null )
+        {
+            return null;
+        }
+
+        List<Date> groupDates = getMilestoneGroupDates( group, false );
+        return getIssueSetEffortRequired( group.getIssues(), groupDates );
+    }
+
+    private static Duration[] getIssueSetEffortRequired( Set<Issue> issues, List<Date> milestoneDates )
+    {
         if ( milestoneDates == null || milestoneDates.size() == 0 )
         {
             return null;
@@ -277,7 +316,6 @@ public class DurationWorkedUtil
             dates.add( date );
         }
 
-        Set<Issue> issues = milestone.getIssues();
         Duration[] effortRequired = new Duration[ dates.size() ];
         // initialise the returnArray if there are no issues on milestone.
         if ( issues == null || issues.size() == 0 )
@@ -312,14 +350,24 @@ public class DurationWorkedUtil
 
     public static double getMilestoneCompleteness( Milestone milestone )
     {
-        final boolean timeEnabled = Boolean.parseBoolean( milestone.getProject().getConfigurationValue(
+        return getIssueListCompleteness( milestone.getIssues(), milestone.getProject() );
+    }
+
+    public static double getMilestoneGroupCompleteness( MilestoneGroup group )
+    {
+        return getIssueListCompleteness( group.getIssues(), group.getProject() );
+    }
+
+    private static double getIssueListCompleteness( Set<Issue> issues, Project project )
+    {
+        final boolean timeEnabled = Boolean.parseBoolean( project.getConfigurationValue(
                 StoredProject.CONFIGURATION_TIMETRACKING_ENABLED ) );
-        final boolean timeBurndown = Boolean.parseBoolean( milestone.getProject().getConfigurationValue(
+        final boolean timeBurndown = Boolean.parseBoolean( project.getConfigurationValue(
                 StoredProject.CONFIGURATION_TIMETRACKING_BURNDOWN ) );
 
         double done = 0;
         double total = 0;
-        for ( Issue issue : milestone.getIssues() )
+        for ( Issue issue : issues )
         {
             double issueHours = 1;
             if ( timeEnabled && issue.getTimeEstimate() != null )
@@ -446,16 +494,26 @@ public class DurationWorkedUtil
 
     public static Double getVelocity( List<DurationWorked> worked, Milestone milestone )
     {
+        return getVelocity( worked, milestone.getStartDate(), milestone.getDueDate() );
+    }
+
+    public static Double getVelocity( List<DurationWorked> worked, MilestoneGroup group )
+    {
+        return getVelocity( worked, group.getStartDate(), group.getDueDate() );
+    }
+
+    public static Double getVelocity( List<DurationWorked> worked, Date setStart, Date setDue )
+    {
         Set<User> usersWorked = new HashSet<User>();
 
         // TODO fix issues around resources not working days they were allocated to...
         Date start = new Date();
         Date end = new Date( 0 );
         boolean calculateRange = true;
-        if ( milestone.getStartDate() != null )
+        if (setStart != null )
         {
-            start = milestone.getStartDate();
-            end = milestone.getDueDate();
+            start = setStart;
+            end = setDue;
             calculateRange = false;
         }
 

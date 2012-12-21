@@ -20,13 +20,11 @@ package org.headsupdev.agile.app.milestones;
 
 import org.headsupdev.agile.api.Manager;
 import org.headsupdev.agile.api.Project;
+import org.headsupdev.agile.app.milestones.entityproviders.MilestoneProvider;
 import org.headsupdev.agile.app.milestones.permission.MilestoneViewPermission;
 import org.headsupdev.agile.storage.DurationWorkedUtil;
 import org.headsupdev.agile.storage.StoredProject;
-import org.headsupdev.agile.storage.issues.Duration;
-import org.headsupdev.agile.storage.issues.DurationWorked;
-import org.headsupdev.agile.storage.issues.Issue;
-import org.headsupdev.agile.storage.issues.Milestone;
+import org.headsupdev.agile.storage.issues.*;
 import org.headsupdev.agile.web.HeadsUpSession;
 import org.headsupdev.agile.web.MountPoint;
 import org.headsupdev.agile.web.WebUtil;
@@ -105,10 +103,26 @@ public class ExportDurationWorked
             // here we could throw some error I guess...
         }
 
+        String groupId = getParameters().getString( "groupId" );
+        if ( groupId != null && groupId.length() > 0 )
+        {
+            MilestoneGroup group = MilestonesApplication.getMilestoneGroup( groupId, getProject() );
+
+            if ( group != null )
+            {
+                for ( Milestone milestone : group.getMilestones() )
+                {
+                    exportMilestone( milestone, ret );
+                }
+
+                return ret.toString();
+            }
+            // here we could throw some error I guess...
+        }
+
         MilestoneFilterPanel filter = new MilestoneFilterPanel( "dummy", HeadsUpSession.ANONYMOUS_USER );
         filter.setFilters( MilestonesApplication.QUERY_DUE_ALL, true, true );
-        SortableEntityProvider<Milestone> provider = MilestonesApplication.getMilestoneProviderForProject( getProject(),
-                filter );
+        SortableEntityProvider<Milestone> provider = new MilestoneProvider( getProject(), filter );
 
         // fall back to listing all milestones
         Iterator<Milestone> milestones = provider.iterator( 0, provider.size() );

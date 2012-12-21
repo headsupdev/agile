@@ -16,29 +16,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.headsupdev.agile.app.files;
+package org.headsupdev.agile.app.milestones;
 
 import org.headsupdev.agile.api.LinkProvider;
 import org.headsupdev.agile.api.Project;
+import org.headsupdev.agile.storage.issues.MilestoneGroup;
 
 /**
- * Docs link format for a changeset in the scm browser
+ * Docs link format for a milestone group
  *
  * @author Andrew Williams
  * @version $Id$
- * @since 1.0
+ * @since 2.0
  */
-public class ChangeLinkProvider extends LinkProvider
+public class MilestoneGroupLinkProvider
+        extends LinkProvider
 {
     @Override
     public String getId()
     {
-        return "change";
+        return "milestonegroup";
     }
 
     public String getPageName()
     {
-        return "files/change";
+        return "milestones/viewgroup";
     }
 
     public String getParamName()
@@ -49,12 +51,7 @@ public class ChangeLinkProvider extends LinkProvider
     @Override
     public boolean isLinkBroken( String params, Project project )
     {
-        return !BrowseApplication.getChangeSetExists( project, params );
-    }
-
-    @Override
-    public boolean supportsQuickLink()
-    {
-        return false;
+        MilestoneGroup group = MilestonesApplication.getMilestoneGroup( params, project );
+        return group == null;
     }
 }

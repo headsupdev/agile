@@ -18,12 +18,10 @@
 
 package org.headsupdev.agile.app.milestones;
 
+import org.headsupdev.agile.api.Project;
 import org.headsupdev.agile.api.User;
 import org.headsupdev.agile.storage.StoredProject;
-import org.headsupdev.agile.storage.issues.Duration;
-import org.headsupdev.agile.storage.issues.DurationWorked;
-import org.headsupdev.agile.storage.issues.Issue;
-import org.headsupdev.agile.storage.issues.Milestone;
+import org.headsupdev.agile.storage.issues.*;
 import org.headsupdev.agile.web.components.StripedListView;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -32,6 +30,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * A tabular layout of the duration worked for a milestone
@@ -45,13 +44,23 @@ public class WorkRemainingTable
 {
     public WorkRemainingTable( String id, final Milestone milestone )
     {
+        this( id, milestone.getProject(), milestone.getIssues() );
+    }
+
+    public WorkRemainingTable( String id, final MilestoneGroup group )
+    {
+        this( id, group.getProject(), group.getIssues() );
+    }
+
+    protected WorkRemainingTable( String id, final Project project, final Set<Issue> issueSet )
+    {
         super( id );
 
-        final boolean burndown = Boolean.parseBoolean( milestone.getProject().getConfigurationValue(
-                StoredProject.CONFIGURATION_TIMETRACKING_BURNDOWN ) );
+        final boolean burndown = Boolean.parseBoolean( project.getConfigurationValue(
+                StoredProject.CONFIGURATION_TIMETRACKING_BURNDOWN) );
 
         List<User> users = new LinkedList<User>();
-        for ( Issue issue : milestone.getIssues() )
+        for ( Issue issue : issueSet )
         {
             if ( issue.getAssignee() != null && !users.contains( issue.getAssignee() ) )
             {
@@ -67,7 +76,7 @@ public class WorkRemainingTable
             }
         }
 
-        List<Issue> issues = new LinkedList<Issue>( milestone.getIssues() );
+        List<Issue> issues = new LinkedList<Issue>( issueSet );
         Collections.sort( issues, new IssueComparator() );
         add( new StripedListView<User>( "person", users )
         {
@@ -87,7 +96,7 @@ public class WorkRemainingTable
                 int estimate = 0;
                 int worked = 0;
                 int remaining = 0;
-                for ( Issue issue : milestone.getIssues() )
+                for ( Issue issue : issueSet )
                 {
                     if ( issue.getAssignee() != null && issue.getAssignee().equals( user ) )
                     {

@@ -18,6 +18,7 @@
 
 package org.headsupdev.agile.api;
 
+import org.headsupdev.agile.api.logging.Logger;
 import org.headsupdev.support.java.StringUtil;
 import org.headsupdev.support.java.Base64;
 
@@ -323,6 +324,13 @@ public class HeadsUpConfiguration
 
     public static void setDebug( boolean debug )
     {
+        String status = "[DEBUG]";
+        if ( !debug )
+        {
+            status = "[ERROR]";
+        }
+
+        Manager.getLogger( "" ).error( "Log level changed to " + status );
         HeadsUpConfiguration.debug = debug;
     }
 

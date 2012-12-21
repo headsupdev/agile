@@ -61,13 +61,19 @@ public class AssignIssue
 
     protected void submitChild()
     {
+        // if we have an assignee that is not watching then add them to the watchers
+        if ( getIssue().getAssignee() != null && !getIssue().getWatchers().contains( getIssue().getAssignee() ) )
+        {
+            getIssue().getWatchers().add( getIssue().getAssignee() );
+        }
+
         getIssue().setStatus( Issue.STATUS_ASSIGNED );
     }
 
     protected Event getUpdateEvent( Comment comment )
     {
         return new UpdateIssueEvent( getIssue(), getIssue().getProject(), getSession().getUser(), comment,
-                "asigned" );
+                "assigned" );
     }
 
 }

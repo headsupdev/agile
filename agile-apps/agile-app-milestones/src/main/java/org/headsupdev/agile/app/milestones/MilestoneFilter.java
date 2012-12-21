@@ -16,45 +16,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.headsupdev.agile.app.files;
+package org.headsupdev.agile.app.milestones;
 
-import org.headsupdev.agile.api.LinkProvider;
-import org.headsupdev.agile.api.Project;
+import org.hibernate.criterion.Criterion;
+
+import java.io.Serializable;
 
 /**
- * Docs link format for a changeset in the scm browser
+ * TODO: Document Me
+ * <p/>
+ * Created: 29/11/2012
  *
  * @author Andrew Williams
- * @version $Id$
- * @since 1.0
+ * @since 2.0
  */
-public class ChangeLinkProvider extends LinkProvider
+public interface MilestoneFilter
+    extends Serializable
 {
-    @Override
-    public String getId()
-    {
-        return "change";
-    }
+    public Criterion getCompletedCriterion();
 
-    public String getPageName()
-    {
-        return "files/change";
-    }
-
-    public String getParamName()
-    {
-        return "id";
-    }
-
-    @Override
-    public boolean isLinkBroken( String params, Project project )
-    {
-        return !BrowseApplication.getChangeSetExists( project, params );
-    }
-
-    @Override
-    public boolean supportsQuickLink()
-    {
-        return false;
-    }
+    public Criterion getDueCriterion();
 }

@@ -157,17 +157,17 @@ public class EmailNotifier
             body.append( content );
         }
 
-        body.append( "</div></div>" );
+        body.append( "</div>" );
         body.append( "<div class=\"footer\" style=\"position:absolute;\n" +
                 "            left:0;\n" +
-                "            top:0;\n" +
+                "            bottom:0;\n" +
                 "            width:100%;\n" +
                 "            padding: 5px 30px;\n" +
                 "            background-color: #cecfca;" +
                 "            color: gray;\n" +
                 "            font-size: 75%;\">" );
-        body.append( getFooterText( footerType ) );
-        body.append( "</div></body></html>" );
+        body.append( getFooterText( footerType, to ) );
+        body.append( "</div></div></body></html>" );
 
         sendNotification( to, from, title, body.toString(), config );
     }
@@ -212,15 +212,15 @@ public class EmailNotifier
         return config.getProperty( "from" );
     }
 
-    public String getFooterText( FooterType footerType )
+    public String getFooterText( FooterType footerType, String to )
     {
         switch ( footerType )
         {
             case Subscription:
-                return "This email was sent to " + getTo() + " because they are subscribed to this project. " +
+                return "This email was sent to " + to + " because they are subscribed to this project. " +
                         "To unsubscribe from these updates please change your subscription settings from your account page.";
             default:
-                return "This email was sent to " + getTo() + " because a notification has been set up to this address." +
+                return "This email was sent to " + to + " because a notification has been set up to this address." +
                         "To stop further emails please speak to your administrator or unsubscribe from this mailing list.";
         }
     }

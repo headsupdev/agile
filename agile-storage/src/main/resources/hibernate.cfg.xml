@@ -72,6 +72,7 @@
     <mapping class="org.headsupdev.agile.storage.issues.Issue" />
     <mapping class="org.headsupdev.agile.storage.issues.IssueRelationship" />
     <mapping class="org.headsupdev.agile.storage.issues.Milestone" />
+    <mapping class="org.headsupdev.agile.storage.issues.MilestoneGroup" />
 
     <event type="post-update">
       <listener class="org.hibernate.search.event.FullTextIndexEventListener" />

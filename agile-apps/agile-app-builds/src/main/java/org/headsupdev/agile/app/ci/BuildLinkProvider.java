@@ -19,6 +19,8 @@
 package org.headsupdev.agile.app.ci;
 
 import org.headsupdev.agile.api.LinkProvider;
+import org.headsupdev.agile.api.Project;
+import org.headsupdev.agile.storage.ci.Build;
 
 /**
  * Docs link format for a continuuous integration build
@@ -43,5 +45,25 @@ public class BuildLinkProvider extends LinkProvider
     public String getParamName()
     {
         return "id";
+    }
+
+    @Override
+    public boolean isLinkBroken( String params, Project project )
+    {
+        try
+        {
+            Build build = CIApplication.getBuild( Long.parseLong( params ), project );
+            return build == null;
+        }
+        catch ( NumberFormatException e )
+        {
+            return true;
+        }
+    }
+
+    @Override
+    public boolean supportsQuickLink()
+    {
+        return false;
     }
 }

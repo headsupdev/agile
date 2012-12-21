@@ -38,6 +38,7 @@ import java.awt.geom.AffineTransform;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Set;
 
 /**
  * A graph of the milestone burndown over time or time spent on a project to date.
@@ -55,6 +56,7 @@ public class BurndownGraph
     private SimpleDateFormat dateFormat = new SimpleDateFormat( "dd" );
     private SimpleDateFormat monthFormat = new SimpleDateFormat( "MMMM" );
 
+    // TODO cache
     protected Project getProject()
     {
         String projectId = getParameters().getString( "project" );
@@ -64,17 +66,6 @@ public class BurndownGraph
         }
 
         return Manager.getStorageInstance().getProject( projectId );
-    }
-
-    protected Milestone getMilestone()
-    {
-        String milestoneId = getParameters().getString( "id" );
-        if ( milestoneId == null || milestoneId.length() == 0 )
-        {
-            return null;
-        }
-
-        return MilestonesApplication.getMilestone( milestoneId, getProject() );
     }
 
     protected byte[] getImageData()
@@ -100,11 +91,11 @@ public class BurndownGraph
         g.fillRect( 0, 0, getWidth(), getHeight() );
         ( (Graphics2D) g ).setRenderingHint( RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON );
 
-        if ( getMilestone() == null )
+        if ( getIssues() == null )
         {
             return;
         }
-        Duration[] effortRequired = DurationWorkedUtil.getMilestoneEffortRequired(getMilestone());
+        Duration[] effortRequired = getEffort();
         double total = 0;
         if ( effortRequired != null && effortRequired.length > 0 )
         {
@@ -151,9 +142,9 @@ public class BurndownGraph
 
         g.drawLine( PAD - 1, PAD + HEIGHT, PAD - 1, PAD + HEIGHT + 5 );
 
-        final boolean ignoreWeekend = Boolean.parseBoolean( getMilestone().getProject().getConfigurationValue(
+        final boolean ignoreWeekend = Boolean.parseBoolean( getProject().getConfigurationValue(
                 StoredProject.CONFIGURATION_TIMETRACKING_IGNOREWEEKEND ) );
-        java.util.List<Date> dates = DurationWorkedUtil.getMilestoneDates( getMilestone(), true );
+        java.util.List<Date> dates = getDates();
 
         drawString( g, "time", getHeight() - MONTH_PAD, 13, PAD, Component.CENTER_ALIGNMENT, -Math.PI / 2 );
         drawString( g, "0", getHeight() - MONTH_PAD, 13, PAD, Component.LEFT_ALIGNMENT, -Math.PI / 2 );
@@ -267,6 +258,21 @@ public class BurndownGraph
         }
     }
 
+    private Milestone getMilestone()
+    {
+        String milestoneId = getParameters().getString( "id" );
+        if ( milestoneId == null || milestoneId.length() == 0 )
+        {
+            return null;
+        }
+
+        return MilestonesApplication.getMilestone( milestoneId, getProject() );
+    }
+
+    protected Set<Issue> getIssues()
+    {
+        return getMilestone().getIssues();
+    }
 
     protected double getTotalHoursForDay( Date day )
     {
@@ -276,12 +282,22 @@ public class BurndownGraph
             return total;
         }
 
-        for ( Issue issue : getMilestone().getIssues() )
+        for ( Issue issue : getIssues() )
         {
             total += DurationWorkedUtil.totalWorkedForDay( issue, day ).getHours();
         }
 
         return total;
+    }
+
+    protected java.util.List<Date> getDates()
+    {
+        return DurationWorkedUtil.getMilestoneDates( getMilestone(), true );
+    }
+
+    protected Duration[] getEffort()
+    {
+        return DurationWorkedUtil.getMilestoneEffortRequired( getMilestone() );
     }
 
     @Override
