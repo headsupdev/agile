@@ -383,7 +383,7 @@ public class IssuePanel
                 session.update( issue );
                 tx.commit();
 
-                form.setVisible( false );
+                setResponsePage( ViewIssue.class, getPage().getPageParameters() );
 
                 // TODO Log drop event.
             }
