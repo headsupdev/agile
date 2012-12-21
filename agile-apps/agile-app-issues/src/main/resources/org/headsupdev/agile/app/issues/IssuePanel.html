@@ -49,7 +49,12 @@
           <th class="reporter">Reported By</th>
           <td class="reporter"><a wicket:id="reporter-link"><span wicket:id="reporter">reporter</span></a></td>
           <th class="assigned">Assigned To</th>
-          <td class="assigned"><a wicket:id="assigned-link"><span wicket:id="assigned">assigned</span></a></td>
+          <td class="assigned">
+              <a wicket:id="assigned-link"><span wicket:id="assigned">assigned</span></a>
+              <form wicket:id="drop-issue-form" style="display: inline">
+                  <input type="submit" wicket:id="drop-issue" value="drop" />
+              </form>
+          </td>
         </tr>
         <tr>
           <th class="watchers">Watched By</th>

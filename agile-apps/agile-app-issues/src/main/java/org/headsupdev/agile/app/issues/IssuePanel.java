@@ -18,8 +18,12 @@
 
 package org.headsupdev.agile.app.issues;
 
+import org.apache.wicket.model.PropertyModel;
+import org.headsupdev.agile.api.Manager;
 import org.headsupdev.agile.api.Project;
+import org.headsupdev.agile.api.User;
 import org.headsupdev.agile.api.service.ChangeSet;
+import org.headsupdev.agile.storage.HibernateStorage;
 import org.headsupdev.agile.storage.StoredProject;
 import org.headsupdev.agile.storage.issues.Issue;
 import org.headsupdev.agile.storage.issues.IssueRelationship;
@@ -47,10 +51,13 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -147,7 +154,7 @@ public class IssuePanel
             @Override
             public String getObject()
             {
-                return IssueUtils.getWatchersDescription( issue, ( (HeadsUpSession) getSession() ).getUser() );
+                return IssueUtils.getWatchersDescription( issue, getSessionUser() );
             }
         } ) );
 
@@ -293,12 +300,18 @@ public class IssuePanel
             params = getProjectPageParameters( issue.getProject() );
             params.add( "username", issue.getAssignee().getUsername() );
             Link assignedLink = new BookmarkablePageLink( "assigned-link", userPage, params );
-            assignedLink.add( new Label( "assigned", issue.getAssignee().getFullnameOrUsername() ) );
+            assignedLink.add( new Label( "assigned", new PropertyModel( issue, "assignee" ) ) );
             add( assignedLink );
+
+            if ( isSessionUserAssignedToIssue( issue ) )
+            {
+                addDropIssueButton( issue );
+            }
         }
         else
         {
             add( new WebMarkupContainer( "assigned-link" ).setVisible( false ) );
+            add( new Form( "drop-issue-form" ).setVisible( false ) );
         }
 
         add( new Label( "created", new FormattedDateModel( issue.getCreated(),
@@ -337,6 +350,46 @@ public class IssuePanel
                 .setEscapeModelStrings( false ) );
         add( new Label( "testNotes", new MarkedUpTextModel( issue.getTestNotes(), issue.getProject() ) )
                 .setEscapeModelStrings( false ).setVisible( issue.getTestNotes() != null ) );
+    }
+
+    private boolean isSessionUserAssignedToIssue( Issue issue )
+    {
+        return issue.getAssignee().equals( getSessionUser() );
+    }
+
+    private User getSessionUser()
+    {
+        return ((HeadsUpSession) getSession()).getUser();
+    }
+
+    private void addDropIssueButton( final Issue issue )
+    {
+        final Form form = new Form( "drop-issue-form" );
+
+        Button button = new Button( "drop-issue" )
+        {
+            @Override
+            public void onSubmit()
+            {
+                super.onSubmit();
+
+                issue.setAssignee( null );
+                issue.getWatchers().remove( getSessionUser() );
+                issue.setStatus( Issue.STATUS_NEW );
+                issue.setUpdated( new Date() );
+
+                Session session = ((HibernateStorage) Manager.getStorageInstance()).getHibernateSession();
+                Transaction tx = session.beginTransaction();
+                session.update( issue );
+                tx.commit();
+
+                form.setVisible( false );
+
+                // TODO Log drop event.
+            }
+        };
+
+        add( form.add( button.setDefaultFormProcessing( false ) ) );
     }
 
     protected PageParameters getProjectPageParameters( Project project )
