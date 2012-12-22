@@ -24,6 +24,7 @@ import org.headsupdev.agile.api.Project;
 import org.headsupdev.agile.storage.DurationWorkedUtil;
 import org.headsupdev.agile.storage.issues.DurationWorked;
 import org.headsupdev.agile.storage.issues.Issue;
+import org.headsupdev.agile.storage.issues.Milestone;
 import org.headsupdev.agile.web.HeadsUpSession;
 import org.headsupdev.agile.web.components.FormattedDateModel;
 import org.headsupdev.agile.web.components.MarkedUpTextModel;
@@ -89,13 +90,23 @@ abstract class IssueSetPanel
             worked.addAll( issue.getTimeWorked() );
         }
 
-        Double velocity = DurationWorkedUtil.getVelocity( worked, start, due );
+        Double velocity = getVelocity( start, due, worked );
         String velocityStr = "-";
         if ( !velocity.equals( Double.NaN ) )
         {
             velocityStr = String.format( "%.1f", velocity );
         }
         add( new Label( "velocity", velocityStr ) );
+    }
+
+    private Double getVelocity( Date start, Date due, List<DurationWorked> worked )
+    {
+        return DurationWorkedUtil.getVelocity( worked, start, due );
+    }
+
+    private double getMilestoneCompleteness( Milestone milestone )
+    {
+        return DurationWorkedUtil.getMilestoneCompleteness( milestone );
     }
 
     protected abstract Set<Issue> getIssues();

@@ -95,15 +95,7 @@ public class BurndownGraph
         {
             return;
         }
-        Duration[] effortRequired = getEffort();
-        double total = 0;
-        if ( effortRequired != null && effortRequired.length > 0 )
-        {
-            for ( int i = 0; i < effortRequired.length; i++ )
-            {
-                total = Math.max( total, effortRequired[ i ].getHours() );
-            }
-        }
+        double total = getHighestValueForEstimates();
 
         int spacer = 1;
         if ( total >= 1500 )
@@ -216,11 +208,27 @@ public class BurndownGraph
         }
 
 
-        drawYCoordsAsLine( convertDurationArray( effortRequired ), total, COLOUR_EFFORT_REQUIRED, g );
+        drawYCoordsAsLine( convertDurationArray( getEffort() ), total, COLOUR_EFFORT_REQUIRED, g );
 
     }
 
-    private double[] convertDurationArray( Duration[] durations )
+    protected double getHighestValueForEstimates()
+    {
+        double highest = 0;
+        Duration[] effortRequired = getEffort();
+
+        if ( effortRequired != null && effortRequired.length > 0 )
+        {
+            for ( int i = 0; i < effortRequired.length; i++ )
+            {
+                highest = Math.max( highest, effortRequired[ i ].getHours() );
+            }
+        }
+
+        return highest;
+    }
+
+    protected double[] convertDurationArray( Duration[] durations )
     {
         if ( durations == null || durations.length == 0 )
         {
@@ -235,7 +243,7 @@ public class BurndownGraph
         return hours;
     }
 
-    private void drawYCoordsAsLine( double[] yCoords, double maxYValue, Color colour, Graphics g )
+    protected void drawYCoordsAsLine( double[] yCoords, double maxYValue, Color colour, Graphics g )
     {
         int i = 0, px = 0, py = 0;
 
@@ -330,12 +338,12 @@ public class BurndownGraph
     public static final Color hoursColor = new Color( 0xDF, 0xAF, 0x4F );
     public static final Color perfectColor = new Color( 0x4F, 0xDF, 0xAF );
 
-    private void drawString( Graphics g, String title, int w, int h, int pad, float align )
+    protected void drawString( Graphics g, String title, int w, int h, int pad, float align )
     {
         drawString( g, title, w, h, pad, align, 0.0 );
     }
 
-    private void drawString( Graphics g, String title, int w, int h, int pad, float align, double rotate )
+    protected void drawString( Graphics g, String title, int w, int h, int pad, float align, double rotate )
     {
         Graphics2D g2 = (Graphics2D) g;
         AffineTransform tx = g2.getTransform();

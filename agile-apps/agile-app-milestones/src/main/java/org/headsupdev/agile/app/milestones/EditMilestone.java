@@ -65,7 +65,7 @@ public class EditMilestone
         final Milestone finalMilestone = milestone;
         add( new EditMilestoneForm( "edit", finalMilestone, false, this )
         {
-            public void onSubmit()
+            public void submitParent()
             {
                 getHeadsUpApplication().addEvent( new UpdateMilestoneEvent( finalMilestone, finalMilestone.getProject(),
                                                                         EditMilestone.this.getSession().getUser() ) );

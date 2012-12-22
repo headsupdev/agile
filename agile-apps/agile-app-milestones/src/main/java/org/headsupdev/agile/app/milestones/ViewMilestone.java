@@ -136,6 +136,11 @@ public class ViewMilestone
         add( new ResourceLink( "export", new ResourceReference( "export-worked.csv" ), params ).setVisible( timeEnabled ) );
     }
 
+    public Milestone getMilestone()
+    {
+        return milestone;
+    }
+
     private SortableEntityProvider<Issue> getIssuesProvider()
     {
         return new SortableEntityProvider<Issue>()

@@ -46,79 +46,84 @@ import java.util.TimeZone;
 public class EditMilestoneForm
         extends Panel
 {
-    public EditMilestoneForm( String id, final Milestone milestone, boolean creating, HeadsUpPage owner )
-    {
-        super( id );
-
-        add( new MilestoneForm( "edit", milestone, creating, owner, this ) );
-    }
-
-    public void onSubmit()
-    {
-        // allow others to override
-    }
-}
-
-class MilestoneForm
-        extends Form<Milestone>
-{
     Milestone milestone;
-    HeadsUpPage owner;
-    EditMilestoneForm parent;
     boolean creating;
 
-    public MilestoneForm( String id, final Milestone milestone, boolean creating, HeadsUpPage owner, EditMilestoneForm parent )
+    public EditMilestoneForm( String id, final Milestone mile, final boolean creating, final HeadsUpPage owner )
     {
         super( id );
-        this.milestone = milestone;
+        this.milestone = mile;
         this.creating = creating;
-        this.owner = owner;
-        this.parent = parent;
-        setModel( new CompoundPropertyModel<Milestone>( milestone ) );
 
-        add( new Label( "project", milestone.getProject().getAlias() ) );
+        Form<Milestone> form = new Form<Milestone>( "edit" ) {
+            public void onSubmit()
+            {
+                if ( !creating )
+                {
+                    milestone = (Milestone) ( (HibernateStorage) owner.getStorage() ).getHibernateSession().merge( milestone );
+                }
+                milestone.setUpdated( new Date() );
+                submitParent();
+
+                PageParameters params = new PageParameters();
+                params.add( "project", milestone.getProject().getId() );
+                params.add( "id", milestone.getName() );
+                setResponsePage( owner.getPageClass( "milestones/view" ), params );
+            }
+
+        };
+
+        layout( form );
+        add( form );
+    }
+
+    public void layout( Form<Milestone> form )
+    {
+        form.setModel( new CompoundPropertyModel<Milestone>( milestone ) );
+
+        form.add( new Label( "project", milestone.getProject().getAlias() ) );
         if ( creating )
         {
-            add( new TextField<String>( "name" ).add( new IdPatternValidator() ).setRequired( true ) );
-            add( new WebMarkupContainer( "name-label" ).setVisible( false ) );
-//            add( new Label( "created", new FormattedDateModel( new Date() ) ) );
+            form.add( new TextField<String>( "name" ).add( new IdPatternValidator() ).setRequired( true ) );
+            form.add( new WebMarkupContainer( "name-label" ).setVisible( false ) );
+//            form.add( new Label( "created", new FormattedDateModel( new Date() ) ) );
         }
         else
         {
-            add( new Label( "name-label", milestone.getName() ) );
-            add( new WebMarkupContainer( "name" ).setVisible( false ) );
-//            add( new Label( "created", new FormattedDateModel( milestone.getCreated() ) ) );
+            form.add( new Label( "name-label", milestone.getName() ) );
+            form.add( new WebMarkupContainer( "name" ).setVisible( false ) );
+//            form.add( new Label( "created", new FormattedDateModel( milestone.getCreated() ) ) );
         }
-        add( new DateTimeField( "startDate" )
+        form.add( new DateTimeField( "startDate" )
         {
             protected TimeZone getClientTimeZone()
             {
-                return ( (HeadsUpSession) getSession() ).getTimeZone();
+                return ((HeadsUpSession) getSession()).getTimeZone();
             }
         } );
-        add( new DateTimeField( "dueDate" )
+        form.add( new DateTimeField( "dueDate" )
         {
             protected TimeZone getClientTimeZone()
             {
-                return ( (HeadsUpSession) getSession() ).getTimeZone();
+                return ((HeadsUpSession) getSession()).getTimeZone();
             }
         } );
 
-        add( new TextArea( "description" ) );
+        form.add( new TextArea( "description" ) );
     }
 
-    public void onSubmit()
+    public void submitParent()
     {
-        if ( !creating )
-        {
-            milestone = (Milestone) ( (HibernateStorage) owner.getStorage() ).getHibernateSession().merge( milestone );
-        }
-        milestone.setUpdated( new Date() );
-        parent.onSubmit();
+        // allow others to override
+    }
 
-        PageParameters params = new PageParameters();
-        params.add( "project", milestone.getProject().getId() );
-        params.add( "id", milestone.getName() );
-        setResponsePage( owner.getPageClass( "milestones/view" ), params );
+    public Milestone getMilestone()
+    {
+        return milestone;
+    }
+
+    public boolean isCreating()
+    {
+        return creating;
     }
 }

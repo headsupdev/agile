@@ -52,7 +52,7 @@ public class CreateMilestone
 
         add( new EditMilestoneForm( "create", create, true, this )
         {
-            public void onSubmit() {
+            public void submitParent() {
                 create.setCreated( new Date() );
                 ( (MilestonesApplication) getHeadsUpApplication() ).addMilestone( create );
 
