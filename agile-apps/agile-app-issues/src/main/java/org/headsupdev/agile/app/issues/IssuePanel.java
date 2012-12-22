@@ -23,6 +23,7 @@ import org.headsupdev.agile.api.Manager;
 import org.headsupdev.agile.api.Project;
 import org.headsupdev.agile.api.User;
 import org.headsupdev.agile.api.service.ChangeSet;
+import org.headsupdev.agile.app.issues.event.UpdateIssueEvent;
 import org.headsupdev.agile.storage.HibernateStorage;
 import org.headsupdev.agile.storage.StoredProject;
 import org.headsupdev.agile.storage.issues.Issue;
@@ -302,15 +303,18 @@ public class IssuePanel
             Link assignedLink = new BookmarkablePageLink( "assigned-link", userPage, params );
             assignedLink.add( new Label( "assigned", new PropertyModel( issue, "assignee" ) ) );
             add( assignedLink );
-
-            if ( isSessionUserAssignedToIssue( issue ) )
-            {
-                addDropIssueButton( issue );
-            }
         }
         else
         {
             add( new WebMarkupContainer( "assigned-link" ).setVisible( false ) );
+        }
+
+        if ( isSessionUserAssignedToIssue( issue ) )
+        {
+            addDropIssueButton( issue );
+        }
+        else
+        {
             add( new Form( "drop-issue-form" ).setVisible( false ) );
         }
 
@@ -354,7 +358,7 @@ public class IssuePanel
 
     private boolean isSessionUserAssignedToIssue( Issue issue )
     {
-        return issue.getAssignee().equals( getSessionUser() );
+        return issue.getAssignee() != null && issue.getAssignee().equals( getSessionUser() );
     }
 
     private User getSessionUser()
@@ -385,7 +389,8 @@ public class IssuePanel
 
                 setResponsePage( ViewIssue.class, getPage().getPageParameters() );
 
-                // TODO Log drop event.
+                ApplicationPageMapper.get().getApplication( "issues" ).addEvent(
+                        new UpdateIssueEvent( issue, issue.getProject(), getSessionUser(), "dropped" ) );
             }
         };
 
