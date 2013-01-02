@@ -369,8 +369,8 @@ public class DurationWorkedUtil
         double total = 0;
         for ( Issue issue : issues )
         {
-            double issueHours = 1;
-            if ( timeEnabled && issue.getTimeEstimate() != null )
+            double issueHours = .25;
+            if ( timeEnabled && issue.getTimeEstimate() != null && issue.getTimeEstimate().getHours() > 0 )
             {
                 issueHours = issue.getTimeEstimate().getHours();
             }
@@ -393,7 +393,13 @@ public class DurationWorkedUtil
                 Duration left = DurationWorkedUtil.lastEstimateForIssue( issue );
                 if ( left != null )
                 {
-                    done += Math.max( issueHours - left.getHours(), 0 );
+                    double leftHours = left.getHours();
+                    if ( issue.getStatus() < Issue.STATUS_RESOLVED && leftHours < issueHours )
+                    {
+                        leftHours = issueHours;
+                    }
+
+                    done += Math.max( issueHours - leftHours, 0 );
                 }
             }
             else
