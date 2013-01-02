@@ -1,3 +1,4 @@
+/* Milestone list */
 table.milestones, table.info, table.details, table.comments, table.remaining {
     width: 100%;
 }
@@ -15,6 +16,28 @@ table.milestones td.open, table.milestones td.issues {
 table.milestones td.due {
     font-weight: bold;
 }
+
+/* Milestone groups */
+table.milestones.listing {
+    margin-bottom: 1em;
+}
+
+table.milestones.listing .paging.top {
+    display: none;
+}
+
+h2.groupname {
+    font-size: 120%;
+}
+
+div.bar.group {
+    float: right;
+    width: 250px;
+    white-space: nowrap;
+    font-size: 90%;
+}
+
+/* Milestone details */
 
 table.issues td.allcell {
     text-align: left;

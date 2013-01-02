@@ -22,10 +22,11 @@
       <div wicket:id="filter">filters</div>
 
       <div wicket:id="group">
-        <a wicket:id="grouplink"><h2 wicket:id="name">Group name</h2></a>
+        <div wicket:id="bar" class="bar group">bar</div>
+        <a wicket:id="grouplink"><h2 class="groupname" wicket:id="name">Group name</h2></a>
         <div wicket:id="milestones">milestones</div>
       </div>
-      <h2 wicket:id="ungrouped">Ungrouped</h2>
+      <h2 class="groupname" wicket:id="ungrouped">Ungrouped</h2>
       <div wicket:id="milestones">milestones</div>
     </wicket:extend>
   </body>

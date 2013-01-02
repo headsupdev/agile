@@ -24,9 +24,12 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.markup.html.panel.Panel;
 import org.headsupdev.agile.app.milestones.entityproviders.GroupedMilestoneProvider;
+import org.headsupdev.agile.storage.DurationWorkedUtil;
 import org.headsupdev.agile.storage.issues.MilestoneGroup;
 import org.headsupdev.agile.web.BookmarkableMenuLink;
+import org.headsupdev.agile.web.components.PercentagePanel;
 import org.headsupdev.agile.web.components.milestones.MilestoneListPanel;
 import org.headsupdev.agile.web.wicket.SortableEntityProvider;
 import org.apache.wicket.markup.html.CSSPackageResource;
@@ -83,6 +86,11 @@ public class Milestones
                         ViewMilestoneGroup.class, params );
                 nameLink.add( new Label( "name", group.getName() ) );
                 listItem.add( nameLink );
+
+                double part = DurationWorkedUtil.getMilestoneGroupCompleteness( group );
+                int percent = (int) ( part * 100 );
+                Panel panel = new PercentagePanel( "bar", percent );
+                listItem.add( panel );
 
                 SortableEntityProvider<Milestone> provider = new GroupedMilestoneProvider( group, filter );
                 listItem.add( new MilestoneListPanel( "milestones", provider, Milestones.this, hideProject ) );
