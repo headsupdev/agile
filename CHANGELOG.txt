@@ -4,9 +4,12 @@
 * Add inline setting of milestone and assignee in issue lists
 * Allow setting debug option at runtime from admin configuration
 * Add quick jump for issue number, filename, account etc in quick search field
+* Add grouping of milestones
+* Add button to drop issues currenty assigned to you
 
 * Fix issues with animations not working offline
 * Fix issue where disabled child projects were still being shown in menu
+* Correct issues with subscriptions on addigning issues
 
 2.0-beta1
 
