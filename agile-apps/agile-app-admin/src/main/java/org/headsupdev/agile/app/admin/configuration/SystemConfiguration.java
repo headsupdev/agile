@@ -40,13 +40,9 @@ import org.apache.wicket.PageParameters;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.headsupdev.support.java.IOUtil;
-import org.headsupdev.support.java.StringUtil;
 
-import java.net.InetAddress;
 import java.util.*;
 import java.io.*;
-import java.net.URL;
-import java.net.MalformedURLException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
@@ -61,9 +57,6 @@ import java.sql.DriverManager;
 public class SystemConfiguration
     extends ConfigurationPage
 {
-    private List<ConfigurationItem> config = new LinkedList<ConfigurationItem>();
-    private List<ConfigurationItem> restartConfig = new LinkedList<ConfigurationItem>();
-
     private boolean showRestart = false;
 
     private Logger log = Manager.getLogger( getClass().getName() );
@@ -76,113 +69,6 @@ public class SystemConfiguration
         {
             showRestart = true;
         }
-
-        config.add( new SystemConfigurationItem( "baseUrl", "Public URL for this system",
-            "Use this field to set the published URL for this system - used for notifications and feeds" )
-        {
-            public boolean test( String value )
-            {
-                try
-                {
-                    URL url = new URL( value + "project-feed.xml" );
-                    // todo can we test the project-feed.xml - might be password protected
-                    return true;
-                }
-                catch ( MalformedURLException e )
-                {
-                    return false;
-                }
-            }
-        });
-        config.add( new SystemConfigurationItem( "timezone.id", "UTC",  "Default Timezone",
-                "The name of the default timezone - this will be used for anonymous users and as a default for all accounts" )
-        {
-            @Override
-            public boolean test( String value )
-            {
-                try
-                {
-                    return TimeZone.getTimeZone( value ).getID().equals( value );
-                }
-                catch ( Exception e ) // catching errors that occur when looking up null or invalid timezone
-                {
-                    return false;
-                }
-            }
-        });
-
-        config.add( new SystemConfigurationItem( "log.errors", true, "Keep a log of any errors encountered",
-            "Switching off this parameter can be useful if you encounter lots of problems with an external component " +
-            "and wish to save database space" ) );
-        config.add( new SystemConfigurationItem( "userList.useNames", true, "Show real names in user lists",
-            "Check this if you prefer real names to usernames in user lists" ) );
-
-        config.add( new SystemConfigurationItem( "smtp.host", "Hostname for outgoing email",
-            "This should be set to the host used to send notification emails" )
-        {
-            public boolean test( String value )
-            {
-                if ( StringUtil.isEmpty( value ) )
-                {
-                    return false;
-                }
-
-                try
-                {
-                    InetAddress address = InetAddress.getByName( value );
-                    return address != null && address.isReachable( 10000 );
-                }
-                catch ( IOException e )
-                {
-                    return false;
-                }
-            }
-        });
-        config.add( new SystemConfigurationItem( "smtp.from", "Senders email address for outgoing email",
-            "This should be set to the email address to send notification emails" )
-        {
-            public boolean test( String value )
-            {
-                return !StringUtil.isEmpty( value );
-            }
-        });
-        config.add( new SystemConfigurationItem( "smtp.username", "Username for outgoing email account",
-            "This should be set to the username used to send notification emails" ) );
-        config.add( new SystemConfigurationItem( "smtp.password", "Password for outgoing email account",
-            "This should be set to the password used to send notification emails" ) );
-
-        restartConfig.add( new SystemConfigurationItem( "dataDir", "Data Directory",
-            "This is the location that " + getStorage().getGlobalConfiguration().getProductName() +
-                " stores files and runs it's builds. " )
-        {
-            public boolean test( String value )
-            {
-                File dir = new File( value );
-                return dir.isDirectory() && dir.canWrite();
-            }
-        } );
-        restartConfig.add( new SystemConfigurationItem( "org.osgi.service.http.port", 8069, "Server Port",
-            "The port that the system should run on - used either in the URL or for mapping through a web server" )
-        {
-            public boolean test( String value )
-            {
-                try
-                {
-                    int port = Integer.parseInt( value );
-                    return port > 0 && port <= 65535;
-                }
-                catch ( NumberFormatException e )
-                {
-                    return false;
-                }
-            }
-        } );
-        restartConfig.add( new SystemConfigurationItem( "heasup.db.url", "Database URL",
-            "The URL of the SQL \"agile\" database " ) );
-        restartConfig.add( new SystemConfigurationItem( "headsup.db.username", "Database Username",
-            "The username for the SQL \"agile\" database ") );
-        restartConfig.add( new SystemConfigurationItem( "headsup.db.password", "Database Password",
-            "The password for the SQL \"agile\" database " ) );
 
         // little hack here to make sure the defaults are copied in...
         HeadsUpConfiguration global = getStorage().getGlobalConfiguration();
@@ -226,6 +112,9 @@ public class SystemConfiguration
         public ConfigurationForm( String id )
         {
             super( id );
+            SystemConfigurationSource configSource =
+                    ( (AdminApplication) getHeadsUpApplication() ).getConfigurationSource();
+
             File bootstrap = getBootstrapPropertiesFile();
             InputStream in = null;
             try
@@ -257,9 +146,9 @@ public class SystemConfiguration
                 {
                     HeadsUpConfiguration.setDebug( debug );
                 }
-            }) );
+            } ) );
             final HeadsUpConfiguration global = getStorage().getGlobalConfiguration();
-            add( new ListView<ConfigurationItem>( "item", config )
+            add( new ListView<ConfigurationItem>( "item", configSource.getConfigurationItems() )
             {
                 protected void populateItem( ListItem<ConfigurationItem> listItem )
                 {
@@ -319,7 +208,8 @@ public class SystemConfiguration
                 }
             } );
 
-            add( new ListView<ConfigurationItem>( "restartitem", restartConfig ) {
+            add( new ListView<ConfigurationItem>( "restartitem", configSource.getConfigurationItemsRequiringRestart() )
+            {
                 protected void populateItem( ListItem<ConfigurationItem> listItem )
                 {
                     final SystemConfigurationItem item = (SystemConfigurationItem) listItem.getModelObject();

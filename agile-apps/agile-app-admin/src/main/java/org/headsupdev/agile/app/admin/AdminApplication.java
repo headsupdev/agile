@@ -139,6 +139,11 @@ public class AdminApplication
         return Admin.class;
     }
 
+    public SystemConfigurationSource getConfigurationSource()
+    {
+        return SystemConfigurationSource.getInstance();
+    }
+
     public void addProject( Project project, org.apache.wicket.Page page )
     {
         Manager.getStorageInstance().addProject( project );
