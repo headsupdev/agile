@@ -49,15 +49,10 @@ public class SystemConfigurationSource
     {
         if ( instance == null )
         {
-            instance = createInstance();
+            instance = new SystemConfigurationSource();
         }
 
         return instance;
-    }
-
-    protected static SystemConfigurationSource createInstance()
-    {
-        return new SystemConfigurationSource();
     }
 
     private List<ConfigurationItem> config = new LinkedList<ConfigurationItem>();
