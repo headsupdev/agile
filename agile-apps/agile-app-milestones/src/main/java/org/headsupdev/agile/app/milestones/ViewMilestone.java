@@ -84,8 +84,7 @@ public class ViewMilestone
         }
 
         addLinks( getLinks( milestone ) );
-
-        add( new MilestonePanel( "milestone", milestone ) );
+        addDetails();
 
         List<Comment> commentList = new LinkedList<Comment>();
         commentList.addAll( milestone.getComments() );
@@ -176,6 +175,11 @@ public class ViewMilestone
     public String getPageTitle()
     {
         return super.getPageTitle() + " :: " + milestone.getName();
+    }
+
+    protected void addDetails()
+    {
+        add( new MilestonePanel( "milestone", milestone ) );
     }
 
     public static List<MenuLink> getLinks( Milestone milestone )
