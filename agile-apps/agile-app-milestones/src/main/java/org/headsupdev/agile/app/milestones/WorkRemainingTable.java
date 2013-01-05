@@ -137,9 +137,9 @@ public class WorkRemainingTable
                     }
                 }
 
-                listItem.add( new Label( "estimate", new Duration( estimate ).toString()) );
-                listItem.add( new Label( "worked", new Duration( worked ).toString()) );
-                listItem.add( new Label( "remaining", new Duration( remaining ).toString()) );
+                listItem.add( new Label( "estimate", new Duration( estimate ).toHoursWithFractionString() ) );
+                listItem.add( new Label( "worked", new Duration( worked ).toHoursWithFractionString() ) );
+                listItem.add( new Label( "remaining", new Duration( remaining ).toHoursWithFractionString() ) );
             }
         } );
     }
