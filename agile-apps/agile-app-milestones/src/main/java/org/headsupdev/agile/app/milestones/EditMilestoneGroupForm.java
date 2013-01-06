@@ -55,56 +55,89 @@ import java.util.List;
 public class EditMilestoneGroupForm
         extends Panel
 {
-    public EditMilestoneGroupForm( String id, final MilestoneGroup group, boolean creating, HeadsUpPage owner)
+    MilestoneGroup group;
+    boolean creating;
+
+    public EditMilestoneGroupForm( String id, final MilestoneGroup milestoneGroup, final boolean creating,
+                                   final HeadsUpPage owner )
     {
         super( id );
 
-        add( new MilestoneGroupForm( "edit", group, creating, owner, this ) );
+        this.group = milestoneGroup;
+        this.creating = creating;
+
+        Form<MilestoneGroup> form = new Form<MilestoneGroup>( "edit" )
+        {
+            public void onSubmit()
+            {
+                Session session = HibernateUtil.getCurrentSession();
+
+                for ( Milestone milestone : group.getMilestones() )
+                {
+                    if ( group.getMilestones().contains( milestone ) )
+                    {
+                        milestone.setGroup( group );
+                    }
+                    else
+                    {
+                        milestone.setGroup( null );
+                    }
+
+                    session.merge( milestone );
+                }
+
+                if ( !creating )
+                {
+                    group = (MilestoneGroup) session.merge( group );
+                }
+                group.setUpdated( new Date() );
+
+                submitParent();
+
+                PageParameters params = new PageParameters();
+                params.add( "project", group.getProject().getId() );
+                params.add( "id", group.getName() );
+                setResponsePage( owner.getPageClass( "milestones/viewgroup" ), params );
+            }
+        };
+
+        layout( form );
+        add( form );
     }
 
-    public void onSubmit()
+    public MilestoneGroup getMilestoneGroup()
+    {
+        return group;
+    }
+
+    public void submitParent()
     {
         // allow others to override
     }
-}
 
-class MilestoneGroupForm
-        extends Form<MilestoneGroup>
-{
-    MilestoneGroup group;
-    HeadsUpPage owner;
-    EditMilestoneGroupForm parent;
-    boolean creating;
-    private List<Milestone> milestones;
-
-    public MilestoneGroupForm( String id, final MilestoneGroup group, boolean creating, final HeadsUpPage owner, EditMilestoneGroupForm parent )
+    protected void layout( Form<MilestoneGroup> form )
     {
-        super( id );
-        this.group = group;
-        this.creating = creating;
-        this.owner = owner;
-        this.parent = parent;
-        setModel( new CompoundPropertyModel<MilestoneGroup>( group ) );
-        milestones = getMilestones( group.getProject() );
+        form.setModel( new CompoundPropertyModel<MilestoneGroup>( group ) );
+        List<Milestone> milestones = getMilestones( group.getProject() );
 
-        add( new Label( "project", group.getProject().getAlias() ) );
+        form.add( new Label( "project", group.getProject().getAlias() ) );
         if ( creating )
         {
-            add( new TextField<String>( "name" ).add( new IdPatternValidator() ).setRequired( true ) );
-            add( new WebMarkupContainer( "name-label" ).setVisible( false ) );
-//            add( new Label( "created", new FormattedDateModel( new Date() ) ) );
+            form.add( new TextField<String>( "name" ).add( new IdPatternValidator() ).setRequired( true ) );
+            form.add( new WebMarkupContainer( "name-label" ).setVisible( false ) );
+//            form.add( new Label( "created", new FormattedDateModel( new Date() ) ) );
         }
         else
         {
-            add( new Label( "name-label", group.getName() ) );
-            add( new WebMarkupContainer( "name" ).setVisible( false ) );
-//            add( new Label( "created", new FormattedDateModel( milestone.getCreated() ) ) );
+            form.add( new Label( "name-label", group.getName() ) );
+            form.add( new WebMarkupContainer( "name" ).setVisible( false ) );
+//            form.add( new Label( "created", new FormattedDateModel( milestone.getCreated() ) ) );
         }
 
-        add( new TextArea( "description" ) );
+        form.add( new TextArea( "description" ) );
 
         CheckGroup<Milestone> checkGroup = new CheckGroup<Milestone>( "milestones" );
-        add( checkGroup );
+        form.add( checkGroup );
 
         checkGroup.add( new StripedListView<Milestone>( "list", milestones )
         {
@@ -135,39 +168,6 @@ class MilestoneGroupForm
                 listItem.add( label );
             }
         } );
-
-    }
-
-    public void onSubmit()
-    {
-        Session session = HibernateUtil.getCurrentSession();
-
-        for ( Milestone milestone : milestones )
-        {
-            if ( group.getMilestones().contains( milestone ) )
-            {
-                milestone.setGroup( group );
-            }
-            else
-            {
-                milestone.setGroup( null );
-            }
-
-            session.merge( milestone );
-        }
-
-        if ( !creating )
-        {
-            group = (MilestoneGroup) session.merge( group );
-        }
-        group.setUpdated( new Date() );
-
-        parent.onSubmit();
-
-        PageParameters params = new PageParameters();
-        params.add( "project", group.getProject().getId() );
-        params.add( "id", group.getName() );
-        setResponsePage( owner.getPageClass( "milestones/viewgroup" ), params );
     }
 
     private List<Milestone> getMilestones( Project project )

@@ -64,7 +64,7 @@ public class EditMilestoneGroup
         final MilestoneGroup finalGroup = group;
         add( new EditMilestoneGroupForm( "edit", finalGroup, false, this )
         {
-            public void onSubmit()
+            public void submitParent()
             {
                 getHeadsUpApplication().addEvent( new UpdateMilestoneGroupEvent( finalGroup, finalGroup.getProject(),
                                                                         EditMilestoneGroup.this.getSession().getUser() ) );

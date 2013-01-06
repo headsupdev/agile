@@ -44,6 +44,11 @@ public class MilestonePanel
                 milestone.getStartDate(), milestone.getDueDate(), milestone.getCompletedDate() );
     }
 
+    public Milestone getMilestone()
+    {
+        return milestone;
+    }
+
     @Override
     protected double getCompleteness()
     {

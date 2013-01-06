@@ -81,8 +81,7 @@ public class ViewMilestoneGroup
         }
 
         addLinks( getLinks( group ) );
-
-        add( new MilestoneGroupPanel( "group", group ) );
+        addDetails();
 
         List<Comment> commentList = new LinkedList<Comment>();
         commentList.addAll( group.getComments() );
@@ -163,10 +162,20 @@ public class ViewMilestoneGroup
         add( new ResourceLink( "exportgroup", new ResourceReference( "export-worked.csv" ), params ).setVisible( timeEnabled ) );
     }
 
+    public MilestoneGroup getMilestoneGroup()
+    {
+        return group;
+    }
+
     @Override
     public String getPageTitle()
     {
         return super.getPageTitle() + " :: " + group.getName();
+    }
+
+    protected void addDetails()
+    {
+        add( new MilestoneGroupPanel( "group", group ) );
     }
 
     public static List<MenuLink> getLinks( MilestoneGroup group )

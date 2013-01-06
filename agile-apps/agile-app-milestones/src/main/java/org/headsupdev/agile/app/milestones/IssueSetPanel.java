@@ -99,14 +99,9 @@ abstract class IssueSetPanel
         add( new Label( "velocity", velocityStr ) );
     }
 
-    private Double getVelocity( Date start, Date due, List<DurationWorked> worked )
+    protected Double getVelocity( Date start, Date due, List<DurationWorked> worked )
     {
         return DurationWorkedUtil.getVelocity( worked, start, due );
-    }
-
-    private double getMilestoneCompleteness( Milestone milestone )
-    {
-        return DurationWorkedUtil.getMilestoneCompleteness( milestone );
     }
 
     protected abstract Set<Issue> getIssues();
