@@ -29,11 +29,11 @@ import org.headsupdev.agile.web.MountPoint;
 import java.util.Date;
 
 /**
- * Create a milestone page
+ * Create a milestone group page
  *
  * @author Andrew Williams
  * @version $Id$
- * @since 1.0
+ * @since 2.0
  */
 @MountPoint( "creategroup" )
 public class CreateMilestoneGroup

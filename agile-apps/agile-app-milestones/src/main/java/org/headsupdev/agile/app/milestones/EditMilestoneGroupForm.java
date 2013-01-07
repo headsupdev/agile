@@ -50,7 +50,7 @@ import java.util.List;
  *
  * @author Andrew Williams
  * @version $Id$
- * @since 1.0
+ * @since 2.0
  */
 public class EditMilestoneGroupForm
         extends Panel

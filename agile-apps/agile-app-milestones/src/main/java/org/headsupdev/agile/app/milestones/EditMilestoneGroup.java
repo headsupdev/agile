@@ -28,11 +28,11 @@ import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.MountPoint;
 
 /**
- * Milestone edit page
+ * Milestone group edit page
  *
  * @author Andrew Williams
  * @version $Id$
- * @since 1.0
+ * @since 2.0
  */
 @MountPoint( "editgroup" )
 public class EditMilestoneGroup
