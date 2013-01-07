@@ -82,8 +82,8 @@ public class Milestones
                 MilestoneGroup group = listItem.getModelObject();
                 PageParameters params = getProjectPageParameters();
                 params.add( "id", group.getName() );
-                BookmarkablePageLink nameLink = new BookmarkablePageLink<ViewMilestoneGroup>( "grouplink",
-                        ViewMilestoneGroup.class, params );
+                BookmarkablePageLink nameLink = new BookmarkablePageLink( "grouplink",
+                        getPageClass( "milestones/viewgroup" ), params );
                 nameLink.add( new Label( "name", group.getName() ) );
                 listItem.add( nameLink );
 

@@ -53,7 +53,10 @@ public class CreateMilestoneGroup
 
         add( new EditMilestoneGroupForm( "create", create, true, this )
         {
-            public void submitParent() {
+            public void submitParent()
+            {
+                super.submitParent();
+
                 create.setCreated( new Date() );
                 ( (MilestonesApplication) getHeadsUpApplication() ).addMilestoneGroup( create );
 

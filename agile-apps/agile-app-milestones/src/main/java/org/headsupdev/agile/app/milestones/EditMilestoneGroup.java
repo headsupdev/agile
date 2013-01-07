@@ -66,6 +66,8 @@ public class EditMilestoneGroup
         {
             public void submitParent()
             {
+                super.submitParent();
+
                 getHeadsUpApplication().addEvent( new UpdateMilestoneGroupEvent( finalGroup, finalGroup.getProject(),
                                                                         EditMilestoneGroup.this.getSession().getUser() ) );
             }
