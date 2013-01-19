@@ -156,7 +156,7 @@ public class ResolveIssue
         return new Duration( 0 );
     }
 
-    protected void submitChild()
+    protected void submitChild( Comment comment )
     {
         boolean timeEnabled = Boolean.parseBoolean( getProject().getConfigurationValue( StoredProject.CONFIGURATION_TIMETRACKING_ENABLED ) );
         boolean timeBurndown = Boolean.parseBoolean( getProject().getConfigurationValue( StoredProject.CONFIGURATION_TIMETRACKING_BURNDOWN ) );
@@ -180,6 +180,7 @@ public class ResolveIssue
                 worked.setWorked( additionalTime );
                 worked.setUpdatedRequired( new Duration( 0 ) );
                 worked.setDay( new Date() );
+                worked.setComment( comment );
 
                 worked.setUser( getSession().getUser() );
                 ( (HibernateStorage) getStorage() ).save( worked );
@@ -205,6 +206,12 @@ public class ResolveIssue
         }
 
         getIssue().setStatus( Issue.STATUS_RESOLVED );
+    }
+
+    @Override
+    protected boolean childWillConsumeComment()
+    {
+        return true;
     }
 
     protected Event getUpdateEvent( Comment comment )

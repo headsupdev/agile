@@ -20,21 +20,13 @@ package org.headsupdev.agile.app.issues;
 
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.util.lang.Bytes;
 import org.headsupdev.agile.api.Event;
 import org.headsupdev.agile.api.User;
 import org.headsupdev.agile.app.issues.event.UpdateIssueEvent;
 import org.headsupdev.agile.storage.Comment;
-import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.MountPoint;
-import org.headsupdev.agile.api.Permission;
-import org.headsupdev.agile.app.issues.permission.IssueEditPermission;
 import org.headsupdev.agile.storage.issues.Issue;
-import org.apache.wicket.markup.html.CSSPackageResource;
-import org.headsupdev.agile.web.components.AttachmentPanel;
 import org.headsupdev.agile.web.components.UserDropDownChoice;
-
-import java.util.*;
 
 /**
  * Issue assign page - set the issue's assigned user to any active user in the system
@@ -59,7 +51,7 @@ public class AssignIssue
         setSubmitLabel( "Assign Issue" );
     }
 
-    protected void submitChild()
+    protected void submitChild( Comment comment )
     {
         // if we have an assignee that is not watching then add them to the watchers
         if ( getIssue().getAssignee() != null && !getIssue().getWatchers().contains( getIssue().getAssignee() ) )
