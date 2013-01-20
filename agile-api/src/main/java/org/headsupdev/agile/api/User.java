@@ -52,6 +52,7 @@ public interface User
     public Date getLastLogin();
 
     public boolean canLogin();
+    public boolean isDisabled();
 
     public String getDescription();
 
