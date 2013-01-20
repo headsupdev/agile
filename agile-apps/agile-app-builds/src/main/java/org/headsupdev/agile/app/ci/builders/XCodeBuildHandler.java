@@ -66,10 +66,11 @@ public class XCodeBuildHandler
         try
         {
             buildOut = new FileWriter( output );
+            prepareProject( project, dir, buildOut );
 
             // execute a clean first of all
             ArrayList<String> commands = new ArrayList<String>();
-            commands.add( "xcodebuild" );
+            appendXcodeCommands( project, config, commands, dir, null );
             commands.add( "clean" );
 
             process = Runtime.getRuntime().exec( commands.toArray( new String[2] ), null, dir );
@@ -91,7 +92,7 @@ public class XCodeBuildHandler
                 process.destroy();
 
                 commands.clear();
-                appendXcodeCommands( config, commands, null );
+                appendXcodeCommands( project, config, commands, dir, null );
 
                 process = Runtime.getRuntime().exec( commands.toArray( new String[commands.size()] ), null, dir );
 
@@ -144,6 +145,60 @@ public class XCodeBuildHandler
         }
     }
 
+    private void prepareProject( Project project, File dir, Writer buildOut )
+    {
+        if ( !new File( dir, "Podfile" ).exists() )
+        {
+            return;
+        }
+
+        Process process = null;
+        StreamGobbler serr = null, sout = null;
+        try
+        {
+            log.debug( "running pod install to set up workspace" );
+
+            // execute a clean first of all
+            ArrayList<String> commands = new ArrayList<String>();
+            commands.add( "pod" );
+            commands.add( "install" );
+            commands.add( "--no-color" );
+
+            process = Runtime.getRuntime().exec( commands.toArray( new String[2] ), null, dir );
+
+            serr = new StreamGobbler( new InputStreamReader( process.getErrorStream() ), buildOut );
+            sout = new StreamGobbler( new InputStreamReader( process.getInputStream() ), buildOut );
+            serr.start();
+            sout.start();
+
+            process.waitFor();
+        }
+        catch ( InterruptedException e )
+        {
+            // TODO use this hook when we cancel the process
+        }
+        catch ( IOException e )
+        {
+            e.printStackTrace( new PrintWriter( buildOut ) );
+            log.error( "Unable to write to build output file - reported in build log", e );
+        }
+        finally
+        {
+            if ( process != null )
+            {
+                // defensively try to close the gobblers
+                if ( serr != null && sout != null )
+                {
+                    waitStreamGobblersToComplete( serr, sout );
+                }
+                IOUtil.close( process.getOutputStream() );
+                IOUtil.close( process.getErrorStream() );
+                IOUtil.close( process.getInputStream() );
+                process.destroy();
+            }
+        }
+    }
+
     public static boolean canFindScanBuild()
     {
         // try and find a binary called scan-build.
@@ -152,15 +207,25 @@ public class XCodeBuildHandler
         return scanBuild != null;
     }
 
-    protected static void appendXcodeCommands( PropertyTree config, ArrayList<String> commands, String overrideConfig )
+    protected static void appendXcodeCommands( Project project, PropertyTree config, ArrayList<String> commands,
+                                               File dir, String overrideConfig )
     {
-        String targetName = config.getProperty( CIApplication.CONFIGURATION_XCODE_TARGET.getKey(),
-                (String) CIApplication.CONFIGURATION_XCODE_TARGET.getDefault() );
+        boolean buildWorkspace = config.getProperty( CIApplication.CONFIGURATION_XCODE_BUILD_WORKSPACE.getKey(),
+                (String) CIApplication.CONFIGURATION_XCODE_SDK.getDefault() ).equals( "true" );
 
         String sdkName = config.getProperty( CIApplication.CONFIGURATION_XCODE_SDK.getKey(),
                 (String) CIApplication.CONFIGURATION_XCODE_SDK.getDefault() );
 
         commands.add( "xcodebuild" );
+
+        if ( buildWorkspace )
+        {
+            setupWorkspaceCommand( project, config, commands, dir );
+        }
+        else
+        {
+            setupProjectCommand( config, commands, overrideConfig );
+        }
 
         if ( overrideConfig != null )
         {
@@ -180,18 +245,76 @@ public class XCodeBuildHandler
             }
         }
 
-        // build the specified target if specified
-        if ( !StringUtil.isEmpty( targetName ) )
-        {
-            commands.add( "-target" );
-            commands.add( targetName );
-        }
-
         // link to the specified sdk if specified
         if ( !StringUtil.isEmpty( sdkName ) )
         {
             commands.add( "-sdk" );
             commands.add( sdkName );
+        }
+
+        commands.add( "ONLY_ACTIVE_ARCH=NO" );
+    }
+
+    private static String getDefaultWorkspace( Project project, File dir )
+    {
+        for ( File child : dir.listFiles() )
+        {
+            if ( !child.isDirectory() )
+            {
+                continue;
+            }
+
+            if ( child.getName().toLowerCase().endsWith( ".xcworkspace" ) )
+            {
+                return child.getName().substring( 0, child.getName().length() - 12 );
+            }
+        }
+
+        return null;
+    }
+
+    private static void setupWorkspaceCommand( Project project, PropertyTree config, ArrayList<String> commands, File dir )
+    {
+        String workspace = config.getProperty( CIApplication.CONFIGURATION_XCODE_WORKSPACE.getKey(),
+                (String) CIApplication.CONFIGURATION_XCODE_TARGET.getDefault() );
+        String scheme = config.getProperty( CIApplication.CONFIGURATION_XCODE_SCHEME.getKey(),
+                (String) CIApplication.CONFIGURATION_XCODE_TARGET.getDefault() );
+
+        String defaultWorkspace = getDefaultWorkspace( project, dir );
+
+        // build the specified workspace if specified, otherwise a default
+        commands.add( "-workspace" );
+        if ( !StringUtil.isEmpty( workspace ) )
+        {
+            commands.add( workspace + ".xcworkspace" );
+        }
+        else
+        {
+            commands.add( defaultWorkspace + ".xcworkspace" );
+        }
+
+        // build the specified workspace scheme if specified, otherwise a default
+        commands.add( "-scheme" );
+        if ( !StringUtil.isEmpty( scheme ) )
+        {
+            commands.add( scheme );
+        }
+        else
+        {
+            commands.add( defaultWorkspace );
+        }
+    }
+
+    private static void setupProjectCommand( PropertyTree config, ArrayList<String> commands, String overrideConfig )
+    {
+        String targetName = config.getProperty( CIApplication.CONFIGURATION_XCODE_TARGET.getKey(),
+                (String) CIApplication.CONFIGURATION_XCODE_TARGET.getDefault() );
+
+        // build the specified target if specified
+        if ( !StringUtil.isEmpty( targetName ) )
+        {
+            commands.add( "-target" );
+            commands.add( targetName );
         }
     }
 
@@ -400,7 +523,7 @@ public class XCodeBuildHandler
                     commands.add( outputPath );
                     log.debug( "Running scan-build in dir:" + dir + " with output path:" + outputPath );
 
-                    appendXcodeCommands( config, commands, "Debug" );
+                    appendXcodeCommands( project, config, commands, dir, "Debug" );
 
                     Process process = Runtime.getRuntime().exec( commands.toArray( new String[commands.size()] ), null, dir );
 

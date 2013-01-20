@@ -124,10 +124,21 @@ public class CIApplication
     public static final ConfigurationItem CONFIGURATION_COMMAND_LINE = new ConfigurationItem( "commandline",
         "make", "Command line", "The command used to start the build process for this project" );
 
+    public static final ConfigurationItem CONFIGURATION_XCODE_BUILD_WORKSPACE = new ConfigurationItem( "xcode.workspacebuild",
+            false, "Build using an Xcode Workspace",
+            "Should this configuration build using an Xcode workspace rather than a project setup" );
+
+    public static final ConfigurationItem CONFIGURATION_XCODE_WORKSPACE = new ConfigurationItem( "xcode.workspace",
+            "", "Workspace Name", "The xcode workspace to load for this build (optional)" );
+    public static final ConfigurationItem CONFIGURATION_XCODE_SCHEME = new ConfigurationItem( "xcode.scheme",
+            "", "Build Scheme (This will need to be marked as a 'shared' scheme from Xcode)",
+            "The xcode scheme to build this project (optional - default is same as workspace)" );
+
+    public static final ConfigurationItem CONFIGURATION_XCODE_TARGET = new ConfigurationItem( "xcode.target",
+            "", "Project Target", "The xcode target to build this project (optional)" );
+
     public static final ConfigurationItem CONFIGURATION_XCODE_CONFIG = new ConfigurationItem( "xcode.config",
         "Release", "Project Configuration", "The xcode configuation to build this project" );
-    public static final ConfigurationItem CONFIGURATION_XCODE_TARGET = new ConfigurationItem( "xcode.target",
-        "", "Project Target", "The xcode target to build this project (optional)" );
     public static final ConfigurationItem CONFIGURATION_XCODE_SDK = new ConfigurationItem( "xcode.sdk",
         "", "Project SDK", "The SDK to build this project against - mainly used for testing (optional)" );
     public static final ConfigurationItem CONFIGURATION_ANALYZE = new ConfigurationItem( "analyze",
@@ -217,14 +228,29 @@ public class CIApplication
                 new ConfigurationItem( "schedule", "Build Schedule", items ) ) );
 
         items = new LinkedList<ConfigurationItem>();
-        items.add( CONFIGURATION_XCODE_CONFIG );
+        // type of build
+        items.add( CONFIGURATION_XCODE_BUILD_WORKSPACE );
+        // workspace build...
+        items.add( CONFIGURATION_XCODE_WORKSPACE );
+        items.add( CONFIGURATION_XCODE_SCHEME );
+        // ...or project build
         items.add( CONFIGURATION_XCODE_TARGET );
+
+        items.add( CONFIGURATION_XCODE_CONFIG );
         items.add( CONFIGURATION_XCODE_SDK ) ;
         items.add( CONFIGURATION_ANALYZE );
         xcodeProjectItems.add( new ConfigurationItem( "schedule.default", "Default Build Schedule", items ) );
         items = new LinkedList<ConfigurationItem>();
-        items.add( CONFIGURATION_XCODE_CONFIG );
+
+        // type of build
+        items.add( CONFIGURATION_XCODE_BUILD_WORKSPACE );
+        // workspace build...
+        items.add( CONFIGURATION_XCODE_WORKSPACE );
+        items.add( CONFIGURATION_XCODE_SCHEME );
+        // ...or project build
         items.add( CONFIGURATION_XCODE_TARGET );
+
+        items.add( CONFIGURATION_XCODE_CONFIG );
         items.add( CONFIGURATION_XCODE_SDK );
         items.add( CONFIGURATION_ANALYZE );
         items.add( CONFIGURATION_CRON_EXPRESSION );
