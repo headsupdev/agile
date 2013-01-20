@@ -209,7 +209,7 @@ public class ResolveIssue
     }
 
     @Override
-    protected boolean childWillConsumeComment()
+    protected boolean willChildConsumeComment()
     {
         return true;
     }

@@ -133,7 +133,7 @@ public class ProgressIssue
     }
 
     @Override
-    protected boolean childWillConsumeComment()
+    protected boolean willChildConsumeComment()
     {
         return true;
     }

@@ -109,7 +109,7 @@ public class CreateComment
     {
     }
 
-    protected boolean childWillConsumeComment()
+    protected boolean willChildConsumeComment()
     {
         return false;
     }
@@ -157,7 +157,7 @@ public class CreateComment
                 create.setCreated( now );
                 ( (HibernateStorage) getStorage() ).save( create );
 
-                if ( !childWillConsumeComment() )
+                if ( !willChildConsumeComment() )
                 {
                     issue.getComments().add( create );
                 }
