@@ -36,8 +36,8 @@ public class EmailNotifier
     implements Notifier
 {
     public static enum FooterType {
-        Notification, Subscription;
-    };
+        Notification, Subscription
+    }
 
     private PropertyTree config = new PropertyTree();
 
@@ -111,7 +111,9 @@ public class EmailNotifier
                 "            font-size:38px;\n" +
                 "            background-color:#f0f1eb;\n" +
                 "            height:45px;\n" +
-                "            color:#555b5b;\"><div style=\"margin: 0 30px;\">" + event.getProject() + "</div></h1>" );
+                "            color:#555b5b;\"><div style=\"margin: 0 30px;\">" );
+        body.append( event.getProject() );
+        body.append( "</div></h1>" );
 
         body.append( "<div id=\"content\" style=\"padding: 0 30px;\">" );
 
@@ -124,7 +126,9 @@ public class EmailNotifier
                 "        <span class=\"history-time\" style=\"font-weight: bold;\n" +
                 "    color: #5b5b5b;\n" +
                 "\n" +
-                "    padding-left: 15pt;\">" + time + "</span>\n" );
+                "    padding-left: 15pt;\">" );
+        body.append( time );
+        body.append( "</span>\n" );
 
 // TODO investigate if we can (sensibly) look up the event icons...
 //        String image = "images/events/" + event.getClass().getName().substring( event.getClass().getPackage().getName().length() + 1) + ".png";
@@ -137,8 +141,12 @@ public class EmailNotifier
                 "    display: block;\n" +
                 "\n" +
                 "    padding-top: 10pt;\n" +
-                "    padding-left: 15pt;\" href=\"" + link + "\">\n" +
-                "          <span class=\"history-title\">" + event.getTitle() + "</span>\n" +
+                "    padding-left: 15pt;\" href=\"" );
+        body.append( link );
+        body.append( "\">\n" +
+                "          <span class=\"history-title\">" );
+        body.append( event.getTitle() );
+        body.append( "</span>\n" +
                 "        </a>\n" +
                 "        \n" +
                 "        <div class=\"history-summary\" style=\"padding: 10pt 15pt;\n" +
@@ -146,7 +154,9 @@ public class EmailNotifier
                 "\n" +
                 "    color:  #5b5b5b;\n" +
                 "    background-color: #f7f8f3;\">\n" +
-                "          <span>" + event.getSummary() + "</span>\n" +
+                "          <span>" );
+        body.append( event.getSummary() );
+        body.append( "</span>\n" +
                 "          \n" +
                 "        </div>\n" +
                 "        \n" +
