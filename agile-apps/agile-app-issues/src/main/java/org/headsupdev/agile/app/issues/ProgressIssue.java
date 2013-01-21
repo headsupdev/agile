@@ -93,7 +93,10 @@ public class ProgressIssue
     {
         duration.setUser( getSession().getUser() );
         duration.setIssue( getIssue() );
-        duration.setComment( comment );
+        if ( willChildConsumeComment() )
+        {
+            duration.setComment( comment );
+        }
 
         ( (HibernateStorage) getStorage() ).save( duration );
         getIssue().getTimeWorked().add( duration );
@@ -135,7 +138,7 @@ public class ProgressIssue
     @Override
     protected boolean willChildConsumeComment()
     {
-        return true;
+        return duration.getWorked().getTimeAsMinutes() > 0;
     }
 
 }

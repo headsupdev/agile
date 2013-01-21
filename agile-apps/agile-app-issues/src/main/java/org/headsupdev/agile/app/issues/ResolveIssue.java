@@ -180,7 +180,10 @@ public class ResolveIssue
                 worked.setWorked( additionalTime );
                 worked.setUpdatedRequired( new Duration( 0 ) );
                 worked.setDay( new Date() );
-                worked.setComment( comment );
+                if ( willChildConsumeComment() )
+                {
+                    worked.setComment( comment );
+                }
 
                 worked.setUser( getSession().getUser() );
                 ( (HibernateStorage) getStorage() ).save( worked );
@@ -198,6 +201,10 @@ public class ResolveIssue
                 DurationWorked worked = new DurationWorked();
                 worked.setWorked( new Duration( hours ) );
                 worked.setDay( new Date() );
+                if ( willChildConsumeComment() )
+                {
+                    worked.setComment( comment );
+                }
 
                 worked.setUser( getSession().getUser() );
                 ( (HibernateStorage) getStorage() ).save( worked );
@@ -211,7 +218,7 @@ public class ResolveIssue
     @Override
     protected boolean willChildConsumeComment()
     {
-        return true;
+        return additionalTime.getTimeAsMinutes() > 0;
     }
 
     protected Event getUpdateEvent( Comment comment )
