@@ -20,6 +20,7 @@ package org.headsupdev.agile.storage.issues;
 
 import org.headsupdev.agile.api.Manager;
 import org.headsupdev.agile.api.User;
+import org.headsupdev.agile.storage.Comment;
 import org.headsupdev.agile.storage.HibernateStorage;
 import org.headsupdev.agile.storage.StoredUser;
 import org.hibernate.Criteria;
@@ -67,6 +68,10 @@ public class DurationWorked
             @AttributeOverride( name = "timeUnit", column=@Column( name = "updatedRequiredUnit" ) )
     } )
     private Duration updatedRequired;
+
+    @OneToOne
+    @IndexedEmbedded
+    private Comment comment;
 
     private Date day;
 
@@ -152,6 +157,19 @@ public class DurationWorked
         Criteria c = session.createCriteria( Issue.class );
 
         return c.list();
+    }
+
+    public Comment getComment()
+    {
+        return comment;
+    }
+
+    public void setComment( Comment comment )
+    {
+        if ( comment != null && comment.getComment() != null )
+        {
+            this.comment = comment;
+        }
     }
 
     public String toString()

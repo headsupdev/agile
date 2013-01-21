@@ -89,10 +89,14 @@ public class ProgressIssue
                 "progressed" );
     }
 
-    protected void submitChild()
+    protected void submitChild( Comment comment )
     {
         duration.setUser( getSession().getUser() );
         duration.setIssue( getIssue() );
+        if ( willChildConsumeComment() )
+        {
+            duration.setComment( comment );
+        }
 
         ( (HibernateStorage) getStorage() ).save( duration );
         getIssue().getTimeWorked().add( duration );
@@ -130,4 +134,11 @@ public class ProgressIssue
             getIssue().getWatchers().add( getSession().getUser() );
         }
     }
+
+    @Override
+    protected boolean willChildConsumeComment()
+    {
+        return duration.getWorked().getTimeAsMinutes() > 0;
+    }
+
 }

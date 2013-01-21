@@ -41,7 +41,7 @@ public class CloseIssue
         setSubmitLabel( "Close Issue" );
     }
 
-    protected void submitChild()
+    protected void submitChild( Comment comment )
     {
         getIssue().setStatus( Issue.STATUS_CLOSED );
     }
