@@ -41,7 +41,7 @@ public class ReopenIssue
         setSubmitLabel( "Reopen Issue" );
     }
 
-    protected void submitChild()
+    protected void submitChild( Comment comment )
     {
         getIssue().setResolution( 0 );
         getIssue().setReopened( getIssue().getReopened() + 1 );

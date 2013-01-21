@@ -107,14 +107,25 @@ public class CommentPanel extends Panel
             workedTitle.add( new Label( "created", new FormattedDateModel( worked.getDay(),
                     ( (HeadsUpSession) getSession() ).getTimeZone() ) ) );
 
-            add( new WebMarkupContainer( "comment" ).setVisible( false ) );
-
             commentTitle.setVisible( false );
+
+            Comment comment = worked.getComment();
+            if ( comment != null )
+            {
+                Label commentLabel = new Label( "comment", new MarkedUpTextModel( comment.getComment(), project ) );
+                commentLabel.setEscapeModelStrings( false );
+                add( commentLabel );
+            }
+            else
+            {
+                add( new WebMarkupContainer( "comment" ).setVisible( false ) );
+            }
         }
         else
         {
             commentTitle.setVisible( false );
             workedTitle.setVisible( false );
+            add( new WebMarkupContainer( "comment" ).setVisible( false ) );
         }
         add( commentTitle );
         add( workedTitle );

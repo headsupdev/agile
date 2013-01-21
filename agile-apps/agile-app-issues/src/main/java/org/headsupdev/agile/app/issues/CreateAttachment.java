@@ -51,7 +51,7 @@ public class CreateAttachment
     }
 
     @Override
-    protected void submitChild()
+    protected void submitChild( Comment comment )
     {
         getIssue().getAttachments().add( attachmentPanel.getAttachment() );
     }

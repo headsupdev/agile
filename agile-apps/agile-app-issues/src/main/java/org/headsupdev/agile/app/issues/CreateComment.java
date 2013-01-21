@@ -105,8 +105,13 @@ public class CreateComment
     {
     }
 
-    protected void submitChild()
+    protected void submitChild( Comment comment )
     {
+    }
+
+    protected boolean willChildConsumeComment()
+    {
+        return false;
     }
 
     public void setSubmitLabel( String submitLabel )
@@ -144,7 +149,6 @@ public class CreateComment
         public void onSubmit()
         {
             issue = (Issue) ( (HibernateStorage) getStorage() ).getHibernateSession().merge( issue );
-            submitChild();
 
             Date now = new Date();
             if ( create.getComment() != null )
@@ -153,8 +157,13 @@ public class CreateComment
                 create.setCreated( now );
                 ( (HibernateStorage) getStorage() ).save( create );
 
-                issue.getComments().add( create );
+                if ( !willChildConsumeComment() )
+                {
+                    issue.getComments().add( create );
+                }
             }
+
+            submitChild( create );
 
             if ( issue.getStatus() < Issue.STATUS_FEEDBACK ) {
                 issue.setStatus( Issue.STATUS_FEEDBACK );
