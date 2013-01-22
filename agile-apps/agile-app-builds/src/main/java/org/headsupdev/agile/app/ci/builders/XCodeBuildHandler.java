@@ -50,6 +50,8 @@ public class XCodeBuildHandler
 
     private static Logger log = Manager.getLogger( XCodeBuildHandler.class.getName() );
 
+    private File cachedBuildDirectory;
+
     public void runBuild( Project project, PropertyTree config, PropertyTree appConfig, File dir, File output,
                                     Build build )
     {
@@ -142,6 +144,20 @@ public class XCodeBuildHandler
         {
             build.setStatus( Build.BUILD_SUCCEEDED );
             onBuildPassed(project, config, appConfig, dir, output, build);
+        }
+
+        cleanupBuildOutput( build, dir );
+    }
+
+    protected void cleanupBuildOutput( Build build, File checkoutDir )
+    {
+        try
+        {
+            FileUtil.delete( getBuildDirectory( build, checkoutDir ) );
+        }
+        catch ( IOException e )
+        {
+            log.error( "Error cleaning up build output", e );
         }
     }
 
@@ -620,5 +636,73 @@ public class XCodeBuildHandler
                                Build build )
     {
         //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    protected File getBuildDirectory( Build build, File checkoutDir )
+    {
+        if ( cachedBuildDirectory != null )
+        {
+            return cachedBuildDirectory;
+        }
+
+        File oldStyle = new File( checkoutDir,  "build" );
+
+        if ( oldStyle.exists() )
+        {
+            cachedBuildDirectory = oldStyle;
+            return oldStyle;
+        }
+
+        cachedBuildDirectory = getDerivedDataDirectory( build, checkoutDir );
+        return cachedBuildDirectory;
+    }
+
+    protected File getDerivedDataDirectory( Build build, File checkoutDir )
+    {
+        String checkoutName = checkoutDir.getName();
+        String buildHashWithDash = checkoutName.substring( checkoutName.indexOf( '-' ) );
+
+        File derivedData = new File( System.getProperty( "user.home" ), "Library/Developer/Xcode/DerivedData" );
+        for ( File derivedDataDir : derivedData.listFiles() )
+        {
+            if ( isDerivedDataDirectoryForBuild( derivedDataDir, buildHashWithDash ) )
+            {
+                return derivedDataDir;
+            }
+        }
+
+        return null;
+    }
+
+    protected boolean isDerivedDataDirectoryForBuild( File derivedDataDir, String buildHash )
+    {
+        File info = new File( derivedDataDir, "Info.plist" );
+        BufferedReader reader = null;
+        try
+        {
+            reader = new BufferedReader( new FileReader( info ) );
+
+            String line = null;
+            while ( ( line = reader.readLine() ) != null )
+            {
+                if ( line.contains( buildHash ) )
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+        catch ( IOException e )
+        {
+            return false;
+        }
+        finally
+        {
+            if ( reader != null )
+            {
+                IOUtil.close( reader );
+            }
+        }
     }
 }
