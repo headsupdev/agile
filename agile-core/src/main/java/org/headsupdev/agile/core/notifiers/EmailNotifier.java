@@ -148,8 +148,11 @@ public class EmailNotifier
         body.append( event.getTitle() );
         body.append( "</span>\n" +
                 "        </a>\n" +
-                "        \n" +
-                "        <div class=\"history-summary\" style=\"padding: 10pt 15pt;\n" +
+                "        \n" );
+
+        if ( event.getSummary() != null )
+        {
+        body.append( "        <div class=\"history-summary\" style=\"padding: 10pt 15pt;\n" +
                 "    margin: 15pt 0;\n" +
                 "\n" +
                 "    color:  #5b5b5b;\n" +
@@ -158,8 +161,10 @@ public class EmailNotifier
         body.append( event.getSummary() );
         body.append( "</span>\n" +
                 "          \n" +
-                "        </div>\n" +
-                "        \n" +
+                "        </div>\n" );
+        }
+
+        body.append( "        \n" +
                 "      </div>" );
 
         String content = event.getBody();
