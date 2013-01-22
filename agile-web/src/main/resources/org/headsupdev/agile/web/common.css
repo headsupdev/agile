@@ -169,6 +169,10 @@ h1, h2, h3, h4, h5, h6 {
     white-space: nowrap;
 }
 
+h2 span.summary {
+    white-space: normal;
+}
+
 img {
     border: 0;
 }
