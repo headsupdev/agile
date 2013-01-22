@@ -676,7 +676,7 @@ public class XCodeBuildHandler
 
     protected boolean isDerivedDataDirectoryForBuild( File derivedDataDir, String buildHash )
     {
-        File info = new File( derivedDataDir, "Info.plist" );
+        File info = new File( derivedDataDir, "info.plist" );
         BufferedReader reader = null;
         try
         {
