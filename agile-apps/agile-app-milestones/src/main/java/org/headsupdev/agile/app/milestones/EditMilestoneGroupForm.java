@@ -72,7 +72,7 @@ public class EditMilestoneGroupForm
             {
                 Session session = HibernateUtil.getCurrentSession();
 
-                for ( Milestone milestone : group.getMilestones() )
+                for ( Milestone milestone : getMilestones( group.getProject() ) )
                 {
                     if ( group.getMilestones().contains( milestone ) )
                     {
