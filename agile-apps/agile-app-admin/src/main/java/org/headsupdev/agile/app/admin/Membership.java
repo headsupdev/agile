@@ -97,13 +97,11 @@ public class Membership
 
             add( new DropDownChoice<User>( "user", new PropertyModel<User>( this, "currentUser" ), users, new IChoiceRenderer<User>()
             {
-                @Override
                 public Object getDisplayValue( User user )
                 {
                     return user.getFullnameOrUsername();
                 }
 
-                @Override
                 public String getIdValue( User user, int i )
                 {
                     return user.getUsername();
@@ -154,11 +152,6 @@ public class Membership
                 {
                     user.getProjects().add( project );
                 }
-            }
-
-            for ( Project child : project.getChildProjects() )
-            {
-                submitProject( child, user, defaultProjectMembers );
             }
         }
 
