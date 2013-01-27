@@ -52,6 +52,17 @@ public class CIQueuedBuild
         return id;
     }
 
+    public String getConfigName()
+    {
+        if ( !config.getPropertyNames().contains( CIApplication.CONFIGURATION_BUILD_NAME.getKey() ) )
+        {
+            return null;
+        }
+
+        return config.getProperty( CIApplication.CONFIGURATION_BUILD_NAME.getKey(),
+                (String) CIApplication.CONFIGURATION_BUILD_NAME.getDefault() );
+    }
+
     public PropertyTree getConfig()
     {
         return config;

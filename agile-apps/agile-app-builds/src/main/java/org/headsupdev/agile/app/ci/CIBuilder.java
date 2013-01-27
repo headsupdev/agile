@@ -18,7 +18,6 @@
 
 package org.headsupdev.agile.app.ci;
 
-import org.headsupdev.agile.app.ci.builders.BuildHandlerFactory;
 import org.headsupdev.support.java.FileUtil;
 import org.headsupdev.agile.api.logging.Logger;
 import org.headsupdev.agile.api.*;
@@ -175,7 +174,14 @@ public class CIBuilder
     {
         Project project = queued.getProject();
         PropertyTree config = queued.getConfig();
-        log.info( "Preparing build for project " + project.getAlias() );
+        if ( queued.getConfigName() == null )
+        {
+            log.info( "Preparing build for project " + project.getAlias() );
+        }
+        else
+        {
+            log.info( "Preparing build \"" + queued.getConfigName() + "\" for project " + project.getAlias() );
+        }
 
         File base = null;
         File projectDir = CIApplication.getProjectDir( project );
@@ -212,6 +218,7 @@ public class CIBuilder
             log.info( "Building project " + project.getAlias() + " in " + base.getPath() );
 
             Build build = new Build( project, project.getRevision() );
+            build.setConfigName( queued.getConfigName() );
             build.setStatus( Build.BUILD_RUNNING );
             long buildId = application.addBuild( build );
             File output = new File( projectDir, buildId + ".txt" );

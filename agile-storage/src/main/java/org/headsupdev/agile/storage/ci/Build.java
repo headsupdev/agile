@@ -66,6 +66,8 @@ public class Build
     @Temporal( TemporalType.TIMESTAMP )
     private Date startTime = new Date(), endTime;
 
+    private String configName;
+
     private int status = 0;
 
     @OneToMany
@@ -164,6 +166,16 @@ public class Build
     public void setEndTime( Date endTime )
     {
         this.endTime = endTime;
+    }
+
+    public String getConfigName()
+    {
+        return configName;
+    }
+
+    public void setConfigName( String configName )
+    {
+        this.configName = configName;
     }
 
     public Set<TestResultSet> getTestResults()

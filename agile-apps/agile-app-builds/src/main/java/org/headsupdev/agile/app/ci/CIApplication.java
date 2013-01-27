@@ -144,6 +144,8 @@ public class CIApplication
     public static final ConfigurationItem CONFIGURATION_ANALYZE = new ConfigurationItem( "analyze",
         false, "Analyze", "Check for common coding errors" );
 
+    public static final ConfigurationItem CONFIGURATION_BUILD_NAME = new ConfigurationItem( "name",
+            "", "Configuration Name", "A name used to identify this build configuration" );
     public static final ConfigurationItem CONFIGURATION_CRON_EXPRESSION = new ConfigurationItem(
         ConfigurationItem.TYPE_CRON, "cron", "0 15 23 * * ?", "Cron Expression",
         "A cron expression to specify when the schedule should run (use format s m h DoM M DoW)" );
@@ -204,6 +206,7 @@ public class CIApplication
         items.add( CONFIGURATION_ANT_HOME_OVERRIDE );
         antProjectItems.add( new ConfigurationItem( "schedule.default", "Default Build Schedule", items ) );
         items = new LinkedList<ConfigurationItem>();
+        items.add( CONFIGURATION_BUILD_NAME );
         items.add( CONFIGURATION_ANT_HOME_OVERRIDE );
         items.add( CONFIGURATION_CRON_EXPRESSION );
         antProjectItems.add( new ConfigurationItem( "schedule", "Build Schedule",
@@ -213,6 +216,7 @@ public class CIApplication
         items.add( CONFIGURATION_ECLIPSE_HOME_OVERRIDE );
         eclipseProjectItems.add( new ConfigurationItem( "schedule.default", "Default Build Schedule", items ) );
         items = new LinkedList<ConfigurationItem>();
+        items.add( CONFIGURATION_BUILD_NAME );
         items.add( CONFIGURATION_ECLIPSE_HOME_OVERRIDE );
         items.add( CONFIGURATION_CRON_EXPRESSION );
         eclipseProjectItems.add( new ConfigurationItem( "schedule", "Build Schedule",
@@ -222,6 +226,7 @@ public class CIApplication
         items.add( CONFIGURATION_COMMAND_LINE );
         cmdProjectItems.add( new ConfigurationItem( "schedule.default", "Default Build Schedule", items ) );
         items = new LinkedList<ConfigurationItem>();
+        items.add( CONFIGURATION_BUILD_NAME );
         items.add( CONFIGURATION_COMMAND_LINE );
         items.add( CONFIGURATION_CRON_EXPRESSION );
         cmdProjectItems.add( new ConfigurationItem( "schedule", "Build Schedule",
@@ -241,6 +246,7 @@ public class CIApplication
         items.add( CONFIGURATION_ANALYZE );
         xcodeProjectItems.add( new ConfigurationItem( "schedule.default", "Default Build Schedule", items ) );
         items = new LinkedList<ConfigurationItem>();
+        items.add( CONFIGURATION_BUILD_NAME );
 
         // type of build
         items.add( CONFIGURATION_XCODE_BUILD_WORKSPACE );
@@ -260,6 +266,7 @@ public class CIApplication
 // no configuration for unknown projects in the default schedule and just a cron expression for other schedules...
 //        otherProjectItems.add( new ConfigurationItem( "schedule.default", "Default Build Schedule", items ) );
         items = new LinkedList<ConfigurationItem>();
+        items.add( CONFIGURATION_BUILD_NAME );
         items.add( CONFIGURATION_CRON_EXPRESSION );
         otherProjectItems.add( new ConfigurationItem( "schedule", "Build Schedule",
                 new ConfigurationItem( "schedule", "Build Schedule", items ) ) );
@@ -382,6 +389,7 @@ public class CIApplication
         }
         mavenItems.add( new ConfigurationItem( "schedule.default", "Default Build Schedule", items ) );
         items = new LinkedList<ConfigurationItem>();
+        items.add( CONFIGURATION_BUILD_NAME );
         items.add( CONFIGURATION_MAVEN_GOALS );
         items.add( CONFIGURATION_MAVEN_PROFILES );
         items.add( CONFIGURATION_MAVEN_HOME_OVERRIDE );

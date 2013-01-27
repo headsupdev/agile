@@ -27,8 +27,16 @@
         <span class="status-queued">&nbsp;&nbsp;&nbsp;&nbsp;</span>Project is queued for building...
         <a wicket:id="remove"><span class="status-remove-nohover">&nbsp;&nbsp;&nbsp;&nbsp;</span>Remove build from queue</a>
       </p>
-      <wicket:enclosure>
-      <p><a wicket:id="build"><span class="status-force">&nbsp;&nbsp;&nbsp;&nbsp;</span>Build project now</a>
+      <wicket:enclosure child="build">
+      <ul>
+        <li>
+          <a wicket:id="build"><span class="status-force">&nbsp;&nbsp;&nbsp;&nbsp;</span>Build project now</a>
+        </li>
+        <li wicket:id="buildConfigs">
+          <a wicket:id="build"><span class="status-force">&nbsp;&nbsp;&nbsp;&nbsp;</span>Build
+            "<span wicket:id="name">name</span>" now</a>
+        </li>
+      </ul>
       </wicket:enclosure>
 
       <wicket:container wicket:id="buildlist">
@@ -38,6 +46,7 @@
           <th class="id">#</th>
           <th class="status">&nbsp;</th>
           <th class="title">Project</th>
+          <th class="config">Config</th>
           <th class="tests">Tests</th>
           <th class="failures">Failures</th>
           <th class="errors">Errors</th>
@@ -52,6 +61,7 @@
             <a class="status" wicket:id="status-link" alt="status icon" href="#">&nbsp;&nbsp;&nbsp;&nbsp;</a>
           </td>
           <td class="title"><span wicket:id="name">name</span></td>
+          <td class="config"><span wicket:id="config">config</span></td>
           <td class="tests" wicket:id="tests">0</td>
           <td class="failures" wicket:id="failures">0</td>
           <td class="errors" wicket:id="errors">0</td>
@@ -68,6 +78,7 @@
         <tr>
           <th class="id">#</th>
           <th class="title">Project</th>
+          <th class="config">Config</th>
           <th class="tests">Tests</th>
           <th class="failures">Failures</th>
           <th class="errors">Errors</th>
@@ -83,6 +94,7 @@
             <a class="status" wicket:id="status-link" alt="status icon" href="#">&nbsp;&nbsp;&nbsp;&nbsp;</a>
             <a href="project" wicket:id="project-link"><span wicket:id="name">name</span></a>
           </td>
+          <td class="config"><span wicket:id="config">config</span></td>
           <td class="tests" wicket:id="tests">0</td>
           <td class="failures" wicket:id="failures">0</td>
           <td class="errors" wicket:id="errors">0</td>

@@ -58,6 +58,15 @@ public class BuildPanel
         super( id );
 
         add( new Label( "id", String.valueOf( build.getId() ) ) );
+        if ( build.getConfigName() == null )
+        {
+            add( new Label( "config", "" ) );
+        }
+        else
+        {
+            add( new Label( "config", build.getConfigName() ) );
+        }
+
         add( new Label( "start", new FormattedDateModel( build.getStartTime(),
                 ( (HeadsUpSession) getSession() ).getTimeZone() ) ) );
         add( new Label( "duration", new FormattedDurationModel( build.getStartTime(), build.getEndTime() ) ) );

@@ -18,6 +18,8 @@
 
 package org.headsupdev.agile.app.ci;
 
+import org.apache.wicket.markup.html.list.ListView;
+import org.headsupdev.agile.api.PropertyTree;
 import org.headsupdev.agile.app.ci.permission.BuildForcePermission;
 import org.headsupdev.agile.app.ci.permission.BuildListPermission;
 import org.headsupdev.agile.web.HeadsUpPage;
@@ -46,7 +48,7 @@ import org.apache.wicket.model.Model;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
-import java.util.Date;
+import java.util.*;
 
 /**
  * Continuous integration home page
@@ -147,10 +149,43 @@ public class CI
                             queueBuild( getProject() );
                         }
                     } );
+
+                    final PropertyTree buildConfigs = Manager.getStorageInstance().getGlobalConfiguration().
+                            getApplicationConfigurationForProject( CIApplication.ID, getProject() ).getSubTree( "schedule" );
+                    List<String> configNames = new LinkedList<String>( buildConfigs.getSubTreeIds() );
+                    configNames.remove( "default" );
+                    Collections.sort( configNames );
+                    add( new ListView<String>( "buildConfigs", configNames )
+                    {
+                        @Override
+                        protected void populateItem( ListItem<String> listItem )
+                        {
+                            final String configId = listItem.getModelObject();
+                            final PropertyTree config = buildConfigs.getSubTree( configId );
+                            final String configName = config.getProperty( "name" );
+
+                            if ( configName == null )
+                            {
+                                listItem.setVisible( false );
+                                return;
+                            }
+                            Link build = new Link( "build" )
+                            {
+                                @Override
+                                public void onClick()
+                                {
+                                    queueBuild( getProject(), configId, config );
+                                }
+                            };
+                            build.add( new Label( "name", configName ) );
+                            listItem.add( build );
+                        }
+                    } );
                 }
                 else
                 {
                     add( new WebMarkupContainer( "build" ).setVisible( false ) );
+                    add( new WebMarkupContainer( "buildConfigs" ).setVisible( false ) );
                 }
 
                 if ( status == Build.BUILD_RUNNING )
@@ -200,6 +235,7 @@ public class CI
             else
             {
                 add( new WebMarkupContainer( "build" ).setVisible( false ) );
+                add( new WebMarkupContainer( "buildConfigs" ).setVisible( false ) );
                 building.add( new WebMarkupContainer( "cancel" ).setVisible( false ) );
                 queued.add( new WebMarkupContainer( "remove" ).setVisible( false ) );
             }
@@ -209,6 +245,7 @@ public class CI
             add( new WebMarkupContainer( "building" ).setVisible( false ) );
             add( new WebMarkupContainer( "queued" ).setVisible( false ) );
             add( new WebMarkupContainer( "build" ).setVisible( false ) );
+            add( new WebMarkupContainer( "buildConfigs" ).setVisible( false ) );
         }
     }
 
@@ -225,6 +262,14 @@ public class CI
         else
         {
             listItem.add( new Label( "name", project.getAlias() ) );
+        }
+        if ( build.getConfigName() == null )
+        {
+            listItem.add( new Label( "config", "" ) );
+        }
+        else
+        {
+            listItem.add( new Label( "config", build.getConfigName() ) );
         }
 
         final boolean canForce = projectList && userHasPermission( ( (HeadsUpSession) getPage().getSession() ).getUser(),
@@ -377,6 +422,11 @@ public class CI
     protected void queueBuild( Project project )
     {
         CIApplication.getBuilder().queueProject( project, false );
+    }
+
+    protected void queueBuild( Project project, String id, PropertyTree config )
+    {
+        CIApplication.getBuilder().queueProject( project, id, config, false );
     }
 
     protected void dequeueBuild( Project project )
