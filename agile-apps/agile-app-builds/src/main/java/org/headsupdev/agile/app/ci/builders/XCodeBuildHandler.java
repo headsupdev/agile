@@ -153,7 +153,11 @@ public class XCodeBuildHandler
     {
         try
         {
-            FileUtil.delete( getBuildDirectory( build, checkoutDir ) );
+            File buildDir = getBuildDirectory( build, checkoutDir );
+            if ( buildDir != null )
+            {
+                FileUtil.delete( buildDir );
+            }
         }
         catch ( IOException e )
         {
