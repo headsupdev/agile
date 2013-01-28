@@ -51,25 +51,29 @@ public class ErrorInternalPage
     {
         super.layout();
 
-        String userParam = getPageParameters().getString( "userError" );
-        if ( userParam != null && userParam.equals( "true" ) )
+        if ( isUserError() )
         {
             userError = true;
             WebMarkupContainer container = new WebMarkupContainer( "userError" );
             container.add( new BookmarkablePageLink( "home", getApplication().getHomePage() ) );
             add( container );
+            add( new Label( "message", "Sorry" ) );
 
             add( new WebMarkupContainer( "systemError" ).setVisible( false ) );
             return;
         }
 
         add( new WebMarkupContainer( "userError" ).setVisible( false ) );
+        add( new Label( "message", "Oops!" ) );
+
         WebMarkupContainer container = new WebMarkupContainer( "systemError" );
         add( container );
 
-        container.add( new Label( "cause", new Model<String>() {
+        container.add( new Label( "cause", new Model<String>()
+        {
             @SuppressWarnings({"ThrowableResultOfMethodCallIgnored"})
-            public String getObject() {
+            public String getObject()
+            {
                 if ( getError() == null )
                 {
                     return "unknown";
@@ -79,8 +83,10 @@ public class ErrorInternalPage
             }
         } ) );
 
-        Label stack = new Label( "stack", new Model<String>() {
-            public String getObject() {
+        Label stack = new Label( "stack", new Model<String>()
+        {
+            public String getObject()
+            {
                 return getStack();
             }
         } );
@@ -96,6 +102,17 @@ public class ErrorInternalPage
         animator.attachTo( button, "onclick", Animator.Action.toggle() );
     }
 
+    protected boolean isUserError()
+    {
+        String userParam = getPageParameters().getString( "userError" );
+        return userParam != null && userParam.equals( "true" );
+    }
+
+    protected String getReason()
+    {
+        return getPageParameters().getString( "reason" );
+    }
+
     @Override
     public String getTitle()
     {
@@ -103,7 +120,8 @@ public class ErrorInternalPage
     }
 
     @SuppressWarnings({"ThrowableResultOfMethodCallIgnored"})
-    protected void onBeforeRender() {
+    protected void onBeforeRender()
+    {
         super.onBeforeRender();
 
         if ( !userError )

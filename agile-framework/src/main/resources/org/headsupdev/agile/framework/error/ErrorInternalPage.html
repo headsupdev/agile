@@ -20,17 +20,21 @@
   <body>
     <wicket:extend>
       <div style="width:100%;text-align:center">
-        <p class="speechbubble big">Oops!</p>
+        <p class="speechbubble big" wicket:id="message">Oops!</p>
       </div>
 
-      <p>Oops! An error occurred which prevented this page from being displayed.</p>
-      <p>The error has been reported and will be fixed as soon as we can manage.</p>
-
       <wicket:container wicket:id="userError">
+      <p>Unfortunately your request could not be handled at this time, this could be due to an invalid
+        input or a problem with the server</p>
+      <p>The problem has been reported and will be fixed as soon as we can manage.</p>
+
       <p>Please press back and try again or go to the application <a wicket:id="home">home page</a>.</p>
       </wicket:container>
 
       <wicket:container wicket:id="systemError">
+      <p>Oops! An error occurred which prevented this page from being displayed.</p>
+      <p>The problem has been reported and will be fixed as soon as we can manage.</p>
+
       <p>The cause was:<br /><span wicket:id="cause">cause</span></p>
 
       <span wicket:id="debug" id="debugbutton" class="button">Show Debug</span>

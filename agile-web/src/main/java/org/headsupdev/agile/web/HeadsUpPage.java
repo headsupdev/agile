@@ -667,6 +667,7 @@ public abstract class HeadsUpPage
 
         PageParameters userError = new PageParameters();
         userError.add( "userError", "true" );
+        userError.add( "reason", reason );
         setResponsePage( getPageClass( "error" ), userError );
     }
 
