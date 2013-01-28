@@ -255,7 +255,7 @@ public class CI
         if ( projectList ) {
             PageParameters params = new PageParameters();
             params.add( "project", project.getId() );
-            Link link = new BookmarkablePageLink( "project-link", getClass(), params );
+            Link link = new BookmarkablePageLink<CI>( "project-link", getClass(), params );
             link.add( new Label( "name", project.getAlias() ) );
             listItem.add( link );
         }
@@ -263,7 +263,7 @@ public class CI
         {
             listItem.add( new Label( "name", project.getAlias() ) );
         }
-        if ( build.getConfigName() == null )
+        if ( build == null || build.getConfigName() == null )
         {
             listItem.add( new Label( "config", "" ) );
         }
@@ -375,7 +375,7 @@ public class CI
             PageParameters params = new PageParameters();
             params.add( "project", project.getId() );
             params.add( "id", String.valueOf( build.getId() ) );
-            BookmarkablePageLink link = new BookmarkablePageLink( "buildId-link", View.class, params );
+            BookmarkablePageLink link = new BookmarkablePageLink<View>( "buildId-link", View.class, params );
             link.add( new Label( "buildId-label", String.valueOf( build.getId() ) ) );
             listItem.add( link );
         }
