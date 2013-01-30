@@ -33,6 +33,7 @@ import javax.persistence.DiscriminatorValue;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -51,6 +52,8 @@ import org.apache.wicket.markup.html.panel.Panel;
 public class BuildSucceededEvent
     extends AbstractEvent
 {
+    private static final long BUILD_NOTIFICATION_LIMIT = 100 * 1024;
+
     BuildSucceededEvent()
     {
     }
@@ -93,27 +96,77 @@ public class BuildSucceededEvent
             addLink( new BookmarkableMenuLink( Tests.class, params, "tests" ) );
         }
 
-        String ret = new RenderUtil()
+        StringBuilder ret = new StringBuilder( new RenderUtil()
         {
             public Panel getPanel()
             {
                 return  new BuildPanel( RenderUtil.PANEL_ID, build );
             }
-        }.getRenderedContent();
+        }.getRenderedContent() );
 
         File outputFile = new File( CIApplication.getProjectDir( getProject() ), getObjectId() + ".txt" );
+        getBuildContent(outputFile, ret);
+
+        return ret.toString();
+    }
+
+    private void getBuildContent( File buildFile, StringBuilder out )
+    {
         try
         {
-            String content = IOUtil.toString( new FileInputStream( outputFile ) );
+            String content;
 
-            ret += "<div class=\"build\"><pre class=\"content\">" + content + "</pre></div>";
+            if ( buildFile.length() > BUILD_NOTIFICATION_LIMIT )
+            {
+                content = getTruncatedBuildContent( buildFile );
+            }
+            else
+            {
+                content = IOUtil.toString( new FileInputStream( buildFile ), BUILD_NOTIFICATION_LIMIT );
+            }
+
+            out.append( "<div class=\"build\"><pre class=\"content\">" );
+            out.append( content );
+            out.append( "</pre></div>" );
         }
         catch ( IOException e )
         {
-            ret += "<p>Unable to load results file - reason: " + e.getMessage() + "</p>";
+            out.append( "<p>Unable to load results file - reason: " );
+            out.append( e.getMessage() );
+            out.append( "</p>" );
         }
+    }
 
-        return ret;
+    private String getTruncatedBuildContent( File buildFile )
+        throws IOException
+    {
+        StringBuilder ret = new StringBuilder();
+        InputStream input = new FileInputStream( buildFile );
+
+        ret.append( IOUtil.toString( input, BUILD_NOTIFICATION_LIMIT / 2 ) );
+        ret.append( "\n...\n\n" );
+
+        input = new FileInputStream( buildFile );
+        if ( input.skip( buildFile.length() - BUILD_NOTIFICATION_LIMIT / 2 ) > 0 )
+        {
+            seekNextLine( input );
+            ret.append( IOUtil.toString( input ) );
+            return ret.toString();
+        }
+        else
+        {
+            return IOUtil.toString( input, BUILD_NOTIFICATION_LIMIT );
+        }
+    }
+
+    private void seekNextLine( InputStream input )
+        throws IOException
+    {
+        int in = input.read();
+        while ( in != '\n' && in != -1 )
+        {
+            in = input.read();
+        }
     }
 
     public List<AbstractEvent.CssReference> getBodyCssReferences()
