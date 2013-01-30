@@ -2,6 +2,7 @@
 
 * Support building of Xcode 4 workspaces
 * Add build schedule names and allow execution of each configuration in the build page
+* Dynamically update workspaces where CocoaPods are used for Xcode projects
 
 * Don't send notifications to disabled accounts
 
