@@ -82,6 +82,11 @@ div.build .content {
     white-space: pre-wrap;
 }
 
+.buildlinks {
+    list-style: none;
+    padding-left: 0;
+}
+
 a.status-queued, span.status-queued {
     background-image: url( queued.png );
     background-repeat: no-repeat;
