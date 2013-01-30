@@ -167,22 +167,37 @@ public class XCodeBuildHandler
 
     private void prepareProject( Project project, File dir, Writer buildOut )
     {
-        if ( !new File( dir, "Podfile" ).exists() )
+        if ( new File( dir, "Podfile" ).exists() )
         {
-            return;
+            prepareCocoaPods( dir, buildOut );
         }
+    }
 
+    private void prepareCocoaPods( File dir, Writer buildOut )
+    {
+        log.debug( "running pod install to set up workspace" );
+
+        // execute a clean first of all
+        ArrayList<String> commands = new ArrayList<String>();
+        commands.add( "pod" );
+        commands.add( "repo" );
+        commands.add( "update" );
+        commands.add( "--no-color" );
+        runCommand( commands, dir, buildOut );
+
+        commands.clear();
+        commands.add( "pod" );
+        commands.add( "install" );
+        commands.add( "--no-color" );
+        runCommand( commands, dir, buildOut );
+    }
+
+    private void runCommand( ArrayList<String> commands, File dir, Writer buildOut )
+    {
         Process process = null;
         StreamGobbler serr = null, sout = null;
         try
         {
-            log.debug( "running pod install to set up workspace" );
-
-            // execute a clean first of all
-            ArrayList<String> commands = new ArrayList<String>();
-            commands.add( "pod" );
-            commands.add( "install" );
-            commands.add( "--no-color" );
 
             process = Runtime.getRuntime().exec( commands.toArray( new String[2] ), null, dir );
 
