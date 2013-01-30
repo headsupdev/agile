@@ -347,7 +347,8 @@ public class DefaultManager
             }
 
             // TODO a configurable system for controlling what a user gets sent
-            if ( ( event.getUsername() == null || !event.getUsername().equals( user.getUsername() ) ) && event.shouldNotify( user ) )
+            if ( ( event.getUsername() == null || !event.getUsername().equals( user.getUsername() ) ) &&
+                    event.shouldNotify( user ) && !user.isDisabled() )
             {
                 if ( !StringUtil.isEmpty( user.getEmail() ) )
                 {

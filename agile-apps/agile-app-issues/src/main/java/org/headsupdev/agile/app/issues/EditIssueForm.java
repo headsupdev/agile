@@ -288,7 +288,6 @@ class IssueForm
                 milestone.getIssues().add( issue );
             }
         }
-        parent.onSubmit( issue );
 
         // if we have an assignee that is not watching then add them to the watchers - assuming they have not just opted out :)
         if ( issue.getAssignee() != null && !issue.getWatchers().contains( issue.getAssignee() ) )
@@ -298,6 +297,7 @@ class IssueForm
                 issue.getWatchers().add( issue.getAssignee() );
             }
         }
+        parent.onSubmit( issue );
 
         PageParameters params = new PageParameters();
         params.add( "project", issue.getProject().getId() );
