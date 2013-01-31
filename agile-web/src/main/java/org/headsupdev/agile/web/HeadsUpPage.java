@@ -422,6 +422,11 @@ public abstract class HeadsUpPage
         Form form = new Form( "quicksearch" ) {
 
             protected void onSubmit() {
+                if ( searchQuery == null )
+                {
+                    return;
+                }
+
                 super.onSubmit();
 
                 String quickLink = getQuickSearchResponse( searchQuery );
@@ -626,6 +631,10 @@ public abstract class HeadsUpPage
 
     public String getQuickSearchResponse( String search )
     {
+        if ( searchQuery == null )
+        {
+            return null;
+        }
         String returnURL = null;
 
         Map<String, LinkProvider> providers = Manager.getInstance().getLinkProviders();
