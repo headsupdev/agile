@@ -158,7 +158,7 @@ public class MilestoneGroup
         Date latest = null;
         for ( Milestone milestone : milestones )
         {
-            if ( latest == null || ( milestone.getStartDate() != null && latest.before(milestone.getDueDate()) ) )
+            if ( latest == null || ( milestone.getDueDate() != null && latest.before(milestone.getDueDate()) ) )
             {
                 latest = milestone.getDueDate();
             }
