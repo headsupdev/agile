@@ -210,7 +210,14 @@ public class APIDocsBuilder
          }
          catch ( IOException e )
          {
-             e.printStackTrace();
+             if ( e.getMessage() != null && e.getMessage().contains( "No such file or directory" ) )
+             {
+                 log.warn( "Doxygen missing" );
+             }
+             else
+             {
+                e.printStackTrace();
+             }
          }
          catch ( InterruptedException e )
          {
@@ -258,23 +265,19 @@ public class APIDocsBuilder
          }
     }
 
-    @Override
     public void projectAdded( Project project )
     {
     }
 
-    @Override
     public void projectModified( Project project )
     {
     }
 
-    @Override
     public void projectFileModified( Project project, String path, File file )
     {
         queueProject( project );
     }
 
-    @Override
     public void projectRemoved( Project project )
     {
     }
