@@ -682,7 +682,13 @@ public class XCodeBuildHandler
         String buildHashWithDash = checkoutName.substring( checkoutName.indexOf( '-' ) );
 
         File derivedData = new File( System.getProperty( "user.home" ), "Library/Developer/Xcode/DerivedData" );
-        for ( File derivedDataDir : derivedData.listFiles() )
+        File[] subdirs = derivedData.listFiles();
+        if ( subdirs == null || subdirs.length == 0 )
+        {
+            return null;
+        }
+
+        for ( File derivedDataDir : subdirs )
         {
             if ( isDerivedDataDirectoryForBuild( derivedDataDir, buildHashWithDash ) )
             {

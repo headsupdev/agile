@@ -76,6 +76,11 @@ public class StoredXCodeProject
 
     }
 
+    protected String replaceVariables( String in )
+    {
+        return in.replace( "$(SRCROOT)/", "" );
+    }
+
     protected String stripComments( String in )
     {
         String out = in;
@@ -113,7 +118,7 @@ public class StoredXCodeProject
             }
         }
 
-        return stripComments(ret);
+        return stripComments( replaceVariables( ret ) );
     }
 
     protected String getFirstTarget( File file )
