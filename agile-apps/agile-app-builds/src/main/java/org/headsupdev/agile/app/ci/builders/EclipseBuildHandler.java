@@ -42,7 +42,7 @@ import java.util.Date;
 public class EclipseBuildHandler
     implements BuildHandler
 {
-    final static String PLUGIN_FILE_NAME = "org.headsupdev.agile.build.eclipse_1.0.0.jar";
+    final static String PLUGIN_FILE_NAME = "org.headsupdev.agile.build.eclipse_2.0.0.jar";
 
     public void runBuild( Project project, PropertyTree config, PropertyTree appConfig, File dir, File output,
                           Build build )
