@@ -190,7 +190,7 @@ public class RepositoryServlet
             throws ServletException, IOException
     {
         // don't allow anon to access accounts / projects area...
-        if ( repository == null || !(repository.equals( "accounts" ) || repository.equals( "projects" ) ) )
+        if ( repository == null || !( repository.equals( "accounts" ) || repository.equals( "projects" ) ) )
         {
             // if anon access allowed then grant access to other areas
             Role anon = securityManager.getRoleById( "anonymous" );
@@ -201,7 +201,7 @@ public class RepositoryServlet
         }
 
         User user = WebLoginManager.getInstance().getLoggedInUser( req );
-        if ( user != null )
+        if ( user != null || allowAnonRequest(req, repository) )
         {
             return true;
         }
@@ -285,6 +285,10 @@ public class RepositoryServlet
                     securityManager.userHasPermission( user, perm, null );
             }
         }
+        else if ( allowAnonRequest( req, repository ) )
+        {
+            return true;
+        }
 
         if ( repository.equals( "accounts" ) )
         {
@@ -362,6 +366,16 @@ public class RepositoryServlet
             securityManager.userHasPermission( user, perm, project );
         ( (HibernateStorage) storage ).closeSession();
         return auth;
+    }
+
+    private boolean allowAnonRequest( HttpServletRequest req, String repository )
+    {
+        if ( !repository.equals( "apps" ) )
+        {
+            return false;
+        }
+
+        return WebLoginManager.getInstance().shouldAllowRequest( req );
     }
 
     private void artifactAdded( String repository, String resource )

@@ -25,6 +25,8 @@ import org.headsupdev.agile.security.RememberedLoginManager;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -42,6 +44,9 @@ public class WebLoginManager
 
     private static WebLoginManager instance;
 
+    private Map<String, Long> recentRequests = new HashMap<String, Long>();
+    private static final Long REQUEST_GRACE_PERIOD = 5000l;
+
     public static WebLoginManager getInstance()
     {
         if ( instance == null )
@@ -57,12 +62,14 @@ public class WebLoginManager
         User wicketUser = getWicketUser();
         if ( wicketUser != null && !wicketUser.equals( HeadsUpSession.ANONYMOUS_USER ) )
         {
+            updateRequestTime( request );
             return wicketUser;
         }
 
         User cookieUser = getRememberedUser( request );
         if ( cookieUser != null )
         {
+            updateRequestTime( request );
             setWicketUser( cookieUser );
             return cookieUser;
         }
@@ -174,4 +181,17 @@ public class WebLoginManager
 
         return cookie;
     }
+
+    public boolean shouldAllowRequest( HttpServletRequest request )
+    {
+        Long lastRequest = recentRequests.get( request.getRemoteHost() );
+
+        return lastRequest != null && ( lastRequest > System.currentTimeMillis() - REQUEST_GRACE_PERIOD );
+    }
+
+    private void updateRequestTime( HttpServletRequest request )
+    {
+        recentRequests.put( request.getRemoteHost(), System.currentTimeMillis() );
+    }
+
 }
