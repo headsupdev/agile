@@ -72,6 +72,11 @@ public class WebLoginManager
 
     private Cookie getCookie( Cookie[] cookies )
     {
+        if ( cookies == null )
+        {
+            return null;
+        }
+
         for ( Cookie cookie : cookies )
         {
             if ( cookie.getName().equals( REMEMBER_COOKIE_NAME ) )
