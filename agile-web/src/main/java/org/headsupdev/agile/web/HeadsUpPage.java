@@ -21,7 +21,6 @@ package org.headsupdev.agile.web;
 import org.apache.wicket.markup.html.CSSPackageResource;
 import org.headsupdev.agile.api.logging.Logger;
 import org.headsupdev.agile.web.components.MarkedUpTextModel;
-import org.headsupdev.support.java.Base64;
 import org.headsupdev.agile.web.components.AccountSummaryPanel;
 import org.headsupdev.agile.web.components.UserDashboard;
 import org.headsupdev.agile.web.dialogs.LoginDialog;
@@ -59,7 +58,6 @@ import org.wicketstuff.animator.Animator;
 import org.wicketstuff.animator.IAnimatorSubject;
 import org.wicketstuff.animator.MarkupIdModel;
 
-import javax.servlet.http.Cookie;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.io.Serializable;
@@ -75,11 +73,7 @@ public abstract class HeadsUpPage
     extends Page
     implements Serializable
 {
-    public static final String REMEMBER_COOKIE_NAME = "agile-login";
     public static final Pattern ID_PATTERN = Pattern.compile( "[a-zA-Z0-9-_\\.]*" );
-
-    private static final String REMEMBER_STORE_KEY = "remembermes";
-    private static Map<String, String> rememberMap = null;
 
     private static final String DIALOG_PANEL_ID = "agile-dialog";
 
@@ -120,22 +114,10 @@ public abstract class HeadsUpPage
     {
         WebManager.getInstance().checkPermissions( this );
 
-        Cookie remember = ( (WebRequest) getRequest() ).getCookie( REMEMBER_COOKIE_NAME );
-        if ( remember != null ) {
-            String value = remember.getValue();
-            int pos = value.indexOf( ':' );
-            if ( pos != -1 ) {
-                String username = value.substring( 0, pos );
-                String key = value.substring( pos + 1 );
-
-                checkRemembers();
-                if ( key.equals( rememberMap.get( username ) ) ) {
-                    org.headsupdev.agile.api.User user = getSecurityManager().getUserByUsername( username );
-                    if ( user != null ) {
-                        getSession().setUser( user );
-                    }
-                }
-            }
+        User user = WebLoginManager.getInstance().getLoggedInUser( ( (WebRequest) getRequest() ).getHttpServletRequest() );
+        if ( user == null )
+        {
+            user = HeadsUpSession.ANONYMOUS_USER;
         }
 
         /* security check */
@@ -220,7 +202,6 @@ public abstract class HeadsUpPage
             }
         } );
 
-        User user = getSession().getUser();
         String pageHint = getHeadsUpApplication().getApplicationId();
         if ( ApplicationPageMapper.isHomeApp( getHeadsUpApplication() ) )
         {
@@ -780,70 +761,6 @@ public abstract class HeadsUpPage
     public boolean userHasPermission( User user, Permission permission, Project project )
     {
         return PrivateConfiguration.isInstalled() && getSecurityManager().userHasPermission( user, permission, project );
-    }
-
-    public void addRememberMe( String username, String random ) {
-        checkRemembers();
-        rememberMap.put( username, random );
-        saveRemembers();
-    }
-
-    public void removeRememberMe( String username ) {
-        checkRemembers();
-        rememberMap.remove( username );
-        saveRemembers();
-    }
-
-    private void checkRemembers()
-    {
-        if ( rememberMap != null )
-        {
-            return;
-        }
-
-        rememberMap = new HashMap<String,String>();
-        String data = getStorage().getGlobalConfiguration().getProperty( REMEMBER_STORE_KEY );
-        if ( data == null ) {
-            return;
-        }
-        data = new String( Base64.decodeBase64( data.getBytes() ) );
-
-        String[] entries = data.split( ";" );
-        for ( String entry : entries )
-        {
-            String[] parts = entry.split( ":" );
-            if ( parts.length < 2 )
-            {
-                continue;
-            }
-
-            rememberMap.put( parts[0], parts[1] );
-        }
-    }
-
-    private void saveRemembers()
-    {
-        if ( rememberMap == null )
-        {
-            return;
-        }
-
-        StringBuilder buffer = new StringBuilder();
-        for ( String user : rememberMap.keySet() )
-        {
-            buffer.append( user );
-            buffer.append( ":" );
-            buffer.append( rememberMap.get( user ) );
-            buffer.append( ";" );
-        }
-        String data = buffer.toString();
-        if ( buffer.length() > 0 )
-        {
-            data = data.substring( 0, buffer.length() - 1 );
-        }
-
-        data = new String( Base64.encodeBase64( data.getBytes() ) );
-        getStorage().getGlobalConfiguration().setProperty( REMEMBER_STORE_KEY, data );
     }
 
     public void showDialog( Panel panel, AjaxRequestTarget target )

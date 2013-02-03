@@ -27,6 +27,7 @@ import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.protocol.http.WebResponse;
+import org.headsupdev.agile.web.WebLoginManager;
 
 import javax.servlet.http.Cookie;
 
@@ -55,13 +56,10 @@ public class LogoutDialog
             @Override
             public void onSubmit()
             {
+                WebLoginManager loginManager = WebLoginManager.getInstance();
+
                 User user = ( (HeadsUpSession) getSession() ).getUser();
-                ( (HeadsUpSession) getSession() ).setUser( null );
-                ( (WebResponse) getResponse() ).clearCookie( new Cookie( HeadsUpPage.REMEMBER_COOKIE_NAME, "" ) );
-                if ( user != null )
-                {
-                    owner.removeRememberMe( user.getUsername() );
-                }
+                loginManager.logUserOut( user, ( (WebResponse) getResponse() ).getHttpServletResponse() );
 
                 Class previous = ( (HeadsUpSession) getSession() ).getPreviousPageClass();
 

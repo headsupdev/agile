@@ -44,6 +44,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.headsupdev.agile.web.WebLoginManager;
 import org.headsupdev.agile.web.WebManager;
 import org.headsupdev.support.java.StringUtil;
 import org.headsupdev.agile.api.HeadsUpConfiguration;
@@ -1176,21 +1177,24 @@ public class DefaultServlet
         sb.append("    <div id=\"outerpage\">\r\n");
         sb.append("      <div id=\"page\">\r\n");
         sb.append("        <div id=\"header1\">\r\n");
-        sb.append("          <img src=\"/resources/org.headsupdev.agile.web.HeadsUpPage/images/agile-title.png\" />\r\n");
+        sb.append("          <a href=\"/\" class=\"headbutton\">\n");
+        sb.append("            <img src=\"/resources/org.headsupdev.agile.web.HeadsUpPage/images/agile-title.png\" />\r\n");
+        sb.append("          </a>");
         sb.append("          <!--<h1>");
         sb.append(Manager.getStorageInstance().getGlobalConfiguration().getProductName());
         sb.append(" </h1>-->\r\n");
 
-        sb.append("          <div id=\"userpanel\">");
-        User user = (User) req.getAttribute( "agile-user" );
+        sb.append("          <ul id=\"userpanel\">");
+        sb.append("            <li class=\"username\" style=\"padding-top: 8px;display: block;\">");
+        User user = WebLoginManager.getInstance().getLoggedInUser( req );
         if ( user == null || user.equals( HeadsUpSession.ANONYMOUS_USER ) ) {
-            sb.append("            <span class=\"username\">you are not logged in</span>");
+            sb.append("            you are not logged in");
         } else {
-            sb.append("            <span class=\"username\">logged in as ");
+            sb.append("            logged in as ");
             sb.append(user.getFullnameOrUsername());
-            sb.append("</span>\r\n");
         }
-        sb.append("          </div>\r\n");
+        sb.append("            </li>\r\n");
+        sb.append("          </ul>\r\n");
         sb.append("        </div>\r\n");
         sb.append("        <div id=\"header2\"></div>\r\n");
 

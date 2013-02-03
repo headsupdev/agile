@@ -18,7 +18,6 @@
 
 package org.headsupdev.agile.web.dialogs;
 
-import org.headsupdev.agile.api.HeadsUpConfiguration;
 import org.headsupdev.agile.api.Manager;
 import org.headsupdev.agile.api.Page;
 import org.headsupdev.agile.api.util.HashUtil;
@@ -35,10 +34,9 @@ import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.protocol.http.WebResponse;
+import org.headsupdev.agile.web.WebLoginManager;
 
-import javax.servlet.http.Cookie;
 import java.util.Date;
-import java.util.Random;
 
 /**
  * TODO document me
@@ -118,7 +116,9 @@ public class LoginDialog
 
         protected void onSubmit()
         {
-            ( (WebResponse) getResponse() ).clearCookie( new Cookie( HeadsUpPage.REMEMBER_COOKIE_NAME, "" ) );
+            WebLoginManager loginManager = WebLoginManager.getInstance();
+            loginManager.removeRememberCookie( ( (WebResponse) getResponse() ).getHttpServletResponse() );
+
             org.headsupdev.agile.api.User user = owner.getSecurityManager().getUserByUsername( username );
             if ( user == null )
             {
@@ -140,18 +140,8 @@ public class LoginDialog
                 return;
             }
 
-            if ( remember ) {
-                String rememberKey = String.valueOf( new Random( System.currentTimeMillis() ).nextInt() );
-                Cookie cookie = new Cookie( HeadsUpPage.REMEMBER_COOKIE_NAME, username + ":" + rememberKey );
-                cookie.setMaxAge( 60 * 60 * 24 * 32 );
-                ( (WebResponse) getResponse() ).addCookie( cookie );
-                owner.addRememberMe( username, rememberKey );
-            } else if ( ( (HeadsUpSession) getSession() ).getUser() != null ) {
-                ( (WebResponse) getResponse() ).clearCookie( new Cookie( HeadsUpPage.REMEMBER_COOKIE_NAME, "" ) );
-                owner.removeRememberMe( ( (HeadsUpSession) getSession() ).getUser().getUsername() );
-            }
+            loginManager.logUserIn( user, remember, ( (WebResponse) getResponse() ).getHttpServletResponse() );
             ( (StoredUser) user ).setLastLogin( new Date() );
-            ( (HeadsUpSession) getSession() ).setUser( user );
 
             if ( !continueToOriginalDestination() )
             {

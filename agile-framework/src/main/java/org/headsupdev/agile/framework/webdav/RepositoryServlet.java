@@ -21,6 +21,7 @@ package org.headsupdev.agile.framework.webdav;
 import org.headsupdev.agile.api.util.HashUtil;
 import org.headsupdev.agile.security.permission.RepositoryReadAppPermission;
 import org.headsupdev.agile.security.permission.RepositoryWriteAppPermission;
+import org.headsupdev.agile.web.WebLoginManager;
 import org.headsupdev.support.java.Base64;
 import org.headsupdev.support.java.FileUtil;
 import org.headsupdev.support.java.StringUtil;
@@ -199,6 +200,12 @@ public class RepositoryServlet
             }
         }
 
+        User user = WebLoginManager.getInstance().getLoggedInUser( req );
+        if ( user != null )
+        {
+            return true;
+        }
+
         String header = req.getHeader( "Authorization" );
         String message = "You must provide a username and password to access this resource.";
         if ( ( header != null ) && header.startsWith( "Basic " ) )
@@ -218,7 +225,7 @@ public class RepositoryServlet
 
             String encodedPass = HashUtil.getMD5Hex( password );
 
-            User user = securityManager.getUserByUsername(username);
+            user = securityManager.getUserByUsername( username );
             if ( user != null )
             {
                 if ( !user.getPassword().equals( encodedPass ) )
@@ -262,7 +269,7 @@ public class RepositoryServlet
         throws ServletException, IOException
     {
         Role anon = securityManager.getRoleById( "anonymous" );
-        User user = (User) req.getAttribute( "agile-user" );
+        User user = WebLoginManager.getInstance().getLoggedInUser( req );
 
         if ( repository == null || repository.length() == 0 )
         {
