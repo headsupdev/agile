@@ -55,7 +55,8 @@ public class EditMilestoneForm
         this.milestone = mile;
         this.creating = creating;
 
-        Form<Milestone> form = new Form<Milestone>( "edit" ) {
+        Form<Milestone> form = new Form<Milestone>( "edit" )
+        {
             public void onSubmit()
             {
                 if ( !creating )
