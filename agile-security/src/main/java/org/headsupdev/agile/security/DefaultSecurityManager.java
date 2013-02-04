@@ -247,18 +247,21 @@ public class DefaultSecurityManager
     public boolean userHasPermission( User user, Permission permission, Project project )
     {
         String permId = permission.getId();
-        for ( Role role : user.getRoles() )
+        if ( user != null && user.getRoles() != null )
         {
-            if ( role.equals( new MemberRole() ) )
+            for ( Role role : user.getRoles() )
             {
-                if ( !( project == null || project.getUsers().contains( user ) ) )
+                if ( role.equals( new MemberRole() ) )
                 {
-                    continue;
+                    if ( !( project == null || project.getUsers().contains( user ) ) )
+                    {
+                        continue;
+                    }
                 }
-            }
-            if ( role.getPermissions().contains( permId ) )
-            {
-                return true;
+                if ( role.getPermissions().contains( permId ) )
+                {
+                    return true;
+                }
             }
         }
 

@@ -21,6 +21,7 @@ package org.headsupdev.agile.framework.webdav;
 import org.headsupdev.agile.api.util.HashUtil;
 import org.headsupdev.agile.security.permission.RepositoryReadAppPermission;
 import org.headsupdev.agile.security.permission.RepositoryWriteAppPermission;
+import org.headsupdev.agile.web.HeadsUpSession;
 import org.headsupdev.agile.web.WebLoginManager;
 import org.headsupdev.support.java.Base64;
 import org.headsupdev.support.java.FileUtil;
@@ -201,7 +202,7 @@ public class RepositoryServlet
         }
 
         User user = WebLoginManager.getInstance().getLoggedInUser( req );
-        if ( user != null || allowAnonRequest(req, repository) )
+        if ( ( user != null && !user.equals( HeadsUpSession.ANONYMOUS_USER ) ) || allowAnonRequest( req, repository ) )
         {
             return true;
         }
@@ -269,7 +270,11 @@ public class RepositoryServlet
         throws ServletException, IOException
     {
         Role anon = securityManager.getRoleById( "anonymous" );
-        User user = WebLoginManager.getInstance().getLoggedInUser( req );
+        User user = (User) req.getAttribute( "agile-user" );
+        if ( user == null )
+        {
+            user = WebLoginManager.getInstance().getLoggedInUser( req );
+        }
 
         if ( repository == null || repository.length() == 0 )
         {
