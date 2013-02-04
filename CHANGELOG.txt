@@ -5,6 +5,8 @@
 * Dynamically update workspaces where CocoaPods are used for Xcode projects
 
 * Don't send notifications to disabled accounts
+* Re-enable eclipse build handling
+* Fixed a lot of authentication based issues 
 
 
 2.0-beta2
