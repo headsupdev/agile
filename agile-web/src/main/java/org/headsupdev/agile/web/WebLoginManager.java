@@ -40,12 +40,13 @@ import java.util.Random;
 public class WebLoginManager
     extends RememberedLoginManager
 {
-    public static final String REMEMBER_COOKIE_NAME = "agile-login";
+    private static final String REMEMBER_COOKIE_NAME = "agile-login";
+    private static final String AGILE_USER_KEY = "agile-user";
 
     private static WebLoginManager instance;
 
     private Map<String, Long> recentRequests = new HashMap<String, Long>();
-    private static final Long REQUEST_GRACE_PERIOD = 5000l;
+    private static final Long REQUEST_GRACE_PERIOD = 10000l;
 
     public static WebLoginManager getInstance()
     {
@@ -59,7 +60,15 @@ public class WebLoginManager
 
     public User getLoggedInUser( HttpServletRequest request )
     {
+        User requestUser = (User) request.getAttribute( AGILE_USER_KEY );
+        if ( requestUser != null && !requestUser.equals( HeadsUpSession.ANONYMOUS_USER ) )
+        {
+            updateRequestTime( request );
+            return requestUser;
+        }
+
         User wicketUser = getWicketUser();
+
         if ( wicketUser != null && !wicketUser.equals( HeadsUpSession.ANONYMOUS_USER ) )
         {
             updateRequestTime( request );
@@ -106,9 +115,11 @@ public class WebLoginManager
         return getRememberedUser( cookie.getValue() );
     }
 
-    public void logUserIn( User user, boolean remember, HttpServletResponse response )
+    public void logUserIn( User user, boolean remember, HttpServletRequest request, HttpServletResponse response )
     {
+        request.setAttribute( AGILE_USER_KEY, user );
         setWicketUser( user );
+
         if ( remember )
         {
             String random = getRandomValue();

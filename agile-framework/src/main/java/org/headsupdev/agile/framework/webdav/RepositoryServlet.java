@@ -239,7 +239,7 @@ public class RepositoryServlet
                 }
                 else
                 {
-                    req.setAttribute( "agile-user", user );
+                    WebLoginManager.getInstance().logUserIn(user, false, req, resp);
                     return true;
                 }
             }
@@ -270,11 +270,7 @@ public class RepositoryServlet
         throws ServletException, IOException
     {
         Role anon = securityManager.getRoleById( "anonymous" );
-        User user = (User) req.getAttribute( "agile-user" );
-        if ( user == null )
-        {
-            user = WebLoginManager.getInstance().getLoggedInUser( req );
-        }
+        User user = WebLoginManager.getInstance().getLoggedInUser( req );
 
         if ( repository == null || repository.length() == 0 )
         {

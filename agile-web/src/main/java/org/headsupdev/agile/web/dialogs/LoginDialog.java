@@ -18,6 +18,7 @@
 
 package org.headsupdev.agile.web.dialogs;
 
+import org.apache.wicket.protocol.http.WebRequest;
 import org.headsupdev.agile.api.Manager;
 import org.headsupdev.agile.api.Page;
 import org.headsupdev.agile.api.util.HashUtil;
@@ -140,7 +141,8 @@ public class LoginDialog
                 return;
             }
 
-            loginManager.logUserIn( user, remember, ( (WebResponse) getResponse() ).getHttpServletResponse() );
+            loginManager.logUserIn( user, remember, ( (WebRequest) getRequest() ).getHttpServletRequest(),
+                    ( (WebResponse) getResponse() ).getHttpServletResponse() );
             ( (StoredUser) user ).setLastLogin( new Date() );
 
             if ( !continueToOriginalDestination() )
