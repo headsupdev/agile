@@ -375,7 +375,7 @@ public class RepositoryServlet
 
     private boolean allowAnonRequest( HttpServletRequest req, String repository )
     {
-        if ( !repository.equals( "apps" ) )
+        if ( repository == null || !repository.equals( "apps" ) )
         {
             return false;
         }
