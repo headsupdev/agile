@@ -78,6 +78,9 @@ public class CIApplication
     public static final ConfigurationItem CONFIGURATION_ECLIPSE_HOME = new ConfigurationItem( "eclipse.home",
         "", "Eclipse home directory", "The directory where Eclipse is installed" );
 
+    public static final ConfigurationItem CONFIGURATION_ANT_TASKS = new ConfigurationItem( "ant.tasks",
+            "", "Ant build tasks", "A space separated list of ant tasks to run when building" );
+
     public static final ConfigurationItem CONFIGURATION_MAVEN_GOALS = new ConfigurationItem( "maven.goals",
         "clean install", "Maven build goals", "A space separated list of maven goals and phases to run when building" );
     public static final ConfigurationItem CONFIGURATION_MAVEN_PROFILES = new ConfigurationItem( "maven.profiles",
@@ -203,10 +206,12 @@ public class CIApplication
         globalItems.add( CONFIGURATION_NOTIFY_REPEAT_PASS );
 
         List<ConfigurationItem> items = new LinkedList<ConfigurationItem>();
+        items.add( CONFIGURATION_ANT_TASKS );
         items.add( CONFIGURATION_ANT_HOME_OVERRIDE );
         antProjectItems.add( new ConfigurationItem( "schedule.default", "Default Build Schedule", items ) );
         items = new LinkedList<ConfigurationItem>();
         items.add( CONFIGURATION_BUILD_NAME );
+        items.add( CONFIGURATION_ANT_TASKS );
         items.add( CONFIGURATION_ANT_HOME_OVERRIDE );
         items.add( CONFIGURATION_CRON_EXPRESSION );
         antProjectItems.add( new ConfigurationItem( "schedule", "Build Schedule",

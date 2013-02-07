@@ -49,13 +49,23 @@ public class UploadApplicationEvent
     protected UploadApplicationEvent( String name, String version, String repoName, String path, Build build,
                                    String type )
     {
-        super( type + " " + name + ":" + version + " (build " + build.getId() + ") deployed",
+        super( type + " " + name + getVersionString( version ) + " (build " + build.getId() + ") deployed",
             "Version " + version + " of the " + type.toLowerCase() + " " + name + " was deployed to the " +
              repoName + " repository<br /><a href=\"" + path + "\">Install</a>", new Date() );
 
         setApplicationId("artifacts");
         setProject( build.getProject() );
         setObjectId( repoName + ',' + path );
+    }
+
+    private static String getVersionString( String version )
+    {
+        if ( version == null )
+        {
+            return "";
+        }
+
+        return ":" + version;
     }
 
     @Override

@@ -41,11 +41,6 @@ public class AntBuildHandler
     public void runBuild( Project project, PropertyTree config, PropertyTree appConfig, File dir, File output,
                           Build build )
     {
-        if ( !( project instanceof AntProject) )
-        {
-            return;
-        }
-
         int result = -1;
         Writer buildOut = null;
         Process process = null;
@@ -61,13 +56,21 @@ public class AntBuildHandler
                 return;
             }
 
+            String tasksProperty = config.getProperty( CIApplication.CONFIGURATION_ANT_TASKS.getKey() );
+            if ( tasksProperty == null )
+            {
+                tasksProperty = (String) CIApplication.CONFIGURATION_ANT_TASKS.getDefault();
+            }
+            String[] tasks = tasksProperty.split(" ");
+
             File antExe = new File( antHome, "ant" );
             if ( !antExe.exists() )
             {
                 antExe = new File( antHome, "ant.bat" );
             }
-            String[] commands = new String[1];
+            String[] commands = new String[1 + tasks.length];
             commands[0] = antExe.getAbsolutePath();
+            System.arraycopy( tasks, 0, commands, 1, tasks.length );
             process = Runtime.getRuntime().exec( commands, null, dir );
 
             serr = new StreamGobbler( new InputStreamReader( process.getErrorStream() ), buildOut );

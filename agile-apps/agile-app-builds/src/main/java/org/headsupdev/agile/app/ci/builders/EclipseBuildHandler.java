@@ -30,6 +30,7 @@ import org.headsupdev.agile.storage.ci.Build;
 
 import java.io.*;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -44,6 +45,8 @@ public class EclipseBuildHandler
 {
     final static String PLUGIN_FILE_NAME = "org.headsupdev.agile.build.eclipse_2.0.0.jar";
 
+    private static Logger log = Manager.getLogger( EclipseBuildHandler.class.getName() );
+
     public void runBuild( Project project, PropertyTree config, PropertyTree appConfig, File dir, File output,
                           Build build )
     {
@@ -52,7 +55,12 @@ public class EclipseBuildHandler
             return;
         }
 
-        Logger log = Manager.getLogger( EclipseBuildHandler.class.getName() );
+        if ( isAndroidProject(project) )
+        {
+            convertAndroidBuildToAnt( project, dir, output );
+            runAndroidAntBuild( project, config, appConfig, "debug", dir, output, build );
+            return;
+        }
 
         URL plugin = EclipseBuildHandler.class.getResource( "eclipse/" + PLUGIN_FILE_NAME );
         if ( plugin == null )
@@ -195,7 +203,7 @@ public class EclipseBuildHandler
         else
         {
             build.setStatus( Build.BUILD_SUCCEEDED );
-            onBuildPassed(project, config, appConfig, dir, output, build);
+            onBuildPassed( project, config, appConfig, dir, output, build );
         }
     }
 
@@ -209,5 +217,111 @@ public class EclipseBuildHandler
                                Build build )
     {
         //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    protected boolean isAndroidProject( Project project )
+    {
+        if ( !( project instanceof EclipseProject) )
+        {
+            return false;
+        }
+
+        EclipseProject eclipse = ( (EclipseProject) project );
+        log.debug( "checking project for android " + eclipse.getNature() );
+
+        String nature = "";
+        if ( eclipse.getNature() != null )
+        {
+            nature = eclipse.getNature().substring( eclipse.getNature().lastIndexOf( '.' ) + 1 );
+        }
+        return "AndroidNature".equals( nature );
+    }
+
+    protected boolean convertAndroidBuildToAnt( Project project, File buildDir, File output )
+    {
+        log.debug( "Converting eclipse project to ant in " + buildDir.getAbsolutePath() );
+        String[] commands = { "android", "update", "project", "-p", buildDir.getAbsolutePath() };
+
+        int result = -1;
+        Writer buildOut = null;
+        Process process = null;
+        StreamGobbler serr = null, sout = null;
+        try
+        {
+            buildOut = new FileWriter( output );
+
+            process = Runtime.getRuntime().exec( commands );
+
+            serr = new StreamGobbler( new InputStreamReader( process.getErrorStream() ), buildOut );
+            sout = new StreamGobbler( new InputStreamReader( process.getInputStream() ), buildOut );
+            serr.start();
+            sout.start();
+
+            result = process.waitFor();
+        }
+        catch ( InterruptedException e )
+        {
+            // TODO use this hook when we cancel the process
+        }
+        catch ( IOException e )
+        {
+            e.printStackTrace( new PrintWriter( buildOut ) );
+            log.error( "Error converting eclipse android build to ant", e );
+        }
+        finally
+        {
+            IOUtil.close( buildOut );
+
+            if ( process != null )
+            {
+                // defensively try to close the gobblers
+                if ( serr != null && sout != null )
+                {
+                    // check that our gobblers are finished...
+                    while ( !serr.isComplete() || !sout.isComplete() )
+                    {
+                        log.debug( "waiting 1s to close gobbler" );
+                        try
+                        {
+                            Thread.sleep( 1000 );
+                        }
+                        catch ( InterruptedException e )
+                        {
+                            // we were just trying to tidy up...
+                        }
+                    }
+                }
+
+                IOUtil.close( process.getInputStream() );
+                IOUtil.close( process.getOutputStream() );
+                IOUtil.close( process.getErrorStream() );
+            }
+        }
+
+        return result == 0;
+    }
+
+    protected void runAndroidAntBuild( Project project, final PropertyTree eclipseConfig, PropertyTree appConfig, String target,
+                                       File buildDir, File output, Build build )
+    {
+        log.debug( "Running ant build for Eclipse Android project" );
+
+        appConfig.setProperty( CIApplication.CONFIGURATION_ANT_TASKS.getKey(), target );
+
+        final EclipseBuildHandler eclipseHandler = this;
+        new AntBuildHandler()
+        {
+            @Override
+            public void onBuildFailed( Project project, PropertyTree config, PropertyTree appConfig, File dir, File output, Build build )
+            {
+                eclipseHandler.onBuildFailed( project, eclipseConfig, appConfig, dir, output, build );
+            }
+
+            @Override
+            public void onBuildPassed( Project project, PropertyTree config, PropertyTree appConfig, File dir, File output, Build build )
+            {
+                eclipseHandler.onBuildPassed( project, eclipseConfig, appConfig, dir, output, build );
+            }
+        }.runBuild(project, appConfig, appConfig, buildDir, output, build);
     }
 }
