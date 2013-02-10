@@ -5,10 +5,13 @@
 * Dynamically update workspaces where CocoaPods are used for Xcode projects
 * Support for setting tasks on an ant build
 * Build Android apps using ant to avoid eclipse issues
+* Created a simple JSON API framework
+* Update navigation on mobile to fit on smaller screens
 
 * Don't send notifications to disabled accounts
 * Re-enable eclipse build handling
 * Fixed a lot of authentication based issues 
+* Fixed what objects were returned in the XML feeds
 
 
 2.0-beta2
