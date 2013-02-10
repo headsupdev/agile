@@ -63,7 +63,7 @@ public class MemberFeed
     {
         Session session = ( (HibernateStorage) Manager.getStorageInstance() ).getHibernateSession();
         Transaction tx = session.beginTransaction();
-        List<User> list = session.createQuery( "from StoredUser u where username != 'anonymous'" ).list();
+        List<User> list = session.createQuery( "from StoredUser u where username != 'anonymous' and (disabled is null or disabled = 0)" ).list();
         tx.commit();
 
         Collections.sort( list ); // hibernate sort is not case insensitive
