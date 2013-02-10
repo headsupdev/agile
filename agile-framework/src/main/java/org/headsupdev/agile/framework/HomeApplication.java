@@ -60,7 +60,7 @@ public class HomeApplication
 
     protected static void setupPages()
     {
-        pages = (Class<? extends Page>[]) new Class[10];
+        Class<? extends Page>[] pages = (Class<? extends Page>[]) new Class[10];
         pages[0] = LoadingPage.class;
         pages[1] = Login.class;
         pages[2] = Logout.class;
@@ -71,13 +71,27 @@ public class HomeApplication
         pages[7] = Error404Page.class;
         pages[8] = ErrorExpiredPage.class;
         pages[9] = ErrorInternalPage.class;
+
+        setPages( pages );
+    }
+
+    public static void setPages( Class<? extends Page>[] pages )
+    {
+        HomeApplication.pages = pages;
     }
 
     protected static void setupApis()
     {
-        apis = (Class<? extends Api>[]) new Class[2];
+        Class<? extends Api>[] apis = (Class<? extends Api>[]) new Class[2];
         apis[0] = ProjectApi.class;
         apis[1] = ConfigurationApi.class;
+
+        setApis( apis );
+    }
+
+    public static void setApis( Class<? extends Api>[] apis )
+    {
+        HomeApplication.apis = apis;
     }
 
     public HomeApplication()
