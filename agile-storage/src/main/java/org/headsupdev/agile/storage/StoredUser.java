@@ -18,6 +18,7 @@
 
 package org.headsupdev.agile.storage;
 
+import org.headsupdev.agile.api.rest.Publish;
 import org.headsupdev.agile.api.util.HashUtil;
 import org.headsupdev.support.java.StringUtil;
 import org.headsupdev.agile.api.*;
@@ -46,27 +47,34 @@ public class StoredUser
     @Id
     @DocumentId
     @Field
+    @Publish
     private String username;
 
     private String password;
 
     @Field(index = Index.TOKENIZED)
+    @Publish
     private String firstname, lastname, email;
 
     @Type( type = "text" )
     @Field(index = Index.TOKENIZED)
+    @Publish
     private String description;
 
     @Temporal( TemporalType.TIMESTAMP )
+    @Publish
     private Date created = new Date();
 
     @Temporal( TemporalType.TIMESTAMP )
+    @Publish
     private Date lastLogin = null;
 
+    @Publish
     private String timeZoneId;
 
+    @Publish
     private Boolean disabled = Boolean.FALSE;
-    
+
     private Boolean hiddenInTimeTracking = Boolean.FALSE;
 
     @ManyToMany( targetEntity = StoredRole.class, fetch = FetchType.LAZY )
