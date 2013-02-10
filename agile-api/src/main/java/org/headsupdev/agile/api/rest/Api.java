@@ -54,6 +54,7 @@ public abstract class Api
     private void setupBuilder()
     {
         GsonBuilder builder = getBuilder();
+        builder.setDateFormat( "yyyy-MM-dd'T'HH:mmZ" ); // ISO 8601 date/time format
         if ( respectPublishAnnotation() )
         {
             // Prefer to only expose the fields I have annotated
