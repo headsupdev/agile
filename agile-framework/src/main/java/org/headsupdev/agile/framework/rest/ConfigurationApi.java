@@ -22,6 +22,7 @@ import org.apache.wicket.PageParameters;
 import org.apache.wicket.model.Model;
 import org.headsupdev.agile.api.HeadsUpConfiguration;
 import org.headsupdev.agile.api.Permission;
+import org.headsupdev.agile.security.permission.ProjectListPermission;
 import org.headsupdev.agile.web.rest.HeadsUpApi;
 import org.headsupdev.agile.api.Manager;
 import org.headsupdev.agile.web.ApplicationPageMapper;
@@ -57,16 +58,21 @@ public class ConfigurationApi
     @Override
     public Permission getRequiredPermission()
     {
-        return null;
+        return new ProjectListPermission();
     }
 
     @Override
     public void doGet( PageParameters params )
     {
-        setModel( new Model<Configurations>( new Configurations() ) );
+        setModel( new Model<Configurations>( getConfigurations() ) );
     }
 
-    private static class Configurations
+    protected Configurations getConfigurations()
+    {
+        return new Configurations();
+    }
+
+    protected class Configurations
         implements Serializable
     {
         private String productName, productUrl, url, version, timeZone;
