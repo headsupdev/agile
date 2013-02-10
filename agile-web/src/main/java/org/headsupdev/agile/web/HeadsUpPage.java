@@ -20,6 +20,7 @@ package org.headsupdev.agile.web;
 
 import org.apache.wicket.markup.html.CSSPackageResource;
 import org.headsupdev.agile.api.logging.Logger;
+import org.headsupdev.agile.web.auth.WebLoginManager;
 import org.headsupdev.agile.web.components.MarkedUpTextModel;
 import org.headsupdev.agile.web.components.AccountSummaryPanel;
 import org.headsupdev.agile.web.components.UserDashboard;

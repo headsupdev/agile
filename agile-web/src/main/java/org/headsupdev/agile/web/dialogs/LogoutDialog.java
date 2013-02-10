@@ -27,9 +27,7 @@ import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.protocol.http.WebResponse;
-import org.headsupdev.agile.web.WebLoginManager;
-
-import javax.servlet.http.Cookie;
+import org.headsupdev.agile.web.auth.WebLoginManager;
 
 /**
  * TODO document me

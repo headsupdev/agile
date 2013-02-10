@@ -90,7 +90,7 @@
     </dependency>
 
     <dependency>
-      <groupId>org.innobuilt</groupId>
+      <groupId>ms.ajwillia</groupId>
       <artifactId>wicket-rest-api</artifactId>
     </dependency>
     <dependency>

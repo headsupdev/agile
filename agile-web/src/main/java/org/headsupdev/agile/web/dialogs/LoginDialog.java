@@ -35,7 +35,7 @@ import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.protocol.http.WebResponse;
-import org.headsupdev.agile.web.WebLoginManager;
+import org.headsupdev.agile.web.auth.WebLoginManager;
 
 import java.util.Date;
 

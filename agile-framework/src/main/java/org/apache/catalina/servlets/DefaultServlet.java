@@ -44,15 +44,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.headsupdev.agile.web.WebLoginManager;
+import org.headsupdev.agile.web.auth.WebLoginManager;
 import org.headsupdev.agile.web.WebManager;
 import org.headsupdev.support.java.StringUtil;
-import org.headsupdev.agile.api.HeadsUpConfiguration;
 import org.headsupdev.agile.api.Manager;
 import org.headsupdev.agile.api.User;
 import org.headsupdev.agile.api.mime.Mime;
 import org.headsupdev.agile.api.util.FileUtil;
-import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.HeadsUpSession;
 import org.headsupdev.agile.web.components.FormattedDurationModel;
 import org.headsupdev.agile.web.components.FormattedSizeModel;

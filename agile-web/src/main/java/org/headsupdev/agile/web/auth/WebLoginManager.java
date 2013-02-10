@@ -16,11 +16,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.headsupdev.agile.web;
+package org.headsupdev.agile.web.auth;
 
 import org.apache.wicket.Session;
 import org.headsupdev.agile.api.User;
 import org.headsupdev.agile.security.RememberedLoginManager;
+import org.headsupdev.agile.web.HeadsUpSession;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;

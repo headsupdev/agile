@@ -3,7 +3,8 @@ package org.headsupdev.agile.framework.rest;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.model.Model;
 import org.headsupdev.agile.api.HeadsUpConfiguration;
-import org.headsupdev.agile.api.rest.Api;
+import org.headsupdev.agile.api.Permission;
+import org.headsupdev.agile.web.rest.HeadsUpApi;
 import org.headsupdev.agile.api.Manager;
 import org.headsupdev.agile.web.ApplicationPageMapper;
 import org.headsupdev.agile.web.MountPoint;
@@ -22,7 +23,7 @@ import java.util.List;
  */
 @MountPoint( "configuration" )
 public class ConfigurationApi
-    extends Api
+    extends HeadsUpApi
 {
     public ConfigurationApi( PageParameters params )
     {
@@ -33,6 +34,12 @@ public class ConfigurationApi
     public boolean respectPublishAnnotation()
     {
         return false;
+    }
+
+    @Override
+    public Permission getRequiredPermission()
+    {
+        return null;
     }
 
     @Override
