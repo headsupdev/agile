@@ -146,6 +146,7 @@
               org.headsupdev.support.java,
               org.headsupdev.support.java.compression,
               org.headsupdev.irc,
+              com.google.gson.*, org.innobuilt.wicket.rest,
               com.sun.syndication.*,
               org.apache.wicket.*,
               org.ops4j.pax.web.extender.whiteboard,org.ops4j.pax.web.extender.whiteboard.runtime,

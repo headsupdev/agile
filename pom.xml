@@ -198,6 +198,11 @@
       </dependency>
 
       <dependency>
+        <groupId>org.innobuilt</groupId>
+        <artifactId>wicket-rest-api</artifactId>
+        <version>0.3.1</version>
+      </dependency>
+      <dependency>
         <groupId>org.opensymphony.quartz</groupId>
         <artifactId>quartz</artifactId>
         <version>1.6.1</version>

@@ -18,6 +18,7 @@
 
 package org.headsupdev.agile.storage;
 
+import org.headsupdev.agile.api.rest.Publish;
 import org.headsupdev.support.java.IOUtil;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.apache.maven.model.Model;
@@ -55,16 +56,20 @@ public class StoredMavenTwoProject
     implements MavenTwoProject
 {
     @Field(index = Index.TOKENIZED)
+    @Publish
     protected String groupId, artifactId, version, packaging;
 
     @Type( type = "text" )
     @Field(index = Index.TOKENIZED)
+    @Publish
     protected String developers;
 
     @Type( type = "text" )
+    @Publish
     protected String modules;
 
     @Type( type = "text" )
+    @Publish
     protected String dependencies;
 
     protected StoredMavenTwoProject()

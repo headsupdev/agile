@@ -18,6 +18,7 @@
 
 package org.headsupdev.agile.api;
 
+import org.headsupdev.agile.api.rest.Api;
 import org.headsupdev.irc.IRCCommand;
 
 import java.util.List;
@@ -38,6 +39,7 @@ public interface Application
 
     Class<? extends Page>[] getPages();
     Class<? extends Page> getHomePage();
+    Class<? extends Api>[] getApis();
     Class[] getResources();
 
     Permission[] getPermissions();

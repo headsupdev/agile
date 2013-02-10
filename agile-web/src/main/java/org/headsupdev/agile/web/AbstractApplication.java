@@ -24,6 +24,7 @@ import java.util.LinkedList;
 import java.io.Serializable;
 
 import org.headsupdev.agile.api.*;
+import org.headsupdev.agile.api.rest.Api;
 import org.headsupdev.agile.storage.StoredProject;
 import org.headsupdev.irc.IRCCommand;
 
@@ -165,6 +166,11 @@ public abstract class AbstractApplication
     public Class<? extends Page> getHomePage()
     {
         return null;
+    }
+
+    public Class<? extends Api>[] getApis()
+    {
+        return (Class<? extends Api>[]) new Class[0];
     }
 
     public Class[] getResources()

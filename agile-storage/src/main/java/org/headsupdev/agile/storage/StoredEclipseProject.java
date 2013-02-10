@@ -21,6 +21,7 @@ package org.headsupdev.agile.storage;
 import org.headsupdev.agile.api.EclipseProject;
 import org.headsupdev.agile.api.Manager;
 import org.headsupdev.agile.api.logging.Logger;
+import org.headsupdev.agile.api.rest.Publish;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
@@ -49,6 +50,7 @@ public class StoredEclipseProject
     implements EclipseProject
 {
     @Field(index = Index.TOKENIZED)
+    @Publish
     protected String nature;
 
     public StoredEclipseProject()

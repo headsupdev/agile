@@ -18,6 +18,7 @@
 
 package org.headsupdev.agile.framework;
 
+import org.headsupdev.agile.api.rest.Api;
 import org.headsupdev.agile.api.HeadsUpConfiguration;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.PageExpiredException;
@@ -145,7 +146,25 @@ public class HeadsUpWebApplication
                 else
                 {
                     mount( new HeadsUpPageRequestTargetUrlCodingStrategy( "/" + app.getApplicationId() + "/" + id,
-                        page ) );
+                            page ) );
+                }
+            }
+        }
+        Class<? extends Api>[] apiList = app.getApis();
+        for ( Class<? extends Api> api : apiList )
+        {
+            if ( api.isAnnotationPresent( MountPoint.class ) )
+            {
+                String id = api.getAnnotation( MountPoint.class ).value();
+
+                if ( ApplicationPageMapper.isHomeApp( app ) )
+                {
+                    mount( new HeadsUpPageRequestTargetUrlCodingStrategy( "/api/" + id, api ) );
+                }
+                else
+                {
+                    mount( new HeadsUpPageRequestTargetUrlCodingStrategy( "/" + app.getApplicationId() + "/api/" + id,
+                            api ) );
                 }
             }
         }

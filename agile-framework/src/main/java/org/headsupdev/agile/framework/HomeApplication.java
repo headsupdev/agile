@@ -19,9 +19,12 @@
 package org.headsupdev.agile.framework;
 
 import org.headsupdev.agile.api.*;
+import org.headsupdev.agile.api.rest.Api;
+import org.headsupdev.agile.framework.rest.ConfigurationApi;
 import org.headsupdev.agile.web.LoadingPage;
 import org.headsupdev.agile.web.AbstractApplication;
 import org.headsupdev.agile.web.SystemEvent;
+import org.headsupdev.agile.framework.rest.ProjectApi;
 import org.headsupdev.agile.framework.error.*;
 import org.headsupdev.agile.framework.webdav.UploadArtifactEvent;
 import org.headsupdev.agile.framework.webdav.Artifact;
@@ -44,13 +47,20 @@ public class HomeApplication
     extends AbstractApplication
 {
     private static Class<? extends Page>[] pages;
+    private static Class<? extends Api>[] apis;
     private List<String> events = new LinkedList<String>();
 
     private static BundleContext context;
 
     static
     {
-        Class<? extends Page>[] pages = (Class<? extends Page>[]) new Class[10];
+        setupPages();
+        setupApis();
+    }
+
+    protected static void setupPages()
+    {
+        pages = (Class<? extends Page>[]) new Class[10];
         pages[0] = LoadingPage.class;
         pages[1] = Login.class;
         pages[2] = Logout.class;
@@ -61,13 +71,13 @@ public class HomeApplication
         pages[7] = Error404Page.class;
         pages[8] = ErrorExpiredPage.class;
         pages[9] = ErrorInternalPage.class;
-
-        setPages( pages );
     }
 
-    public static void setPages( Class<? extends Page>[] pages )
+    protected static void setupApis()
     {
-        HomeApplication.pages = pages;
+        apis = (Class<? extends Api>[]) new Class[2];
+        apis[0] = ProjectApi.class;
+        apis[1] = ConfigurationApi.class;
     }
 
     public HomeApplication()
@@ -93,6 +103,11 @@ public class HomeApplication
     public Class<? extends Page>[] getPages()
     {
         return (Class<? extends Page>[]) pages;
+    }
+
+    public Class<? extends Api>[] getApis()
+    {
+        return (Class<? extends Api>[]) apis;
     }
 
     public Class<? extends Page> getHomePage()

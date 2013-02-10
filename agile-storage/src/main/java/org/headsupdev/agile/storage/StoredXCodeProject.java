@@ -18,6 +18,7 @@
 
 package org.headsupdev.agile.storage;
 
+import org.headsupdev.agile.api.rest.Publish;
 import org.headsupdev.support.java.IOUtil;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Index;
@@ -46,12 +47,15 @@ public class StoredXCodeProject
     implements XCodeProject
 {
     @Field(index = Index.TOKENIZED)
+    @Publish
     protected String version;
 
     @Field(index = Index.TOKENIZED)
+    @Publish
     protected String bundleId;
 
     @Field(index = Index.TOKENIZED)
+    @Publish
     protected String platform;
 
     public StoredXCodeProject()

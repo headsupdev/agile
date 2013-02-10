@@ -19,6 +19,7 @@
 package org.headsupdev.agile.storage;
 
 import org.headsupdev.agile.api.*;
+import org.headsupdev.agile.api.rest.Publish;
 import org.headsupdev.support.java.StringUtil;
 import org.headsupdev.support.java.Base64;
 import org.hibernate.search.annotations.*;
@@ -152,25 +153,31 @@ public class StoredProject
 
     @Id
     @DocumentId
+    @Publish
     protected String id;
 
     @Field(index = Index.TOKENIZED)
+    @Publish
     protected String name, alias, scm;
 
     protected String scmUsername, scmPassword;
 
     @Field
+    @Publish
     protected String revision;
 
     @Temporal( TemporalType.TIMESTAMP )
+    @Publish
     private Date imported = new Date(), updated;
 
+    @Publish
     protected Boolean disabled;
 
     @ManyToOne( targetEntity = StoredProject.class, fetch = FetchType.LAZY )
     protected Project parent;
 
     @OneToMany( targetEntity = StoredProject.class, fetch = FetchType.LAZY, mappedBy = "parent" )
+    @Publish
     protected Set<Project> children = new HashSet<Project>();
 
     @ManyToMany( targetEntity = StoredUser.class, fetch = FetchType.LAZY, mappedBy = "projects" )

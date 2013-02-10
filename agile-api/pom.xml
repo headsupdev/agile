@@ -68,6 +68,10 @@
       <groupId>org.apache.wicket</groupId>
       <artifactId>wicket</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.innobuilt</groupId>
+      <artifactId>wicket-rest-api</artifactId>
+    </dependency>
 
     <dependency>
       <groupId>org.hibernate</groupId>
@@ -159,6 +163,7 @@
           <instructions>
             <Include-Resource>target/processed-resources</Include-Resource>
             <Import-Package>javax.activation, javax.crypto, javax.crypto.interfaces, javax.crypto.spec, javax.naming, javax.naming.directory, javax.net, javax.net.ssl, javax.security.auth.callback, javax.security.auth.x500, javax.security.sasl,      org.apache.wicket.*,!junit.textui,!junit.framework,org.apache.wicket.*,
+              com.google.gson.*, org.innobuilt.wicket.rest,
 
             javax.imageio, !javax.portlet, javax.servlet, javax.servlet.http, !javax.swing.*, javax.xml.parsers, javax.xml.transform, javax.xml.transform.stream, org.slf4j, !org.w3c.dom, org.xml.sax, !sun.misc, !sun.reflect
             </Import-Package>
