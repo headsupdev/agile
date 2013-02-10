@@ -170,7 +170,6 @@ public class StoredProject
     @Publish
     private Date imported = new Date(), updated;
 
-    @Publish
     protected Boolean disabled;
 
     @ManyToOne( targetEntity = StoredProject.class, fetch = FetchType.LAZY )

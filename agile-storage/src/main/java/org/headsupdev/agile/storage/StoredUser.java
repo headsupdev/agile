@@ -72,7 +72,6 @@ public class StoredUser
     @Publish
     private String timeZoneId;
 
-    @Publish
     private Boolean disabled = Boolean.FALSE;
 
     private Boolean hiddenInTimeTracking = Boolean.FALSE;
