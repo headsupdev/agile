@@ -82,7 +82,8 @@ public class AuthenticationHelper
             }
         }
 
-        resp.addHeader( "WWW-Authenticate", "Basic realm=\"HeadsUp Webdav\"" );
+        String productName = Manager.getStorageInstance().getGlobalConfiguration().getProductName();
+        resp.addHeader( "WWW-Authenticate", "Basic realm=\"" + productName + "\"" );
         resp.sendError( HttpServletResponse.SC_UNAUTHORIZED, message );
 
         return false;
