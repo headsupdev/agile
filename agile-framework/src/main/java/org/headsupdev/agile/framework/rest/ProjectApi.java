@@ -79,7 +79,14 @@ public class ProjectApi
     @Override
     public void doGet( PageParameters params )
     {
-        setModel( new Model( new ArrayList( Manager.getStorageInstance().getRootProjects( true ) ) ) );
+        if ( getProject() == null || getProject().equals( StoredProject.getDefault() ) )
+        {
+            setModel( new Model( new ArrayList( Manager.getStorageInstance().getRootProjects( true ) ) ) );
+        }
+        else
+        {
+            setModel( new Model( getProject() ) );
+        }
     }
 
     static class ProjectTypeAdapterFactory
