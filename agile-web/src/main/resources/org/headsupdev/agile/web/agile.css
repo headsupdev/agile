@@ -198,17 +198,20 @@ body {min-height: 100%;} /* for proper browsers */
     background-color: #F0F1EA;
     border-left: 1px solid lightgray;
     border-right: 1px solid lightgray;
-    border-bottom: 1px solid lightgray;
 }
 
 #projectmenu.up {
     height: 0;
     overflow: hidden;
+
+    border-bottom: 0 solid lightgray;
 }
 
 #projectmenu.down {
     height: auto;
     overflow: hidden;
+
+    border-bottom: 1px solid lightgray;
 }
 
 #projectmenu-header {

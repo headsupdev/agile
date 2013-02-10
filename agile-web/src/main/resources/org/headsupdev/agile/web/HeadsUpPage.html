@@ -59,10 +59,14 @@
             <wicket:enclosure child="userdashbutton">
             <li class="hiddenonmobile"><div class="headbutton" wicket:id="userdashbutton"><span class="totals" wicket:id="totals">0</span></div></li>
             </wicket:enclosure>
+            <wicket:enclosure child="account">
             <li><a class="account headbutton" wicket:id="account">my account</a></li>
-            <li><a class="login headbutton" wicket:id="login-link"><span wicket:id="login-label"></span></a></li>
+            </wicket:enclosure>
+            <li><a class="login headbutton" wicket:id="login-link" onclick="document.getElementById('userpanelbutton').childNodes[1].click()"><span wicket:id="login-label"></span></a></li>
             <li><a class="search headbutton" wicket:id="search">search</a></li>
+            <wicket:enclosure child="support">
             <li><a class="support headbutton" wicket:id="support">support</a></li>
+            </wicket:enclosure>
           </ul>
           <div id="taskpanel" wicket:id="taskpanel">
             <a wicket:id="tasklink" href="tasks"><img wicket:id="spinner" id="spinner" style="" /></a>

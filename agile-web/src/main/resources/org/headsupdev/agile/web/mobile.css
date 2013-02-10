@@ -19,8 +19,10 @@
     padding: 0;
     list-style: none;
 
-    background-color: #404040;
-    border: 1px solid #F0F1EA;
+    background-color: #4b4b4b;
+    border-bottom: 1px solid #F0F1EA;
+    border-left: 1px solid #F0F1EA;
+    border-right: 1px solid #F0F1EA;
     overflow: hidden;
 
     z-index: 250;
@@ -28,7 +30,15 @@
 
 #userpanel li {
     display: block;
-    padding: 1.5pt 5pt;
+    padding: 4pt 5pt !important;
+}
+
+#header1 .headbutton:hover {
+	background-image: none;
+}
+
+#header1 #userpanel .headbutton {
+	padding: 0;
 }
 
 #userpanel .search {
@@ -37,10 +47,12 @@
 
 #userpanel.up {
     height: 0;
+    border-bottom: 0 solid #F0F1EA;
 }
 
 #userpanel.down {
     height: auto;
+    border-bottom: 1px solid #F0F1EA;
 }
 
 #userpanelbutton {

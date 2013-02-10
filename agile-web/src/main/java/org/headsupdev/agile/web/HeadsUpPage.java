@@ -268,6 +268,7 @@ public abstract class HeadsUpPage
                     }
                     else
                     {
+                        target.appendJavascript("document.getElementById('userpanelbutton').childNodes[1].click()");
                         showDialog( new LoginDialog( DIALOG_PANEL_ID, true, HeadsUpPage.this ), target );
                     }
                 }
@@ -299,6 +300,7 @@ public abstract class HeadsUpPage
                     }
                     else
                     {
+                        target.appendJavascript("document.getElementById('userpanelbutton').childNodes[1].click()");
                         showDialog( new LogoutDialog( DIALOG_PANEL_ID, true, HeadsUpPage.this ), target );
                     }
                 }
