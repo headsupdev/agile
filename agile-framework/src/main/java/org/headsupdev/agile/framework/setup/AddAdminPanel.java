@@ -54,21 +54,22 @@ public class AddAdminPanel
     class CreateAdminForm
         extends Form
     {
-        String password, password2, email;
-        String firstname, lastname = "";
+        String password, password2, email, telephone;
+        String firstname, lastname;
 
         public CreateAdminForm( String id )
         {
             super(id);
 
             add( new Label( "username", "admin" ) );
-            add( new TextField( "firstname", new PropertyModel( this, "firstname" ) ) );
-            add( new TextField( "lastname", new PropertyModel( this, "lastname" ) ) );
-            add( new TextField( "email", new PropertyModel( this, "email" ) ).setRequired( true ) );
+            add( new TextField<String>( "firstname", new PropertyModel<String>( this, "firstname" ) ) );
+            add( new TextField<String>( "lastname", new PropertyModel<String>( this, "lastname" ) ) );
+            add( new TextField<String>( "email", new PropertyModel<String>( this, "email" ) ).setRequired( true ) );
+            add( new TextField<String>( "telephone", new PropertyModel<String>( this, "telephone" ) ) );
 
             PasswordTextField pass, pass2;
-            pass = new PasswordTextField( "password", new PropertyModel( this, "password" ) );
-            pass2 = new PasswordTextField( "password2", new PropertyModel( this, "password2" ) );
+            pass = new PasswordTextField( "password", new PropertyModel<String>( this, "password" ) );
+            pass2 = new PasswordTextField( "password2", new PropertyModel<String>( this, "password2" ) );
             add( pass.setRequired( true ) );
             add( pass2.setRequired( true ) );
 
@@ -80,6 +81,7 @@ public class AddAdminPanel
             StoredUser created = new StoredUser( "admin" );
             created.setPassword( password );
             created.setEmail( email );
+            created.setTelephone( telephone );
             created.setFirstname( firstname );
             created.setLastname( lastname );
 
@@ -119,6 +121,16 @@ public class AddAdminPanel
         public void setEmail( String email )
         {
             this.email = email;
+        }
+
+        public String getTelephone()
+        {
+            return telephone;
+        }
+
+        public void setTelephone( String telephone )
+        {
+            this.telephone = telephone;
         }
 
         public String getFirstname()

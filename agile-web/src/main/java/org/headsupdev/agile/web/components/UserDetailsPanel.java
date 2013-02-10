@@ -41,6 +41,7 @@ public class UserDetailsPanel
         add( new Label( "firstname", user.getFirstname() ) );
         add( new Label( "lastname", user.getLastname() ) );
         add( new Label( "email", user.getEmail() ) );
+        add( new Label( "telephone", user.getTelephone() ) );
         add( new Label( "last", new FormattedDateModel( user.getLastLogin(),
                 ( (HeadsUpSession) getSession() ).getTimeZone() ) ) );
         add( new Label( "description", new MarkedUpTextModel( user.getDescription(), project ) )

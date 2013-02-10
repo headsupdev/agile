@@ -39,6 +39,8 @@ public interface User
 
     public String getEmail();
 
+    public String getTelephone();
+
     public String getFirstname();
 
     public String getLastname();

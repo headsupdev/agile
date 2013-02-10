@@ -54,7 +54,7 @@ public class StoredUser
 
     @Field(index = Index.TOKENIZED)
     @Publish
-    private String firstname, lastname, email;
+    private String firstname, lastname, email, telephone;
 
     @Type( type = "text" )
     @Field(index = Index.TOKENIZED)
@@ -125,6 +125,16 @@ public class StoredUser
     public void setEmail( String email )
     {
         this.email = email;
+    }
+
+    public String getTelephone()
+    {
+        return telephone;
+    }
+
+    public void setTelephone( String telephone )
+    {
+        this.telephone = telephone;
     }
 
     public String getFirstname()

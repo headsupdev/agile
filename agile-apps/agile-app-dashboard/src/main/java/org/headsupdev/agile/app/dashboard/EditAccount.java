@@ -104,6 +104,7 @@ public class EditAccount
             add( new TextField( "firstname" ) );
             add( new TextField( "lastname" ) );
             add( new TextField( "email" ) );
+            add( new TextField( "telephone" ) );
             add( new TextArea( "description" ) );
 
             // if we are administering this account allow changing of this value
