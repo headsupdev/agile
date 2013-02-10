@@ -21,11 +21,13 @@ package org.headsupdev.agile.web.auth;
 import org.apache.wicket.Session;
 import org.headsupdev.agile.api.User;
 import org.headsupdev.agile.security.RememberedLoginManager;
+import org.headsupdev.agile.storage.StoredUser;
 import org.headsupdev.agile.web.HeadsUpSession;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -118,6 +120,8 @@ public class WebLoginManager
 
     public void logUserIn( User user, boolean remember, HttpServletRequest request, HttpServletResponse response )
     {
+        ( (StoredUser) user ).setLastLogin( new Date() );
+
         request.setAttribute( AGILE_USER_KEY, user );
         setWicketUser( user );
 

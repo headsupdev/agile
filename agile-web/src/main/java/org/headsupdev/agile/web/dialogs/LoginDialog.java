@@ -143,7 +143,6 @@ public class LoginDialog
 
             loginManager.logUserIn( user, remember, ( (WebRequest) getRequest() ).getHttpServletRequest(),
                     ( (WebResponse) getResponse() ).getHttpServletResponse() );
-            ( (StoredUser) user ).setLastLogin( new Date() );
 
             if ( !continueToOriginalDestination() )
             {
