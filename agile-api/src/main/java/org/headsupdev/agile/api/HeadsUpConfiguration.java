@@ -234,12 +234,7 @@ public class HeadsUpConfiguration
 
     public boolean getUseFullnamesForUsers()
     {
-        return Boolean.parseBoolean( getProperty(KEY_USERS_USE_NAMES, "false" ) );
-    }
-
-    public void setUserListUserNames( boolean useNames )
-    {
-        setProperty(KEY_USERS_USE_NAMES, String.valueOf( useNames ) );
+        return Boolean.parseBoolean( getProperty( KEY_USERS_USE_NAMES, "false" ) );
     }
 
 //    public String getMavenHome()
