@@ -62,7 +62,7 @@
             <wicket:enclosure child="account">
             <li><a class="account headbutton" wicket:id="account">my account</a></li>
             </wicket:enclosure>
-            <li><a class="login headbutton" wicket:id="login-link" onclick="document.getElementById('userpanelbutton').childNodes[1].click()"><span wicket:id="login-label"></span></a></li>
+            <li><a class="login headbutton" wicket:id="login-link"><span wicket:id="login-label"></span></a></li>
             <li><a class="search headbutton" wicket:id="search">search</a></li>
             <wicket:enclosure child="support">
             <li><a class="support headbutton" wicket:id="support">support</a></li>
@@ -76,19 +76,25 @@
         </div>
         <div id="header2">
           <div id="projectselect">
-            <div wicket:id="projectlink"><span wicket:id="projectname">project</span></div>
+            <div wicket:id="projectlink"><span wicket:id="title">project</span></div>
           </div>
           <form wicket:id="quicksearch" class="quicksearch hiddenonmobile">
             <input type="text" placeholder="Search..." wicket:id="query" value="" class="input" />
             <input type="submit" value="Go" class="submit" />
           </form>
+          <div id="mainselect">
+            <div wicket:id="mainlink"><span wicket:id="title">Application \/</span></div>
+          </div>
+          <div id="subselect">
+            <div wicket:id="sublink"><span wicket:id="title">O</span></div>
+          </div>
         </div>
-        <div id="mainmenu">
+        <div id="mainmenu" wicket:id="mainmenu-container" class="up">
           <ul>
             <li wicket:id="mainmenu" class="mainmenu-item"><a wicket:id="mainmenu-link"><span wicket:id="mainmenu-label"></span></a></li>
           </ul>
         </div>
-        <div id="submenu" wicket:id="submenu-container">
+        <div id="submenu" wicket:id="submenu-container" class="up">
           <ul>
             <li wicket:id="submenu" class="submenu-item"><a wicket:id="submenu-link"><span wicket:id="submenu-label"></span></a></li>
           </ul>

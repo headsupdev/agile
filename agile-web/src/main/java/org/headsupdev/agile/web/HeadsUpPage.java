@@ -137,7 +137,11 @@ public abstract class HeadsUpPage
 
         add( new WebMarkupContainer( "headerlogo" ).add( new AttributeModifier( "src", true,
             new PropertyModel<String>( WebManager.getInstance(), "headerLogo" ) ) ) );
-        add( new ListView<Application>( "mainmenu", ApplicationPageMapper.get().getApplications( getSession().getUser() ) ) {
+
+        WebMarkupContainer mainmenu = new WebMarkupContainer( "mainmenu-container" );
+        mainmenu.setMarkupId( "mainmenu" );
+        mainmenu.add( new ListView<Application>( "mainmenu",
+                ApplicationPageMapper.get().getApplications( getSession().getUser() ) ) {
             protected void populateItem( ListItem<Application> listItem )
             {
                 final Application app = listItem.getModelObject();
@@ -176,9 +180,14 @@ public abstract class HeadsUpPage
                     }
                 } ) );
             }
-        });
+        } );
+
+        addAnimatedSelect( "mainlink", getHeadsUpApplication().getName() + "   \u25bc", mainmenu );
+        add( mainmenu );
 
         submenu = new WebMarkupContainer( "submenu-container" );
+        submenu.setMarkupId( "submenu" );
+        addAnimatedSelect( "sublink", "\u2699", submenu );
         add( submenu );
 
         submenu.add( new ListView<Link>( "submenu", links ) {
@@ -429,14 +438,7 @@ public abstract class HeadsUpPage
         add( form.setVisible( ApplicationPageMapper.get().getSearchApp() != null ) );
         form.add( new TextField<String>( "query", new PropertyModel<String>( this, "searchQuery" ) ) );
 
-
-        WebMarkupContainer projectselect = new WebMarkupContainer( "projectlink" );
-        projectselect.add( new Label( "projectname", getProject().getAlias() + "   \u25bc" ) );
-        add( projectselect );
-
-        animator = new Animator();
-        animator.addCssStyleSubject( new MarkupIdModel( projectmenu ), "up", "down" );
-        animator.attachTo( projectselect, "onclick", Animator.Action.toggle() );
+        addAnimatedSelect( "projectlink", getProject().getAlias() + "   \u25bc", projectmenu );
 
         WebMarkupContainer taskpanel = new WebMarkupContainer( "taskpanel" );
         Link taskLink = new BookmarkablePageLink( "tasklink", getPageClass( "tasks" ), getProjectPageParameters() );
@@ -611,6 +613,17 @@ public abstract class HeadsUpPage
         {
             addLink( link );
         }
+    }
+
+    protected void addAnimatedSelect( String id, String title, WebMarkupContainer list )
+    {
+        WebMarkupContainer projectselect = new WebMarkupContainer( id );
+        projectselect.add( new Label( "title", title ) );
+        add( projectselect );
+
+        Animator animator = new Animator();
+        animator.addCssStyleSubject( new MarkupIdModel( list ), "up", "down" );
+        animator.attachTo( projectselect, "onclick", Animator.Action.toggle() );
     }
 
     public String getQuickSearchResponse( String search )

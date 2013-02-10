@@ -1,3 +1,5 @@
+/* @override http://localhost:8069/resources/org.headsupdev.agile.web.HeadsUpPage/mobile.css */
+
 .hiddenonmobile {
     display: none !important;
 }
@@ -8,6 +10,7 @@
 
 #header2 {
     padding: 14px 2px;
+    border-bottom: 1px solid lightgray;
 }
 
 #userpanel {
@@ -57,6 +60,121 @@
 
 #userpanelbutton {
     display: block;
+}
+
+#mainselect, #subselect {
+    display: block;
+}
+
+#mainselect {
+    position: absolute;
+    right: 35px;
+    top: 38px;
+    font-size: 13pt;
+    font-weight: bold;
+    color: #545A5A;
+    cursor: pointer;
+}
+
+#mainmenu {
+    position: absolute;
+    right: 32px;
+    top: 62px;
+    
+    padding: 0 !important;
+    list-style: none;
+
+    background-color: #F0F1EA;
+    background-image: none;
+    border-top: none;
+    border-left: 1px solid lightgray;
+    border-right: 1px solid lightgray;
+    border-bottom: 1px solid lightgray;
+    overflow: hidden;
+
+    z-index: 250;
+}
+
+#mainmenu.up {
+    height: 0;
+    overflow: hidden;
+
+    border-bottom: 0 solid lightgray;
+}
+
+#mainmenu.down {
+    height: auto;
+    overflow: hidden;
+
+    border-bottom: 1px solid lightgray;
+}
+
+#mainmenu li {
+    display: block;
+    padding: 4pt 5pt !important;
+    margin:0;
+}
+
+#mainmenu li.mainmenu-item-selected {
+	background-image: none;
+}
+
+.mainmenu-item:hover, .mainmenu-item a:hover {
+	background-image: none;
+}
+
+#subselect {
+    position: absolute;
+    right: 8px;
+    top: 31px;
+    font-size: 20pt;
+    font-weight: bold;
+    color: #545A5A;
+    cursor: pointer;
+}
+
+#submenu {
+    position: absolute;
+    right: 0;
+    top: 62px;
+    
+    padding: 0 !important;
+    padding: 0;
+    list-style: none;
+
+    background-color: #F0F1EA;
+    background-image: none;
+    border-top: none;
+    border-left: 1px solid lightgray;
+    border-right: 1px solid lightgray;
+    border-bottom: 1px solid lightgray;
+    overflow: hidden;
+
+    z-index: 250;
+}
+
+#submenu.up {
+    height: 0;
+    overflow: hidden;
+
+    border-bottom: 0 solid lightgray;
+}
+
+#submenu.down {
+    height: auto;
+    overflow: hidden;
+
+    border-bottom: 1px solid lightgray;
+}
+
+#submenu li {
+    display: block;
+    padding: 4pt 5pt !important;
+    margin:0;
+}
+
+.submenu-item:hover, .submenu-item a:hover {
+	background-color: transparent;
 }
 
 #projectselect {
@@ -188,11 +306,24 @@
 
 #filterbutton {
     right: 0px;
-    margin-top: -35px;
+    margin-top: -4px;
 
-    padding-right: 35px;
+    padding: 2px 5px;
+    padding-right: 25px;
 
-    border-left: none;
+    background-color: #F0F1EA;
+    border-left: 1px solid lightgray;
+    border-bottom: 1px solid lightgray;
+}
+
+#filterbutton.filterbuttonhidden {
+    background-position: 48px -34px;
+    background-repeat: no-repeat;
+}
+
+#filterbutton.filterbuttonshown {
+    background-position: 48px 23px;
+    background-repeat: no-repeat;
 }
 
 /** little app hacks - make hooks for app specific mobile styles **/

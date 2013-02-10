@@ -135,6 +135,10 @@ body {min-height: 100%;} /* for proper browsers */
     padding: 11px 15px 10px 15px;
 }
 
+#mainselect, #subselect {
+    display: none;
+}
+
 #mainmenu {
     background-color: #dad9d7;
     background: -webkit-gradient(linear, left top, left bottom, from(#f2f0ef), to(#c1bfbe));
