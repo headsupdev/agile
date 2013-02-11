@@ -93,10 +93,6 @@
       <groupId>ms.ajwillia</groupId>
       <artifactId>wicket-rest-api</artifactId>
     </dependency>
-    <dependency>
-      <groupId>rome</groupId>
-      <artifactId>rome</artifactId>
-    </dependency>
 
     <dependency>
       <groupId>javax.servlet</groupId>
@@ -128,7 +124,6 @@
               org.headsupdev.agile.images.*,
               org.headsupdev.agile.web.*,
               org.headsupdev.agile,
-              com.sun.syndication.*,
               org.wicketstuff.*,
               org.innobuilt.wicket.rest.*,com.google.gson.*;version="2.2.0",
               org.apache.wicket.datetime.*;version="1.4.18",
@@ -136,7 +131,7 @@
               org.joda.time.*;version="1.6.0",
               javax.servlet.*
             ]]></Export-Package>
-            <Private-Package>org.jdom.*,org.headsupdev.agile,org.apache.commons.lang.*,org.apache.catalina.*,org.apache.tomcat.*,org.apache.naming.*,org.json.simple.*,org.apache.log4j.*,${bundle.namespace}.*</Private-Package>
+            <Private-Package>org.headsupdev.agile,org.apache.commons.lang.*,org.apache.catalina.*,org.apache.tomcat.*,org.apache.naming.*,org.json.simple.*,org.apache.log4j.*,${bundle.namespace}.*</Private-Package>
             <Import-Package><![CDATA[
               org.headsupdev.agile.api.*,
               org.headsupdev.agile.security.*,
@@ -147,7 +142,6 @@
               org.headsupdev.support.java,
               org.headsupdev.support.java.compression,
               org.headsupdev.irc,
-              com.sun.syndication.*,
               org.apache.wicket.*,
               org.ops4j.pax.web.extender.whiteboard,org.ops4j.pax.web.extender.whiteboard.runtime,
               org.hibernate,org.hibernate.collection,org.hibernate.criterion,org.hibernate.classic,

@@ -76,7 +76,6 @@
                 org.headsupdev.support.java.*,
                 org.apache.wicket.*,
                 org.hibernate,org.hibernate.criterion,org.hibernate.transform,javax.persistence.*,
-                com.sun.syndication.feed.synd,
                 javax.imageio,javax.servlet.*
             </Import-Package>
             <Embed-Transitive>true</Embed-Transitive>

@@ -124,7 +124,6 @@
                 org.apache.maven.scm.*,
                 org.apache.wicket.*,
                 org.hibernate,org.hibernate.classic,org.hibernate.jdbc,
-                com.sun.syndication.feed.synd,
                 !org.apache.maven.scm.*,org.quartz.*,
                 javax.persistence,!com.sun.management.*,!junit.framework,
                 javax.sql,javax.transaction,javax.xml.*,

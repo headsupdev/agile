@@ -20,37 +20,21 @@ package org.headsupdev.agile.app.search.feed;
 
 import org.headsupdev.agile.web.WebUtil;
 import org.headsupdev.agile.web.MountPoint;
-import org.headsupdev.agile.app.search.Search;
 import org.headsupdev.agile.security.permission.ProjectListPermission;
-import org.headsupdev.agile.api.Storage;
-import org.headsupdev.agile.api.Manager;
 import org.headsupdev.agile.api.Permission;
-import org.headsupdev.agile.api.SearchResult;
-import org.headsupdev.agile.storage.HibernateUtil;
-import org.headsupdev.agile.storage.SessionProxy;
-import org.headsupdev.agile.storage.HibernateStorage;
-import org.hibernate.Session;
-import org.hibernate.search.FullTextSession;
-import org.hibernate.search.FullTextQuery;
-import org.apache.lucene.queryParser.MultiFieldQueryParser;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.search.Query;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.PageParameters;
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.output.XMLOutputter;
 
-import java.util.*;
 import java.io.PrintWriter;
-import java.io.IOException;
 
 /**
  * A simple xml page that reports search results in xml form
+ * This has been replaced by the new JSON API
  *
+ * @deprecated
  * @author Andrew Williams
  * @version $Id$
  * @since 1.0
@@ -59,8 +43,14 @@ import java.io.IOException;
 public class SearchFeed
    extends WebPage
 {
-    private PageParameters parameters;
-    private Storage storage = Manager.getStorageInstance();
+    String DEPRECATED_ACTIVITY = "<searchResults>\n" +
+            "<result>\n" +
+            "<title>This app is no longer supported</title>\n" +
+            "<relevance>0%</relevance>\n" +
+            "<link>" AbstractFeed.APP_URL + "</link>\n" +
+            "<icon>http://headsupdev.org/resources/org.headsupdev.agile.HeadsUpResourceMarker/images/type/System.png</icon>\n" +
+            "</result>\n" +
+            "</searchResults>";
 
     public Permission getRequiredPermission() {
         return new ProjectListPermission();
@@ -68,7 +58,6 @@ public class SearchFeed
 
     public SearchFeed( PageParameters params )
     {
-        this.parameters = params;
         WebUtil.authenticate( (WebRequest) getRequest(), (WebResponse) getResponse(), getRequiredPermission(), null );
     }
 
@@ -82,70 +71,7 @@ public class SearchFeed
     protected final void onRender( MarkupStream markupStream )
     {
         PrintWriter writer = new PrintWriter(getResponse().getOutputStream());
-        try
-        {
-            Document doc = new Document();
-            Element root = new Element( "searchResults" );
-            doc.setRootElement( root );
-
-            populateFeed( root );
-            XMLOutputter out = new XMLOutputter();
-            out.output( doc, writer );
-        }
-        catch ( IOException e )
-        {
-            throw new RuntimeException( "Error streaming feed.", e );
-        }
-    }
-
-    protected void populateFeed( Element root )
-    {
-        String query = parameters.getString( "query" );
-        List<Object[]> results = new LinkedList<Object[]>();
-
-        Session session = ( (HibernateStorage) Manager.getStorageInstance() ).getHibernateSession();
-        FullTextSession fullTextSession = org.hibernate.search.Search.createFullTextSession(
-            ( (SessionProxy) session ).getRealSession() );
-
-        MultiFieldQueryParser parser = new MultiFieldQueryParser(
-            new ArrayList<String>( HibernateUtil.getSearchFields() ).toArray( new String[ 0 ] ),
-            new StandardAnalyzer());
-        try
-        {
-            // TODO can we limit by project somehow? I think not :(
-            Query q = parser.parse( query );
-
-            FullTextQuery textQuery = fullTextSession.createFullTextQuery( q );
-            textQuery.setProjection( FullTextQuery.SCORE, FullTextQuery.THIS );//, FullTextQuery.EXPLANATION );
-            textQuery.setMaxResults( 25 );
-            results = textQuery.list();
-        }
-        catch ( Exception e )
-        {
-            Manager.getLogger( getClass().getName() ).error( "Failed to run search", e );
-        }
-
-        for ( Object[] o : results )
-        {
-            Element node = new Element( "result" );
-            int relevance = (int) ( ( (Float) o[0] ) * 100 );
-            String title = o[1].toString();
-
-            String link = "";
-            if ( o[1] instanceof SearchResult)
-            {
-                link = ( (SearchResult) o[1] ).getLink();
-            }
-
-            node.addContent( new Element( "title" ).addContent( title ) );
-            node.addContent( new Element( "relevance" ).addContent( relevance + "%" ) );
-            node.addContent( new Element( "link" ).addContent( storage.getGlobalConfiguration().getFullUrl( link ) ) );
-
-            String image = Search.getClassImageName( o[1] );
-            node.addContent( new Element( "icon" ).addContent( storage.getGlobalConfiguration().getFullUrl(
-                "resources/org.headsupdev.agile.HeadsUpResourceMarker/" + image ) ) );
-
-            root.addContent( node );
-        }
+        writer.write( DEPRECATED_ACTIVITY );
+        writer.close();
     }
 }

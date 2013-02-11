@@ -137,8 +137,7 @@
                 org.headsupdev.agile.security.*,
                 org.headsupdev.support.java.*,
                 org.apache.wicket.*,
-                org.hibernate,org.hibernate.criterion,org.hibernate.transform,org.hibernate.classic,javax.persistence.*,
-                com.sun.syndication.feed.synd
+                org.hibernate,org.hibernate.criterion,org.hibernate.transform,org.hibernate.classic,javax.persistence.*
             </Import-Package>
             <Private-Package>${bundle.namespace}.internal.*</Private-Package>
             <!--

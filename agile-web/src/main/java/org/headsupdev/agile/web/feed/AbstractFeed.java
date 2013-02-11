@@ -25,18 +25,16 @@ import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.PageParameters;
 
 import java.io.PrintWriter;
-import java.io.IOException;
 
-import com.sun.syndication.io.SyndFeedOutput;
-import com.sun.syndication.io.FeedException;
-import com.sun.syndication.feed.synd.*;
 import org.headsupdev.agile.api.*;
 import org.headsupdev.agile.storage.StoredProject;
 import org.headsupdev.agile.web.WebUtil;
 
 /**
  * An abstract backing for Rome based RSS feeds in agile
+ * This has been replaced by the new JSON API
  *
+ * @deprecated
  * @author Andrew Williams
  * @version $Id$
  * @since 1.0
@@ -44,6 +42,30 @@ import org.headsupdev.agile.web.WebUtil;
 public abstract class AbstractFeed
    extends WebPage
 {
+    public static final String APP_URL = "https://itunes.apple.com/us/app/headsup-agile/id602356809?ls=1&amp;mt=8";
+
+    String EMPTY_RESPONSE = "<rss xmlns:content=\"http://purl.org/rss/1.0/modules/content/\" xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" xmlns:hud=\"http://headsupdev.com/ns/agile\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\" xmlns:maven=\"http://headsupdev.com/ns/maven\" xmlns:taxo=\"http://purl.org/rss/1.0/modules/taxonomy/\" version=\"2.0\">\n" +
+            "</rss>";
+
+    String DEPRECATED_RESPONSE = "<rss xmlns:content=\"http://purl.org/rss/1.0/modules/content/\" xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" xmlns:hud=\"http://headsupdev.com/ns/agile\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\" xmlns:maven=\"http://headsupdev.com/ns/maven\" xmlns:taxo=\"http://purl.org/rss/1.0/modules/taxonomy/\" version=\"2.0\">\n" +
+            "<channel>\n" +
+            "<title>HeadsUp Agile Feeds Deprecated</title>\n" +
+            "<link>" + APP_URL + "</link>\n" +
+            "<description>This app is no longer supported</description>\n" +
+            "<item>\n" +
+            "<title>This app is no longer supported</title>\n" +
+            "<link>" + APP_URL + "</link>\n" +
+            "<description>Please download the new HeadsUp Agile app for iOS</description>\n" +
+            "<pubDate>Mon, 11 Feb 2013 21:54:10 GMT</pubDate>\n" +
+            "<guid>" + APP_URL + "</guid>\n" +
+            "<dc:date>2013-02-11T21:54:10Z</dc:date>\n" +
+            "<hud:id>1</hud:id>\n" +
+            "<hud:type>SystemEvent</hud:type>\n" +
+            "<hud:time>1360590850000</hud:time>\n" +
+            "</item>\n" +
+            "</channel>\n" +
+            "</rss>";
+
     private Project project;
     private PageParameters parameters = new PageParameters();
 
@@ -65,26 +87,15 @@ public abstract class AbstractFeed
     protected final void onRender( MarkupStream markupStream )
     {
         PrintWriter writer = new PrintWriter(getResponse().getOutputStream());
-        SyndFeedOutput output = new SyndFeedOutput();
-        try
+        if ( parameters.get( "before" ) == null )
         {
-            SyndFeed feed = new SyndFeedImpl();
-            feed.setFeedType( "rss_2.0" );
-            feed.setTitle( getTitle() );
-            feed.setDescription( getDescription() );
-            feed.setLink( getLink() );
-
-            populateFeed( feed );
-            output.output( feed, writer );
+            writer.write( DEPRECATED_RESPONSE );
         }
-        catch ( IOException e )
+        else
         {
-            throw new RuntimeException( "Error streaming feed.", e );
+            writer.write( EMPTY_RESPONSE );
         }
-        catch ( FeedException e )
-        {
-            throw new RuntimeException( "Error streaming feed.", e );
-        }
+        writer.close();
     }
 
     public Project getProject()
@@ -118,15 +129,4 @@ public abstract class AbstractFeed
     }
 
     public abstract Permission getRequiredPermission();
-
-    public abstract String getTitle();
-
-    public abstract String getDescription();
-
-    public String getLink()
-    {
-        return Manager.getStorageInstance().getGlobalConfiguration().getFullUrl( getRequest().getURL() );
-    }
-
-    protected abstract void populateFeed( SyndFeed feed );
 }
