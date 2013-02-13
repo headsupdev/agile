@@ -27,6 +27,7 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.PageParameters;
+import org.headsupdev.agile.web.feed.AbstractFeed;
 
 import java.io.PrintWriter;
 
@@ -47,7 +48,7 @@ public class SearchFeed
             "<result>\n" +
             "<title>This app is no longer supported</title>\n" +
             "<relevance>0%</relevance>\n" +
-            "<link>" AbstractFeed.APP_URL + "</link>\n" +
+            "<link>" + AbstractFeed.APP_URL + "</link>\n" +
             "<icon>http://headsupdev.org/resources/org.headsupdev.agile.HeadsUpResourceMarker/images/type/System.png</icon>\n" +
             "</result>\n" +
             "</searchResults>";
