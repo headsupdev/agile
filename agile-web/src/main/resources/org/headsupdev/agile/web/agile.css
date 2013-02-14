@@ -253,6 +253,18 @@ body {min-height: 100%;} /* for proper browsers */
     color: #25b6e6;
 }
 
+#projectmenu .projectgroup {
+    margin-top: 10px;
+    display: block;
+    color: grey;
+    font-size: 90%;
+    font-style: italic;
+}
+
+#projectmenu-content {
+    margin-top: -10px;
+}
+
 #projectmenu ul {
     margin: 0;
     padding: 0;

@@ -7,6 +7,7 @@
 * Build Android apps using ant to avoid eclipse issues
 * Created a simple JSON API framework
 * Update navigation on mobile to fit on smaller screens
+* Group recently used and active projects at the top of the menu
 
 * Don't send notifications to disabled accounts
 * Re-enable eclipse build handling

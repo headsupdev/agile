@@ -212,46 +212,8 @@ public abstract class HeadsUpPage
             }
         } );
 
-        String pageHint = getHeadsUpApplication().getApplicationId();
-        if ( ApplicationPageMapper.isHomeApp( getHeadsUpApplication() ) )
-        {
-            if ( ApplicationPageMapper.get().getApplication( "dashboard" ) != null )
-            {
-                pageHint = "show";
-            }
-            else
-            {
-                pageHint = "";
-            }
-        }
-        WebMarkupContainer projectmenu = new WebMarkupContainer( "projectmenu" );
-        projectmenu.setOutputMarkupId( true );
-        projectmenu.setMarkupId( "projectmenu" );
-        projectmenu.add( new ProjectListPanel( "project-tree", getStorage().getRootProjects(), getPageClass( pageHint ),
-                getProject() )
-                .setVisible( userHasPermission( user, new ProjectListPermission(), null ) ) );
+        WebMarkupContainer projectmenu = createProjectMenu( user );
         add( projectmenu );
-
-        WebMarkupContainer noProjects = new WebMarkupContainer( "noprojects" );
-        noProjects.setVisible( getStorage().getProjects().size() == 0 );
-        projectmenu.add( noProjects );
-
-        PageParameters params = new PageParameters();
-        params.add( "project", Project.ALL_PROJECT_ID );
-        BookmarkablePageLink allProjects = new BookmarkablePageLink( "allprojects-link", getPageClass( pageHint ), params );
-        allProjects.add( new AttributeModifier( "class", new Model<String>() {
-            public String getObject()
-            {
-                if ( getProject().equals( StoredProject.getDefault() ) )
-                {
-                    return "selected";
-                }
-
-                return "";
-            }
-        } ) );
-        allProjects.setVisible( getStorage().getProjects().size() > 0 );
-        projectmenu.add( allProjects );
 
         if ( !getClass().getName().endsWith( "Login" ) && !getClass().getName().endsWith( "Logout" ) )
         {
@@ -615,15 +577,79 @@ public abstract class HeadsUpPage
         }
     }
 
+    protected String getPageHint()
+    {
+        if ( ApplicationPageMapper.isHomeApp( getHeadsUpApplication() ) )
+        {
+            if ( ApplicationPageMapper.get().getApplication( "dashboard" ) != null )
+            {
+                return "show";
+            }
+            else
+            {
+                return "";
+            }
+        }
+
+        return getHeadsUpApplication().getApplicationId();
+    }
+
+    protected WebMarkupContainer createProjectMenu( User user )
+    {
+        String pageHint = getPageHint();
+        WebMarkupContainer projectmenu = new WebMarkupContainer( "projectmenu" );
+        projectmenu.setOutputMarkupId( true );
+        projectmenu.setMarkupId( "projectmenu" );
+
+        List<Project> recent = getStorage().getRecentRootProjects( user );
+        projectmenu.add( new ProjectListPanel( "recent-project-tree", recent, getPageClass( pageHint ), getProject() )
+                .setVisible( userHasPermission( user, new ProjectListPermission(), null ) && recent.size() > 0 ) );
+
+        List<Project> active = new ArrayList<Project>( getStorage().getActiveRootProjects() );
+        active.removeAll( recent );
+        projectmenu.add( new ProjectListPanel( "active-project-tree", active, getPageClass( pageHint ), getProject() )
+                .setVisible( userHasPermission( user, new ProjectListPermission(), null ) && active.size() > 0 ) );
+
+        List<Project> other = new ArrayList<Project>( getStorage().getRootProjects() );
+        other.removeAll( recent );
+        other.removeAll( active );
+        projectmenu.add( new ProjectListPanel( "other-project-tree", other, getPageClass( pageHint ), getProject() )
+                .setVisible( userHasPermission( user, new ProjectListPermission(), null ) && other.size() > 0 ) );
+
+
+        WebMarkupContainer noProjects = new WebMarkupContainer( "noprojects" );
+        noProjects.setVisible( getStorage().getProjects().size() == 0 );
+        projectmenu.add( noProjects );
+
+        PageParameters params = new PageParameters();
+        params.add( "project", Project.ALL_PROJECT_ID );
+        BookmarkablePageLink allProjects = new BookmarkablePageLink( "allprojects-link", getPageClass( pageHint ), params );
+        allProjects.add( new AttributeModifier( "class", new Model<String>() {
+            public String getObject()
+            {
+                if ( getProject().equals( StoredProject.getDefault() ) )
+                {
+                    return "selected";
+                }
+
+                return "";
+            }
+        } ) );
+        allProjects.setVisible( getStorage().getProjects().size() > 0 );
+        projectmenu.add( allProjects );
+
+        return projectmenu;
+    }
+
     protected void addAnimatedSelect( String id, String title, WebMarkupContainer list )
     {
-        WebMarkupContainer projectselect = new WebMarkupContainer( id );
-        projectselect.add( new Label( "title", title ) );
-        add( projectselect );
+        WebMarkupContainer select = new WebMarkupContainer( id );
+        select.add( new Label( "title", title ) );
+        add( select );
 
         Animator animator = new Animator();
         animator.addCssStyleSubject( new MarkupIdModel( list ), "up", "down" );
-        animator.attachTo( projectselect, "onclick", Animator.Action.toggle() );
+        animator.attachTo( select, "onclick", Animator.Action.toggle() );
     }
 
     public String getQuickSearchResponse( String search )

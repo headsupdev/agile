@@ -18,12 +18,13 @@
 
 package org.headsupdev.agile.framework.rest;
 
-import org.headsupdev.agile.api.Manager;
-import org.headsupdev.agile.api.Permission;
-import org.headsupdev.agile.api.Project;
+import org.apache.wicket.protocol.http.WebRequest;
+import org.headsupdev.agile.api.*;
+import org.headsupdev.agile.api.rest.Publish;
 import org.headsupdev.agile.security.permission.ProjectListPermission;
 import org.headsupdev.agile.storage.*;
 import org.headsupdev.agile.web.MountPoint;
+import org.headsupdev.agile.web.auth.WebLoginManager;
 import org.headsupdev.agile.web.rest.HeadsUpApi;
 
 import com.google.gson.*;
@@ -35,7 +36,8 @@ import org.apache.wicket.PageParameters;
 import org.apache.wicket.model.Model;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.io.Serializable;
+import java.util.*;
 
 /**
  * This project API lists all active projects in a tree heirarchy along with a type identifier for each project.
@@ -81,11 +83,70 @@ public class ProjectApi
     {
         if ( getProject() == null || getProject().equals( StoredProject.getDefault() ) )
         {
-            setModel( new Model( new ArrayList( Manager.getStorageInstance().getRootProjects( true ) ) ) );
+            User user = WebLoginManager.getInstance().getLoggedInUser( ( (WebRequest) getRequest() ).getHttpServletRequest() );
+
+            if ( returnInactiveProjects( params ) )
+            {
+                setModel( new Model<GroupedProjects>( new GroupedProjectsWithInactive( user ) ) );
+            }
+            else
+            {
+                setModel( new Model<GroupedProjects>( new GroupedProjects( user ) ) );
+            }
         }
         else
         {
-            setModel( new Model( getProject() ) );
+            setModel( new Model( getProjectEntry() ) );
+        }
+    }
+
+    protected boolean returnInactiveProjects( PageParameters params )
+    {
+        return params.getAsBoolean( "withInactive", true );
+    }
+
+    protected HashMap<String, Project> getProjectEntry()
+    {
+        HashMap<String, Project> ret = new HashMap<String, Project>();
+
+        ret.put( "project", getProject() );
+        return ret;
+    }
+
+    static class GroupedProjects
+            implements Serializable
+    {
+        @Publish
+        List<Project> recent, active;
+
+        public GroupedProjects( User user )
+        {
+            Storage storage = Manager.getStorageInstance();
+
+            recent = storage.getRecentRootProjects( user );
+            Collections.sort( recent );
+
+            active = new ArrayList<Project>( storage.getActiveRootProjects() );
+            active.removeAll( recent );
+            Collections.sort( active );
+        }
+    }
+
+    static class GroupedProjectsWithInactive
+            extends GroupedProjects
+    {
+        @Publish
+        List<Project> inactive;
+
+        public GroupedProjectsWithInactive( User user )
+        {
+            super( user );
+            Storage storage = Manager.getStorageInstance();
+
+            inactive = new ArrayList<Project>( storage.getRootProjects() );
+            inactive.removeAll( recent );
+            inactive.removeAll( active );
+            Collections.sort( inactive );
         }
     }
 

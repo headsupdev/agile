@@ -46,6 +46,9 @@ public interface Storage
     List<Project> getRootProjects();
     List<Project> getRootProjects( boolean withDisabled );
 
+    List<Project> getActiveRootProjects();
+    List<Project> getRecentRootProjects( User user );
+
     void addProject( Project project );
 
     List<Event> getEvents( Date start, Date stop );

@@ -103,7 +103,18 @@
           <div id="projectmenu" wicket:id="projectmenu" class="up">
             <div id="projectmenu-header">&nbsp;</div>
             <div id="projectmenu-content">
-              <div wicket:id="project-tree">tree</div>
+              <wicket:enclosure>
+              <span class="projectgroup">Recent</span>
+              <div wicket:id="recent-project-tree">tree</div>
+              </wicket:enclosure>
+              <wicket:enclosure>
+              <span class="projectgroup">Active</span>
+              <div wicket:id="active-project-tree">tree</div>
+              </wicket:enclosure>
+              <wicket:enclosure>
+              <span class="projectgroup">Inactive</span>
+              <div wicket:id="other-project-tree">tree</div>
+              </wicket:enclosure>
               <wicket:enclosure>
                 <br />
                 <span class="alllink"><a wicket:id="allprojects-link" class="">All projects</a></span>

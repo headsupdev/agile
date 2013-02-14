@@ -18,7 +18,9 @@
 
 package org.headsupdev.agile.storage;
 
+import org.headsupdev.agile.api.logging.Logger;
 import org.headsupdev.support.java.StringUtil;
+import org.hibernate.Criteria;
 import org.hibernate.Transaction;
 import org.hibernate.Session;
 import org.hibernate.Query;
@@ -28,6 +30,8 @@ import java.io.*;
 import java.nio.channels.FileChannel;
 
 import org.headsupdev.agile.api.*;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 
 /**
  * Backing the data to a real database using hibernate.
@@ -44,6 +48,143 @@ public class HibernateStorage
     private static Map<Object, org.hibernate.classic.Session> sessions = new HashMap<Object, org.hibernate.classic.Session>();
 
     private static HeadsUpConfiguration globalConfig;
+
+    private static final long RECENT_PROJECTS_OFFSET = 1000l * 60 * 60 * 24 * 6;
+    private static final long ACTIVE_PROJECTS_OFFSET = 1000l * 60 * 60 * 24 * 30;
+    private static Set<String> activeProjectIds;
+    private static Map<String, Date> latestProjectActivity;
+    private static Map<String, Set<String>> recentProjectIds;
+    private static Map<String, Map<String, Date>> latestUserProjectActivity;
+
+    private static boolean loaded = false;
+    protected void load()
+    {
+        if ( loaded )
+        {
+            return;
+        }
+        loaded = true;
+
+        activeProjectIds = new HashSet<String>();
+        latestProjectActivity = new HashMap<String, Date>();
+        List<Event> activeEvents = getEvents( new Date( System.currentTimeMillis() - ACTIVE_PROJECTS_OFFSET ),
+                new Date() );
+        for ( Event event : activeEvents )
+        {
+            addActiveProjectForEvent( event );
+        }
+
+        recentProjectIds = new HashMap<String, Set<String>>();
+        latestUserProjectActivity = new HashMap<String, Map<String, Date>>();
+        List<Event> recentEvents = getEvents( new Date( System.currentTimeMillis() - RECENT_PROJECTS_OFFSET ) );
+        for ( Event event : recentEvents )
+        {
+            addRecentProjectForEvent( event );
+        }
+
+        scheduleRemoveInactiveProjects();
+    }
+
+    public HibernateStorage()
+    {
+        load();
+    }
+
+    protected static void removeInactiveProjects()
+    {
+        Date oldestActiveDate = new Date( System.currentTimeMillis() - ACTIVE_PROJECTS_OFFSET );
+        for ( String projectId : latestProjectActivity.keySet() )
+        {
+            Date latestActivity = latestProjectActivity.get( projectId );
+            if ( latestActivity.before( oldestActiveDate ) )
+            {
+                latestProjectActivity.remove( projectId );
+            }
+        }
+
+        Date oldestRecentDate = new Date( System.currentTimeMillis() - RECENT_PROJECTS_OFFSET );
+        for ( String username : latestUserProjectActivity.keySet() )
+        {
+            Map<String, Date> latestUserActivity = latestUserProjectActivity.get( username );
+
+            for ( String projectId : latestUserActivity.keySet() )
+            {
+                Date latestRecent = latestUserActivity.get( projectId );
+                if ( latestRecent.before( oldestRecentDate ) )
+                {
+                    latestUserActivity.remove( projectId );
+                }
+            }
+        }
+    }
+
+    protected static void scheduleRemoveInactiveProjects()
+    {
+        new Thread()
+        {
+            public void run()
+            {
+                while ( true )
+                {
+                    try
+                    {
+                        Thread.sleep( 1000l * 60 * 60 * 6 );
+                    }
+                    catch ( InterruptedException e )
+                    {
+                     // ignore
+                    }
+
+                    Logger log = Manager.getLogger( "HibernateStorage-InactiveProjects" );
+                    log.debug( "Removing inactive or non-recent projects" );
+                    removeInactiveProjects();
+                }
+            }
+        }.start();
+    }
+
+    protected static void addActiveProjectForEvent( Event event )
+    {
+        if ( event.getProject() == null || event.getProject().getId().equals( Project.ALL_PROJECT_ID ) )
+        {
+            return;
+        }
+
+        String projectId = event.getProject().getId();
+
+        activeProjectIds.add( projectId );
+        latestProjectActivity.put( projectId, event.getTime() );
+    }
+
+    protected static void addRecentProjectForEvent( Event event )
+    {
+        if ( event.getProject() == null || event.getProject().getId().equals( Project.ALL_PROJECT_ID ) )
+        {
+            return;
+        }
+        String projectId = event.getProject().getId();
+
+        if ( event.getUsername() == null )
+        {
+            return;
+        }
+
+        Set<String> userRecentProjectIds = recentProjectIds.get( event.getUsername() );
+        if ( userRecentProjectIds == null )
+        {
+            userRecentProjectIds = new HashSet<String>();
+            recentProjectIds.put( event.getUsername(), userRecentProjectIds );
+        }
+        userRecentProjectIds.add( projectId );
+
+        Map<String, Date> projectActivity = latestUserProjectActivity.get( event.getUsername() );
+        if ( projectActivity == null )
+        {
+            projectActivity = new HashMap<String, Date>();
+            latestUserProjectActivity.put( event.getUsername(), projectActivity );
+        }
+        projectActivity.put( projectId, event.getTime() );
+    }
 
     public Session getHibernateSession()
     {
@@ -311,13 +452,55 @@ public class HibernateStorage
     public List<Project> getRootProjects( boolean withDisabled )
     {
         Session session = getHibernateSession();
-        String disabledWhere = "";
-        if ( !withDisabled )
+
+        return getProjectCriteria( session, withDisabled, null ).list();
+    }
+
+    public List<Project> getActiveRootProjects()
+    {
+        Session session = getHibernateSession();
+
+        return getProjectCriteria( session, false, activeProjectIds ).list();
+    }
+
+    public List<Project> getRecentRootProjects( User user )
+    {
+        Session session = getHibernateSession();
+
+        Set<String> recentIds = recentProjectIds.get( user.getUsername() );
+        if ( recentIds == null )
         {
-            disabledWhere = " and (disabled is null or disabled = false)";
+            return new ArrayList<Project>();
         }
-        List<Project> list = session.createQuery( "from StoredProject p where id != '" + Project.ALL_PROJECT_ID + "' and parent is null" +
-                disabledWhere + " order by name" ).list();
+        return getProjectCriteria( session, false, recentIds ).list();
+    }
+
+    protected Criteria getProjectCriteria( Session session, boolean disabled, Set<String> ids )
+    {
+        Criteria criteria = session.createCriteria( Project.class );
+        criteria.add( Restrictions.not( Restrictions.eq( "id", Project.ALL_PROJECT_ID ) ) );
+        criteria.add( Restrictions.isNull( "parent" ) );
+
+        if ( !disabled )
+        {
+            criteria.add( Restrictions.or( Restrictions.isNull( "disabled" ), Restrictions.eq( "disabled", false ) ) );
+        }
+
+        if ( ids != null )
+        {
+            criteria.add( Restrictions.in( "id", ids ) );
+        }
+
+        criteria.addOrder( Order.asc( "name" ) );
+        return criteria;
+    }
+
+    public List<Event> getEvents( Date start )
+    {
+        Session session = getHibernateSession();
+        Query q = session.createQuery( "from StoredEvent e where time >= :start order by time desc" );
+        q.setDate( "start", start );
+        List<Event> list = q.list();
 
         return list;
     }
@@ -489,6 +672,9 @@ public class HibernateStorage
 
     public void addEvent( Event event )
     {
+        addActiveProjectForEvent( event );
+        addRecentProjectForEvent( event );
+
         save( event );
     }
 
