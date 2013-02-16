@@ -60,11 +60,12 @@ public class FileChangeSetEvent
     {
         super( "Changeset " + ((changeSet instanceof TransactionalScmChangeSet)?changeSet.getId():"") + " (" +
                 getFileCount( changeSet, project ) + " " + getFileCountString( changeSet, project) + ") committed by " +
-                getUserNameForAuthor( changeSet.getAuthor() ), changeSet.getComment(), changeSet.getDate() );
+                getDisplayNameForAuthor( changeSet.getAuthor() ), changeSet.getComment(), changeSet.getDate() );
 
         setApplicationId( BrowseApplication.ID );
         setProject( project );
-        setUsername( changeSet.getAuthor() );
+
+        setUsername( getUsernameForAuthor( changeSet.getAuthor() ) );
         setObjectId( changeSet.getId() );
     }
 
@@ -158,7 +159,19 @@ public class FileChangeSetEvent
         return "files";
     }
 
-    private static String getUserNameForAuthor( String author )
+    private static String getUsernameForAuthor( String author )
+    {
+        User match = Manager.getSecurityInstance().getUserByUsernameEmailOrFullname( author );
+
+        if ( match == null )
+        {
+            return author;
+        }
+
+        return match.getUsername();
+    }
+
+    private static String getDisplayNameForAuthor( String author )
     {
         User match = Manager.getSecurityInstance().getUserByUsernameEmailOrFullname( author );
 
