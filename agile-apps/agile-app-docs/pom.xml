@@ -58,7 +58,7 @@
     <dependency>
       <groupId>org.wicketstuff</groupId>
       <artifactId>tinymce</artifactId>
-      <version>1.4.18</version>
+      <version>1.4.17</version>
     </dependency>
 
     <dependency>
