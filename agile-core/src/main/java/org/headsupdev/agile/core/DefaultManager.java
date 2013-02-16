@@ -341,14 +341,14 @@ public class DefaultManager
         for ( User user : Manager.getSecurityInstance().getUsers() )
         {
             user = (User) session.load( StoredUser.class, user.getUsername() );
-            if ( !user.isDisabled() )
+            if ( user.isDisabled() )
             {
                 continue;
             }
 
             // TODO a configurable system for controlling what a user gets sent
             if ( ( event.getUsername() == null || !event.getUsername().equals( user.getUsername() ) ) &&
-                    event.shouldNotify( user ) && !user.isDisabled() )
+                    event.shouldNotify( user ) )
             {
                 if ( !StringUtil.isEmpty( user.getEmail() ) )
                 {
