@@ -19,6 +19,8 @@
 package org.headsupdev.agile.app.history;
 
 import org.headsupdev.agile.api.*;
+import org.headsupdev.agile.api.rest.Api;
+import org.headsupdev.agile.app.history.rest.ActivityApi;
 import org.headsupdev.agile.web.WebApplication;
 import org.headsupdev.agile.storage.HibernateStorage;
 import org.headsupdev.agile.app.history.permission.HistoryViewPermission;
@@ -70,12 +72,21 @@ public class HistoryApplication
     }
 
     @Override
-    public Class<? extends Page>[] getPages() {
+    public Class<? extends Page>[] getPages()
+    {
         return new Class[]{ History.class, ShowEvent.class, ShowEventBody.class, HistoryFeed.class };
     }
 
+
     @Override
-    public Class<? extends Page> getHomePage() {
+    public Class<? extends Api>[] getApis()
+    {
+        return new Class[]{ ActivityApi.class };
+    }
+
+    @Override
+    public Class<? extends Page> getHomePage()
+    {
         return History.class;
     }
 
