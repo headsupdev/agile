@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2013 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -112,21 +112,15 @@ public class UpdatingPanel extends Panel
                     }
                 } ) );
 
-                try {
-                    final UpdateDetails update = ( (DefaultManager) Manager.getInstance() ).getAvailableUpdates().get( 0 );
-                    URL download = new URL( update.getFile() );
+                try
+                {
+                    final UpdateDetails update = getUpdate();
                     final long length = update.getLength();
+
+                    URL download = new URL( update.getFile() );
                     URLConnection conn = download.openConnection();
                     conn.connect();
-
-                    // follow redirects that Java does not handle (hhtp: -> https: for example)
-                    if ( ( (HttpURLConnection) conn).getResponseCode() == 301 || ( (HttpURLConnection) conn).getResponseCode() == 302 )
-                    {
-                        String newLocation = conn.getHeaderField( "Location" );
-                        download = new URL( newLocation );
-                        conn = download.openConnection();
-                        conn.connect();
-                    }
+                    conn = followRedirects( conn );
 
                     if ( length > -1 ) {
                         target.addComponent( this.setVisible( false ) );
@@ -161,29 +155,38 @@ public class UpdatingPanel extends Panel
                         try {
                             byte[] buffer = new byte[4096];
                             long downloaded = 0;
-                            InputStream in = connection.getInputStream();
 
-                            outFile = new File( org.headsupdev.agile.api.util.FileUtil.getTempDir(),
-                                    new File( update.getFile() ).getName() );
-                            OutputStream out = new FileOutputStream( outFile );
-
-                            int chunk;
-                            while ( ( chunk = in.read( buffer ) ) > -1 ) {
-                                downloaded += chunk;
-                                out.write( buffer, 0, chunk );
-
-                                if ( length > 0 )
-                                {
-                                    int prog = (int) ( ( (double) downloaded / length ) * 100 );
-                                    if ( prog > 99 ) {
-                                        prog = 99;
-                                    }
-                                    progress = prog;
-                                }
+                            if ( connection.getURL().getProtocol().equals( "file" ) )
+                            {
+                                outFile = new File( connection.getURL().getFile() );
+                                progress = 99;
                             }
+                            else
+                            {
+                                outFile = new File( org.headsupdev.agile.api.util.FileUtil.getTempDir(),
+                                        new File( update.getFile() ).getName() );
 
-                            in.close();
-                            out.close();
+                                InputStream in = connection.getInputStream();
+                                OutputStream out = new FileOutputStream( outFile );
+
+                                int chunk;
+                                while ( ( chunk = in.read( buffer ) ) > -1 ) {
+                                    downloaded += chunk;
+                                    out.write( buffer, 0, chunk );
+
+                                    if ( length > 0 )
+                                    {
+                                        int prog = (int) ( ( (double) downloaded / length ) * 100 );
+                                        if ( prog > 99 ) {
+                                            prog = 99;
+                                        }
+                                        progress = prog;
+                                    }
+                                }
+
+                                in.close();
+                                out.close();
+                            }
 
                             outFile = new TarFile( new GZipFile( outFile ).expand( true ) ).expand();
 
@@ -275,9 +278,19 @@ public class UpdatingPanel extends Panel
         updateForm.add( done );
 
         add( updateForm );
-        setVisible( ( (DefaultManager) Manager.getInstance() ).getAvailableUpdates().size() > 0 &&
+        setVisible( hasUpdate() &&
             Manager.getSecurityInstance().userHasPermission( ( (HeadsUpSession) Session.get() ).getUser(),
                 new AdminPermission(), null ) );
+    }
+
+    protected UpdateDetails getUpdate()
+    {
+        return ( (DefaultManager) Manager.getInstance() ).getAvailableUpdates().get( 0 );
+    }
+
+    protected boolean hasUpdate()
+    {
+        return ( (DefaultManager) Manager.getInstance() ).getAvailableUpdates().size() > 0;
     }
 
     private void updateProperties( File file )
@@ -345,5 +358,25 @@ public class UpdatingPanel extends Panel
                 }
             }
         }
+    }
+
+    protected URLConnection followRedirects( URLConnection connection )
+            throws IOException
+    {
+        if ( !( connection instanceof HttpURLConnection ) )
+        {
+            return connection;
+        }
+
+        // follow redirects that Java does not handle (http: -> https: for example)
+        if ( ( (HttpURLConnection) connection).getResponseCode() == 301 || ( (HttpURLConnection) connection).getResponseCode() == 302 )
+        {
+            String newLocation = connection.getHeaderField( "Location" );
+            URL download = new URL( newLocation );
+            connection = download.openConnection();
+            connection.connect();
+        }
+
+        return connection;
     }
 }

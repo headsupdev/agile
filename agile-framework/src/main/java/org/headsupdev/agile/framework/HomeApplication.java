@@ -60,7 +60,7 @@ public class HomeApplication
 
     protected static void setupPages()
     {
-        Class<? extends Page>[] pages = (Class<? extends Page>[]) new Class[10];
+        Class<? extends Page>[] pages = (Class<? extends Page>[]) new Class[11];
         pages[0] = LoadingPage.class;
         pages[1] = Login.class;
         pages[2] = Logout.class;
@@ -71,6 +71,7 @@ public class HomeApplication
         pages[7] = Error404Page.class;
         pages[8] = ErrorExpiredPage.class;
         pages[9] = ErrorInternalPage.class;
+        pages[10] = ManualUpdate.class;
 
         setPages( pages );
     }

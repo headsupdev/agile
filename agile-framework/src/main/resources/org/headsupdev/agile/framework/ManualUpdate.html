@@ -1,0 +1,40 @@
+<!--
+  ~ HeadsUp Agile
+  ~ Copyright 2013 Heads Up Development Ltd.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<html xmlns="http://www.w3.org/1999/html">
+  <body>
+    <wicket:extend>
+      <div class="error"><strong>IMPORTANT!</strong> Only upload HeadsUp Agile Pro releases in .tar.gz format.<br />
+        Uploading any other files can corrupt your installation and may result in data loss.</div>
+
+      <div class="updating" wicket:id="updating"></div>
+
+      <form wicket:id="upload">
+        <table>
+          <tr>
+            <th>Release file</th>
+            <td><input type="file" wicket:id="file" /></td>
+          </tr>
+          <tr>
+            <td colspan="2"><input type="submit" value="Upgrade" /></td>
+          </tr>
+        </table>
+      </form>
+    </wicket:extend>
+  </body>
+</html>
