@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2013 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -18,32 +18,17 @@
 
 package org.headsupdev.agile.app.search.rest;
 
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.queryParser.MultiFieldQueryParser;
-import org.apache.lucene.search.Query;
-import org.headsupdev.agile.api.Manager;
 import org.headsupdev.agile.api.Permission;
-import org.headsupdev.agile.api.SearchResult;
-import org.headsupdev.agile.api.Storage;
-import org.headsupdev.agile.app.search.Search;
 import org.headsupdev.agile.app.search.Searcher;
 import org.headsupdev.agile.security.permission.ProjectListPermission;
-import org.headsupdev.agile.storage.HibernateStorage;
-import org.headsupdev.agile.storage.HibernateUtil;
-import org.headsupdev.agile.storage.SessionProxy;
 import org.headsupdev.agile.web.MountPoint;
 import org.headsupdev.agile.web.rest.HeadsUpApi;
 
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.model.Model;
 import org.headsupdev.support.java.StringUtil;
-import org.hibernate.Session;
-import org.hibernate.search.FullTextQuery;
-import org.hibernate.search.FullTextSession;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * A search API that provides a simple list of details for any results matching the given query.
