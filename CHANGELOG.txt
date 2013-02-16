@@ -9,6 +9,7 @@
 * Update navigation on mobile to fit on smaller screens
 * Group recently used and active projects at the top of the menu
 * Add a manual update page for easier upgrading of unreleased versions
+* Include a create menu item for documents
 
 * Don't send notifications to disabled accounts
 * Re-enable eclipse build handling

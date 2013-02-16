@@ -18,6 +18,7 @@
 
 package org.headsupdev.agile.app.docs;
 
+import org.apache.wicket.PageParameters;
 import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.HeadsUpSession;
 import org.headsupdev.agile.web.BookmarkableMenuLink;
@@ -29,6 +30,7 @@ import org.headsupdev.agile.api.Permission;
 import org.headsupdev.agile.api.User;
 import org.headsupdev.agile.storage.docs.Document;
 import org.headsupdev.agile.storage.HibernateStorage;
+import org.headsupdev.agile.web.components.IdPatternValidator;
 import org.headsupdev.agile.web.components.history.HistoryPanel;
 import org.apache.wicket.ResourceReference;
 import org.apache.wicket.markup.html.CSSPackageResource;
@@ -36,7 +38,6 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.*;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.Model;
 import wicket.contrib.tinymce.TinyMceBehavior;
 import wicket.contrib.tinymce.settings.TinyMCESettings;
 
@@ -61,7 +62,8 @@ import java.io.IOException;
 public class Edit
     extends HeadsUpPage
 {
-    private String title, content;
+    private String name, content;
+    boolean canEditTitle = false;
 
     public Permission getRequiredPermission() {
         return new DocEditPermission();
@@ -72,25 +74,26 @@ public class Edit
         super.layout();
         add( CSSPackageResource.getHeaderContribution( getClass(), "doc.css" ) );
 
-        title = getPageParameters().getString( "page" );
-        if ( title == null || title.length() == 0 )
+        name = getPageParameters().getString( "page" );
+        if ( name == null || name.length() == 0 )
         {
-            title = "Welcome";
+            name = "Untitled";
+            canEditTitle = true;
         }
-        if ( !ID_PATTERN.matcher( title ).matches() )
+        else if ( !isValidName( name ) )
         {
-            userError("Invalid document name");
+            userError( "Invalid document name" );
             return;
         }
 
         addLink( new BookmarkableMenuLink( getPageClass( "docs/" ), getPageParameters(), "view" ) );
 
-        Document doc = DocsApplication.getDocument( title, getProject() );
+        Document doc = DocsApplication.getDocument( name, getProject() );
         boolean create = false;
         if ( doc == null )
         {
-            doc = new Document( title, getProject() );
-            doc.setContent( "<html><body><h1>" + title + "</h1><p>This is a new page</p></body></html>" );
+            doc = new Document( name, getProject() );
+            doc.setContent( "<html><body><h1>" + name + "</h1><p>This is a new page</p></body></html>" );
             create = true;
         }
         content = doc.getContent();
@@ -102,7 +105,12 @@ public class Edit
     @Override
     public String getTitle()
     {
-        return "Edit Document " + title;
+        return "Edit Document " + name;
+    }
+
+    protected boolean isValidName( String name )
+    {
+        return ID_PATTERN.matcher( name ).matches();
     }
 
     class EditForm extends Form<Document>
@@ -117,20 +125,12 @@ public class Edit
             this.doc = d;
             this.create = create;
 
-            setModel( new CompoundPropertyModel<Document>( doc ) );
-            add( new Label( "name" ) );
-            add( new Label( "project", doc.getProject().getAlias() ) );
-            final TextArea contentArea = new TextArea<String>( "content", new Model<String>() {
-                public String getObject()
-                {
-                    return content;
-                }
+            setModel( new CompoundPropertyModel( Edit.this ) );
+            add( new Label( "label", doc.getName() ).setVisible( !canEditTitle ) );
+            add( new TextField<String>( "name" ).add( new IdPatternValidator() ).setVisible( canEditTitle ) );
 
-                public void setObject( String s )
-                {
-                    content = s;
-                }
-            } )
+            add( new Label( "project", doc.getProject().getAlias() ) );
+            final TextArea contentArea = new TextArea<String>( "content" )
             {
                 protected boolean shouldTrimInput() {
                     return false;
@@ -166,7 +166,11 @@ public class Edit
             }
 
             User user = ( (HeadsUpSession) getSession() ).getUser();
-            if ( !create )
+            if ( create )
+            {
+                doc = new Document( name, doc.getProject() );
+            }
+            else
             {
                 doc = (Document) ( (HibernateStorage) getStorage() ).getHibernateSession().merge( doc );
             }
@@ -187,7 +191,10 @@ public class Edit
                 doc.setUpdated( new Date() );
                 getHeadsUpApplication().addEvent( new UpdateDocumentEvent( doc, user, getContentSummary( doc ) ) );
             }
-            setResponsePage( getPageClass( "docs/" ), getPageParameters() );
+
+            PageParameters params = getProjectPageParameters();
+            params.add( "page", name );
+            setResponsePage( getPageClass( "docs/" ), params );
         }
     }
 
