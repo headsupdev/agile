@@ -18,18 +18,13 @@
 
 package org.headsupdev.agile.app.search;
 
-import org.headsupdev.agile.HeadsUpResourceMarker;
 import org.headsupdev.agile.app.search.permission.SearchPermission;
 import org.headsupdev.agile.storage.StoredProject;
 import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.components.HeadsUpResourceReference;
 import org.headsupdev.agile.api.*;
-import org.headsupdev.agile.storage.HibernateStorage;
-import org.headsupdev.agile.storage.SessionProxy;
-import org.headsupdev.agile.storage.HibernateUtil;
 
 import java.util.*;
-import java.lang.reflect.Method;
 
 import org.apache.wicket.markup.html.CSSPackageResource;
 import org.apache.wicket.markup.html.basic.Label;
@@ -38,7 +33,6 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.PackageResource;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.image.Image;
@@ -46,13 +40,7 @@ import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.ResourceReference;
-import org.apache.lucene.queryParser.MultiFieldQueryParser;
-import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Explanation;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.hibernate.Session;
-import org.hibernate.search.FullTextSession;
-import org.hibernate.search.FullTextQuery;
 
 /**
  * Search home page
@@ -64,7 +52,6 @@ import org.hibernate.search.FullTextQuery;
 public class Search
     extends HeadsUpPage
 {
-    private static final int PAGE_SIZE = 25;
     private String query = null;
     private int from = 0;
     private WebMarkupContainer noresults;
@@ -100,7 +87,7 @@ public class Search
 
         params.remove( "project" );
         params.add( "project", getProject().getId() );
-        params.add( "from", String.valueOf( from + PAGE_SIZE ) );
+        params.add( "from", String.valueOf( from + Searcher.PAGE_SIZE ) );
         moreresultsLink = new BookmarkablePageLink( "morelink", Search.class, params );
         moreresultsLink.setOutputMarkupPlaceholderTag( true );
         add( moreresultsLink.setVisible( false ) );
@@ -119,27 +106,27 @@ public class Search
         form.add( new TextField<String>( "query", new PropertyModel<String>( this, "query" ) ) );
 
         final Map<String,Integer> colors = new HashMap<String,Integer>();
-        add( new ListView<Object[]>( "result", new SearchModel() )
+        add( new ListView<Searcher.Result>( "result", new SearchModel() )
         {
-            protected void populateItem( ListItem<Object[]> listItem ) {
-                Object[] o = listItem.getModelObject();
+            protected void populateItem( ListItem<Searcher.Result> listItem )
+            {
+                Searcher.Result result = listItem.getModelObject();
 
-                if ( o[1] == null )
+                if ( result.match == null )
                 {
                     listItem.setVisible( false );
                     return;
                 }
 
-                ResourceReference icon = new HeadsUpResourceReference( getClassImageName( o[1] ) );
+                ResourceReference icon = new HeadsUpResourceReference( Searcher.getClassImageName( result.match ) );
                 listItem.add( new Image( "icon", icon ) );
 
-                int relevance = (int) ( ( (Float) o[0] ) * 100 );
-                listItem.add(new Label("relevance", relevance + "%"));
+                listItem.add(new Label("relevance", ( result.relevance * 100 ) + "%"));
 
                 WebMarkupContainer container;
-                if ( o[1] instanceof SearchResult)
+                if ( result.link != null )
                 {
-                    container = new ExternalLink( "link", ( (SearchResult) o[1] ).getLink() );
+                    container = new ExternalLink( "link", result.link );
                     listItem.add( new WebMarkupContainer( "nolink" ).setVisible( false ) );
                 }
                 else
@@ -147,15 +134,15 @@ public class Search
                     container = new WebMarkupContainer( "nolink" );
                     listItem.add( new WebMarkupContainer( "link" ).setVisible( false ) );
                 }
-                container.add( new Label( "title", o[1].toString() ) );
+                container.add( new Label( "title", result.title ) );
                 listItem.add( container );
 
-                listItem.add( new Label( "project", getProjectFromResult( o ).getAlias() ) );
+                listItem.add( new Label( "project", result.project.getAlias() ) );
 
                 Map<String,List<String>> fields = new HashMap<String,List<String>>();
-                parseMatches( (Explanation) o[2], fields, colors );
+                parseMatches( result.explanation, fields, colors );
 
-                listItem.add( new Label( "summary", new SearchRenderModel( o[1], fields, colors ) )
+                listItem.add( new Label( "summary", new SearchRenderModel( result.match, fields, colors ) )
                     .setEscapeModelStrings( false ) );
             }
         });
@@ -165,25 +152,6 @@ public class Search
     public String getTitle()
     {
         return "Search";
-    }
-
-    private Project getProjectFromResult( Object[] result )
-    {
-        if ( result[1] instanceof Project) {
-            return (Project) result[1];
-        }
-        else
-        {
-            try
-            {
-                Method getProject = result[1].getClass().getMethod( "getProject" );
-                return (Project) getProject.invoke( result[1] );
-            }
-            catch ( Exception e )
-            {
-                return StoredProject.getDefault();
-            }
-        }
     }
 
     private void parseMatches( Explanation e, Map<String,List<String>> fields, Map<String,Integer> colors )
@@ -229,116 +197,29 @@ public class Search
         }
     }
 
-    public static String getClassImageName( Object o )
-    {
-        if ( o instanceof SearchResult )
-        {
-            String path = ( (SearchResult) o ).getIconPath();
-            if ( path != null )
-            {
-                return path;
-            }
-        }
-
-        return getClassImageName( o.getClass() );
-    }
-
-    public static String getClassImageName( Class type )
-    {
-        if ( type.equals( Object.class ) )
-        {
-            return "images/type/System.png";
-        }
-
-        int start = type.getPackage().getName().length() + 1;
-        int end = type.getName().length();
-        if ( type.getName().contains( "$" ) )
-        {
-            end = type.getName().indexOf( '$' );
-        }
-
-        String image = "images/type/" + type.getName().substring( start, end ) + ".png";
-        if ( PackageResource.exists( HeadsUpResourceMarker.class, image, null, null ) )
-        {
-            return image;
-        }
-
-        return getClassImageName( type.getSuperclass() );
-    }
-
     class SearchModel
-        extends AbstractReadOnlyModel<List<Object[]>>
+        extends AbstractReadOnlyModel<List<Searcher.Result>>
     {
-        List<Object[]> results = new LinkedList<Object[]>();
+        Searcher searcher = new Searcher( query, from );
         int newFrom;
 
         public SearchModel()
         {
             if ( query != null )
             {
-                Session session = ( (HibernateStorage) Manager.getStorageInstance() ).getHibernateSession();
-                FullTextSession fullTextSession = org.hibernate.search.Search.createFullTextSession(
-                    ( (SessionProxy) session ).getRealSession() );
-
-                MultiFieldQueryParser parser = new MultiFieldQueryParser(
-                    new ArrayList<String>( HibernateUtil.getSearchFields() ).toArray(
-                            new String[ HibernateUtil.getSearchFields().size() ] ),
-                    new StandardAnalyzer());
-                try
-                {
-                    Query q = parser.parse( query );
-
-                    newFrom = from;
-                    boolean more = true;
-                    while ( more && results.size() < PAGE_SIZE )
-                    {
-                        more = addResults( q, fullTextSession, newFrom );
-                    }
-                }
-                catch ( Exception e )
-                {
-                    Manager.getLogger( "Search" ).error( "Failed to run search", e );
-                }
+                searcher.setProject( getProject() );
+                List<Searcher.Result> results = searcher.getResults();
 
                 noresults.setVisible( results.size() == 0 );
                 notallprojectsLink.setVisible( results.size() == 0 && !getProject().equals( StoredProject.getDefault() ) );
-                moreresultsLink.setVisible( results.size() == PAGE_SIZE );
+                moreresultsLink.setVisible( results.size() == Searcher.PAGE_SIZE );
                 moreresultsLink.setParameter( "from", newFrom );
             }
         }
 
-        public List<Object[]> getObject()
+        public List<Searcher.Result> getObject()
         {
-            return results;
-        }
-
-        private boolean addResults( Query q, FullTextSession fullTextSession, int from )
-        {
-            FullTextQuery textQuery = fullTextSession.createFullTextQuery( q );
-            textQuery.setProjection( FullTextQuery.SCORE, FullTextQuery.THIS, FullTextQuery.EXPLANATION );
-            textQuery.setMaxResults(PAGE_SIZE);
-            textQuery.setFirstResult( from );
-
-            Iterator i = textQuery.iterate();
-            while ( i.hasNext() ) {
-                try
-                {
-                    Object[] result = (Object[]) i.next();
-
-                    if ( getProject().equals( StoredProject.getDefault() ) || getProject().equals(
-                            getProjectFromResult( result ) ) )
-                    {
-                        results.add( result );
-                    }
-                }
-                catch ( Exception e )
-                {
-                    Manager.getLogger( "Search" ).error( "Error extracting search results", e );
-                }
-                newFrom++;
-            }
-            
-            return textQuery.getResultSize() == PAGE_SIZE;
+            return searcher.getResults();
         }
     }
 }

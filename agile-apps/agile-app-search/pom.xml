@@ -84,6 +84,7 @@
                 org.headsupdev.agile.web.*,
                 org.headsupdev.agile.storage.*,
                 org.headsupdev.agile.security.*,
+                org.headsupdev.support.java,
                 org.apache.wicket.*,
                 org.hibernate.*,org.apache.lucene.*,
                 javax.xml.*,!oracle.xml.*,!org.jaxen.*,!org.w3c.*,org.xml.sax.*,!org.apache.xerces.*

@@ -19,6 +19,8 @@
 package org.headsupdev.agile.app.search;
 
 import org.headsupdev.agile.api.*;
+import org.headsupdev.agile.api.rest.Api;
+import org.headsupdev.agile.app.search.rest.SearchApi;
 import org.headsupdev.agile.web.WebApplication;
 import org.headsupdev.agile.app.search.feed.SearchFeed;
 import org.headsupdev.agile.app.search.permission.SearchPermission;
@@ -64,12 +66,20 @@ public class SearchApplication
     }
 
     @Override
-    public Class<? extends Page>[] getPages() {
+    public Class<? extends Page>[] getPages()
+    {
         return new Class[] { SearchFeed.class, Reindex.class, Search.class };
     }
 
     @Override
-    public Class<? extends Page> getHomePage() {
+    public Class<? extends Api>[] getApis()
+    {
+        return new Class[] { SearchApi.class };
+    }
+
+    @Override
+    public Class<? extends Page> getHomePage()
+    {
         return Search.class;
     }
 
