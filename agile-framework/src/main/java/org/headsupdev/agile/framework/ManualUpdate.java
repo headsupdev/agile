@@ -104,6 +104,11 @@ public class ManualUpdate
 
                 FileUpload file = upload.getFileUpload();
                 String filename = file.getClientFileName();
+                if ( !isValidUpateFile( filename ) )
+                {
+                    error( "Not a valid upgrade file");
+                    return;
+                }
 
                 uploadedFile = new File( FileUtil.getTempDir(), filename );
                 uploadedFile.getParentFile().mkdirs();
@@ -121,5 +126,10 @@ public class ManualUpdate
             }
         } );
         uploadForm.add( upload );
+    }
+
+    protected boolean isValidUpateFile( String filename )
+    {
+        return filename.endsWith( ".tar.gz" ) && filename.toLowerCase().contains( "agile" );
     }
 }
