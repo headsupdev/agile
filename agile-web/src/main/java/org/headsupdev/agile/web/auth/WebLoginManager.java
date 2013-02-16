@@ -131,11 +131,6 @@ public class WebLoginManager
             setRememberCookie( user.getUsername(), random, response );
             rememberUser( user, random );
         }
-        else
-        {
-            removeRememberCookie( response );
-            forgetUser( user );
-        }
     }
 
     protected String getRandomValue()
