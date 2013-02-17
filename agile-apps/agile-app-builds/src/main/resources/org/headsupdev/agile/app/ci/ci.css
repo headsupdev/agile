@@ -156,3 +156,29 @@ a.status-remove:hover, span.status-remove, a.status-remove-nohover, span.status-
 .testpass {
     background-color: #DFFFDF !important;
 }
+
+
+div.download a {
+    background-color:#1198c5;
+    color:#b7ecfe;
+    border:10px solid #e5e5d9;
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+    border-radius: 15px;
+
+    width:200px;
+    margin:auto;
+    padding:10px;
+    display:block;
+    font-size:18px;
+
+    text-align: center;
+    float: right;
+    margin-top: -32px;
+}
+
+div.download a:active {
+    background-color: #666;
+    color: #fff;
+    border-style: inset;
+}

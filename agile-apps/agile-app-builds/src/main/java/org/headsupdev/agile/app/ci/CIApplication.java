@@ -564,4 +564,20 @@ public class CIApplication
         File appDir = new File( Manager.getStorageInstance().getDataDirectory(), "builds" );
         return new File( appDir, project.getId().replace( ':', '_' ) );
     }
+
+    public static UploadApplicationEvent getLatestUploadEvent( Project project )
+    {
+        Session session = ( (HibernateStorage) Manager.getStorageInstance() ).getHibernateSession();
+
+        Query q = session.createQuery( "from UploadApplicationEvent e where project.id = :pid order by time desc" );
+        q.setString( "pid", project.getId() );
+        q.setMaxResults( 1 );
+        List<UploadApplicationEvent> events = q.list();
+        if ( events.size() == 0 )
+        {
+            return null;
+        }
+
+        return events.get( 0 );
+    }
 }

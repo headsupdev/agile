@@ -18,8 +18,11 @@
 
 package org.headsupdev.agile.app.ci;
 
+import org.apache.wicket.Component;
+import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.list.ListView;
 import org.headsupdev.agile.api.PropertyTree;
+import org.headsupdev.agile.app.ci.event.UploadApplicationEvent;
 import org.headsupdev.agile.app.ci.permission.BuildForcePermission;
 import org.headsupdev.agile.app.ci.permission.BuildListPermission;
 import org.headsupdev.agile.web.HeadsUpPage;
@@ -62,7 +65,7 @@ public class CI
 {
     public void layout() {
         super.layout();
-        add( CSSPackageResource.getHeaderContribution( getClass(), "ci.css" ) );
+        add( CSSPackageResource.getHeaderContribution( CI.class, "ci.css" ) );
 
         final boolean projectList = getProject().equals( StoredProject.getDefault() );
         if ( projectList )
@@ -92,6 +95,8 @@ public class CI
         }
         add( builds );
 
+        add( createDownloadButton() );
+
         WebMarkupContainer projects = new WebMarkupContainer( "projectlist" );
         projects.add( new ProjectTreeListView( "projects", getProject() )
         {
@@ -113,6 +118,31 @@ public class CI
         return "Builds for project " + getProject().getAlias();
     }
 
+    protected Component createDownloadButton()
+    {
+        WebMarkupContainer button = new WebMarkupContainer( "download" );
+        if ( getProject().equals( StoredProject.getDefault() ) )
+        {
+            return button.setVisible( false );
+        }
+
+        UploadApplicationEvent upload = CIApplication.getLatestUploadEvent(getProject());
+        if ( upload == null )
+        {
+            return button.setVisible( false );
+        }
+
+        ExternalLink link = new ExternalLink( "link", upload.getLink() );
+        link.add( new Label( "label", getButtonLabel( upload ) ) );
+        button.add( link );
+
+        return button;
+    }
+
+    protected String getButtonLabel( UploadApplicationEvent upload )
+    {
+        return "Download (build" + upload.getBuildNumber() + ")";
+    }
 
     void renderTopLinks( boolean projectList )
     {

@@ -329,3 +329,8 @@
 form.search input.submit {
     right: 2px;
 }
+
+div.download a {
+    float: none !important;
+    margin-top: 5px !important;
+}

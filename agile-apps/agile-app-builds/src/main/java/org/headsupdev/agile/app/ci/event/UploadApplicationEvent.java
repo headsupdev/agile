@@ -58,6 +58,22 @@ public class UploadApplicationEvent
         setObjectId( repoName + ',' + path );
     }
 
+    public String getLink()
+    {
+        int start = getBody().indexOf( "href=\"" ) + 6;
+        int end = getBody().indexOf( "\"", start );
+
+        return getBody().substring( start, end );
+    }
+
+    public String getBuildNumber()
+    {
+        int start = getTitle().indexOf( "(build" ) + 6;
+        int end = getTitle().indexOf( ")", start );
+
+        return getTitle().substring( start, end );
+    }
+
     private static String getVersionString( String version )
     {
         if ( version == null )
