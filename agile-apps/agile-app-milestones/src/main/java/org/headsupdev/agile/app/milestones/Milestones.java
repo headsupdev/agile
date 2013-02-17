@@ -87,7 +87,7 @@ public class Milestones
                 nameLink.add( new Label( "name", group.getName() ) );
                 listItem.add( nameLink );
 
-                double part = DurationWorkedUtil.getMilestoneGroupCompleteness( group );
+                double part = group.getCompleteness();
                 int percent = (int) ( part * 100 );
                 Panel panel = new PercentagePanel( "bar", percent );
                 listItem.add( panel );

@@ -52,7 +52,7 @@ public class MilestonePanel
     @Override
     protected double getCompleteness()
     {
-        return DurationWorkedUtil.getMilestoneCompleteness( milestone );
+        return milestone.getCompleteness();
     }
 
     @Override

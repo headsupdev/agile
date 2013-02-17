@@ -49,7 +49,7 @@ public class MilestoneGroupPanel
     @Override
     protected double getCompleteness()
     {
-        return DurationWorkedUtil.getMilestoneGroupCompleteness( group );
+        return group.getCompleteness();
     }
 
     @Override

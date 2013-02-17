@@ -21,6 +21,7 @@ package org.headsupdev.agile.storage.issues;
 import org.headsupdev.agile.api.Project;
 import org.headsupdev.agile.api.SearchResult;
 import org.headsupdev.agile.storage.Comment;
+import org.headsupdev.agile.storage.DurationWorkedUtil;
 import org.headsupdev.agile.storage.hibernate.NameProjectBridge;
 import org.headsupdev.agile.storage.hibernate.NameProjectId;
 import org.hibernate.annotations.Type;
@@ -289,12 +290,6 @@ public class MilestoneGroup
             return 0.0;
         }
 
-        double completeness = 0.0;
-        for ( Milestone milestone : milestones )
-        {
-            completeness += milestone.getCompleteness();
-        }
-
-        return completeness / milestones.size();
+        return DurationWorkedUtil.getMilestoneGroupCompleteness( this );
     }
 }

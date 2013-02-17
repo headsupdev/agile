@@ -148,7 +148,7 @@ public class EditMilestoneGroupForm
                 listItem.add( new Label( "id", milestone.getName() ) );
                 listItem.add( new Check<Milestone>( "check", listItem.getModel() ) );
 
-                double part = DurationWorkedUtil.getMilestoneCompleteness( milestone );
+                double part = milestone.getCompleteness();
                 int percent = (int) ( part * 100 );
                 Panel panel = new PercentagePanel( "bar", percent );
                 listItem.add( panel );

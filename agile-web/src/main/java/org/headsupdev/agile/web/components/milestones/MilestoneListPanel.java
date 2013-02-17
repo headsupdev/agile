@@ -79,7 +79,7 @@ public class MilestoneListPanel
                 cell.add( idLink );
                 listItem.add( cell );
 
-                double part = DurationWorkedUtil.getMilestoneCompleteness(milestone);
+                double part = milestone.getCompleteness();
                 int percent = (int) ( part * 100 );
                 Panel panel = new PercentagePanel( "bar", percent );
                 listItem.add( panel );
