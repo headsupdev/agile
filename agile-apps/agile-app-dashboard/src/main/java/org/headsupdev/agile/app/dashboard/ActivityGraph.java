@@ -129,20 +129,23 @@ public class ActivityGraph
 
         // draw CI results
         java.util.List<Event> ciEvents = getEvents( "builds", project, start, now, tree );
-        boolean[] ciStates = getStatesForCIEvents( ciEvents, now );
+        int[] ciStates = getStatesForCIEvents( ciEvents, now );
 
         for ( int i = 0; i < ciStates.length; i++ )
         {
             int x = PAD + (int) Math.round( (double) ( i * ( (double) WIDTH / divisions ) ) );
             int x2 = PAD + (int) Math.round( (double) ( ( i + 1 ) * ( (double) WIDTH / divisions ) ) );
 
-            if ( ciStates[i] )
+            switch ( ciStates[i] )
             {
-                g.setColor( success );
-            }
-            else
-            {
-                g.setColor( fail );
+                case 1:
+                    g.setColor( success );
+                    break;
+                case 0:
+                    g.setColor( fail );
+                    break;
+                default:
+                    g.setColor( Color.WHITE );
             }
 
             g.fillRect( x, PAD, x2 - x, HEIGHT );
@@ -406,10 +409,10 @@ public class ActivityGraph
         return ret;
     }
 
-    private boolean[] getStatesForCIEvents( List<Event> events, Date now )
+    private int[] getStatesForCIEvents( List<Event> events, Date now )
     {
         int divisions = getDivisions();
-        boolean[] ret = new boolean[divisions];
+        int[] ret = new int[divisions];
         Collections.reverse( events );
 
         Calendar cal = new GregorianCalendar();
@@ -438,12 +441,12 @@ public class ActivityGraph
             }
         }
 
-        Map<Project, Boolean> states = new HashMap<Project, Boolean>();
         Date divEnd = cal.getTime();
         eventIter = events.listIterator();
         for ( int c = 0; c < divisions; c++ )
         {
             Map<Project, Integer> failureMap = new HashMap<Project, Integer>();
+            Map<Project, Integer> passMap = new HashMap<Project, Integer>();
             Map<Project, Boolean> finalFailures = new HashMap<Project, Boolean>();
             Map<Project, Boolean> finalSuccesses = new HashMap<Project, Boolean>();
 
@@ -457,6 +460,10 @@ public class ActivityGraph
                     if ( failureMap.containsKey( p ) ) {
                         failures = failureMap.get( p );
                     }
+                    int passes = 0;
+                    if ( passMap.containsKey( p ) ) {
+                        passes = passMap.get( p );
+                    }
                     boolean finallyFailed = false;
                     if ( finalFailures.containsKey( p ) ) {
                         finallyFailed = finalFailures.get( p );
@@ -468,6 +475,7 @@ public class ActivityGraph
 
                     if ( next.getClass().getName().endsWith( "BuildSucceededEvent" ) )
                     {
+                        passes++;
                         finallyFailed = false;
                         finallySucceeded = true;
                     }
@@ -479,6 +487,7 @@ public class ActivityGraph
                     }
 
                     failureMap.put( p, failures );
+                    passMap.put( p, passes );
                     finalFailures.put( p, finallyFailed );
                     finalSuccesses.put( p, finallySucceeded );
                 }
@@ -489,30 +498,45 @@ public class ActivityGraph
                 }
             }
 
+            boolean allEndedWell = true;
             int failures = 0;
+            int passes = 0;
             for ( Project project : projects )
             {
                 if ( failureMap.containsKey( project ) )
                 {
                     failures += failureMap.get( project );
                 }
-
-                if ( finalFailures.containsKey( project ) && finalFailures.get( project ) )
+                if ( passMap.containsKey( project ) )
                 {
-                    states.put( project, Boolean.FALSE );
+                    passes += passMap.get( project );
                 }
-                else if ( finalSuccesses.containsKey( project ) && finalSuccesses.get( project ) )
+
+                boolean finallySucceeded = !finalSuccesses.containsKey( project ) || finalSuccesses.get( project );
+                allEndedWell = allEndedWell && finallySucceeded;
+            }
+            if ( failures <= 0 )
+            {
+                if ( passes > 0 )
                 {
-                    states.put( project, Boolean.TRUE );
+                    ret[c] = 1;
                 }
                 else
                 {
-                    if ( states.containsKey( project ) && !states.get( project ) ) {
-                        failures++;
-                    }
+                    ret[c] = -1;
                 }
             }
-            ret[c] = failures <= 0;
+            else
+            {
+                if ( allEndedWell )
+                {
+                    ret[c] = 1;
+                }
+                else
+                {
+                    ret[c] = 0;
+                }
+            }
 
             if ( isMonth() )
             {
