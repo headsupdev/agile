@@ -15,6 +15,7 @@
 * Re-enable eclipse build handling
 * Fixed a lot of authentication based issues 
 * Fixed what objects were returned in the XML feeds
+* Fix layout of login dialog for small screens
 
 
 2.0-beta2

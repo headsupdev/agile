@@ -43,6 +43,6 @@ public class Login
     {
         super.layout();
 
-        add( new LoginDialog( "dialog", false, this ) );
+        showDialog( new LoginDialog( DIALOG_PANEL_ID, false, this ), null );
     }
 }

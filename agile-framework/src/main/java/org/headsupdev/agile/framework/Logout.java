@@ -44,6 +44,6 @@ public class Logout
     {
         super.layout();
 
-        add( new LogoutDialog( "dialog", false, this ) );
+        showDialog( new LogoutDialog( DIALOG_PANEL_ID, false, this ), null );
     }
 }
