@@ -76,7 +76,7 @@ public abstract class HeadsUpPage
 {
     public static final Pattern ID_PATTERN = Pattern.compile( "[a-zA-Z0-9-_\\.]*" );
 
-    private static final String DIALOG_PANEL_ID = "agile-dialog";
+    protected static final String DIALOG_PANEL_ID = "agile-dialog";
 
     private Application application;
     private Project project;
@@ -817,6 +817,10 @@ public abstract class HeadsUpPage
         }
 
         panel.setVisible( true );
-        target.addComponent( panel );
+
+        if ( target != null )
+        {
+            target.addComponent( panel );
+        }
     }
 }
