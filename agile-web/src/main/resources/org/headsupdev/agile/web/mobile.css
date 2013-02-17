@@ -1,5 +1,3 @@
-/* @override http://localhost:8069/resources/org.headsupdev.agile.web.HeadsUpPage/mobile.css */
-
 .hiddenonmobile {
     display: none !important;
 }
@@ -37,11 +35,11 @@
 }
 
 #header1 .headbutton:hover {
-	background-image: none;
+    background-image: none;
 }
 
 #header1 #userpanel .headbutton {
-	padding: 0;
+    padding: 0;
 }
 
 #userpanel .search {
@@ -80,7 +78,7 @@
     position: absolute;
     right: 32px;
     top: 62px;
-    
+
     padding: 0 !important;
     list-style: none;
 
@@ -116,11 +114,11 @@
 }
 
 #mainmenu li.mainmenu-item-selected {
-	background-image: none;
+    background-image: none;
 }
 
 .mainmenu-item:hover, .mainmenu-item a:hover {
-	background-image: none;
+    background-image: none;
 }
 
 #subselect {
@@ -137,7 +135,7 @@
     position: absolute;
     right: 0;
     top: 62px;
-    
+
     padding: 0 !important;
     padding: 0;
     list-style: none;
@@ -174,7 +172,7 @@
 }
 
 .submenu-item:hover, .submenu-item a:hover {
-	background-color: transparent;
+    background-color: transparent;
 }
 
 #projectselect {
@@ -196,7 +194,7 @@
     position: absolute;
     bottom: 22px;
     left: 2px;
-    
+
     line-height: 150%;
 }
 
@@ -327,11 +325,6 @@
 }
 
 /** little app hacks - make hooks for app specific mobile styles **/
-
-#content div.project, #content div.user {
-    margin-top: -100px;
-    margin-bottom: 99px;
-}
 
 form.search input.submit {
     right: 2px;

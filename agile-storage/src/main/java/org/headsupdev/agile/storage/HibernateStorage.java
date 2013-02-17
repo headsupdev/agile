@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2013 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -49,8 +49,8 @@ public class HibernateStorage
 
     private static HeadsUpConfiguration globalConfig;
 
-    private static final long RECENT_PROJECTS_OFFSET = 1000l * 60 * 60 * 24 * 6;
-    private static final long ACTIVE_PROJECTS_OFFSET = 1000l * 60 * 60 * 24 * 30;
+    private static final long RECENT_PROJECTS_OFFSET = 1000l * 60 * 60 * 24 * 7;
+    private static final long ACTIVE_PROJECTS_OFFSET = 1000l * 60 * 60 * 24 * 28;
     private static Set<String> activeProjectIds;
     private static Map<String, Date> latestProjectActivity;
     private static Map<String, Set<String>> recentProjectIds;

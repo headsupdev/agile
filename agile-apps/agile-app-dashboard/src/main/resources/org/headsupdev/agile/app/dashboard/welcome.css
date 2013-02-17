@@ -1,5 +1,10 @@
-#content p {
-    padding-bottom: 127px;
+p.projectgraphgroup {
+    display: block;
+    width: 100%;
+    clear: both;
+
+    color: gray;
+    border-bottom: 1px solid lightgrey;
 }
 
 img.activitygraph {
@@ -20,6 +25,10 @@ img.icon {
     vertical-align: middle;
 }
 
+#content {
+    margin-bottom: 315px;
+}
+
 #content div.project {
     width: 271px;
 }
@@ -36,9 +45,7 @@ img.icon {
     float: left;
     height: 180px;
 
-    margin-top: -130px;
     padding-bottom: 5px;
-    margin-bottom: 129px;
 
     text-align: center;
     font-size: 90%;
@@ -51,12 +58,16 @@ img.icon {
     margin-top: -5px;
 }
 
+#content div.project span.caption {
+    padding-right: 30px;
+}
+
 #content div.project a, #content div.user a {
     border: none;
 }
 
 #content div.project a:hover, #content div.user a:hover,
- #content div.project a:hover span, #content div.user span a:hover {
+#content div.project a:hover span, #content div.user span a:hover {
     background-color: transparent;
 }
 
@@ -71,4 +82,3 @@ table.project-details td {
 table.project-details, table.details, table.moredetails {
     width: 100%;
 }
-

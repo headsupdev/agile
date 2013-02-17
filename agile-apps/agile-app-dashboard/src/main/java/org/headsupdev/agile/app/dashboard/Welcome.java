@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2013 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -32,6 +32,10 @@ import org.headsupdev.agile.api.Permission;
 import org.headsupdev.agile.security.permission.ProjectListPermission;
 import org.headsupdev.agile.web.HeadsUpPage;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 /**
  * The HeadsUp welcome page - will display the dashboard most likely.
  *
@@ -51,7 +55,31 @@ public class Welcome extends HeadsUpPage
         super.layout();
         add( CSSPackageResource.getHeaderContribution( getClass(), "welcome.css" ) );
 
-        add( new ListView<Project>( "projectlist", getStorage().getRootProjects() ) {
+        List<Project> recent = getStorage().getRecentRootProjects( getSession().getUser() );
+        Collections.sort( recent );
+        addProjectGraphListView( "recentprojects", recent );
+
+        List<Project> active = new ArrayList<Project>( getStorage().getActiveRootProjects() );
+        active.removeAll( recent );
+        Collections.sort( active );
+        addProjectGraphListView( "activeprojects", active );
+
+        List<Project> inactive = new ArrayList<Project>( getStorage().getRootProjects() );
+        inactive.removeAll( recent );
+        inactive.removeAll( active );
+        Collections.sort( inactive );
+        addProjectGraphListView( "inactiveprojects", inactive );
+    }
+
+    @Override
+    public String getTitle()
+    {
+        return "Welcome to " + getStorage().getGlobalConfiguration().getProductName();
+    }
+
+    protected void addProjectGraphListView( String id, List<Project> projects )
+    {
+        add( new ListView<Project>( id, projects ) {
             protected void populateItem( ListItem<Project> listItem )
             {
                 Project project = listItem.getModelObject();
@@ -75,12 +103,6 @@ public class Welcome extends HeadsUpPage
                 projectLink.add( new Label( "name", project.getAlias() ) );
                 listItem.add( projectLink );
             }
-        });
-    }
-
-    @Override
-    public String getTitle()
-    {
-        return "Welcome to " + getStorage().getGlobalConfiguration().getProductName();
+        } );
     }
 }

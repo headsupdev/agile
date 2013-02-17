@@ -19,12 +19,35 @@
 <html>
   <body>
     <wicket:extend>
-      <wicket:enclosure child="projectlist">
-        <p>The following projects are loaded:</p>
+      <wicket:enclosure child="recentprojects">
         <div class="projects">
-          <div wicket:id="projectlist" class="project">
+          <p class="projectgraphgroup">Recently updated projects</p>
+
+          <div wicket:id="recentprojects" class="project">
             <a wicket:id="project-link"><img wicket:id="activity" alt="activity graph" class="activitygraph" /><br />
             <span wicket:id="name" class="caption"></span></a>
+          </div>
+        </div>
+      </wicket:enclosure>
+
+      <wicket:enclosure child="activeprojects">
+        <div class="projects">
+          <p class="projectgraphgroup">Currently active projects</p>
+
+          <div wicket:id="activeprojects" class="project">
+            <a wicket:id="project-link"><img wicket:id="activity" alt="activity graph" class="activitygraph" /><br />
+              <span wicket:id="name" class="caption"></span></a>
+          </div>
+        </div>
+      </wicket:enclosure>
+
+      <wicket:enclosure child="inactiveprojects">
+        <div class="projects">
+          <p class="projectgraphgroup">Other enabled projects</p>
+
+          <div wicket:id="inactiveprojects" class="project">
+            <a wicket:id="project-link"><img wicket:id="activity" alt="activity graph" class="activitygraph" /><br />
+              <span wicket:id="name" class="caption"></span></a>
           </div>
         </div>
       </wicket:enclosure>
