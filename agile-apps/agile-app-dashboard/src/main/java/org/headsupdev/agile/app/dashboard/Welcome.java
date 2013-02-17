@@ -103,6 +103,6 @@ public class Welcome extends HeadsUpPage
                 projectLink.add( new Label( "name", project.getAlias() ) );
                 listItem.add( projectLink );
             }
-        } );
+        }.setVisible( projects.size() > 0 ) );
     }
 }
