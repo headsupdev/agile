@@ -54,6 +54,13 @@ public class CITestStatusModifier
                         return className + " testfail";
                     }
                 }
+                else if ( type.equals( "failerror" ) )
+                {
+                    if ( build.getFailures() > 0 || build.getErrors() > 0 )
+                    {
+                        return className + " testfail";
+                    }
+                }
                 else if ( type.equals( "errors" ) )
                 {
                     if ( build.getErrors() > 0 )

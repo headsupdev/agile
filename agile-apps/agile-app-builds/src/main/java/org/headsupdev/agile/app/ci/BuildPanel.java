@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2013 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -45,7 +45,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * TODO document me
+ * A panel that displays the details of a build.
  *
  * @author Andrew Williams
  * @since 1.0
@@ -92,8 +92,10 @@ public class BuildPanel
         }
         add( new Image( "status", new ResourceReference( View.class, icon ) ) );
         add( new Label( "tests", String.valueOf( build.getTests() ) ).add( new CITestStatusModifier( "tests", build, "tests" ) ) );
-        add( new Label( "failures", String.valueOf( build.getFailures() ) ).add( new CITestStatusModifier( "failures", build, "failures" ) ) );
-        add( new Label( "errors", String.valueOf( build.getErrors() ) ).add( new CITestStatusModifier( "errors", build, "errors" ) ) );
+        WebMarkupContainer failError = new WebMarkupContainer( "failerror" );
+        failError.add( new Label( "failures", String.valueOf( build.getFailures() ) ) );
+        failError.add( new Label( "errors", String.valueOf( build.getErrors() ) ) );
+        add( failError.add( new CITestStatusModifier( "failerror", build, "failures" ) ) );
 
         params = new PageParameters();
         params.add( "project", build.getProject().getId() );
