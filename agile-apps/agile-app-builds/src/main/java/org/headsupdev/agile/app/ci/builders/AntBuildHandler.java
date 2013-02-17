@@ -47,7 +47,7 @@ public class AntBuildHandler
         StreamGobbler serr = null, sout = null;
         try
         {
-            buildOut = new FileWriter( output );
+            buildOut = new FileWriter( output, true );
 
             String antHome = MavenTwoBuildHandler.lookupBuildExecutable( CIApplication.CONFIGURATION_ANT_HOME,
                     config, appConfig, build, output );

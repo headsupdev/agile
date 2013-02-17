@@ -240,7 +240,7 @@ public class EclipseBuildHandler
     protected boolean convertAndroidBuildToAnt( Project project, File buildDir, File output )
     {
         log.debug( "Converting eclipse project to ant in " + buildDir.getAbsolutePath() );
-        String[] commands = { "android", "update", "project", "-p", buildDir.getAbsolutePath() };
+        String[] commands = { "android", "update", "project", "-t", "1", "-p", buildDir.getAbsolutePath() };
 
         int result = -1;
         Writer buildOut = null;
@@ -322,6 +322,6 @@ public class EclipseBuildHandler
             {
                 eclipseHandler.onBuildPassed( project, eclipseConfig, appConfig, dir, output, build );
             }
-        }.runBuild(project, appConfig, appConfig, buildDir, output, build);
+        }.runBuild( project, appConfig, appConfig, buildDir, output, build );
     }
 }
