@@ -77,7 +77,7 @@ table.key td {
     color: #5db008 !important;
 }
 
-.comment-icon {
+.comment-icon, .milestone-check {
     width: 16px;
 }
 

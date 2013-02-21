@@ -46,6 +46,7 @@
           <tr>
               <table class="milestones listing">
                   <tr>
+                      <th class="milestone-check">&nbsp;</th>
                       <th class="name">Name</th>
                       <th class="percent">Progress</th>
                       <th class="issues">Issues</th>
@@ -54,7 +55,7 @@
                   </tr>
                   <wicket:container wicket:id="milestones">
                   <tr wicket:id="list">
-                      <td><input type="checkbox" wicket:id="check" /></td>
+                      <td class="milestone-check"><input type="checkbox" wicket:id="check" /></td>
                       <td wicket:id="id" class="name">id</td>
                       <td wicket:id="bar" class="bar">bar</td>
                       <td wicket:id="issues" class="issues">0</td>
