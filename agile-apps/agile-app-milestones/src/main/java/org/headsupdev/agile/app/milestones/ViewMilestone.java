@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2013 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -202,6 +202,10 @@ public class ViewMilestone
                 links.add( new BookmarkableMenuLink( RenderUtil.getPageClass( "milestones/complete" ), pageParams, "complete" ) );
             }
             links.add( new BookmarkableMenuLink( RenderUtil.getPageClass( "milestones/comment" ), pageParams, "comment" ) );
+        }
+        else
+        {
+            links.add( new BookmarkableMenuLink( RenderUtil.getPageClass( "milestones/reopen" ), pageParams, "reopen" ) );
         }
 
         return links;

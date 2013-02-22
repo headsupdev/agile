@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2013 Heads Up Development Ltd.
+ * Copyright 2013 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -19,43 +19,41 @@
 package org.headsupdev.agile.app.milestones;
 
 import org.headsupdev.agile.api.Event;
+import org.headsupdev.agile.app.milestones.event.UpdateMilestoneEvent;
 import org.headsupdev.agile.storage.Comment;
-import org.headsupdev.agile.app.milestones.event.CompleteMilestoneEvent;
+import org.apache.wicket.markup.html.form.Form;
 import org.headsupdev.agile.web.MountPoint;
 
-import java.util.Date;
-
-import org.apache.wicket.markup.html.form.Form;
-
 /**
- * Milestone complete page - mark it as completed
+ * Add a comment for an issue
  *
  * @author Andrew Williams
  * @version $Id$
  * @since 1.0
  */
-@MountPoint( "complete" )
-public class CompleteMilestone
-    extends CreateComment
+@MountPoint( "reopen" )
+public class ReopenMilestone
+        extends CreateComment
 {
     protected void layoutChild( Form form )
     {
-        setSubmitLabel( "Complete Milestone" );
+        setSubmitLabel( "Reopen Milestone" );
     }
 
     protected void submitChild()
     {
-        getMilestone().setCompletedDate( new Date() );
+        getMilestone().setCompletedDate( null );
     }
 
     @Override
     public String getTitle()
     {
-        return "Complete milestone " + getMilestone().getName();
+        return "Reopen milestone " + getMilestone().getName();
     }
 
     protected Event getUpdateEvent( Comment comment )
     {
-        return new CompleteMilestoneEvent( getMilestone(), getMilestone().getProject(), getSession().getUser(), comment );
+        return new UpdateMilestoneEvent( getMilestone(), getMilestone().getProject(), getSession().getUser(), comment,
+                "reopened" );
     }
 }
