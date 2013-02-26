@@ -365,7 +365,7 @@
   <distributionManagement>
     <site>
       <id>headsupdev-site</id>
-      <url>dav:http://headsupdev.org/repository/site/headsup/</url>
+      <url>dav:http://headsupdev.org/repository/site/agile/</url>
     </site>
   </distributionManagement>
 
