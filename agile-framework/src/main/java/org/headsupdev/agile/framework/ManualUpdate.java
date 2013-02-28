@@ -18,6 +18,7 @@
 
 package org.headsupdev.agile.framework;
 
+import org.apache.wicket.markup.html.basic.Label;
 import org.headsupdev.agile.api.Permission;
 import org.headsupdev.agile.api.util.FileUtil;
 import org.headsupdev.agile.core.UpdateDetails;
@@ -59,6 +60,8 @@ public class ManualUpdate
     {
         super.layout();
         add( CSSPackageResource.getHeaderContribution(getClass(), "updates.css") );
+
+        add( new Label( "productName", getStorage().getGlobalConfiguration().getProductName() ) );
 
         updating = new UpdatingPanel( "updating", HomeApplication.getHeadsUpRuntime() )
         {
