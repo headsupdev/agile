@@ -466,6 +466,10 @@ public class HibernateStorage
     public List<Project> getRecentRootProjects( User user )
     {
         Session session = getHibernateSession();
+        if ( user == null || user.getUsername().equals( "anonymous" ) )
+        {
+            return new ArrayList<Project>();
+        }
 
         Set<String> recentIds = recentProjectIds.get( user.getUsername() );
         if ( recentIds == null )
