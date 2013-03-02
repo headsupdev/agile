@@ -84,6 +84,12 @@ public class View
         WebMarkupContainer details = new WebMarkupContainer( "details" );
         add( details );
 
+        PageParameters titledParameters = getPageParameters();
+        if ( !titledParameters.containsKey( "page" ) )
+        {
+            titledParameters.add( "page", title );
+        }
+
         if ( doc == null )
         {
             addLink( new BookmarkableMenuLink( getPageClass( "docs/edit" ), getPageParameters(), "create" ) );
@@ -92,19 +98,14 @@ public class View
             WebMarkupContainer notfound = new WebMarkupContainer( "notfound" );
             notfound.add( new Label( "page", title ) );
             notfound.add( new Label( "project", getProject().getAlias() ) );
-            PageParameters createParams = getPageParameters();
-            if ( !createParams.containsKey( "page" ) )
-            {
-                createParams.add( "page", title );
-            }
-            notfound.add( new BookmarkablePageLink( "create", getPageClass( "docs/edit" ), createParams ) );
+            notfound.add( new BookmarkablePageLink( "create", getPageClass( "docs/edit" ), titledParameters ) );
             add( notfound );
 
             details.setVisible( false );
             return;
         }
 
-        addLink( new BookmarkableMenuLink( getPageClass( "docs/edit" ), getPageParameters(), "edit" ) );
+        addLink( new BookmarkableMenuLink( getPageClass( "docs/edit" ), titledParameters, "edit" ) );
 
         watching = doc.getWatchers().contains( getSession().getUser() );
         addLink( new MenuLink()
