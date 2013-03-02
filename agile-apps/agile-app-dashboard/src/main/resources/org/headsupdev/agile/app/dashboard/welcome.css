@@ -25,8 +25,9 @@ img.icon {
     vertical-align: middle;
 }
 
-#content {
-    margin-bottom: 315px;
+.clearBeforeFooter {
+    clear: both;
+    height: 0;
 }
 
 #content div.project {
