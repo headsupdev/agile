@@ -47,6 +47,7 @@ import org.hibernate.search.annotations.*;
 public class Document
     implements Serializable, SearchResult, Comparable<Document>
 {
+    public static final String DEFAULT_PAGE = "Welcome";
     @EmbeddedId
     @DocumentId
     @FieldBridge( impl = NameProjectBridge.class )

@@ -18,6 +18,7 @@
 
 package org.headsupdev.agile.app.docs;
 
+import org.apache.wicket.PageParameters;
 import org.headsupdev.agile.api.*;
 import org.headsupdev.agile.api.mime.Mime;
 import org.headsupdev.agile.storage.HibernateStorage;
@@ -74,7 +75,7 @@ public class View
         title = getPageParameters().getString( "page" );
         if ( title == null || title.length() == 0 )
         {
-            title = "Welcome";
+            title = Document.DEFAULT_PAGE;
         }
 
         doc = DocsApplication.getDocument( title, getProject() );
@@ -91,7 +92,12 @@ public class View
             WebMarkupContainer notfound = new WebMarkupContainer( "notfound" );
             notfound.add( new Label( "page", title ) );
             notfound.add( new Label( "project", getProject().getAlias() ) );
-            notfound.add( new BookmarkablePageLink( "create", getPageClass( "docs/edit"), getPageParameters() ) );
+            PageParameters createParams = getPageParameters();
+            if ( !createParams.containsKey( "page" ) )
+            {
+                createParams.add( "page", title );
+            }
+            notfound.add( new BookmarkablePageLink( "create", getPageClass( "docs/edit" ), createParams ) );
             add( notfound );
 
             details.setVisible( false );
