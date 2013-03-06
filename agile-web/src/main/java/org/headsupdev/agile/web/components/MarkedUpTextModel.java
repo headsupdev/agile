@@ -129,6 +129,11 @@ public class MarkedUpTextModel extends Model<String> {
             module = "doc";
         }
 
+        // simple URLs should be marked up too!
+        if ( name.startsWith( "//" ) ) {
+            return text;
+        }
+
         if ( providers.containsKey( module ) )
         {
             pos = name.indexOf( ":" );
