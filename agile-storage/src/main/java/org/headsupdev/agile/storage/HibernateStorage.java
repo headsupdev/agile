@@ -460,6 +460,10 @@ public class HibernateStorage
     {
         Session session = getHibernateSession();
 
+        if ( activeProjectIds.size() == 0 )
+        {
+            return new ArrayList<Project>();
+        }
         return getProjectCriteria( session, false, activeProjectIds ).list();
     }
 
@@ -472,7 +476,7 @@ public class HibernateStorage
         }
 
         Set<String> recentIds = recentProjectIds.get( user.getUsername() );
-        if ( recentIds == null )
+        if ( recentIds == null || recentIds.size() == 0 )
         {
             return new ArrayList<Project>();
         }

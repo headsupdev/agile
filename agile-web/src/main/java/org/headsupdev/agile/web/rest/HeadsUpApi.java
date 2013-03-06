@@ -84,13 +84,22 @@ public abstract class HeadsUpApi
     protected boolean isAnonymousAllowed()
     {
         // if anon access allowed then grant access to other areas
-        Role anon = Manager.getSecurityInstance().getRoleById( "anonymous" );
-        if ( getRequiredPermission() == null || anon.getPermissions().contains( getRequiredPermission().getId() ) )
+        if ( getRequiredPermission() == null || anonUserHasRequiredPermission() )
         {
             return true;
         }
 
         return false;
+    }
+
+    private boolean anonUserHasRequiredPermission() {
+        Role anon = Manager.getSecurityInstance().getRoleById( "anonymous" );
+        if ( anon == null )
+        {
+            return false;
+        }
+
+        return anon.getPermissions().contains( getRequiredPermission().getId() );
     }
 
     public abstract Permission getRequiredPermission();
