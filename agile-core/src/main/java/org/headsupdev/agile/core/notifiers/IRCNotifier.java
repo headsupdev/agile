@@ -53,7 +53,6 @@ public class IRCNotifier
             public void onDisconnected( IRCConnection connection )
             {
                 IRCNotifier notifier = null;
-                System.out.println( "disconnected " + connection );
                 for ( IRCNotifier n : connections.keySet() )
                 {
                     if ( connections.get( n ).equals( connection ) )
@@ -68,7 +67,6 @@ public class IRCNotifier
                     return;
                 }
 
-                System.out.println( "notifier reconnecting " + notifier );
                 notifier.connected = false;
                 notifier.connect();
             }
