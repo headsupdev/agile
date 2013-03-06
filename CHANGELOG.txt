@@ -1,3 +1,10 @@
+2.0-beta4
+
+*
+
+* Fixed marked up text to render URLs as links
+* Fix some issues with memory constraints when updating
+
 2.0-beta3
 
 * Support building of Xcode 4 workspaces
