@@ -93,12 +93,15 @@ public class HibernateStorage
     protected static void removeInactiveProjects()
     {
         Date oldestActiveDate = new Date( System.currentTimeMillis() - ACTIVE_PROJECTS_OFFSET );
-        for ( String projectId : latestProjectActivity.keySet() )
+        Iterator<String> keyIterator = latestProjectActivity.keySet().iterator();
+        while ( keyIterator.hasNext() )
         {
+            String projectId = keyIterator.next();
+
             Date latestActivity = latestProjectActivity.get( projectId );
             if ( latestActivity.before( oldestActiveDate ) )
             {
-                latestProjectActivity.remove( projectId );
+                keyIterator.remove();
             }
         }
 
@@ -107,12 +110,15 @@ public class HibernateStorage
         {
             Map<String, Date> latestUserActivity = latestUserProjectActivity.get( username );
 
-            for ( String projectId : latestUserActivity.keySet() )
+            keyIterator = latestUserActivity.keySet().iterator();
+            while ( keyIterator.hasNext() )
             {
+                String projectId = keyIterator.next();
+
                 Date latestRecent = latestUserActivity.get( projectId );
                 if ( latestRecent.before( oldestRecentDate ) )
                 {
-                    latestUserActivity.remove( projectId );
+                    keyIterator.remove();
                 }
             }
         }
