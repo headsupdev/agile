@@ -98,7 +98,7 @@ public class ActivityApi
             {
                 item.projectId = event.getProject().getId();
             }
-            item.type = event.getClass().getSimpleName();
+            item.type = getClassName( event.getClass() );
 
             item.title = event.getTitle();
             item.link = configuration.getFullUrl( "/activity/event/id/" + event.getId() );

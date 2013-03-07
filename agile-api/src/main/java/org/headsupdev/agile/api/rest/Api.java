@@ -23,6 +23,7 @@ import com.google.gson.FieldAttributes;
 import com.google.gson.GsonBuilder;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.model.IModel;
+import org.hibernate.proxy.HibernateProxyHelper;
 
 /**
  * The base class for HeadsUp Agile REST API classes. This allows for simple API creation by exposing objects
@@ -109,5 +110,12 @@ public abstract class Api
         {
             return false;
         }
+    }
+
+    public static String getClassName( Class aClass )
+    {
+        Class realClass = HibernateProxyHelper.getClassWithoutInitializingProxy( aClass );
+
+        return realClass.getSimpleName();
     }
 }

@@ -22,6 +22,7 @@ import org.headsupdev.agile.HeadsUpResourceMarker;
 import org.headsupdev.agile.api.Manager;
 import org.headsupdev.agile.api.Project;
 import org.headsupdev.agile.api.SearchResult;
+import org.headsupdev.agile.api.rest.Api;
 import org.headsupdev.agile.api.rest.Publish;
 import org.headsupdev.agile.storage.HibernateStorage;
 import org.headsupdev.agile.storage.HibernateUtil;
@@ -240,7 +241,7 @@ public class Searcher
         public Result( Object[] object )
         {
             match = object[1];
-            matchType = match.getClass().getSimpleName();
+            matchType = Api.getClassName( match.getClass() );
             title = object[1].toString();
 
             project = getProjectFromResult( object );
