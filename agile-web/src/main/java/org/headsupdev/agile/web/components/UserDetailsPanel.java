@@ -33,15 +33,15 @@ import org.headsupdev.agile.api.Project;
 public class UserDetailsPanel
     extends Panel
 {
-    public UserDetailsPanel( String id, User user, Project project )
+    public UserDetailsPanel( String id, User user, Project project, boolean showFullDetails )
     {
         super( id );
 
         add( new Label( "username", user.getUsername() ) );
         add( new Label( "firstname", user.getFirstname() ) );
         add( new Label( "lastname", user.getLastname() ) );
-        add( new Label( "email", user.getEmail() ) );
-        add( new Label( "telephone", user.getTelephone() ) );
+        add( new Label( "email", user.getEmail() ).setVisible( showFullDetails ) );
+        add( new Label( "telephone", user.getTelephone() ).setVisible( showFullDetails ) );
         add( new Label( "last", new FormattedDateModel( user.getLastLogin(),
                 ( (HeadsUpSession) getSession() ).getTimeZone() ) ) );
         add( new Label( "description", new MarkedUpTextModel( user.getDescription(), project ) )

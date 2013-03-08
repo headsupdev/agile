@@ -21,6 +21,7 @@ package org.headsupdev.agile.app.dashboard;
 import org.headsupdev.agile.api.Event;
 import org.headsupdev.agile.api.Manager;
 import org.headsupdev.agile.api.Permission;
+import org.headsupdev.agile.api.User;
 import org.headsupdev.agile.app.dashboard.permission.MemberViewPermission;
 import org.headsupdev.agile.security.permission.AdminPermission;
 import org.headsupdev.agile.storage.DurationWorkedUtil;
@@ -138,7 +139,7 @@ public class Account
         params.add( "silent", "true" );
         add( new Image( "account", new ResourceReference( "member.png" ), params ) );
 
-        add( new UserDetailsPanel( "details", user, getProject() ) );
+        add( new UserDetailsPanel( "details", user, getProject(), shouldShowFullDetails() ) );
 
         if ( showTools )
         {
@@ -206,6 +207,13 @@ public class Account
     public String getPageTitle()
     {
         return super.getPageTitle() + " :: Account:" + username;
+    }
+
+    private boolean shouldShowFullDetails()
+    {
+        User currentUser = getSession().getUser();
+
+        return ( currentUser != null && !currentUser.equals( HeadsUpSession.ANONYMOUS_USER ) );
     }
 
     public SortableEntityProvider<Issue> getIssuesWatchedBy( final org.headsupdev.agile.api.User user )

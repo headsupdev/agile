@@ -18,14 +18,22 @@
 
 package org.headsupdev.agile.app.dashboard.rest;
 
+import com.google.gson.*;
+import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.model.Model;
 import org.headsupdev.agile.api.Manager;
 import org.headsupdev.agile.api.Permission;
+import org.headsupdev.agile.api.User;
 import org.headsupdev.agile.app.dashboard.permission.MemberListPermission;
+import org.headsupdev.agile.storage.StoredUser;
+import org.headsupdev.agile.web.HeadsUpSession;
 import org.headsupdev.agile.web.MountPoint;
 import org.headsupdev.agile.web.rest.HeadsUpApi;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -54,6 +62,53 @@ public class AccountApi
     @Override
     public void doGet( PageParameters params )
     {
+        getBuilder().registerTypeAdapterFactory( new MaskedUserAdapterFactory() );
+
         setModel( new Model( new ArrayList( Manager.getSecurityInstance().getRealUsers() ) ) );
+    }
+
+    private boolean shouldReturnFullDetails()
+    {
+        User currentUser = ( (HeadsUpSession) getSession() ).getUser();
+
+        return ( currentUser != null && !currentUser.equals( HeadsUpSession.ANONYMOUS_USER ) );
+    }
+
+    class MaskedUserAdapterFactory
+            implements TypeAdapterFactory
+    {
+        public <T> TypeAdapter<T> create( final Gson gson, TypeToken<T> type )
+        {
+            if ( !StoredUser.class.isAssignableFrom( type.getRawType() ) )
+            {
+                return null; // this class only serializes StoredUser class objects
+            }
+
+            final TypeAdapter<StoredUser> projectAdapter = gson.getDelegateAdapter( this, TypeToken.get( StoredUser.class ) );
+
+            return new TypeAdapter<T>()
+            {
+                @Override
+                public void write( JsonWriter out, T value )
+                        throws IOException
+                {
+                    JsonObject object = projectAdapter.toJsonTree( (StoredUser) value ).getAsJsonObject();
+                    if ( !shouldReturnFullDetails() )
+                    {
+                        object.remove( "email" );
+                        object.remove( "telephone" );
+                    }
+
+                    gson.getAdapter( JsonElement.class ).write( out, object );
+                }
+
+                @Override
+                public T read( JsonReader in )
+                        throws IOException
+                {
+                    return null;
+                }
+            };
+        }
     }
 }
