@@ -1,6 +1,6 @@
 <!--
   ~ HeadsUp Agile
-  ~ Copyright 2009-2012 Heads Up Development Ltd.
+  ~ Copyright 2009-2013 Heads Up Development Ltd.
   ~
   ~ This program is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU Affero General Public License as
@@ -20,17 +20,10 @@
   <body>
     <wicket:extend>
       <form wicket:id="edit">
-        <table class="info vertical">
-          <tr>
-            <th class="name" style="width:20%">Id</th>
-            <td class="name" style="width:30%">
-              <span wicket:id="label">id</span>
-              <input type="text" wicket:id="name" />
-            </td>
-            <th class="project" style="width:20%">Project</th>
-            <td wicket:id="project" class="project" style="width:30%">project</td>
-          </tr>
-        </table>
+        <h1><span wicket:id="verb">Edit</span> Document
+          <span wicket:id="label">id</span>
+          <input type="text" wicket:id="name" />
+        </h1>
         <textarea wicket:id="content" id="content" rows="36" cols="80">content</textarea><br />
         <input type="submit" value="Save Page" />
       </form>

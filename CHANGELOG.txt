@@ -5,6 +5,7 @@
 * Fixed marked up text to render URLs as links
 * Fix some issues with memory constraints when updating
 * Fix possible crashes with the system if setup is not complete
+* Improvements to document edit styling to better match document view styles
 
 2.0-beta3
 

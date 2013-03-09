@@ -1,3 +1,21 @@
+/*
+ * HeadsUp Agile
+ * Copyright 2009-2013 Heads Up Development Ltd.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 table.docs, table.info, table.details, table.comments, table.attachments, textarea {
     width: 100%;
 }
@@ -33,7 +51,11 @@ table.key td {
 pre {
     padding: 5px;
     border: 1px dashed black;
-    font-size: 85%;
+    font-size: 75%;
+    
+    -moz-tab-size: 4;
+    -o-tab-size:   4;
+    tab-size:      4;
 }
 
 .attachment-filename {
@@ -55,11 +77,30 @@ pre {
     width: 100%;
 }
 
-.siteembed apiframe {
+.siteembed, .apiframe {
     height: 100%;
     position: relative;
 }
 
 .comment-icon {
     width: 16px;
+}
+
+#doc-content, .mceContentBody {
+    background-color: white;
+}
+
+#doc-content table, .mceContentBody table {
+    border-collapse: separate;
+    border: 1px solid grey;
+}
+
+#doc-content table,  #content td, .mceContentBody table, .mceContentBody td {
+    border-spacing: 0;
+    padding: 0 3px;
+}
+
+h1 input {
+    font-size: 22pt;
+    font-weight: bold;
 }

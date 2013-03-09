@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2013 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -105,7 +105,12 @@ public class Edit
     @Override
     public String getTitle()
     {
-        return "Edit Document " + name;
+        return null;
+    }
+
+    protected String getVerb()
+    {
+        return "Edit";
     }
 
     protected boolean isValidName( String name )
@@ -129,7 +134,7 @@ public class Edit
             add( new Label( "label", doc.getName() ).setVisible( !canEditTitle ) );
             add( new TextField<String>( "name" ).add( new IdPatternValidator() ).setVisible( canEditTitle ) );
 
-            add( new Label( "project", doc.getProject().getAlias() ) );
+            add( new Label( "verb", getVerb() ) );
             final TextArea contentArea = new TextArea<String>( "content" )
             {
                 protected boolean shouldTrimInput() {
@@ -145,6 +150,11 @@ public class Edit
             settings.setContentCss( new ResourceReference( HeadsUpPage.class, "common.css" ) );
             settings.setRelativeUrls( false );
             settings.setResizing( true );
+
+            // specify this manually as the API does not allow for the list of css contributions
+            settings.addCustomSetting( "content_css : \"" +
+                    urlFor( new ResourceReference( getClass(), "doc.css" ) ) + "," +
+                    urlFor( new ResourceReference( HeadsUpPage.class, "common.css" ) ) + "\"" );
 
             settings.addCustomSetting( "plugins : \"safari,spellchecker,iespell,style,pagebreak,table,advimage,advlink,inlinepopups,insertdatetime,media,searchreplace,print,contextmenu,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras\"" );
             settings.addCustomSetting( "theme_advanced_buttons1 : \"bold,italic,underline,|,justifyleft,justifycenter,justifyright,justifyfull,|,forecolor,backcolor,formatselect,fontselect,visualchars,|,fullscreen,help\"" );
@@ -224,7 +234,7 @@ public class Edit
 
                 public void handleText( char[] data, int pos )
                 {
-                    StringTokenizer tokens = new StringTokenizer(new String(data), " ", true);
+                    StringTokenizer tokens = new StringTokenizer( new String( data ), " ", true );
                     while (tokens.hasMoreElements() && !full )
                     {
 
@@ -238,7 +248,7 @@ public class Edit
                             }
                             else
                             {
-                                token = token.substring(1);
+                                token = token.substring( 1 );
                             }
                         }
                         if ( chars > length )
@@ -257,7 +267,7 @@ public class Edit
                 }
             };
 
-            new ParserDelegator().parse( new StringReader( complete ), callback, false);
+            new ParserDelegator().parse( new StringReader( complete ), callback, false );
 
             return text.toString();
         }
