@@ -1,6 +1,6 @@
 2.0-beta4
 
-*
+* Better security by hiding email and telephone details from anonymous views
 
 * Fixed marked up text to render URLs as links
 * Fix some issues with memory constraints when updating
