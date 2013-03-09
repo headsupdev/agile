@@ -121,7 +121,7 @@ public class Search
                 ResourceReference icon = new HeadsUpResourceReference( Searcher.getClassImageName( result.match ) );
                 listItem.add( new Image( "icon", icon ) );
 
-                listItem.add(new Label("relevance", ( result.relevance * 100 ) + "%"));
+                listItem.add( new Label( "relevance", (int) ( result.relevance * 100 ) + "%" ) );
 
                 WebMarkupContainer container;
                 if ( result.link != null )

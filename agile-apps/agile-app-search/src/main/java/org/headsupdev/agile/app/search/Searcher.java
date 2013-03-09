@@ -225,6 +225,7 @@ public class Searcher
             implements Serializable
     {
         public Object match;
+
         @Publish
         private String matchType;
 
@@ -235,7 +236,9 @@ public class Searcher
         @Publish
         public String title, link, icon;
 
+        @Publish
         public float relevance;
+
         public Explanation explanation;
 
         public Result( Object[] object )
@@ -248,6 +251,11 @@ public class Searcher
             projectId = project.getId();
 
             relevance = (Float) object[0];
+            // avoid over-ranking results (based on many field match?)
+            if ( relevance > 1 )
+            {
+                relevance = 1;
+            }
             explanation = (Explanation) object[2];
 
             if ( match instanceof SearchResult )

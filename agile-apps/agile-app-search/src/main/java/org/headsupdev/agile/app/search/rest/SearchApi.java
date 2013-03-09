@@ -20,7 +20,7 @@ package org.headsupdev.agile.app.search.rest;
 
 import org.headsupdev.agile.api.Permission;
 import org.headsupdev.agile.app.search.Searcher;
-import org.headsupdev.agile.security.permission.ProjectListPermission;
+import org.headsupdev.agile.app.search.permission.SearchPermission;
 import org.headsupdev.agile.web.MountPoint;
 import org.headsupdev.agile.web.rest.HeadsUpApi;
 
@@ -50,7 +50,7 @@ public class SearchApi
     @Override
     public Permission getRequiredPermission()
     {
-        return new ProjectListPermission();
+        return new SearchPermission();
     }
 
     @Override
