@@ -61,7 +61,7 @@ public class MarkedUpTextModel extends Model<String> {
         }
 
         StringBuilder ret = new StringBuilder( in.length() );
-        StringTokenizer tokenizer = new StringTokenizer( in, " \t\n\r\f<>(){}&,!?;", true );
+        StringTokenizer tokenizer = new StringTokenizer( in, " \t\n\r\f<>(){}&,!?;'\"", true );
 
         Map<String, LinkProvider> providers = Manager.getInstance().getLinkProviders();
         while ( tokenizer.hasMoreTokens() )
@@ -169,6 +169,11 @@ public class MarkedUpTextModel extends Model<String> {
 
         String module = text.substring( 0, pos ).toLowerCase();
         String name = text.substring( pos + 1 );
+
+        // simple URLs should never be broken
+        if ( name.startsWith( "//" ) ) {
+            return false;
+        }
 
         if ( module.equals( "wiki" ) )
         {
