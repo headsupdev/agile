@@ -18,6 +18,7 @@
 
 package org.headsupdev.agile.web.components.history;
 
+import org.headsupdev.agile.api.rest.Api;
 import org.headsupdev.agile.web.HeadsUpSession;
 import org.headsupdev.agile.web.components.FormattedDateModel;
 import org.apache.wicket.markup.html.CSSPackageResource;
@@ -108,7 +109,7 @@ public class HistoryPanel
             }
             listItem.add( date );
 
-            String image = "images/events/" + event.getClass().getName().substring( event.getClass().getPackage().getName().length() + 1) + ".png";
+            String image = "images/events/" + Api.getClassName( event ) + ".png";
             if ( !PackageResource.exists( HeadsUpPage.class, image, null, null ) ) {
                 image = "images/events/StoredEvent.png";
             }

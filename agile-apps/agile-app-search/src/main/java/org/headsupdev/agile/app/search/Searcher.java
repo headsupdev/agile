@@ -241,7 +241,7 @@ public class Searcher
         public Result( Object[] object )
         {
             match = object[1];
-            matchType = Api.getClassName( match.getClass() );
+            matchType = Api.getClassName( match );
             title = object[1].toString();
 
             project = getProjectFromResult( object );

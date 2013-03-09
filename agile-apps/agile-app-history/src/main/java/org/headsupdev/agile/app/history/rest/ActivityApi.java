@@ -98,18 +98,18 @@ public class ActivityApi
             {
                 item.projectId = event.getProject().getId();
             }
-            item.type = getClassName( event.getClass() );
+            item.type = getClassName( event );
 
             item.title = event.getTitle();
             item.link = configuration.getFullUrl( "/activity/event/id/" + event.getId() );
             item.date = event.getTime();
             item.description = new MarkedUpTextModel( event.getSummary(), event.getProject() ).getObject();
 
-            String image = "/images/events/" + event.getClass().getName().substring( event.getClass().getPackage().getName().length() + 1) + ".png";
+            String image = "images/events/" + item.type + ".png";
             if ( !PackageResource.exists( HeadsUpPage.class, image, null, null ) ) {
-                image = "/images/events/StoredEvent.png";
+                image = "images/events/StoredEvent.png";
             }
-            item.icon = configuration.getFullUrl( "/resources/" + HeadsUpPage.class.getCanonicalName() + image );
+            item.icon = configuration.getFullUrl( "/resources/" + HeadsUpPage.class.getCanonicalName() + "/" + image );
 
             entries.add( item );
         }

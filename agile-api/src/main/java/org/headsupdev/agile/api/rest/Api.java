@@ -112,9 +112,9 @@ public abstract class Api
         }
     }
 
-    public static String getClassName( Class aClass )
+    public static String getClassName( Object object )
     {
-        Class realClass = HibernateProxyHelper.getClassWithoutInitializingProxy( aClass );
+        Class realClass = HibernateProxyHelper.getClassWithoutInitializingProxy( object );
 
         return realClass.getSimpleName();
     }
