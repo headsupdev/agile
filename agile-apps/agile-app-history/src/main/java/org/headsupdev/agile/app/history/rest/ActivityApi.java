@@ -20,7 +20,6 @@ package org.headsupdev.agile.app.history.rest;
 
 import org.apache.wicket.markup.html.PackageResource;
 import org.headsupdev.agile.api.Event;
-import org.headsupdev.agile.api.HeadsUpConfiguration;
 import org.headsupdev.agile.api.Manager;
 import org.headsupdev.agile.api.Permission;
 import org.headsupdev.agile.api.rest.Publish;
@@ -87,7 +86,6 @@ public class ActivityApi
         List<Event> list = q.list();
         tx.commit();
 
-        HeadsUpConfiguration configuration = Manager.getStorageInstance().getGlobalConfiguration();
         ArrayList<Item> entries = new ArrayList<Item>();
         for ( Event event : list )
         {
@@ -101,7 +99,7 @@ public class ActivityApi
             item.type = getClassName( event );
 
             item.title = event.getTitle();
-            item.link = configuration.getFullUrl( "/activity/event/id/" + event.getId() );
+            item.link = getURLForPath( "/activity/event/id/" + event.getId() );
             item.date = event.getTime();
             item.description = new MarkedUpTextModel( event.getSummary(), event.getProject() ).getObject();
 
@@ -109,7 +107,7 @@ public class ActivityApi
             if ( !PackageResource.exists( HeadsUpPage.class, image, null, null ) ) {
                 image = "images/events/StoredEvent.png";
             }
-            item.icon = configuration.getFullUrl( "/resources/" + HeadsUpPage.class.getCanonicalName() + "/" + image );
+            item.icon = getURLForPath( "/resources/" + HeadsUpPage.class.getCanonicalName() + "/" + image );
 
             entries.add( item );
         }

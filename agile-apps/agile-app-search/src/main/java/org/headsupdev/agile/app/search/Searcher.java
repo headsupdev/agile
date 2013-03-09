@@ -252,11 +252,10 @@ public class Searcher
 
             if ( match instanceof SearchResult )
             {
-                link = ( (SearchResult) match ).getLink();
+                link = Api.getURLForPath( ( (SearchResult) match ).getLink() );
 
                 String image = getClassImageName( match );
-                icon = Manager.getStorageInstance().getGlobalConfiguration().getFullUrl( "resources/" +
-                        HeadsUpResourceMarker.class.getCanonicalName() + "/" + image );
+                icon = Api.getURLForPath( "/resources/" + HeadsUpResourceMarker.class.getCanonicalName() + "/" + image );
             }
         }
     }

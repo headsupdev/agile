@@ -118,4 +118,10 @@ public abstract class Api
 
         return realClass.getSimpleName();
     }
+
+    public static String getURLForPath( String path )
+    {
+        // this is a single point to decide if we use relative or absolute URLs, could be a config option...
+        return path;
+    }
 }
