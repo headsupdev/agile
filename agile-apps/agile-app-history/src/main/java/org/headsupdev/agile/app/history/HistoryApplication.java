@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2013 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -21,6 +21,7 @@ package org.headsupdev.agile.app.history;
 import org.headsupdev.agile.api.*;
 import org.headsupdev.agile.api.rest.Api;
 import org.headsupdev.agile.app.history.rest.ActivityApi;
+import org.headsupdev.agile.web.BookmarkableMenuLink;
 import org.headsupdev.agile.web.WebApplication;
 import org.headsupdev.agile.storage.HibernateStorage;
 import org.headsupdev.agile.app.history.permission.HistoryViewPermission;
@@ -49,6 +50,8 @@ public class HistoryApplication
     public HistoryApplication()
     {
         links = new LinkedList<MenuLink>();
+        links.add( new BookmarkableMenuLink( History.class, null, "list" ) );
+        links.add( new SimpleMenuLink( "grouped" ) );
     }
 
     public String getName()
@@ -74,7 +77,8 @@ public class HistoryApplication
     @Override
     public Class<? extends Page>[] getPages()
     {
-        return new Class[]{ History.class, ShowEvent.class, ShowEventBody.class, HistoryFeed.class };
+        return new Class[]{ History.class, ShowEvent.class, ShowEventBody.class, GroupedActivity.class,
+                HistoryFeed.class };
     }
 
 
@@ -107,7 +111,7 @@ public class HistoryApplication
         return ret;
     }
 
-    public List<Event> getEvents( long before, List<String> types )
+    public List<Event> getEvents( long before, List<String> types, int count )
     {
         if ( types == null || types.size() == 0 )
         {
@@ -119,11 +123,11 @@ public class HistoryApplication
         Query q = session.createQuery( "from StoredEvent e where e.class in (:types) and e.time < :before order by time desc" );
         q.setParameterList( "types", types );
         q.setTimestamp( "before", new Date( before ) );
-        q.setMaxResults( 50 );
+        q.setMaxResults( count );
         return q.list();
     }
 
-    public List<Event> getEventsForProject( Project project, long before, List<String> types )
+    public List<Event> getEventsForProject( Project project, long before, List<String> types, int count )
     {
         if ( types == null || types.size() == 0 )
         {
@@ -136,7 +140,7 @@ public class HistoryApplication
         q.setParameterList( "types", types );
         q.setString( "pid", project.getId() );
         q.setTimestamp( "before", new Date( before ) );
-        q.setMaxResults( 50 );
+        q.setMaxResults( count );
         return q.list();
     }
 }
