@@ -257,9 +257,9 @@ class IssueForm
         {
             issue = (Issue) ( (HibernateStorage) owner.getStorage() ).getHibernateSession().merge( issue );
 
-            // if we are updating our total on an issue already begun (having had time logged) we need to log the change
+            // if we are updating our total required but not the initial estimate then log the change
             if ( issue.getTimeRequired() != null && !issue.getTimeRequired().equals( oldTimeRequired ) &&
-                    issue.getTimeWorked().size() > 0)
+                    ( issue.getTimeEstimate() == null || !issue.getTimeRequired().equals( issue.getTimeEstimate() ) ) )
             {
                 DurationWorked simulate = new DurationWorked();
                 simulate.setUpdatedRequired( issue.getTimeRequired() );
@@ -267,7 +267,7 @@ class IssueForm
                 simulate.setIssue( issue );
                 simulate.setUser( ( (HeadsUpSession) getSession() ).getUser() );
 
-                ( (HibernateStorage) owner.getStorage() ).save(simulate);
+                ( (HibernateStorage) owner.getStorage() ).save( simulate );
                 issue.getTimeWorked().add( simulate );
             }
         }
