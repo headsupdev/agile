@@ -340,7 +340,7 @@ public class StoredXCodeProject
                     }
                     else if ( line.contains( ">LSRequiresIPhoneOS<" ) )
                     {
-                        platform = "iPhone";
+                        platform = "iOS";
                     }
                 }
             }

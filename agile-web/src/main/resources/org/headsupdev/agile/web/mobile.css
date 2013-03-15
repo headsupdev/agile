@@ -352,3 +352,26 @@ div.download a {
     float: none !important;
     margin-top: 5px !important;
 }
+
+.activity-group {
+    float: none !important;
+    width: auto !important;
+
+    margin-right: 0 !important;
+    border: none !important;
+}
+
+.activity-group .activity-name {
+    padding: 5pt 0 !important;
+}
+
+.activity-group .activity-list {
+    padding: 0 !important;
+    height: auto !important;
+    overflow: hidden !important;
+}
+
+.activity-group .history-summary {
+    display: none !important;
+}
+

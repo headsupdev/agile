@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2013 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -54,6 +54,8 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 public class History
     extends HeadsUpPage
 {
+    public static final int ROWS_PER_PAGE = 50;
+
     private List<String> types;
     private long before;
 
@@ -197,11 +199,11 @@ public class History
             {
                 if ( allProject )
                 {
-                    return ( (HistoryApplication) getHeadsUpApplication() ).getEvents( before, types );
+                    return ( (HistoryApplication) getHeadsUpApplication() ).getEvents( before, types, ROWS_PER_PAGE );
                 }
                 else
                 {
-                    return ( (HistoryApplication) getHeadsUpApplication() ).getEventsForProject( project, before, types );
+                    return ( (HistoryApplication) getHeadsUpApplication() ).getEventsForProject( project, before, types, ROWS_PER_PAGE );
                 }
             }
         }, allProject ) );
@@ -210,11 +212,11 @@ public class History
         List<Event> events;
         if ( allProject )
         {
-            events = ( (HistoryApplication) getHeadsUpApplication() ).getEvents( before, types );
+            events = ( (HistoryApplication) getHeadsUpApplication() ).getEvents( before, types, ROWS_PER_PAGE );
         }
         else
         {
-            events = ( (HistoryApplication) getHeadsUpApplication() ).getEventsForProject( project, before, types );
+            events = ( (HistoryApplication) getHeadsUpApplication() ).getEventsForProject( project, before, types, ROWS_PER_PAGE );
         }
         long oldest = Long.MAX_VALUE;
         if ( events != null && events.size() > 0 )

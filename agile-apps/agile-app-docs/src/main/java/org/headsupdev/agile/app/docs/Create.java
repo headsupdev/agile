@@ -32,8 +32,8 @@ public class Create
     extends Edit
 {
     @Override
-    public String getTitle()
+    public String getVerb()
     {
-        return "Create Document";
+        return "Create";
     }
 }
