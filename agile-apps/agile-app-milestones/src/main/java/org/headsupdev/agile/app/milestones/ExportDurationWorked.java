@@ -22,9 +22,11 @@ import org.headsupdev.agile.api.Manager;
 import org.headsupdev.agile.api.Project;
 import org.headsupdev.agile.app.milestones.entityproviders.MilestoneProvider;
 import org.headsupdev.agile.app.milestones.permission.MilestoneViewPermission;
-import org.headsupdev.agile.storage.DurationWorkedUtil;
+import org.headsupdev.agile.storage.HibernateStorage;
+import org.headsupdev.agile.storage.resource.ResourceManagerImpl;
 import org.headsupdev.agile.storage.StoredProject;
 import org.headsupdev.agile.storage.issues.*;
+import org.headsupdev.agile.storage.resource.DurationWorked;
 import org.headsupdev.agile.web.HeadsUpSession;
 import org.headsupdev.agile.web.MountPoint;
 import org.headsupdev.agile.web.WebUtil;
@@ -152,7 +154,8 @@ public class ExportDurationWorked
         }
         ret.append( "\n\n" );
 
-        List<Date> dates = DurationWorkedUtil.getMilestoneDates( milestone, true );
+        List<Date> dates = ( (HibernateStorage) Manager.getStorageInstance() ).getResourceManager().
+                getMilestoneDates( milestone, true );
         if ( burndown )
         {
             ret.append( "\"Estimated Hours\"\n" );
@@ -231,7 +234,8 @@ public class ExportDurationWorked
 
             for ( Date date : dates )
             {
-                Duration est = DurationWorkedUtil.lastEstimateForDay( issue, date);
+                Duration est = ( (HibernateStorage) Manager.getStorageInstance() ).getResourceManager().
+                        lastEstimateForDay( issue, date );
 
                 if ( est != null )
                 {
@@ -270,7 +274,8 @@ public class ExportDurationWorked
             for ( Date date : dates )
             {
                 hourLog.append( "," );
-                Duration total = DurationWorkedUtil.totalWorkedForDay(issue, date);
+                Duration total = ( (HibernateStorage) Manager.getStorageInstance() ).getResourceManager().
+                        totalWorkedForDay( issue, date );
                 if ( total != null )
                 {
                     hourLog.append( total.getHours() );

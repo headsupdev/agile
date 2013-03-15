@@ -22,6 +22,7 @@ import org.headsupdev.agile.api.Project;
 import org.headsupdev.agile.api.User;
 import org.headsupdev.agile.storage.StoredProject;
 import org.headsupdev.agile.storage.issues.*;
+import org.headsupdev.agile.storage.resource.DurationWorked;
 import org.headsupdev.agile.web.components.StripedListView;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;

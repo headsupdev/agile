@@ -18,7 +18,9 @@
 
 package org.headsupdev.agile.app.milestones;
 
-import org.headsupdev.agile.storage.DurationWorkedUtil;
+import org.headsupdev.agile.api.Manager;
+import org.headsupdev.agile.storage.HibernateStorage;
+import org.headsupdev.agile.storage.resource.ResourceManagerImpl;
 import org.headsupdev.agile.storage.issues.Duration;
 import org.headsupdev.agile.storage.issues.Issue;
 import org.headsupdev.agile.storage.issues.MilestoneGroup;
@@ -64,7 +66,8 @@ public class GroupBurndownGraph
 
         for ( Issue issue : getIssues() )
         {
-            total += DurationWorkedUtil.totalWorkedForDay( issue, day ).getHours();
+            total += ( (HibernateStorage) Manager.getStorageInstance() ).getResourceManager().
+                    totalWorkedForDay( issue, day ).getHours();
         }
 
         return total;
@@ -72,11 +75,13 @@ public class GroupBurndownGraph
 
     protected java.util.List<Date> getDates()
     {
-        return DurationWorkedUtil.getMilestoneGroupDates( getMilestoneGroup(), true );
+        return ( (HibernateStorage) Manager.getStorageInstance() ).getResourceManager().
+                getMilestoneGroupDates( getMilestoneGroup(), true );
     }
 
     protected Duration[] getEffort()
     {
-        return DurationWorkedUtil.getMilestoneGroupEffortRequired( getMilestoneGroup() );
+        return ( (HibernateStorage) Manager.getStorageInstance() ).getResourceManager().
+                getMilestoneGroupEffortRequired( getMilestoneGroup() );
     }
 }

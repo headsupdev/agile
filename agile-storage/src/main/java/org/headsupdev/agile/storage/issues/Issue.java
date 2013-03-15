@@ -28,6 +28,7 @@ import org.headsupdev.agile.storage.ScmChangeSet;
 import org.headsupdev.agile.storage.StoredUser;
 import org.headsupdev.agile.storage.hibernate.IdProjectBridge;
 import org.headsupdev.agile.storage.hibernate.IdProjectId;
+import org.headsupdev.agile.storage.resource.DurationWorked;
 import org.hibernate.annotations.Type;
 import org.hibernate.search.annotations.DocumentId;
 import org.hibernate.search.annotations.Field;

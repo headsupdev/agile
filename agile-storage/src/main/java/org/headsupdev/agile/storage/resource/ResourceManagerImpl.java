@@ -16,12 +16,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.headsupdev.agile.storage;
+package org.headsupdev.agile.storage.resource;
 
 import org.headsupdev.agile.api.Manager;
 import org.headsupdev.agile.api.Project;
 import org.headsupdev.agile.api.User;
 import org.headsupdev.agile.api.logging.Logger;
+import org.headsupdev.agile.storage.HibernateStorage;
+import org.headsupdev.agile.storage.StoredProject;
 import org.headsupdev.agile.storage.issues.*;
 import org.headsupdev.support.java.DateUtil;
 import org.hibernate.Criteria;
@@ -49,9 +51,9 @@ import java.util.Set;
  * @version $Id$
  * @since 1.0
  */
-public class DurationWorkedUtil
+public class ResourceManagerImpl
 {
-    private static Logger log = Manager.getLogger( DurationWorkedUtil.class.getName() );
+    private static Logger log = Manager.getLogger( ResourceManagerImpl.class.getName() );
 
     /**
      * this will always return a duration object. it will be the most appropriate 'estimated time' remaining
@@ -61,7 +63,7 @@ public class DurationWorkedUtil
      * @param dayInQuestion
      * @return
      */
-    public static Duration lastEstimateForDay( Issue issue, Date dayInQuestion )
+    public Duration lastEstimateForDay( Issue issue, Date dayInQuestion )
     {
 
         Date endOfDayInQuestion = DateUtil.getEndOfDate(Calendar.getInstance(), dayInQuestion);
@@ -105,7 +107,7 @@ public class DurationWorkedUtil
         return estimate;
     }
 
-    public static Duration lastEstimateForIssue( Issue issue )
+    public Duration lastEstimateForIssue( Issue issue )
     {
         Duration estimate = issue.getTimeEstimate();
 
@@ -127,7 +129,7 @@ public class DurationWorkedUtil
         return estimate;
     }
 
-    public static Duration totalWorkedForDay( Issue issue, Date date )
+    public Duration totalWorkedForDay( Issue issue, Date date )
     {
         Calendar cal = GregorianCalendar.getInstance();
         cal.setTime( date );
@@ -157,17 +159,17 @@ public class DurationWorkedUtil
         return new Duration( total );
     }
 
-    public static Date getMilestoneStartDate( Milestone milestone )
+    public Date getMilestoneStartDate( Milestone milestone )
     {
         return getIssueSetStartDate( milestone.getIssues(), milestone.getStartDate(), milestone.getDueDate() );
     }
 
-    public static Date getMilestoneGroupStartDate( MilestoneGroup group )
+    public Date getMilestoneGroupStartDate( MilestoneGroup group )
     {
         return getIssueSetStartDate( group.getIssues(), group.getStartDate(), group.getDueDate() );
     }
 
-    private static Date getIssueSetStartDate( Set<Issue> issues, Date start, Date due )
+    private Date getIssueSetStartDate( Set<Issue> issues, Date start, Date due )
     {
         if ( start != null )
         {
@@ -204,19 +206,19 @@ public class DurationWorkedUtil
         return first;
     }
 
-    public static List<Date> getMilestoneDates( Milestone milestone, boolean includeDayBefore )
+    public List<Date> getMilestoneDates( Milestone milestone, boolean includeDayBefore )
     {
-        return getIssueSetDates(  DurationWorkedUtil.getMilestoneStartDate( milestone ), milestone.getDueDate(),
+        return getIssueSetDates( getMilestoneStartDate(milestone), milestone.getDueDate(),
                 milestone.getProject(), includeDayBefore );
     }
 
-    public static List<Date> getMilestoneGroupDates( MilestoneGroup group, boolean includeDayBefore )
+    public List<Date> getMilestoneGroupDates( MilestoneGroup group, boolean includeDayBefore )
     {
-        return getIssueSetDates(  DurationWorkedUtil.getMilestoneGroupStartDate( group ), group.getDueDate(),
+        return getIssueSetDates( getMilestoneGroupStartDate(group), group.getDueDate(),
                 group.getProject(), includeDayBefore );
     }
 
-    private static List<Date> getIssueSetDates( Date start, Date due, Project project, boolean includeDayBefore )
+    private List<Date> getIssueSetDates( Date start, Date due, Project project, boolean includeDayBefore )
     {
         // some prep work to make sure we have valid dates for start and end of milestone
         List<Date> dates = new LinkedList<Date>();
@@ -268,7 +270,7 @@ public class DurationWorkedUtil
      * @param milestone
      * @return
      */
-    public static Duration[] getMilestoneEffortRequired( Milestone milestone )
+    public Duration[] getMilestoneEffortRequired( Milestone milestone )
     {
         if ( milestone == null )
         {
@@ -286,7 +288,7 @@ public class DurationWorkedUtil
      * @param group
      * @return
      */
-    public static Duration[] getMilestoneGroupEffortRequired( MilestoneGroup group )
+    public Duration[] getMilestoneGroupEffortRequired( MilestoneGroup group )
     {
         if ( group == null )
         {
@@ -297,7 +299,7 @@ public class DurationWorkedUtil
         return getIssueSetEffortRequired( group.getIssues(), groupDates );
     }
 
-    private static Duration[] getIssueSetEffortRequired( Set<Issue> issues, List<Date> milestoneDates )
+    private Duration[] getIssueSetEffortRequired( Set<Issue> issues, List<Date> milestoneDates )
     {
         if ( milestoneDates == null || milestoneDates.size() == 0 )
         {
@@ -348,17 +350,17 @@ public class DurationWorkedUtil
         return effortRequired;
     }
 
-    public static double getMilestoneCompleteness( Milestone milestone )
+    public double getMilestoneCompleteness( Milestone milestone )
     {
         return getIssueListCompleteness( milestone.getIssues(), milestone.getProject() );
     }
 
-    public static double getMilestoneGroupCompleteness( MilestoneGroup group )
+    public double getMilestoneGroupCompleteness( MilestoneGroup group )
     {
         return getIssueListCompleteness( group.getIssues(), group.getProject() );
     }
 
-    private static double getIssueListCompleteness( Set<Issue> issues, Project project )
+    private double getIssueListCompleteness( Set<Issue> issues, Project project )
     {
         final boolean timeEnabled = Boolean.parseBoolean( project.getConfigurationValue(
                 StoredProject.CONFIGURATION_TIMETRACKING_ENABLED ) );
@@ -390,7 +392,7 @@ public class DurationWorkedUtil
 
             if ( timeBurndown )
             {
-                Duration left = DurationWorkedUtil.lastEstimateForIssue( issue );
+                Duration left = lastEstimateForIssue( issue );
                 if ( left != null )
                 {
                     double leftHours = left.getHours();
@@ -404,7 +406,7 @@ public class DurationWorkedUtil
             }
             else
             {
-                Duration worked = DurationWorkedUtil.lastEstimateForIssue( issue );
+                Duration worked = lastEstimateForIssue( issue );
                 if ( worked != null )
                 {
                     done += Math.min( worked.getHours(), issueHours );
@@ -415,7 +417,7 @@ public class DurationWorkedUtil
         return done / total;
     }
 
-    public static Double getAverageVelocity()
+    public Velocity getAverageVelocity()
     {
         if ( !averageVelocity.equals( Double.NaN ) )
         {
@@ -431,23 +433,23 @@ public class DurationWorkedUtil
                 continue;
             }
 
-            Double velocity = getUserVelocity( user );
-            if ( !velocity.equals( Double.NaN ) )
+            Velocity velocity = getUserVelocity( user );
+            if ( !velocity.equals( Velocity.INVALID ) )
             {
-                velocities += velocity;
+                velocities += velocity.getVelocity();
                 velocityCount++;
             }
         }
 
-        averageVelocity = velocities / velocityCount;
+        averageVelocity = new Velocity( velocities, (double) velocityCount );
         return averageVelocity;
     }
 
     // TODO we need to expire this once a week (or day)...
-    private static Map<User, Double> userVelocities = new HashMap<User, Double>();
-    private static Double averageVelocity = Double.NaN;
+    private static Map<User, Velocity> userVelocities = new HashMap<User, Velocity>();
+    private static Velocity averageVelocity = Velocity.INVALID;
 
-    public static Double getUserVelocity( User user )
+    public Velocity getUserVelocity(User user)
     {
         if ( userVelocities.get( user ) != null )
         {
@@ -455,13 +457,13 @@ public class DurationWorkedUtil
         }
 
         List<DurationWorked> worked = getDurationWorkedForUser(user);
-        Double velocity = calculateVelocity( worked, user );
+        Velocity velocity = calculateVelocity( worked, user );
 
         userVelocities.put( user, velocity );
         return velocity;
     }
 
-    public static Double getCurrentUserVelocity( User user )
+    public Velocity getCurrentUserVelocity(User user)
     {
 //        if ( userVelocities.get( user ) != null )
 //        {
@@ -471,13 +473,13 @@ public class DurationWorkedUtil
         Calendar cal = Calendar.getInstance();
         cal.add( Calendar.WEEK_OF_YEAR, -1 );
         List<DurationWorked> worked = getDurationWorkedForUser(user, cal.getTime(), new Date());
-        Double velocity = calculateVelocity( worked, user );
+        Velocity velocity = calculateVelocity( worked, user );
 
 //        userVelocities.put( user, velocity );
         return velocity;
     }
 
-    public static Double getUserVelocityInWeek( User user, Date week )
+    public Velocity getUserVelocityInWeek( User user, Date week )
     {
 // TODO cache this
 //        if ( userVelocities.get( user ) != null )
@@ -492,23 +494,23 @@ public class DurationWorkedUtil
         cal.add( Calendar.MILLISECOND, -1 );
 
         List<DurationWorked> worked = getDurationWorkedForUser(user, week, cal.getTime());
-        Double velocity = calculateVelocity( worked, user );
+        Velocity velocity = calculateVelocity( worked, user );
 
 //        userVelocities.put( user, velocity );
         return velocity;
     }
 
-    public static Double getVelocity( List<DurationWorked> worked, Milestone milestone )
+    public Velocity getVelocity( List<DurationWorked> worked, Milestone milestone )
     {
         return getVelocity( worked, milestone.getStartDate(), milestone.getDueDate() );
     }
 
-    public static Double getVelocity( List<DurationWorked> worked, MilestoneGroup group )
+    public Velocity getVelocity( List<DurationWorked> worked, MilestoneGroup group )
     {
         return getVelocity( worked, group.getStartDate(), group.getDueDate() );
     }
 
-    public static Double getVelocity( List<DurationWorked> worked, Date setStart, Date setDue )
+    public Velocity getVelocity( List<DurationWorked> worked, Date setStart, Date setDue )
     {
         Set<User> usersWorked = new HashSet<User>();
 
@@ -540,7 +542,7 @@ public class DurationWorkedUtil
             }
         }
 
-        Double velocities = 0.0;
+        double velocities = 0.0;
         int velocityCount = 0;
         for ( User user : usersWorked )
         {
@@ -549,22 +551,22 @@ public class DurationWorkedUtil
                 continue;
             }
 
-            Double vel = calculateVelocity( worked, user );
+            Velocity vel = calculateVelocity( worked, user );
             if ( !vel.equals( Double.NaN ) )
             {
-                velocities += vel;
+                velocities += vel.getVelocity();
                 velocityCount++;
             }
         }
 
-        return velocities / velocityCount;
+        return new Velocity( velocities, (double) velocityCount );
     }
 
-    private static Double calculateVelocity( List<DurationWorked> workedList, User user )
+    private Velocity calculateVelocity( List<DurationWorked> workedList, User user )
     {
         if ( user.isHiddenInTimeTracking() )
         {
-            return Double.NaN;
+            return Velocity.INVALID;
         }
 
         double estimatedHoursWorked = 0.0;
@@ -697,17 +699,16 @@ public class DurationWorkedUtil
             estimatedHoursWorked += totalEstimated;
         }
 
-        double velocity = 0;
+        Velocity velocity = Velocity.INVALID;
         if ( daysWorked > 0 )
         {
-            velocity = ( estimatedHoursWorked / daysWorked );
+            velocity = new Velocity( estimatedHoursWorked, daysWorked );
         }
-        log.debug( " Velocity " + velocity + " for user " + user + " based on " + estimatedHoursWorked + " over " +
-                daysWorked + " days" );
+        log.debug( velocity.toString() );
         return velocity;
     }
 
-    public static Double getUserHoursLogged( User user )
+    public Double getUserHoursLogged( User user )
     {
 // TODO cache
 //        if ( userVelocities.get( user ) != null )
@@ -721,7 +722,7 @@ public class DurationWorkedUtil
         return logged;
     }
 
-    public static Double getUserHoursLoggedInWeek( User user, Date week )
+    public Double getUserHoursLoggedInWeek( User user, Date week )
     {
 // TODO cache this
 //        if ( userVelocities.get( user ) != null )
@@ -740,7 +741,7 @@ public class DurationWorkedUtil
         return logged;
     }
 
-    private static Double calculateHoursLogged( List<DurationWorked> workedList, User user )
+    private Double calculateHoursLogged( List<DurationWorked> workedList, User user )
     {
         double total = 0;
         int daysWorked = 0;
@@ -752,6 +753,10 @@ public class DurationWorkedUtil
             if ( worked.getUser().equals( user ) && worked.getWorked() != null )
             {
                 total += worked.getWorked().getHours();
+                if ( worked.getDay() == null )
+                {
+                    continue;
+                }
 
                 // check if this is a new day
                 cal.setTime( worked.getDay() );
@@ -770,24 +775,7 @@ public class DurationWorkedUtil
         return total / daysWorked;
     }
 
-    private static List<Issue> getAllIssuesWithDurationWorked()
-    {
-        List<Issue> allIssues = new ArrayList<Issue>();
-        Session session = ( (HibernateStorage) Manager.getStorageInstance() ).getHibernateSession();
-
-        Criteria c = session.createCriteria( Issue.class );
-        for ( Issue issue : (List<Issue>) c.list() )
-        {
-            if ( issue.getTimeWorked() != null && issue.getTimeWorked().size() > 0 )
-            {
-                allIssues.add( issue );
-            }
-        }
-
-        return allIssues;
-    }
-
-    private static List<DurationWorked> getDurationWorkedForUser( User user )
+    protected List<DurationWorked> getDurationWorkedForUser( User user )
     {
         Session session = ( (HibernateStorage) Manager.getStorageInstance() ).getHibernateSession();
 
@@ -798,7 +786,7 @@ public class DurationWorkedUtil
         return c.list();
     }
 
-    private static List<DurationWorked> getDurationWorkedForUser( User user, Date start, Date end )
+    protected List<DurationWorked> getDurationWorkedForUser( User user, Date start, Date end )
     {
         List<DurationWorked> workedList = new ArrayList<DurationWorked>();
         Session session = ( (HibernateStorage) Manager.getStorageInstance() ).getHibernateSession();
@@ -830,7 +818,7 @@ public class DurationWorkedUtil
      *
      * @return
      */
-    public static Duration getLoggedTimeForUser( User user, Date start, Date end )
+    public Duration getLoggedTimeForUser( User user, Date start, Date end )
     {
 
         List<DurationWorked> workedList = getDurationWorkedForUser( user, start, end );

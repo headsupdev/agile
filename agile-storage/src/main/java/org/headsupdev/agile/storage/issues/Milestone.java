@@ -18,10 +18,12 @@
 
 package org.headsupdev.agile.storage.issues;
 
+import org.headsupdev.agile.api.Manager;
 import org.headsupdev.agile.api.Project;
 import org.headsupdev.agile.api.SearchResult;
 import org.headsupdev.agile.storage.Comment;
-import org.headsupdev.agile.storage.DurationWorkedUtil;
+import org.headsupdev.agile.storage.HibernateStorage;
+import org.headsupdev.agile.storage.resource.ResourceManagerImpl;
 import org.headsupdev.agile.storage.hibernate.NameProjectBridge;
 import org.headsupdev.agile.storage.hibernate.NameProjectId;
 import org.hibernate.annotations.Type;
@@ -259,6 +261,7 @@ public class Milestone
 
     public double getCompleteness()
     {
-        return DurationWorkedUtil.getMilestoneCompleteness( this );
+        return ( (HibernateStorage) Manager.getStorageInstance() ).getResourceManager().
+                getMilestoneCompleteness( this );
     }
 }

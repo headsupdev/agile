@@ -23,7 +23,7 @@ import org.headsupdev.agile.storage.Attachment;
 import org.headsupdev.agile.storage.HibernateStorage;
 import org.headsupdev.agile.storage.StoredProject;
 import org.headsupdev.agile.storage.issues.Duration;
-import org.headsupdev.agile.storage.issues.DurationWorked;
+import org.headsupdev.agile.storage.resource.DurationWorked;
 import org.headsupdev.agile.storage.issues.Issue;
 import org.headsupdev.agile.storage.issues.Milestone;
 import org.headsupdev.agile.web.HeadsUpPage;

@@ -31,8 +31,6 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.model.Model;
-import org.headsupdev.agile.storage.DurationWorkedUtil;
-import org.headsupdev.agile.storage.StoredProject;
 import org.headsupdev.agile.storage.issues.Milestone;
 import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.HeadsUpSession;
@@ -40,8 +38,6 @@ import org.headsupdev.agile.web.components.FormattedDateModel;
 import org.headsupdev.agile.web.components.PercentagePanel;
 import org.headsupdev.agile.web.components.StripedDataView;
 import org.headsupdev.agile.web.wicket.StyledPagingNavigator;
-
-import java.util.Iterator;
 
 /**
  * A panel that displays a formatted, coloured list of the milestones passed in

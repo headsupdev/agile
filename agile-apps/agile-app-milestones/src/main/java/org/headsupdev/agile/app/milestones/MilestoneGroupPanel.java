@@ -18,7 +18,6 @@
 
 package org.headsupdev.agile.app.milestones;
 
-import org.headsupdev.agile.storage.DurationWorkedUtil;
 import org.headsupdev.agile.storage.issues.Issue;
 import org.headsupdev.agile.storage.issues.MilestoneGroup;
 

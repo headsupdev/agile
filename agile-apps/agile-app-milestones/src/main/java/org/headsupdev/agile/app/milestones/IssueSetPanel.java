@@ -20,11 +20,12 @@ package org.headsupdev.agile.app.milestones;
 
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.headsupdev.agile.api.Manager;
 import org.headsupdev.agile.api.Project;
-import org.headsupdev.agile.storage.DurationWorkedUtil;
-import org.headsupdev.agile.storage.issues.DurationWorked;
+import org.headsupdev.agile.storage.HibernateStorage;
+import org.headsupdev.agile.storage.resource.DurationWorked;
 import org.headsupdev.agile.storage.issues.Issue;
-import org.headsupdev.agile.storage.issues.Milestone;
+import org.headsupdev.agile.storage.resource.Velocity;
 import org.headsupdev.agile.web.HeadsUpSession;
 import org.headsupdev.agile.web.components.FormattedDateModel;
 import org.headsupdev.agile.web.components.MarkedUpTextModel;
@@ -90,18 +91,19 @@ abstract class IssueSetPanel
             worked.addAll( issue.getTimeWorked() );
         }
 
-        Double velocity = getVelocity( start, due, worked );
+        Velocity velocity = getVelocity( start, due, worked );
         String velocityStr = "-";
-        if ( !velocity.equals( Double.NaN ) )
+        if ( !velocity.equals( Velocity.INVALID ) )
         {
-            velocityStr = String.format( "%.1f", velocity );
+            velocityStr = String.format( "%.1f", velocity.getVelocity() );
         }
         add( new Label( "velocity", velocityStr ) );
     }
 
-    protected Double getVelocity( Date start, Date due, List<DurationWorked> worked )
+    protected Velocity getVelocity( Date start, Date due, List<DurationWorked> worked )
     {
-        return DurationWorkedUtil.getVelocity( worked, start, due );
+        return ( (HibernateStorage) Manager.getStorageInstance() ).getResourceManager().
+                getVelocity( worked, start, due );
     }
 
     protected abstract Set<Issue> getIssues();

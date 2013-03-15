@@ -21,7 +21,7 @@ package org.headsupdev.agile.app.issues;
 import org.headsupdev.agile.api.Manager;
 import org.headsupdev.agile.storage.HibernateStorage;
 import org.headsupdev.agile.storage.StoredProject;
-import org.headsupdev.agile.storage.issues.DurationWorked;
+import org.headsupdev.agile.storage.resource.DurationWorked;
 import org.headsupdev.agile.web.*;
 import org.headsupdev.agile.web.components.CommentPanel;
 import org.headsupdev.agile.web.components.EmbeddedFilePanel;

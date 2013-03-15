@@ -23,9 +23,10 @@ import org.headsupdev.agile.api.Project;
 import org.headsupdev.agile.api.PropertyTree;
 import org.headsupdev.agile.api.User;
 import org.headsupdev.agile.storage.issues.Duration;
-import org.headsupdev.agile.storage.issues.DurationWorked;
+import org.headsupdev.agile.storage.resource.DurationWorked;
 import org.headsupdev.agile.storage.issues.Issue;
 import junit.framework.TestCase;
+import org.headsupdev.agile.storage.resource.ResourceManagerImpl;
 
 import java.io.File;
 import java.util.Calendar;
@@ -40,9 +41,10 @@ import java.util.Set;
  * @author roberthewitt
  * @since 2.0-alpha-2-SNAPSHOT
  */
-public class DurationWorkedUtilTest
+public class ResourceManagerImplTest
         extends TestCase
 {
+    private ResourceManagerImpl resourceManager = new ResourceManagerImpl();
 
     public void testLastEstimateForDayExcludeInitialEstimates()
             throws Exception
@@ -81,43 +83,43 @@ public class DurationWorkedUtilTest
         // issue creation date -3
         calendar.setTime( issue.getCreated() );
         calendar.add( Calendar.DATE, -3 );
-        Duration duration = DurationWorkedUtil.lastEstimateForDay( issue, calendar.getTime() );
+        Duration duration = resourceManager.lastEstimateForDay( issue, calendar.getTime() );
         assertTrue( duration != null );
         assertEquals( new Integer( 0 ), duration.getTime() );
 
         // issue creation date -2
         calendar.add( Calendar.DATE, 1 );
-        duration = DurationWorkedUtil.lastEstimateForDay( issue, calendar.getTime() );
+        duration = resourceManager.lastEstimateForDay( issue, calendar.getTime() );
         assertTrue( duration != null );
         assertEquals( new Integer( 3 ), duration.getTime() );
 
         // issue creation date -1
         calendar.add( Calendar.DATE, 1 );
-        duration = DurationWorkedUtil.lastEstimateForDay( issue, calendar.getTime() );
+        duration = resourceManager.lastEstimateForDay( issue, calendar.getTime() );
         assertTrue( duration != null );
         assertEquals( new Integer( 3 ), duration.getTime() );
 
         // issue created date ...
         calendar.add( Calendar.DATE, 1 );
-        duration = DurationWorkedUtil.lastEstimateForDay( issue, calendar.getTime() );
+        duration = resourceManager.lastEstimateForDay( issue, calendar.getTime() );
         assertTrue( duration != null );
         assertEquals( new Integer( 3 ), duration.getTime() );
 
         // issue created date +1
         calendar.add( Calendar.DATE, 1 );
-        duration = DurationWorkedUtil.lastEstimateForDay( issue, calendar.getTime() );
+        duration = resourceManager.lastEstimateForDay( issue, calendar.getTime() );
         assertTrue( duration != null );
         assertEquals( new Integer( 3 ), duration.getTime() );
 
         // issue created date +2
         calendar.add( Calendar.DATE, 1 );
-        duration = DurationWorkedUtil.lastEstimateForDay( issue, calendar.getTime() );
+        duration = resourceManager.lastEstimateForDay( issue, calendar.getTime() );
         assertTrue( duration != null );
         assertEquals( new Integer( 2 ), duration.getTime() );
 
         // issue created date +3
         calendar.add( Calendar.DATE, 1 );
-        duration = DurationWorkedUtil.lastEstimateForDay( issue, calendar.getTime() );
+        duration = resourceManager.lastEstimateForDay( issue, calendar.getTime() );
         assertTrue( duration != null );
         assertEquals( new Integer( 2 ), duration.getTime() );
     }
@@ -161,43 +163,43 @@ public class DurationWorkedUtilTest
         // issue creation date -3
         calendar.setTime( issue.getCreated() );
         calendar.add( Calendar.DATE, -3 );
-        Duration duration = DurationWorkedUtil.lastEstimateForDay( issue, calendar.getTime() );
+        Duration duration = resourceManager.lastEstimateForDay( issue, calendar.getTime() );
         assertTrue( duration != null );
         assertEquals( new Integer( 5 ), duration.getTime() );
 
         // issue creation date -2
         calendar.add( Calendar.DATE, 1 );
-        duration = DurationWorkedUtil.lastEstimateForDay( issue, calendar.getTime() );
+        duration = resourceManager.lastEstimateForDay( issue, calendar.getTime() );
         assertTrue( duration != null );
         assertEquals( new Integer( 3 ), duration.getTime() );
 
         // issue creation date -1
         calendar.add( Calendar.DATE, 1 );
-        duration = DurationWorkedUtil.lastEstimateForDay( issue, calendar.getTime() );
+        duration = resourceManager.lastEstimateForDay( issue, calendar.getTime() );
         assertTrue( duration != null );
         assertEquals( new Integer( 3 ), duration.getTime() );
 
         // issue created date ...
         calendar.add( Calendar.DATE, 1 );
-        duration = DurationWorkedUtil.lastEstimateForDay( issue, calendar.getTime() );
+        duration = resourceManager.lastEstimateForDay( issue, calendar.getTime() );
         assertTrue( duration != null );
         assertEquals( new Integer( 3 ), duration.getTime() );
 
         // issue created date +1
         calendar.add( Calendar.DATE, 1 );
-        duration = DurationWorkedUtil.lastEstimateForDay( issue, calendar.getTime() );
+        duration = resourceManager.lastEstimateForDay( issue, calendar.getTime() );
         assertTrue( duration != null );
         assertEquals( new Integer( 3 ), duration.getTime() );
 
         // issue created date +2
         calendar.add( Calendar.DATE, 1 );
-        duration = DurationWorkedUtil.lastEstimateForDay( issue, calendar.getTime() );
+        duration = resourceManager.lastEstimateForDay( issue, calendar.getTime() );
         assertTrue( duration != null );
         assertEquals( new Integer( 2 ), duration.getTime() );
 
         // issue created date +3
         calendar.add( Calendar.DATE, 1 );
-        duration = DurationWorkedUtil.lastEstimateForDay( issue, calendar.getTime() );
+        duration = resourceManager.lastEstimateForDay( issue, calendar.getTime() );
         assertTrue( duration != null );
         assertEquals( new Integer( 2 ), duration.getTime() );
     }
@@ -229,31 +231,31 @@ public class DurationWorkedUtilTest
         // issue creation date -1
         calendar.setTime( issue.getCreated() );
         calendar.add( Calendar.DATE, -1 );
-        Duration duration = DurationWorkedUtil.lastEstimateForDay( issue, calendar.getTime() );
+        Duration duration = resourceManager.lastEstimateForDay( issue, calendar.getTime() );
         assertTrue( duration != null );
         assertEquals( new Integer( 5 ), duration.getTime() );
 
         // issue creation date
         calendar.add( Calendar.DATE, 1 );
-        duration = DurationWorkedUtil.lastEstimateForDay( issue, calendar.getTime() );
+        duration = resourceManager.lastEstimateForDay( issue, calendar.getTime() );
         assertTrue( duration != null );
         assertEquals( new Integer( 5 ), duration.getTime() );
 
         // issue creation date +1
         calendar.add( Calendar.DATE, 1 );
-        duration = DurationWorkedUtil.lastEstimateForDay( issue, calendar.getTime() );
+        duration = resourceManager.lastEstimateForDay( issue, calendar.getTime() );
         assertTrue( duration != null );
         assertEquals( new Integer( 5 ), duration.getTime() );
 
         // issue creation date +2
         calendar.add( Calendar.DATE, 1 );
-        duration = DurationWorkedUtil.lastEstimateForDay( issue, calendar.getTime() );
+        duration = resourceManager.lastEstimateForDay( issue, calendar.getTime() );
         assertTrue( duration != null );
         assertEquals( new Integer( 3 ), duration.getTime() );
 
         // issue creation date +3
         calendar.add( Calendar.DATE, 1 );
-        duration = DurationWorkedUtil.lastEstimateForDay( issue, calendar.getTime() );
+        duration = resourceManager.lastEstimateForDay( issue, calendar.getTime() );
         assertTrue( duration != null );
         assertEquals( new Integer( 3 ), duration.getTime() );
     }
@@ -285,31 +287,31 @@ public class DurationWorkedUtilTest
         // issue creation date -1
         calendar.setTime( issue.getCreated() );
         calendar.add( Calendar.DATE, -1 );
-        Duration duration = DurationWorkedUtil.lastEstimateForDay( issue, calendar.getTime() );
+        Duration duration = resourceManager.lastEstimateForDay( issue, calendar.getTime() );
         assertTrue( duration != null );
         assertEquals( new Integer( 0 ), duration.getTime() );
 
         // issue creation date
         calendar.add( Calendar.DATE, 1 );
-        duration = DurationWorkedUtil.lastEstimateForDay( issue, calendar.getTime() );
+        duration = resourceManager.lastEstimateForDay( issue, calendar.getTime() );
         assertTrue( duration != null );
         assertEquals( new Integer( 5 ), duration.getTime() );
 
         // issue creation date +1
         calendar.add( Calendar.DATE, 1 );
-        duration = DurationWorkedUtil.lastEstimateForDay( issue, calendar.getTime() );
+        duration = resourceManager.lastEstimateForDay( issue, calendar.getTime() );
         assertTrue( duration != null );
         assertEquals( new Integer( 5 ), duration.getTime() );
 
         // issue creation date +2
         calendar.add( Calendar.DATE, 1 );
-        duration = DurationWorkedUtil.lastEstimateForDay( issue, calendar.getTime() );
+        duration = resourceManager.lastEstimateForDay( issue, calendar.getTime() );
         assertTrue( duration != null );
         assertEquals( new Integer( 3 ), duration.getTime() );
 
         // issue creation date +3
         calendar.add( Calendar.DATE, 1 );
-        duration = DurationWorkedUtil.lastEstimateForDay( issue, calendar.getTime() );
+        duration = resourceManager.lastEstimateForDay( issue, calendar.getTime() );
         assertTrue( duration != null );
         assertEquals( new Integer( 3 ), duration.getTime() );
     }

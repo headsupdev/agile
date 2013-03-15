@@ -19,7 +19,7 @@
 package org.headsupdev.agile.web.components.issues;
 
 import org.headsupdev.agile.storage.issues.Duration;
-import org.headsupdev.agile.storage.issues.DurationWorked;
+import org.headsupdev.agile.storage.resource.DurationWorked;
 import org.headsupdev.agile.storage.issues.Issue;
 import org.apache.wicket.model.Model;
 

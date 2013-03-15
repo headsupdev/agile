@@ -20,7 +20,7 @@ package org.headsupdev.agile.web.components;
 
 import org.headsupdev.agile.api.Project;
 import org.headsupdev.agile.storage.Comment;
-import org.headsupdev.agile.storage.issues.DurationWorked;
+import org.headsupdev.agile.storage.resource.DurationWorked;
 import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.HeadsUpSession;
 import org.apache.wicket.ResourceReference;

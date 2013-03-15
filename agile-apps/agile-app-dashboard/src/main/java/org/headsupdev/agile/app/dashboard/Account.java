@@ -24,12 +24,13 @@ import org.headsupdev.agile.api.Permission;
 import org.headsupdev.agile.api.User;
 import org.headsupdev.agile.app.dashboard.permission.MemberViewPermission;
 import org.headsupdev.agile.security.permission.AdminPermission;
-import org.headsupdev.agile.storage.DurationWorkedUtil;
 import org.headsupdev.agile.storage.HibernateStorage;
 import org.headsupdev.agile.storage.StoredProject;
 import org.headsupdev.agile.storage.issues.Duration;
-import org.headsupdev.agile.storage.issues.DurationWorked;
+import org.headsupdev.agile.storage.resource.DurationWorked;
 import org.headsupdev.agile.storage.issues.Issue;
+import org.headsupdev.agile.storage.resource.ResourceManagerImpl;
+import org.headsupdev.agile.storage.resource.Velocity;
 import org.headsupdev.agile.web.BookmarkableMenuLink;
 import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.HeadsUpSession;
@@ -109,27 +110,27 @@ public class Account
         add( velocityPanel.setVisible( showVelocity ) );
         if ( showVelocity )
         {
-            Double velocity = DurationWorkedUtil.getUserVelocity( user );
+            Velocity velocity = getResourceManager().getUserVelocity( user );
             String velocityStr = "-";
-            if ( !velocity.equals( Double.NaN ) )
+            if ( !velocity.equals( Velocity.INVALID ) )
             {
-                velocityStr = String.format( "%.1f", velocity );
+                velocityStr = String.format( "%.1f", velocity.getVelocity() );
             }
             velocityPanel.add( new Label( "velocity", velocityStr ) );
 
-            Double currentVelocity = DurationWorkedUtil.getCurrentUserVelocity( user );
+            Velocity currentVelocity = getResourceManager().getCurrentUserVelocity( user );
             String currentVelocityStr = "-";
-            if ( !currentVelocity.equals( Double.NaN ) )
+            if ( !currentVelocity.equals( Velocity.INVALID ) )
             {
-                currentVelocityStr = String.format( "%.1f", currentVelocity );
+                currentVelocityStr = String.format( "%.1f", currentVelocity.getVelocity() );
             }
             velocityPanel.add( new Label( "currentvelocity", currentVelocityStr ) );
 
-            Double averageVelocity = DurationWorkedUtil.getAverageVelocity();
+            Velocity averageVelocity = getResourceManager().getAverageVelocity();
             String averageVelocityStr = "-";
-            if ( !averageVelocity.equals( Double.NaN ) )
+            if ( !averageVelocity.equals( Velocity.INVALID ) )
             {
-                averageVelocityStr = String.format( "%.1f", averageVelocity );
+                averageVelocityStr = String.format( "%.1f", averageVelocity.getVelocity() );
             }
             velocityPanel.add( new Label( "averagevelocity", averageVelocityStr ) );
         }
@@ -159,9 +160,9 @@ public class Account
         Date startOfToday = DateUtil.getStartOfToday( calendar );
         Date endOfToday = DateUtil.getEndOfToday( calendar );
 
-        Duration durationDay = DurationWorkedUtil.getLoggedTimeForUser( user, startOfToday, endOfToday );
+        Duration durationDay = getResourceManager().getLoggedTimeForUser( user, startOfToday, endOfToday );
         add( new Label( "loggedtimeday", durationDay == null ? " - " : durationDay.toString() ) );
-        Duration durationWeek = DurationWorkedUtil.getLoggedTimeForUser( user, startOfWeek, endOfWeek );
+        Duration durationWeek = getResourceManager().getLoggedTimeForUser( user, startOfWeek, endOfWeek );
         add( new Label( "loggedtimeweek", durationWeek == null ? " - " : durationWeek.toString() ) );
 
         add( new ListView<DurationWorked>( "comments", getRecentDurationWorked( user ) )
@@ -199,7 +200,7 @@ public class Account
             }
         }.setVisible( showTools && timeEnabled ) );
 
-        add( new Label( "history-name", user.getFullnameOrUsername()) );
+        add( new Label( "history-name", user.getFullnameOrUsername() ) );
         add( new HistoryPanel( "events", getEventsForUser( user ), true ) );
     }
 
@@ -280,5 +281,10 @@ public class Account
 
         q.setMaxResults( 10 );
         return q.list();
+    }
+
+    public ResourceManagerImpl getResourceManager()
+    {
+        return ( (HibernateStorage) getStorage() ).getResourceManager();
     }
 }

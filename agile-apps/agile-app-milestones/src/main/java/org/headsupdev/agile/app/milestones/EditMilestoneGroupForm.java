@@ -27,7 +27,6 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.headsupdev.agile.api.Project;
 import org.headsupdev.agile.app.milestones.entityproviders.MilestoneProvider;
-import org.headsupdev.agile.storage.DurationWorkedUtil;
 import org.headsupdev.agile.storage.HibernateUtil;
 import org.headsupdev.agile.storage.StoredProject;
 import org.headsupdev.agile.storage.issues.Milestone;

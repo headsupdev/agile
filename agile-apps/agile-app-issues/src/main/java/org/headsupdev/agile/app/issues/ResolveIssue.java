@@ -25,7 +25,7 @@ import org.headsupdev.agile.storage.Comment;
 import org.headsupdev.agile.storage.HibernateStorage;
 import org.headsupdev.agile.storage.StoredProject;
 import org.headsupdev.agile.storage.issues.Duration;
-import org.headsupdev.agile.storage.issues.DurationWorked;
+import org.headsupdev.agile.storage.resource.DurationWorked;
 import org.headsupdev.agile.storage.issues.Issue;
 import org.headsupdev.agile.storage.issues.IssueRelationship;
 import org.headsupdev.agile.web.MountPoint;

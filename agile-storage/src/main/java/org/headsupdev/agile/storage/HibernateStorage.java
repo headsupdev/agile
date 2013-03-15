@@ -19,6 +19,7 @@
 package org.headsupdev.agile.storage;
 
 import org.headsupdev.agile.api.logging.Logger;
+import org.headsupdev.agile.storage.resource.ResourceManagerImpl;
 import org.headsupdev.support.java.StringUtil;
 import org.hibernate.Criteria;
 import org.hibernate.Transaction;
@@ -48,6 +49,7 @@ public class HibernateStorage
     private static Map<Object, org.hibernate.classic.Session> sessions = new HashMap<Object, org.hibernate.classic.Session>();
 
     private static HeadsUpConfiguration globalConfig;
+    private static ResourceManagerImpl resourceManager;
 
     private static final long RECENT_PROJECTS_OFFSET = 1000l * 60 * 60 * 24 * 7;
     private static final long ACTIVE_PROJECTS_OFFSET = 1000l * 60 * 60 * 24 * 28;
@@ -432,6 +434,16 @@ public class HibernateStorage
     private void reloadGlobalConfiguration()
     {
         globalConfig = null;
+    }
+
+    public ResourceManagerImpl getResourceManager()
+    {
+        if ( resourceManager == null )
+        {
+            resourceManager = new ResourceManagerImpl();
+        }
+
+        return resourceManager;
     }
 
     public Project getProject( String id )

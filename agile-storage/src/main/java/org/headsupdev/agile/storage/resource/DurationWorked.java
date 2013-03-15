@@ -16,13 +16,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.headsupdev.agile.storage.issues;
+package org.headsupdev.agile.storage.resource;
 
 import org.headsupdev.agile.api.Manager;
 import org.headsupdev.agile.api.User;
 import org.headsupdev.agile.storage.Comment;
 import org.headsupdev.agile.storage.HibernateStorage;
 import org.headsupdev.agile.storage.StoredUser;
+import org.headsupdev.agile.storage.issues.Duration;
+import org.headsupdev.agile.storage.issues.Issue;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.search.annotations.IndexedEmbedded;
