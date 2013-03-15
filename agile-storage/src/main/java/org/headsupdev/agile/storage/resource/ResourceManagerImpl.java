@@ -92,10 +92,17 @@ public class ResourceManagerImpl
         if ( estimate == null )
         {
             // if the issue was created before the dayInQuestion then we report the original issue time estimate
-            // of if we want to backtrack the originalTimeEstimate
+            // or if we want to backtrack the originalTimeEstimate
             if ( issue.getIncludeInInitialEstimates() || issue.getCreated().before( endOfDayInQuestion ) )
             {
-                estimate = issue.getTimeEstimate();
+                if ( issue.getTimeRequired() != null && ( issue.getTimeWorked() == null || issue.getTimeWorked().size() == 0 ) )
+                {
+                    estimate = issue.getTimeRequired();
+                }
+                else if ( issue.getTimeEstimate() != null )
+                {
+                    estimate = issue.getTimeEstimate();
+                }
             }
             else
             {
