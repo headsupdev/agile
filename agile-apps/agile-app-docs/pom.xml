@@ -82,7 +82,6 @@
              | assume public classes are in the top package, and private classes are under ".internal"
             -->
             <Import-Package>
-                ${bundle.namespace}.*,
                 org.headsupdev.agile.api.*,
                 org.headsupdev.agile.web.*,
                 org.headsupdev.agile.storage.*,

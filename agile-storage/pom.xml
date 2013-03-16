@@ -89,9 +89,9 @@
     </dependency>
 
     <dependency>
-      <groupId>jdom</groupId>
+      <groupId>org.jdom</groupId>
       <artifactId>jdom</artifactId>
-      <version>1.0</version>
+      <version>1.1-fixed</version>
     </dependency>
 
     <dependency>
@@ -165,10 +165,10 @@
                   org.hibernate.annotations.*,org.hibernate.connection,org.hibernate.search.annotations,
                   org.hibernate.criterion,org.hibernate.transform,org.hibernate.collection,org.hibernate.search,
                   org.hibernate.proxy,org.hibernate.classic,org.hibernate.jdbc,javax.persistence.*,javax.transaction.*,
-                  javassist.*,org.xml.sax.*,org.apache.lucene.*,org.apache.xerces.*,
+                  javassist.*,org.xml.sax.*,org.apache.lucene.*,org.apache.xerces.*,org.jdom.*,
                   com.mysql.jdbc.*,org.h2.*
               </Export-Package>
-              <Private-Package>${bundle.namespace}.*,javassist.*,org.jdom.*,org.hibernate.bytecode,org.hibernate.cache.*,
+              <Private-Package>${bundle.namespace}.*,javassist.*,org.hibernate.bytecode,org.hibernate.cache.*,
                   org.hibernate.bytecode.*,org.hibernate.context,org.hibernate.dialect.*,org.hibernate.engine.*,org.hibernate.event.*,
                   org.hibernate.exception,org.hibernate.hql.*,org.hibernate.id.*,org.hibernate.impl,org.hibernate.intercept.*,
                   org.hibernate.jdbc.*,org.hibernate.loader.*,org.hibernate.lob,org.hibernate.mapping,org.hibernate.metadata,
@@ -177,11 +177,10 @@
                   org.hibernate.tuple.*,org.hibernate.type,org.hibernate.usertype,org.hibernate.util,org.hibernate.action,
                   org.hibernate.param</Private-Package>
               <Import-Package><![CDATA[
-                org.headsupdev.agile.api.*,org.hibernate.connection,
-                        org.headsupdev.agile.storage.*,
+                org.headsupdev.agile.api.*,
                         org.headsupdev.support.java,
                         !com.ibm.ejs.jts.jta,!com.ibm.ws.Transaction,!com.mchange.v2.c3p0,!com.sun.*,
-                        javassist.*,!javax.annotation,javax.crypto,
+                        javassist.*,!javax.annotation,javax.crypto,org.jdom.*,
                         javax.crypto.interfaces,javax.crypto.spec,!javax.jms,
                         javax.management,javax.naming,javax.naming.event,javax.naming.spi,javax.net,javax.net.ssl,
                         !javax.security.*,javax.servlet,javax.servlet.http,javax.sql,
@@ -190,10 +189,9 @@
                         org.hibernate,org.hibernate.annotations.*,org.hibernate.cfg.*,org.hibernate.criterion,
                         org.hibernate.classic,org.hibernate.jdbc,org.hibernate.transform,org.hibernate.collection,
                         org.hibernate.search,!org.hibernate.repackage.*,org.apache.commons.collections.*,org.apache.commons.logging.*,
-                        org.apache.log4j.*,org.slf4j.*,org.apache.lucene.*,org.xml.sax.*,org.w3c.*,org.apache.xerces.*,!oracle.xml.*,
+                        org.apache.log4j.*,org.slf4j.*,org.apache.lucene.*,org.xml.sax.*,org.w3c.*,org.apache.xerces.*,
                         !org.jaxen.*,!org.jboss.resource.adapter.jdbc.*,org.osgi.*,!org.relaxng.datatype,!org.xmlpull.v1,
-                        org.codehaus.plexus.util.*,
-                        javax.naming.directory, !junit.framework, !junit.textui
+                        org.codehaus.plexus.util.*, javax.naming.directory,!oracle.xml.*
               ]]></Import-Package>
               <!--
                | each module can override these defaults in their osgi.bnd file

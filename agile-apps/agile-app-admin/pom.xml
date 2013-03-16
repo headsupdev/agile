@@ -112,7 +112,6 @@
              | assume public classes are in the top package, and private classes are under ".internal"
             -->
             <Import-Package>
-                ${bundle.namespace}.*,
                 org.headsupdev.agile.api.*,
                 org.headsupdev.agile.scm.*,
                 org.headsupdev.agile.web.*,
@@ -124,15 +123,15 @@
                 org.apache.maven.scm.*,
                 org.apache.wicket.*,
                 org.hibernate,org.hibernate.classic,org.hibernate.jdbc,
-                !org.apache.maven.scm.*,org.quartz.*,
-                javax.persistence,!com.sun.management.*,!junit.framework,
+                org.quartz.*,
+                javax.persistence,!com.sun.management.*,
                 javax.sql,javax.transaction,javax.xml.*,
-                !oracle.xml.*,!org.jaxen.*,!org.w3c.*,org.xml.sax.*,org.apache.xerces.*,
+                !org.w3c.*,org.xml.sax.*,
 
                 com.mysql.jdbc, org.h2,
-                org.joda.time.*,
+                org.joda.time.*,org.jdom.*
             </Import-Package>
-            <Private-Package>${bundle.namespace}.internal.*,org.jdom.*</Private-Package>
+            <Private-Package>${bundle.namespace}.internal.*</Private-Package>
             <Embed-Transitive>true</Embed-Transitive>
             <Embed-Dependency>*;artifactId=jackson-core-asl,jackson-mapper-asl</Embed-Dependency>
             <Bundle-ClassPath>.,{maven-dependencies}</Bundle-ClassPath>

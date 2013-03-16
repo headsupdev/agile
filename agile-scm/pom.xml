@@ -125,9 +125,7 @@
                 org.headsupdev.agile.scm.*,
                 org.headsupdev.support.java,
 
-                !org.apache.maven.scm.command.blame,!org.apache.regexp,org.codehaus.plexus.util.*,
-
-                !com.sun.*,!javax.*,!oracle.xml.*,!org.jaxen.*,!org.w3c.*,!junit.*,
+                org.codehaus.plexus.util.*,!junit.*,
                 org.osgi.framework,org.osgi.util.tracker,org.slf4j
             ]]></Import-Package>
             <Export-Package>${bundle.namespace}.*,org.apache.maven.scm.*</Export-Package>

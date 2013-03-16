@@ -131,7 +131,7 @@
               org.joda.time.*;version="1.6.0",
               javax.servlet.*
             ]]></Export-Package>
-            <Private-Package>org.headsupdev.agile,org.apache.commons.lang.*,org.apache.catalina.*,org.apache.tomcat.*,org.apache.naming.*,org.json.simple.*,org.apache.log4j.*,${bundle.namespace}.*</Private-Package>
+            <Private-Package>org.headsupdev.agile,org.json.simple.*,org.apache.log4j.*,${bundle.namespace}.*</Private-Package>
             <Import-Package><![CDATA[
               org.headsupdev.agile.api.*,
               org.headsupdev.agile.security.*,
@@ -153,7 +153,7 @@
               javax.imageio,
               !javax.imageio.stream,
 
-              org.xml.sax.*,org.w3c.*,!oracle.xml.*,!org.jaxen.*,!org.apache.xerces.*,!javax.xml.*,
+              org.xml.sax.*,org.w3c.*,!javax.xml.*,
               org.osgi.framework,
               org.osgi.util.tracker,
               org.wicketstuff.*,

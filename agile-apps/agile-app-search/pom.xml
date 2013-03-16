@@ -78,7 +78,6 @@
             <Bundle-Activator>${bundle.namespace}.SearchApplication</Bundle-Activator>
             <Bundle-Version>${project.version}</Bundle-Version>
             <Import-Package>
-                ${bundle.namespace}.*,
                 org.headsupdev.agile,
                 org.headsupdev.agile.api.*,
                 org.headsupdev.agile.web.*,
@@ -86,10 +85,9 @@
                 org.headsupdev.agile.security.*,
                 org.headsupdev.support.java,
                 org.apache.wicket.*,
-                org.hibernate.*,org.apache.lucene.*,
-                javax.xml.*,!oracle.xml.*,!org.jaxen.*,!org.w3c.*,org.xml.sax.*,!org.apache.xerces.*
+                org.hibernate.*,org.apache.lucene.*
             </Import-Package>
-            <Private-Package>${bundle.namespace}.internal.*,org.jdom.*</Private-Package>
+            <Private-Package>${bundle.namespace}.internal.*</Private-Package>
           </instructions>
         </configuration>
       </plugin>
