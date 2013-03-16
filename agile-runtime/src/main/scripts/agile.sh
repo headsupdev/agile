@@ -21,7 +21,7 @@ if [ !  -x $JAVA_EXEC ]; then
 
 fi
 
-JAVA_OPTS="-Xmx1024m -XX:MaxPermSize=256m -Djava.awt.headless=true -Duser.timezone=UTC \
+JAVA_OPTS="$AGILE_JVM_OPTS -Xmx1024m -XX:MaxPermSize=256m -Djava.awt.headless=true -Duser.timezone=UTC \
   -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled"
 
 COLORS=''

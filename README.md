@@ -23,11 +23,18 @@ Quickstart
 1. Execute the following commands:
 
         mvn install
-        ./agile-runtime/target/agile-2.0-beta-2-SNAPSHOT.dir/agile-2.0-beta-2-SNAPSHOT/bin/agile.sh
+        mvn exec:exec
 
 1. You will need to do a mvm clean between each version number increment (if you get felix related errors)
 
 1. Open a web browser at http://localhost:8069/
+
+Debugging
+---------
+
+To enable debugging options when running from within maven simply execute:
+
+        mvn exec:exec -Pdebug
 
 Support
 -------

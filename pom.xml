@@ -290,6 +290,16 @@
           </provision>
         </configuration>
       </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>1.2.1</version>
+
+        <configuration>
+          <executable>agile-runtime/target/${project.artifactId}-${project.version}.dir/${project.artifactId}-${project.version}/bin/agile.sh</executable>
+        </configuration>
+      </plugin>
     </plugins>
 
     <pluginManagement>
@@ -435,6 +445,29 @@
 
             <configuration>
               <updateReleaseInfo>true</updateReleaseInfo>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>debug</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>1.2.1</version>
+
+            <configuration>
+              <executable>agile-runtime/target/${project.artifactId}-${project.version}.dir/${project.artifactId}-${project.version}/bin/agile.sh</executable>
+              <environmentVariables>
+                <AGILE_JVM_OPTS>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8068</AGILE_JVM_OPTS>
+              </environmentVariables>
+              <arguments>
+                <argument>--debug</argument>
+              </arguments>
             </configuration>
           </plugin>
         </plugins>
