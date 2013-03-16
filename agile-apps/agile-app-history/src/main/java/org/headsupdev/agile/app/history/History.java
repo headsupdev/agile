@@ -84,14 +84,6 @@ public class History
         }
         loadFilters();
 
-        add( new WebMarkupContainer( "feedlink" ).add( new AttributeModifier( "href", true, new Model<String>()
-        {
-            public String getObject()
-            {
-                return getStorage().getGlobalConfiguration().getFullUrl( "/" + getProject().getId() + "/activity/feed.xml" );
-            }
-        } ) ) );
-
         FilterBorder filter = new FilterBorder( "filter" );
         add( filter );
 

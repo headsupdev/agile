@@ -83,15 +83,6 @@ public class GroupedActivity
             types.put( appId, typesInApp );
         }
 
-        add( new WebMarkupContainer( "feedlink" ).add( new AttributeModifier( "href", true, new Model<String>()
-        {
-            public String getObject()
-            {
-                return getStorage().getGlobalConfiguration().getFullUrl( "/" + getProject().getId() + "/activity/feed.xml" );
-            }
-        } ) ) );
-
-
         try
         {
             before = getPageParameters().getLong( "before" );
