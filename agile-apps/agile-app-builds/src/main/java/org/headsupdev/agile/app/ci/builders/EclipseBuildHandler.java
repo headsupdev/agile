@@ -19,6 +19,7 @@
 package org.headsupdev.agile.app.ci.builders;
 
 import org.headsupdev.agile.api.Project;
+import org.headsupdev.agile.app.ci.CIBuilder;
 import org.headsupdev.support.java.FileUtil;
 import org.headsupdev.support.java.IOUtil;
 import org.headsupdev.agile.api.EclipseProject;
@@ -46,6 +47,12 @@ public class EclipseBuildHandler
     final static String PLUGIN_FILE_NAME = "org.headsupdev.agile.build.eclipse_2.0.0.jar";
 
     private static Logger log = Manager.getLogger( EclipseBuildHandler.class.getName() );
+
+    @Override
+    public boolean isReadyToBuild( Project project, CIBuilder builder )
+    {
+        return true;
+    }
 
     public void runBuild( Project project, PropertyTree config, PropertyTree appConfig, File dir, File output,
                           Build build )

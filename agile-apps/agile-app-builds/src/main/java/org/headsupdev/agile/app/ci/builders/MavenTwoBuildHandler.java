@@ -18,6 +18,8 @@
 
 package org.headsupdev.agile.app.ci.builders;
 
+import org.headsupdev.agile.app.ci.CIBuilder;
+import org.headsupdev.agile.storage.StoredMavenTwoProject;
 import org.headsupdev.support.java.FileUtil;
 import org.headsupdev.support.java.IOUtil;
 import org.headsupdev.support.java.StringUtil;
@@ -55,6 +57,27 @@ public class MavenTwoBuildHandler
     public static final Pattern LINT_ERROR_WARNING_COUNTS_PATTERN = Pattern.compile( "<br/>(\\d*) errors and (\\d*) warnings found:<br/>" );
 
     private static Logger log = Manager.getLogger( MavenTwoBuildHandler.class.getName() );
+
+    @Override
+    public boolean isReadyToBuild( Project project, CIBuilder builder )
+    {
+        if ( !( project instanceof MavenTwoProject ) )
+        {
+            return true;
+        }
+
+        for ( MavenDependency dependency : ( (MavenTwoProject) project ).getDependencies() )
+        {
+            Project projectForDep = dependency.getProject();
+            if ( builder.isProjectQueued( projectForDep ) )
+            {
+                log.info( "Deferring build of " + project.getId() + " due to dependency on " + projectForDep.getId() );
+                return false;
+            }
+        }
+
+        return true;
+    }
 
     public void runBuild( Project project, PropertyTree config, PropertyTree appConfig, File dir, File logFile,
                           Build build )

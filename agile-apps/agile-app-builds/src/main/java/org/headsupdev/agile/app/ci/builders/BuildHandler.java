@@ -19,6 +19,7 @@
 package org.headsupdev.agile.app.ci.builders;
 
 import org.headsupdev.agile.api.*;
+import org.headsupdev.agile.app.ci.CIBuilder;
 import org.headsupdev.agile.storage.ci.Build;
 
 import java.io.*;
@@ -31,6 +32,8 @@ import java.io.*;
  */
 public interface BuildHandler
 {
+    public boolean isReadyToBuild( Project project, CIBuilder builder );
+
     public void runBuild( Project project, PropertyTree config, PropertyTree appConfig, File dir, File output,
                           Build build );
 

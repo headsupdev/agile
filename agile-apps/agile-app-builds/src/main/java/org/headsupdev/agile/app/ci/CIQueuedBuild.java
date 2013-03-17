@@ -32,7 +32,7 @@ public class CIQueuedBuild
     private Project project;
     private String id;
     private PropertyTree config;
-    private boolean notify;
+    private boolean notify, deferred;
 
     public CIQueuedBuild( Project project, String id, PropertyTree config, boolean notify )
     {
@@ -71,6 +71,16 @@ public class CIQueuedBuild
     public boolean getNotify()
     {
         return notify;
+    }
+
+    public boolean isDeferred()
+    {
+        return deferred;
+    }
+
+    public void setDeferred( boolean deferred )
+    {
+        this.deferred = deferred;
     }
 
     public boolean equals( Object o )

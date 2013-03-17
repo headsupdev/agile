@@ -19,6 +19,7 @@
 package org.headsupdev.agile.app.ci.builders;
 
 import org.headsupdev.agile.api.Project;
+import org.headsupdev.agile.app.ci.CIBuilder;
 import org.headsupdev.support.java.IOUtil;
 import org.headsupdev.agile.api.CommandLineProject;
 import org.headsupdev.agile.api.PropertyTree;
@@ -40,6 +41,12 @@ public class CommandLineBuildHandler
     implements BuildHandler
 {
     private static Logger log = Manager.getLogger( CommandLineBuildHandler.class.getName() );
+
+    @Override
+    public boolean isReadyToBuild( Project project, CIBuilder builder )
+    {
+        return true;
+    }
 
     public void runBuild( Project project, PropertyTree config, PropertyTree appConfig, File dir, File output,
                                                Build build )

@@ -18,6 +18,7 @@
 
 package org.headsupdev.agile.app.ci;
 
+import org.headsupdev.agile.app.ci.builders.BuildHandler;
 import org.headsupdev.support.java.FileUtil;
 import org.headsupdev.agile.api.logging.Logger;
 import org.headsupdev.agile.api.*;
@@ -68,12 +69,17 @@ public class CIBuilder
 
         if ( !isProjectQueued( project ) )
         {
-            synchronized ( pendingBuilds )
-            {
-                pendingBuilds.add( new CIQueuedBuild( project, id, config, notify ) );
-            }
+            queueBuild(new CIQueuedBuild(project, id, config, notify));
 
             buildProjects();
+        }
+    }
+
+    private void queueBuild( CIQueuedBuild build )
+    {
+        synchronized ( pendingBuilds )
+        {
+            pendingBuilds.add( build );
         }
     }
 
@@ -173,6 +179,14 @@ public class CIBuilder
     private void buildProject( CIQueuedBuild queued )
     {
         Project project = queued.getProject();
+        BuildHandler buildHandler = CIApplication.getHandlerFactory().getBuildHandler( project );
+        if ( !queued.isDeferred() && !buildHandler.isReadyToBuild( project, this ) )
+        {
+            queued.setDeferred( true );
+            queueBuild( queued );
+            return;
+        }
+
         PropertyTree config = queued.getConfig();
         if ( queued.getConfigName() == null )
         {
@@ -223,8 +237,7 @@ public class CIBuilder
             long buildId = application.addBuild( build );
             File output = new File( projectDir, buildId + ".txt" );
 
-            CIApplication.getHandlerFactory().getBuildHandler( project ).runBuild( project, config,
-                    application.getConfiguration(), base, output, build );
+            buildHandler.runBuild( project, config, application.getConfiguration(), base, output, build );
 
             Event event;
             if ( build.getStatus() != Build.BUILD_SUCCEEDED )

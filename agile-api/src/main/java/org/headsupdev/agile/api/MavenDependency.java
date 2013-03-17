@@ -33,4 +33,6 @@ public interface MavenDependency {
     public String getVersion();
 
     public String getType();
+
+    public Project getProject();
 }

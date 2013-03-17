@@ -18,12 +18,15 @@
 
 package org.headsupdev.agile.storage;
 
+import org.headsupdev.agile.api.*;
 import org.headsupdev.agile.api.rest.Publish;
 import org.headsupdev.support.java.IOUtil;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Developer;
+import org.headsupdev.support.java.StringUtil;
+import org.hibernate.*;
 import org.hibernate.annotations.Type;
 import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.Field;
@@ -35,11 +38,6 @@ import java.io.File;
 import java.io.Reader;
 import java.io.FileReader;
 import java.io.Serializable;
-
-import org.headsupdev.agile.api.MavenTwoProject;
-import org.headsupdev.agile.api.Manager;
-import org.headsupdev.agile.api.Project;
-import org.headsupdev.agile.api.MavenDependency;
 
 /**
  * A project representing a maven2 pom. This type of project has many extra fields for maven metadata.
@@ -350,5 +348,20 @@ class MavenTwoDependency
     public String getType()
     {
         return type;
+    }
+
+    public MavenTwoProject getProject()
+    {
+        Session session = HibernateStorage.getCurrentSession();
+        Transaction tx = session.beginTransaction();
+
+        org.hibernate.Query q = session.createQuery( "from StoredProject p where groupId = :group and artifactId = :artifact" );
+        q.setString( "group", group );
+        q.setString( "artifact", artifact );
+
+        MavenTwoProject project = (MavenTwoProject) q.uniqueResult();
+        tx.commit();
+
+        return project;
     }
 }

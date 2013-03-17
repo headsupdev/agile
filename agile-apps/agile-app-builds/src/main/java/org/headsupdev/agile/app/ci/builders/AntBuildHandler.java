@@ -19,6 +19,7 @@
 package org.headsupdev.agile.app.ci.builders;
 
 import org.headsupdev.agile.api.*;
+import org.headsupdev.agile.app.ci.CIBuilder;
 import org.headsupdev.support.java.IOUtil;
 import org.headsupdev.agile.api.logging.Logger;
 import org.headsupdev.agile.app.ci.CIApplication;
@@ -37,6 +38,12 @@ public class AntBuildHandler
     extends MavenTwoBuildHandler
 {
     private static Logger log = Manager.getLogger( XCodeBuildHandler.class.getName() );
+
+    @Override
+    public boolean isReadyToBuild( Project project, CIBuilder builder )
+    {
+        return true;
+    }
 
     public void runBuild( Project project, PropertyTree config, PropertyTree appConfig, File dir, File output,
                           Build build )

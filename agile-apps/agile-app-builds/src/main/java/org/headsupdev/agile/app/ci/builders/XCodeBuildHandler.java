@@ -18,6 +18,7 @@
 
 package org.headsupdev.agile.app.ci.builders;
 
+import org.headsupdev.agile.app.ci.CIBuilder;
 import org.headsupdev.agile.storage.HibernateStorage;
 import org.headsupdev.agile.storage.ci.TestResult;
 import org.headsupdev.agile.storage.ci.TestResultSet;
@@ -51,6 +52,12 @@ public class XCodeBuildHandler
     private static Logger log = Manager.getLogger( XCodeBuildHandler.class.getName() );
 
     private File cachedBuildDirectory;
+
+    @Override
+    public boolean isReadyToBuild( Project project, CIBuilder builder )
+    {
+        return true;
+    }
 
     public void runBuild( Project project, PropertyTree config, PropertyTree appConfig, File dir, File output,
                                     Build build )

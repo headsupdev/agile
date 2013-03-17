@@ -2,6 +2,7 @@
 
 * Add a grouped history page for better visibility of which apps are active
 * Better security by hiding email and telephone details from anonymous views
+* Deffer (once) builds of maven projects that have a dependency also in the build queue
 
 * Fixed marked up text to render URLs as links
 * Fix some issues with memory constraints when updating
