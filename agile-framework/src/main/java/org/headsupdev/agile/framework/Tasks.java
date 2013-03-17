@@ -59,8 +59,8 @@ public class Tasks
         super.layout();
         add( CSSPackageResource.getHeaderContribution( getClass(), "tasks.css" ) );
 
-        final WebMarkupContainer taskList = new WebMarkupContainer( "taskList" );
-        ListView<Task> tasks = new ListView<Task>( "tasks", new AbstractReadOnlyModel<List<? extends Task>>()
+        final WebMarkupContainer taskLists = new WebMarkupContainer( "taskLists" );
+        ListView<Task> projectTasks = new ListView<Task>( "projecttasks", new AbstractReadOnlyModel<List<? extends Task>>()
         {
             public List<? extends Task> getObject() {
                 return getManager().getTasks();
@@ -70,12 +70,37 @@ public class Tasks
             protected void populateItem( ListItem<Task> listItem )
             {
                 Task task = listItem.getModelObject();
-                if ( task == null )
+                if ( task == null || task.getProject() == null || !task.getProject().equals( getProject() ) )
                 {
-                    setVisible( false );
+                    listItem.setVisible( false );
                     return;
                 }
 
+                setVisible( true );
+                listItem.add( new Label( "time", new FormattedDurationModel( task.getStartTime(), new Date() ) ) );
+                listItem.add( new Label( "title", task.getTitle() ) );
+                listItem.add( new Label( "description", task.getDescription() ) );
+            }
+        };
+        taskLists.add( projectTasks );
+
+        ListView<Task> otherTasks = new ListView<Task>( "othertasks", new AbstractReadOnlyModel<List<? extends Task>>()
+        {
+            public List<? extends Task> getObject() {
+                return getManager().getTasks();
+            }
+        } )
+        {
+            protected void populateItem( ListItem<Task> listItem )
+            {
+                Task task = listItem.getModelObject();
+                if ( task == null || ( task.getProject() != null && task.getProject().equals( getProject() ) ) )
+                {
+                    listItem.setVisible( false );
+                    return;
+                }
+
+                setVisible( true );
                 listItem.add( new Label( "time", new FormattedDurationModel( task.getStartTime(), new Date() ) ) );
                 listItem.add( new Label( "title", task.getTitle() ) );
 
@@ -83,7 +108,7 @@ public class Tasks
                 {
                     ExternalLink projectLink = new ExternalLink( "project-link", "/" + task.getProject().getId() + "/tasks/" );
                     projectLink.add( new Label( "project", task.getProject().getAlias() ) );
-                    listItem.add( projectLink.setVisible( getProject().equals( StoredProject.getDefault() ) ) );
+                    listItem.add( projectLink );
                 }
                 else
                 {
@@ -93,19 +118,19 @@ public class Tasks
                 listItem.add( new Label( "description", task.getDescription() ) );
             }
         };
-        taskList.add( tasks );
+        taskLists.add( otherTasks );
 
-        taskList.setOutputMarkupId( true );
-        taskList.add( new AbstractAjaxTimerBehavior( Duration.seconds( 10 ) )
+        taskLists.setOutputMarkupId( true );
+        taskLists.add( new AbstractAjaxTimerBehavior( Duration.seconds( 10 ) )
         {
             protected void onTimer( AjaxRequestTarget target )
             {
-                target.addComponent( taskList );
+                target.addComponent( taskLists );
             }
         } );
 
 
-        add( taskList );
+        add( taskLists );
     }
 
     @Override

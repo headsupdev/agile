@@ -19,17 +19,30 @@
 <html>
   <body>
     <wicket:extend>
-      <div class="tasks" wicket:id="taskList">
-        <div class="task" wicket:id="tasks">
-          <span class="time"><span wicket:id="time">15 minutes</span> ago</span>
-          <wicket:enclosure child="project-link">
-          <span class="project">Project <a wicket:id="project-link" class="project-link">
-            <span wicket:id="project">MyProject</span>
-          </a></span>
-          </wicket:enclosure>
+      <div wicket:id="taskLists">
+        <div class="taskgroup">Current Project</div>
+        <div class="tasks">
+          <div class="task" wicket:id="projecttasks">
+            <span class="time"><span wicket:id="time">15 minutes</span> ago</span>
 
-          <span wicket:id="title" class="title">title</span>
-          <p wicket:id="description" class="description">description</p>
+            <span wicket:id="title" class="title">title</span>
+            <p wicket:id="description" class="description">description</p>
+          </div>
+        </div>
+
+        <div class="taskgroup">Other Projects</div>
+        <div class="tasks">
+          <div class="task" wicket:id="othertasks">
+            <span class="time"><span wicket:id="time">15 minutes</span> ago</span>
+            <wicket:enclosure child="project-link">
+            <span class="project">Project <a wicket:id="project-link" class="project-link">
+              <span wicket:id="project">MyProject</span>
+            </a></span>
+            </wicket:enclosure>
+
+            <span wicket:id="title" class="title">title</span>
+            <p wicket:id="description" class="description">description</p>
+          </div>
         </div>
       </div>
     </wicket:extend>
