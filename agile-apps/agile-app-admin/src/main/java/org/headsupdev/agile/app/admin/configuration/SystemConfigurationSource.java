@@ -161,7 +161,7 @@ public class SystemConfigurationSource
                 }
             }
         } );
-        restartConfig.add( new SystemConfigurationItem( "heasup.db.url", "Database URL",
+        restartConfig.add( new SystemConfigurationItem( "headsup.db.url", "Database URL",
                 "The URL of the SQL \"agile\" database " ) );
         restartConfig.add( new SystemConfigurationItem( "headsup.db.username", "Database Username",
                 "The username for the SQL \"agile\" database ") );

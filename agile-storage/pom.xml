@@ -165,10 +165,9 @@
                   org.hibernate.annotations.*,org.hibernate.connection,org.hibernate.search.annotations,
                   org.hibernate.criterion,org.hibernate.transform,org.hibernate.collection,org.hibernate.search,
                   org.hibernate.proxy,org.hibernate.classic,org.hibernate.jdbc,javax.persistence.*,javax.transaction.*,
-                  javassist.*,org.xml.sax.*,org.apache.lucene.*,org.apache.xerces.*,org.jdom.*,
-                  com.mysql.jdbc.*,org.h2.*
+                  javassist.*,org.xml.sax.*,org.apache.lucene.*,org.apache.xerces.*,org.jdom.*
               </Export-Package>
-              <Private-Package>${bundle.namespace}.*,javassist.*,org.hibernate.bytecode,org.hibernate.cache.*,
+              <Private-Package>${bundle.namespace}.*,org.hibernate.bytecode,org.hibernate.cache.*,javassist.*,
                   org.hibernate.bytecode.*,org.hibernate.context,org.hibernate.dialect.*,org.hibernate.engine.*,org.hibernate.event.*,
                   org.hibernate.exception,org.hibernate.hql.*,org.hibernate.id.*,org.hibernate.impl,org.hibernate.intercept.*,
                   org.hibernate.jdbc.*,org.hibernate.loader.*,org.hibernate.lob,org.hibernate.mapping,org.hibernate.metadata,
@@ -180,7 +179,7 @@
                 org.headsupdev.agile.api.*,
                         org.headsupdev.support.java,
                         !com.ibm.ejs.jts.jta,!com.ibm.ws.Transaction,!com.mchange.v2.c3p0,!com.sun.*,
-                        javassist.*,!javax.annotation,javax.crypto,org.jdom.*,
+                        !javax.annotation,javax.crypto,
                         javax.crypto.interfaces,javax.crypto.spec,!javax.jms,
                         javax.management,javax.naming,javax.naming.event,javax.naming.spi,javax.net,javax.net.ssl,
                         !javax.security.*,javax.servlet,javax.servlet.http,javax.sql,
@@ -198,7 +197,7 @@
               -->
 
               <Embed-Transitive>true</Embed-Transitive>
-              <Embed-Dependency>*;artifactId=!xml-apis|log4j|jdom|commons-collections|mysql-connector-java|h2|
+              <Embed-Dependency>*;artifactId=!xml-apis|log4j|jdom|commons-collections|javassist|
                   hibernate-core|hibernate-search|hibernate-annotations|hibernate-commons-annotations</Embed-Dependency>
               <Bundle-ClassPath>.,{maven-dependencies}</Bundle-ClassPath>
             </instructions>

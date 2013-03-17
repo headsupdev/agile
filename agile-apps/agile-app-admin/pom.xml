@@ -128,7 +128,6 @@
                 javax.sql,javax.transaction,javax.xml.*,
                 !org.w3c.*,org.xml.sax.*,
 
-                com.mysql.jdbc, org.h2,
                 org.joda.time.*,org.jdom.*
             </Import-Package>
             <Private-Package>${bundle.namespace}.internal.*</Private-Package>
