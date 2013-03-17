@@ -18,7 +18,7 @@
 
 package org.headsupdev.agile.web.components.configuration;
 
-import org.headsupdev.agile.core.DatabaseRegistry;
+import org.headsupdev.agile.storage.DatabaseRegistry;
 
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.html.form.TextField;

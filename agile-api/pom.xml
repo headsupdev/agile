@@ -77,6 +77,7 @@
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate-annotations</artifactId>
       <version>3.4.0.GA</version>
+      <scope>provided</scope>
       <exclusions>
         <exclusion>
           <groupId>org.hibernate</groupId>
@@ -164,10 +165,9 @@
             <Include-Resource>target/processed-resources</Include-Resource>
             <Import-Package>javax.activation, javax.crypto, javax.crypto.interfaces, javax.crypto.spec, javax.naming, javax.naming.directory,
               javax.net, javax.net.ssl, javax.security.auth.callback, javax.security.auth.x500, javax.security.sasl,
-              org.apache.wicket.*,!junit.textui,!junit.framework,org.apache.wicket.*,
-              com.google.gson.*, org.innobuilt.wicket.rest, org.hibernate.proxy,
-              javax.imageio, !javax.portlet, javax.servlet, javax.servlet.http, !javax.swing.*, javax.xml.parsers,
-              javax.xml.transform, javax.xml.transform.stream, org.slf4j, !org.w3c.dom, org.xml.sax, !sun.misc, !sun.reflect
+              org.apache.wicket.*,org.apache.wicket.*, com.google.gson.*, org.innobuilt.wicket.rest, org.hibernate.proxy,
+              javax.imageio, javax.servlet, javax.servlet.http, javax.xml.parsers,
+              javax.xml.transform, javax.xml.transform.stream, org.slf4j, org.xml.sax
             </Import-Package>
             <Export-Package><![CDATA[
               org.headsupdev.agile.api.*,

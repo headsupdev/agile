@@ -16,8 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.headsupdev.agile.core;
+package org.headsupdev.agile.storage;
 
+import org.headsupdev.agile.api.Manager;
+import org.headsupdev.agile.api.logging.Logger;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.util.List;
 import java.util.LinkedList;
 import java.util.Map;
@@ -75,7 +80,31 @@ public class DatabaseRegistry {
     public static String getTypeForUrl( String url )
     {
         String[] splits = url.split( ":" );
+        if ( splits.length < 2 )
+        {
+            return "unknown";
+        }
 
         return splits[1];
+    }
+
+    public static boolean canConnect( String url, String username, String password )
+    {
+        Logger log = Manager.getLogger( DatabaseRegistry.class.getName() );
+
+        String type = getTypeForUrl( url );
+        try
+        {
+            Class.forName( getDriver( type ) );
+            Connection conn = DriverManager.getConnection( url, username, password );
+
+            return conn != null;
+        }
+        catch( Exception e )
+        {
+            log.error( "Failed SQL test", e );
+        }
+
+        return false;
     }
 }

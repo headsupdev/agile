@@ -24,6 +24,7 @@ import org.headsupdev.agile.api.ConfigurationItem;
 import org.headsupdev.agile.api.Manager;
 import org.headsupdev.agile.app.admin.AdminApplication;
 import org.headsupdev.agile.api.logging.Logger;
+import org.headsupdev.agile.storage.DatabaseRegistry;
 import org.headsupdev.agile.web.components.BooleanImage;
 import org.headsupdev.agile.web.components.configuration.SQLURLField;
 import org.headsupdev.agile.web.MountPoint;
@@ -43,8 +44,6 @@ import org.headsupdev.support.java.IOUtil;
 
 import java.util.*;
 import java.io.*;
-import java.sql.Connection;
-import java.sql.DriverManager;
 
 /**
  * A panel for editing the base system configuration.
@@ -297,13 +296,11 @@ public class SystemConfiguration
 
         private BooleanImage sqlTestImage;
         private SQLURLField sqlUrlField;
-        private TextField sqlUsernameField, sqlPasswordField;
-        private String sqlDriver;
+        private TextField<String> sqlUsernameField, sqlPasswordField;
         private void setupSQLItems( final String key, ListItem listItem, final SystemConfigurationItem item,
                                     final BooleanImage test )
         {
-            sqlDriver = restartItems.getProperty( "headsup.db.driver" );
-
+            System.out.println( "key = " + key );
             if ( key.equals( "headsup.db.url" ) )
             {
                 sqlTestImage = test;
@@ -318,17 +315,18 @@ public class SystemConfiguration
                             showRestart = true;
                         }
 
-                        String dialect = "org.hibernate.dialect.H2Dialect";
-                        String driver = "org.h2.Driver";
-                        if ( s.startsWith( "jdbc:mysql:" ) )
+                        String type = DatabaseRegistry.getTypeForUrl( s );
+                        if ( !DatabaseRegistry.getTypes().contains( type ) )
                         {
-                            dialect = "org.hibernate.dialect.MySQLDialect";
-                            driver = "com.mysql.jdbc.Driver";
+                            // TODO report error
+                            return;
                         }
+
+                        String dialect = DatabaseRegistry.getDialect( type );
+                        String driver = DatabaseRegistry.getDriver( type );
                         restartItems.setProperty( "headsup.db.dialect", dialect );
                         restartItems.setProperty( "headsup.db.driver", driver );
 
-                        sqlDriver = driver;
                         super.setObject( s );
                     }
 
@@ -388,22 +386,10 @@ public class SystemConfiguration
         private void testSQL( AjaxRequestTarget target )
         {
             String url = sqlUrlField.getDefaultModelObject().toString();
-            String username = sqlUsernameField.getModelObject().toString();
-            String password = sqlPasswordField.getModelObject().toString();
+            String username = sqlUsernameField.getModelObject();
+            String password = sqlPasswordField.getModelObject();
 
-            boolean result = false;
-
-            try
-            {
-                Class.forName( sqlDriver );
-                Connection conn = DriverManager.getConnection( url, username, password );
-
-                result = conn != null;
-            }
-            catch( Exception e )
-            {
-                log.error( "Failed SQL test", e );
-            }
+            boolean result = DatabaseRegistry.canConnect( url, username, password );
             sqlTestImage.setBoolean( result );
 
             target.addComponent( sqlTestImage );

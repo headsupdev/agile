@@ -135,7 +135,7 @@
           <instructions>
             <Export-Package><![CDATA[
             ]]></Export-Package>
-            <Private-Package>org.jdom.*,org.apache.commons.lang.*,org.apache.catalina.*,org.apache.tomcat.*,org.apache.naming.*,${bundle.namespace}.*</Private-Package>
+            <Private-Package>org.apache.catalina.*,org.apache.tomcat.*,org.apache.naming.*,${bundle.namespace}.*</Private-Package>
             <Import-Package><![CDATA[
               org.headsupdev.agile.api.*,
               org.headsupdev.agile.security.*,
@@ -147,25 +147,14 @@
               org.headsupdev.support.java.compression,
               org.headsupdev.irc,
               com.google.gson.*, org.innobuilt.wicket.rest,
-              com.sun.syndication.*,
               org.apache.wicket.*,
               org.ops4j.pax.web.extender.whiteboard,org.ops4j.pax.web.extender.whiteboard.runtime,
               org.hibernate,org.hibernate.collection,org.hibernate.criterion,org.hibernate.classic,
               org.hibernate.search.annotations,
-              javax.activation.*,
-              javax.persistence.*,
-              javax.servlet.*,
-              javax.naming.*,
-              javax.imageio,
-              org.xml.sax.*,org.w3c.*,!oracle.xml.*,!org.jaxen.*,!org.apache.xerces.*,!javax.xml.*,
-              !javax.imageio.stream,!javax.swing.tree,
-              org.osgi.framework,
-              org.osgi.util.tracker,
-              org.wicketstuff.*,
-              org.apache.wicket.datetime.*,
-              org.apache.wicket.extensions.*,
-              org.joda.time.*,
-              org.slf4j.*,
+              javax.persistence.*,javax.servlet.*,javax.naming.*,javax.imageio,
+              org.xml.sax.*,org.w3c.*,!javax.xml.*,
+              org.osgi.framework,org.osgi.util.tracker,
+              org.wicketstuff.*
             ]]></Import-Package>
           </instructions>
         </configuration>

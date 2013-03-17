@@ -130,7 +130,6 @@
             -->
             <Export-Package>!${bundle.namespace}.internal.*,${bundle.namespace}.*;version="${project.version}"</Export-Package>
             <Import-Package>
-                ${bundle.namespace}.*,
                 org.headsupdev.agile.api.*,
                 org.headsupdev.agile.web.*,
                 org.headsupdev.agile.storage.*,

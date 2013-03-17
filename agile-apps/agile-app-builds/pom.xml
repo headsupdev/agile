@@ -108,7 +108,7 @@
             <Bundle-Activator>${bundle.namespace}.CIApplication</Bundle-Activator>
             <Bundle-Version>${project.version}</Bundle-Version>
             <Import-Package>
-                ${bundle.namespace}.*,org.osgi.framework,
+                org.osgi.framework,
                 org.headsupdev.agile.api.*,
                 org.headsupdev.agile.web.*,
                 org.headsupdev.agile.storage.*,
@@ -116,14 +116,10 @@
                 org.headsupdev.support.java,
                 org.headsupdev.support.java.compression,
                 org.headsupdev.irc,
-                org.apache.wicket.*,org.hibernate.*,org.codehaus.plexus.util.*,
-                javax.persistence,!javax.ejb,!javax.jms,!org.apache.avalon.*,!org.apache.log,!org.apache.log4j,
-                !org.apache.commons.beanutils,org.apache.commons.collections,org.apache.commons.logging,
-                !org.apache.commons.digester,!org.apache.commons.modeler, !org.apache.commons.dbcp,org.quartz.*,
-                !javax.mail.*,!javax.management,!javax.naming,!javax.rmi,javax.servlet.*,javax.sql,javax.transaction,
-                javax.xml.*,org.xml.sax.*,!oracle.xml.*,!org.jaxen.*,!org.w3c.dom,org.apache.xerces.*
+                org.apache.wicket.*,org.hibernate.*,org.codehaus.plexus.util.*,javax.persistence,org.jdom.*,
+                org.apache.commons.collections,org.apache.commons.logging,org.quartz.*,javax.sql,javax.transaction
             </Import-Package>
-            <Private-Package>${bundle.namespace}.internal.*,org.jdom.*</Private-Package>
+            <Private-Package>${bundle.namespace}.internal.*</Private-Package>
             <Embed-Transitive>true</Embed-Transitive>
             <Embed-Dependency>*;artifactId=maven-invoker</Embed-Dependency>
             <Bundle-ClassPath>.,{maven-dependencies}</Bundle-ClassPath>

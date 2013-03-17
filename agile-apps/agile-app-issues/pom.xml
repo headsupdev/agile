@@ -68,7 +68,6 @@
             <Bundle-Activator>${bundle.namespace}.IssuesApplication</Bundle-Activator>
             <Bundle-Version>${project.version}</Bundle-Version>
             <Import-Package>
-                ${bundle.namespace}.*,
                 org.headsupdev.agile.api.*,
                 org.headsupdev.agile.web.*,
                 org.headsupdev.agile.storage.*,
@@ -76,7 +75,7 @@
                 org.headsupdev.support.java.*,
                 org.apache.wicket.*,
                 org.hibernate,org.hibernate.criterion,org.hibernate.transform,javax.persistence.*,
-                javax.imageio,javax.servlet.*
+                javax.imageio
             </Import-Package>
             <Embed-Transitive>true</Embed-Transitive>
             <Embed-Dependency>*;artifactId=jhighlight</Embed-Dependency>

@@ -68,7 +68,6 @@
             <Bundle-Activator>${bundle.namespace}.BrowseApplication</Bundle-Activator>
             <Bundle-Version>${project.version}</Bundle-Version>
             <Import-Package>
-                ${bundle.namespace}.*,
                 org.headsupdev.agile.api.*,
                 org.headsupdev.agile.scm.*,
                 org.headsupdev.agile.web.*,
@@ -78,10 +77,8 @@
                 org.apache.wicket.*,
                 org.apache.maven.scm.*,
                 org.hibernate.*,
-                org.codehaus.plexus.util.*,!org.apache.maven.scm.*,!org.apache.regexp,
                 org.osgi.framework,
-                javax.imageio,javax.persistence.*,javax.servlet.*,
-                !junit.framework,
+                javax.imageio,javax.persistence.*
             </Import-Package>
             <Embed-Transitive>true</Embed-Transitive>
             <Bundle-ClassPath>.,{maven-dependencies}</Bundle-ClassPath>

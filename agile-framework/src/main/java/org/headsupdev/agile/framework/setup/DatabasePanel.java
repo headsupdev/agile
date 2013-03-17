@@ -21,7 +21,7 @@ package org.headsupdev.agile.framework.setup;
 import org.headsupdev.support.java.IOUtil;
 import org.headsupdev.agile.core.PrivateConfiguration;
 import org.headsupdev.agile.api.Manager;
-import org.headsupdev.agile.core.DatabaseRegistry;
+import org.headsupdev.agile.storage.DatabaseRegistry;
 import org.headsupdev.agile.api.logging.Logger;
 import org.headsupdev.agile.web.components.configuration.SQLURLField;
 import org.headsupdev.agile.web.components.BooleanImage;
@@ -37,8 +37,6 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 
 import java.util.Properties;
 import java.io.*;
-import java.sql.Connection;
-import java.sql.DriverManager;
 
 /**
  * A panel for the setup to connect to the required database.
@@ -113,21 +111,7 @@ public class DatabasePanel
 
         void testSQL( AjaxRequestTarget target )
         {
-            boolean result = false;
-            String type = DatabaseRegistry.getTypeForUrl( url );
-            String driver = DatabaseRegistry.getDriver( type );
-
-            try
-            {
-                Class.forName( driver );
-                Connection conn = DriverManager.getConnection( url, username, password );
-
-                result = conn != null;
-            }
-            catch( Exception e )
-            {
-                log.error( "Failed SQL test", e );
-            }
+            boolean result = DatabaseRegistry.canConnect( url, username, password );
             testImage.setBoolean( result );
 
             target.addComponent( testImage );
@@ -139,10 +123,11 @@ public class DatabasePanel
             String driver = DatabaseRegistry.getDriver( type );
 
             Properties bootstrap = getBootstrapProperties();
-            String currentUrl = bootstrap.getProperty( "headsup.db.url" );
+            String currentType = DatabaseRegistry.getTypeForUrl( bootstrap.getProperty( "headsup.db.url" ) );
             bootstrap.setProperty( "headsup.db.dialect", dialect );
             bootstrap.setProperty( "headsup.db.driver", driver );
             bootstrap.setProperty( "headsup.db.url", url );
+
             if ( username == null )
             {
                 username = "";
@@ -171,8 +156,7 @@ public class DatabasePanel
                 }
             }
 
-            // TODO make something more clever than this lame change test
-            if ( url.startsWith( "jdbc:mysql:" ) && !currentUrl.startsWith( "jdbc:mysql:" ) )
+            if ( !currentType.equals( type ) )
             {
                 restartMessage.setVisible( true );
 
