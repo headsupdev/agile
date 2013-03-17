@@ -43,11 +43,6 @@ img.icon {
     vertical-align: middle;
 }
 
-.clearBeforeFooter {
-    clear: both;
-    height: 0;
-}
-
 #content div.project {
     width: 271px;
 }

@@ -559,6 +559,11 @@ body {min-height: 100%;} /* for proper browsers */
     margin-bottom: 134px;
 }
 
+.clearBeforeFooter {
+    clear: both;
+    height: 0;
+}
+
 /* Tabbed panel style */
 div.tabs div.tab-row {
     font-size: 11pt;
