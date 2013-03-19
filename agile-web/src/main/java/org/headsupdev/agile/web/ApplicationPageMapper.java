@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2013 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -19,6 +19,7 @@
 package org.headsupdev.agile.web;
 
 import org.headsupdev.agile.api.*;
+import org.headsupdev.agile.api.logging.Logger;
 import org.headsupdev.agile.core.PrivateConfiguration;
 import org.headsupdev.agile.security.permission.AdminPermission;
 import org.headsupdev.agile.web.wicket.HeadsUpRequestCodingStrategy;
@@ -45,6 +46,7 @@ public class ApplicationPageMapper
     private Application searchApp;
 
     private static ApplicationPageMapper instance = new ApplicationPageMapper();
+    private static Logger log;
 
     public static ApplicationPageMapper get()
     {
@@ -59,6 +61,7 @@ public class ApplicationPageMapper
         pageApplications = new HashMap<Class<? extends org.apache.wicket.Page>,Application>();
         
         Manager.getInstance().addProjectListener( this );
+        log = Manager.getLogger( getClass().getSimpleName() );
     }
 
     public void addApplication( Application app )
@@ -223,6 +226,14 @@ public class ApplicationPageMapper
         if ( ret == null && ( path.equals( "" ) || path.equals( "home" ) || path.equals( "dashboard" ) ) )
         {
             ret = LoadingPage.class;
+        }
+
+        // handle a complete failure to link to the requested page...
+        if ( ret == null )
+        {
+            log.error( "Unable to find page class for path \"" + path + "\"" );
+
+            return getPageClass( "filenotfound" );
         }
         return ret;
     }
