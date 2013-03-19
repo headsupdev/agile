@@ -21,7 +21,6 @@ package org.headsupdev.agile.app.history;
 import org.headsupdev.agile.api.*;
 import org.headsupdev.agile.api.rest.Api;
 import org.headsupdev.agile.app.history.rest.ActivityApi;
-import org.headsupdev.agile.web.BookmarkableMenuLink;
 import org.headsupdev.agile.web.WebApplication;
 import org.headsupdev.agile.storage.HibernateStorage;
 import org.headsupdev.agile.app.history.permission.HistoryViewPermission;
@@ -50,8 +49,6 @@ public class HistoryApplication
     public HistoryApplication()
     {
         links = new LinkedList<MenuLink>();
-        links.add( new BookmarkableMenuLink( History.class, null, "list" ) );
-        links.add( new SimpleMenuLink( "grouped" ) );
     }
 
     public String getName()

@@ -21,6 +21,7 @@ package org.headsupdev.agile.app.history;
 import org.headsupdev.agile.api.Permission;
 import org.headsupdev.agile.api.Project;
 import org.headsupdev.agile.api.Event;
+import org.headsupdev.agile.api.SimpleMenuLink;
 import org.headsupdev.agile.app.history.permission.HistoryViewPermission;
 import org.headsupdev.agile.security.permission.ProjectListPermission;
 import org.headsupdev.agile.web.components.history.HistoryPanel;
@@ -38,7 +39,6 @@ import org.apache.wicket.markup.html.form.*;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
@@ -222,6 +222,9 @@ public class History
         if ( more ) {
             addLink( new BookmarkableMenuLink( getClass(), params, "\u25c0 earlier" ) );
         }
+
+        // link to the other view for event listings
+        addLink( new SimpleMenuLink( "grouped" ) );
     }
 
     private void loadFilters()

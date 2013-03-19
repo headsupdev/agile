@@ -18,23 +18,17 @@
 
 package org.headsupdev.agile.app.history;
 
-import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.AbstractReadOnlyModel;
-import org.apache.wicket.model.Model;
 import org.headsupdev.agile.api.Event;
 import org.headsupdev.agile.api.Permission;
 import org.headsupdev.agile.api.Project;
 import org.headsupdev.agile.app.history.permission.HistoryViewPermission;
 import org.headsupdev.agile.security.permission.ProjectListPermission;
 import org.headsupdev.agile.storage.StoredProject;
-import org.headsupdev.agile.web.ApplicationIdComparator;
-import org.headsupdev.agile.web.ApplicationPageMapper;
-import org.headsupdev.agile.web.HeadsUpPage;
-import org.headsupdev.agile.web.MountPoint;
+import org.headsupdev.agile.web.*;
 import org.headsupdev.agile.web.components.history.HistoryPanel;
 
 import java.util.*;
@@ -117,5 +111,8 @@ public class GroupedActivity
                 }, allProject));
             }
         } );
+
+        // link to the main view for event listings
+        addLink( new BookmarkableMenuLink( History.class, null, "list" ) );
     }
 }
