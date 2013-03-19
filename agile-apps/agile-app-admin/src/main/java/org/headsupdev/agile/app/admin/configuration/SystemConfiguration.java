@@ -300,7 +300,6 @@ public class SystemConfiguration
         private void setupSQLItems( final String key, ListItem listItem, final SystemConfigurationItem item,
                                     final BooleanImage test )
         {
-            System.out.println( "key = " + key );
             if ( key.equals( "headsup.db.url" ) )
             {
                 sqlTestImage = test;
