@@ -232,6 +232,11 @@ public class StoredProject
     }
 
     public String getName() {
+        if ( name == null )
+        {
+            return id;
+        }
+
         return name;
     }
 
@@ -243,7 +248,7 @@ public class StoredProject
     public String getAlias() {
         if ( alias == null )
         {
-            return name;
+            return getName();
         }
 
         return alias;
@@ -469,7 +474,7 @@ public class StoredProject
         {
             return -1;
         }
-        if ( p == null )
+        if ( p == null || p.getAlias() == null )
         {
             return 1;
         }
