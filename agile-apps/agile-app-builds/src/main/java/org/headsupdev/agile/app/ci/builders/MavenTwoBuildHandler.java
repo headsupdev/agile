@@ -58,7 +58,6 @@ public class MavenTwoBuildHandler
 
     private static Logger log = Manager.getLogger( MavenTwoBuildHandler.class.getName() );
 
-    @Override
     public boolean isReadyToBuild( Project project, CIBuilder builder )
     {
         if ( !( project instanceof MavenTwoProject ) )
@@ -66,17 +65,36 @@ public class MavenTwoBuildHandler
             return true;
         }
 
+        if ( project.getParent() != null )
+        {
+            if ( isBuildWaitingFor( project.getParent(), builder, "parent project", project.getId() ) )
+            {
+                return false;
+            }
+        }
+
         for ( MavenDependency dependency : ( (MavenTwoProject) project ).getDependencies() )
         {
             Project projectForDep = dependency.getProject();
-            if ( builder.isProjectQueued( projectForDep ) )
+
+            if ( isBuildWaitingFor( projectForDep, builder, "dependency on", project.getId() ) )
             {
-                log.info( "Deferring build of " + project.getId() + " due to dependency on " + projectForDep.getId() );
                 return false;
             }
         }
 
         return true;
+    }
+
+    protected boolean isBuildWaitingFor( Project project, CIBuilder builder, String type, String name )
+    {
+        if ( builder.isProjectQueued( project ) )
+        {
+            log.info( "Deferring build of " + name + " due to " + type + " " + project.getId() );
+            return true;
+        }
+
+        return false;
     }
 
     public void runBuild( Project project, PropertyTree config, PropertyTree appConfig, File dir, File logFile,
