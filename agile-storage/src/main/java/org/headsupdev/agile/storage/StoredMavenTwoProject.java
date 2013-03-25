@@ -25,7 +25,6 @@ import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Developer;
-import org.headsupdev.support.java.StringUtil;
 import org.hibernate.*;
 import org.hibernate.annotations.Type;
 import org.hibernate.search.annotations.Indexed;
@@ -359,7 +358,13 @@ class MavenTwoDependency
         q.setString( "group", group );
         q.setString( "artifact", artifact );
 
-        MavenTwoProject project = (MavenTwoProject) q.uniqueResult();
+        // no particular guarantee that there will only be one project with these identifiers loaded!...
+        MavenTwoProject project = null;
+        List<MavenTwoProject> projects = (List<MavenTwoProject>) q.list();
+        if ( projects.size() > 0 )
+        {
+            project = projects.get( 0 );
+        }
         tx.commit();
 
         return project;
