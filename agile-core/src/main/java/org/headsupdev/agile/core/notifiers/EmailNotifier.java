@@ -173,10 +173,7 @@ public class EmailNotifier
         }
 
         body.append( "</div>" );
-        body.append( "<div class=\"footer\" style=\"position:absolute;\n" +
-                "            left:0;\n" +
-                "            bottom:0;\n" +
-                "            width:100%;\n" +
+        body.append( "<div class=\"footer\" style=\"width:100%;\n" +
                 "            padding: 5px 30px;\n" +
                 "            background-color: #cecfca;" +
                 "            color: gray;\n" +
