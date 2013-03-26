@@ -131,6 +131,17 @@ public class CIBuilder
         return false;
     }
 
+    public void unsetAllDeferred()
+    {
+        synchronized( pendingBuilds )
+        {
+            for ( CIQueuedBuild build : pendingBuilds )
+            {
+                build.setDeferred( false );
+            }
+        }
+    }
+
     protected void buildProjects()
     {
         if ( building )
@@ -186,6 +197,7 @@ public class CIBuilder
             queueBuild( queued );
             return;
         }
+        unsetAllDeferred();
 
         PropertyTree config = queued.getConfig();
         if ( queued.getConfigName() == null )

@@ -19,7 +19,6 @@
 package org.headsupdev.agile.app.ci.builders;
 
 import org.headsupdev.agile.app.ci.CIBuilder;
-import org.headsupdev.agile.storage.StoredMavenTwoProject;
 import org.headsupdev.support.java.FileUtil;
 import org.headsupdev.support.java.IOUtil;
 import org.headsupdev.support.java.StringUtil;
