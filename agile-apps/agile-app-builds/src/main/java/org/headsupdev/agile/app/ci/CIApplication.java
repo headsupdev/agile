@@ -206,6 +206,7 @@ public class CIApplication
         globalItems.add( CONFIGURATION_NOTIFY_REPEAT_PASS );
 
         List<ConfigurationItem> items = new LinkedList<ConfigurationItem>();
+        items.add( CONFIGURATION_BUILD_NAME );
         items.add( CONFIGURATION_ANT_TASKS );
         items.add( CONFIGURATION_ANT_HOME_OVERRIDE );
         antProjectItems.add( new ConfigurationItem( "schedule.default", "Default Build Schedule", items ) );
@@ -218,6 +219,7 @@ public class CIApplication
                 new ConfigurationItem( "schedule", "Build Schedule", items ) ) );
 
         items = new LinkedList<ConfigurationItem>();
+        items.add( CONFIGURATION_BUILD_NAME );
         items.add( CONFIGURATION_ECLIPSE_HOME_OVERRIDE );
         eclipseProjectItems.add( new ConfigurationItem( "schedule.default", "Default Build Schedule", items ) );
         items = new LinkedList<ConfigurationItem>();
@@ -228,6 +230,7 @@ public class CIApplication
                 new ConfigurationItem( "schedule", "Build Schedule", items ) ) );
 
         items = new LinkedList<ConfigurationItem>();
+        items.add( CONFIGURATION_BUILD_NAME );
         items.add( CONFIGURATION_COMMAND_LINE );
         cmdProjectItems.add( new ConfigurationItem( "schedule.default", "Default Build Schedule", items ) );
         items = new LinkedList<ConfigurationItem>();
@@ -238,6 +241,7 @@ public class CIApplication
                 new ConfigurationItem( "schedule", "Build Schedule", items ) ) );
 
         items = new LinkedList<ConfigurationItem>();
+        items.add( CONFIGURATION_BUILD_NAME );
         // type of build
         items.add( CONFIGURATION_XCODE_BUILD_WORKSPACE );
         // workspace build...
@@ -250,9 +254,9 @@ public class CIApplication
         items.add( CONFIGURATION_XCODE_SDK ) ;
         items.add( CONFIGURATION_ANALYZE );
         xcodeProjectItems.add( new ConfigurationItem( "schedule.default", "Default Build Schedule", items ) );
+
         items = new LinkedList<ConfigurationItem>();
         items.add( CONFIGURATION_BUILD_NAME );
-
         // type of build
         items.add( CONFIGURATION_XCODE_BUILD_WORKSPACE );
         // workspace build...
@@ -268,8 +272,11 @@ public class CIApplication
         xcodeProjectItems.add( new ConfigurationItem( "schedule", "Build Schedule",
                 new ConfigurationItem( "schedule", "Build Schedule", items ) ) );
 
-// no configuration for unknown projects in the default schedule and just a cron expression for other schedules...
-//        otherProjectItems.add( new ConfigurationItem( "schedule.default", "Default Build Schedule", items ) );
+// a fallback for other project types. Allow naming and then a named schedule.
+// This could do anything based on the builder code loaded at the time...
+        items = new LinkedList<ConfigurationItem>();
+        items.add( CONFIGURATION_BUILD_NAME );
+        otherProjectItems.add( new ConfigurationItem( "schedule.default", "Default Build Schedule", items ) );
         items = new LinkedList<ConfigurationItem>();
         items.add( CONFIGURATION_BUILD_NAME );
         items.add( CONFIGURATION_CRON_EXPRESSION );
@@ -385,6 +392,7 @@ public class CIApplication
         List<ConfigurationItem> mavenItems = new LinkedList<ConfigurationItem>();
 
         List<ConfigurationItem> items = new LinkedList<ConfigurationItem>();
+        items.add( CONFIGURATION_BUILD_NAME );
         items.add( CONFIGURATION_MAVEN_GOALS );
         items.add( CONFIGURATION_MAVEN_PROFILES );
         items.add( CONFIGURATION_MAVEN_HOME_OVERRIDE );
@@ -392,6 +400,7 @@ public class CIApplication
         {
             items.add( CONFIGURATION_ANALYZE );
         }
+
         mavenItems.add( new ConfigurationItem( "schedule.default", "Default Build Schedule", items ) );
         items = new LinkedList<ConfigurationItem>();
         items.add( CONFIGURATION_BUILD_NAME );

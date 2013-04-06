@@ -165,13 +165,6 @@ public class CI
             {
                 if ( status != Build.BUILD_RUNNING && !CIBuilder.isProjectQueued( getProject() ) )
                 {
-                    add( new Link( "build" )
-                    {
-                        public void onClick()
-                        {
-                            queueBuild( getProject() );
-                        }
-                    } );
                     addLink( new DynamicMenuLink( "build" )
                     {
                         public void onClick()
@@ -183,8 +176,12 @@ public class CI
                     final PropertyTree buildConfigs = Manager.getStorageInstance().getGlobalConfiguration().
                             getApplicationConfigurationForProject( CIApplication.ID, getProject() ).getSubTree( "schedule" );
                     List<String> configNames = new LinkedList<String>( buildConfigs.getSubTreeIds() );
-                    configNames.remove( "default" );
-                    Collections.sort( configNames );
+                    if ( configNames.size() > 1 )
+                    {
+                        configNames.remove( "default" );
+                        Collections.sort( configNames );
+                        configNames.add( 0, "default" );
+                    }
                     add( new ListView<String>( "buildConfigs", configNames )
                     {
                         @Override
@@ -192,12 +189,21 @@ public class CI
                         {
                             final String configId = listItem.getModelObject();
                             final PropertyTree config = buildConfigs.getSubTree( configId );
-                            final String configName = config.getProperty( "name" );
+                            String configName = config.getProperty( "name" );
 
                             if ( configName == null )
                             {
-                                listItem.setVisible( false );
-                                return;
+                                if ( !configId.equals( "default" ) )
+                                {
+                                   listItem.setVisible( false );
+                                    return;
+                                }
+
+                                configName = "project";
+                            }
+                            else
+                            {
+                                configName = "\"" + configName + "\"";
                             }
                             Link build = new Link( "build" )
                             {
@@ -214,7 +220,6 @@ public class CI
                 }
                 else
                 {
-                    add( new WebMarkupContainer( "build" ).setVisible( false ) );
                     add( new WebMarkupContainer( "buildConfigs" ).setVisible( false ) );
                 }
 

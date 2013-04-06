@@ -30,14 +30,11 @@
         <span class="status-queued">&nbsp;&nbsp;&nbsp;&nbsp;</span>Project is queued for building...
         <a wicket:id="remove"><span class="status-remove-nohover">&nbsp;&nbsp;&nbsp;&nbsp;</span>Remove build from queue</a>
       </p>
-      <wicket:enclosure child="build">
+      <wicket:enclosure child="buildConfigs">
       <ul class="buildlinks">
-        <li>
-          <a wicket:id="build"><span class="status-force">&nbsp;&nbsp;&nbsp;&nbsp;</span>Build project now</a>
-        </li>
         <li wicket:id="buildConfigs">
           <a wicket:id="build"><span class="status-force">&nbsp;&nbsp;&nbsp;&nbsp;</span>Build
-            "<span wicket:id="name">name</span>" now</a>
+            <span wicket:id="name">name</span> now</a>
         </li>
       </ul>
       </wicket:enclosure>
