@@ -42,6 +42,8 @@ public class ConfigurationItem
     public static final int TYPE_SET = 10;
     public static final int TYPE_LIST = 20;
 
+    public static final String CRON_VALUE_NEVER = "never";
+
     private int type;
     private String key, title, description;
     private Object fallback;

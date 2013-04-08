@@ -18,6 +18,7 @@
 
 package org.headsupdev.agile.app.ci;
 
+import org.headsupdev.agile.api.ConfigurationItem;
 import org.headsupdev.agile.api.Project;
 import org.headsupdev.agile.api.PropertyTree;
 import org.headsupdev.agile.api.Manager;
@@ -93,6 +94,11 @@ public class CIScheduler {
             {
                 cron = (String) CIApplication.CONFIGURATION_CRON_EXPRESSION.getDefault();
             }
+            if ( ConfigurationItem.CRON_VALUE_NEVER.equals( cron ) )
+            {
+                return;
+            }
+
             try
             {
                 Trigger trigger = new CronTrigger( "schedule:" + project.getId() + ":" + ( i + 1 ), null, cron );

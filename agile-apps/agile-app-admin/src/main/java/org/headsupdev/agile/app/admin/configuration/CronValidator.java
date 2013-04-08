@@ -20,10 +20,12 @@ package org.headsupdev.agile.app.admin.configuration;
 
 import org.apache.wicket.validation.validator.StringValidator;
 import org.apache.wicket.validation.IValidatable;
+import org.headsupdev.agile.api.ConfigurationItem;
 import org.quartz.CronExpression;
 
 /**
- * TODO document me
+ * A quick validator for cron expressions.
+ * Also allowable is "never" for something that should not be scheduled.
  *
  * @author Andrew Williams
  * @since 1.0
@@ -31,10 +33,17 @@ import org.quartz.CronExpression;
 public class CronValidator
     extends StringValidator
 {
-    protected void onValidate( IValidatable<String> validatable ) {
+    protected void onValidate( IValidatable<String> validatable )
+    {
+        if ( ConfigurationItem.CRON_VALUE_NEVER.equals( validatable.getValue() ) )
+        {
+            // nice and simple
+            return;
+        }
+
         try
         {
-            CronExpression cron = new CronExpression( validatable.getValue() );
+            new CronExpression( validatable.getValue() );
         }
         catch ( Exception e )
         {

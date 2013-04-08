@@ -151,7 +151,7 @@ public class CIApplication
             "", "Configuration Name", "A name used to identify this build configuration" );
     public static final ConfigurationItem CONFIGURATION_CRON_EXPRESSION = new ConfigurationItem(
         ConfigurationItem.TYPE_CRON, "cron", "0 15 23 * * ?", "Cron Expression",
-        "A cron expression to specify when the schedule should run (use format s m h DoM M DoW)" );
+        "A cron expression to specify when the schedule should run (use format s m h DoM M DoW) or 'never' to disable the schedule" );
 
     private List<MenuLink> links;
     private List<String> eventTypes;
