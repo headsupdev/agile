@@ -104,7 +104,7 @@ public class HeadsUpConfiguration
     public String removeProperty( String key )
     {
         String ret = super.removeProperty( key );
-        Manager.getStorageInstance().removeConfigurationItem(key);
+        Manager.getStorageInstance().removeConfigurationItem( key );
         return ret;
     }
 
@@ -160,7 +160,7 @@ public class HeadsUpConfiguration
 
     public String getSmtpHost()
     {
-        return getProperty(KEY_SMTP_HOST, null);
+        return getProperty( KEY_SMTP_HOST, null );
     }
 
     public void setSmtpHost( String smtpHost )
@@ -266,49 +266,52 @@ public class HeadsUpConfiguration
 
     public PropertyTree getApplicationConfiguration( Application app )
     {
-        return getApplicationConfiguration(app.getApplicationId());
+        return getApplicationConfiguration( app.getApplicationId() );
     }
 
     public PropertyTree getApplicationConfiguration( String appId )
     {
-        return getSubTree( KEY_APPLICATIONS ).getSubTree(appId);
+        return getSubTree( KEY_APPLICATIONS ).getSubTree( appId );
     }
 
     private String encodeProjectId( String projectId )
     {
-        return projectId.replace(".", "+");
+        return projectId.replace( ".", "+" );
     }
 
     public PropertyTree getApplicationConfigurationForProject( Application app, Project project )
     {
-        return getApplicationConfigurationForProject(app.getApplicationId(), project);
+        return getApplicationConfigurationForProject( app.getApplicationId(), project );
     }
 
     public PropertyTree getApplicationConfigurationForProject( String appId, Project project )
     {
         String pid = encodeProjectId( project.getId() );
-        return getApplicationConfiguration( appId ).getSubTree( KEY_PROJECTS ).getSubTree(pid);
+        return getApplicationConfiguration( appId ).getSubTree( KEY_PROJECTS ).getSubTree( pid );
     }
 
     public PropertyTree getProjectConfiguration( Project project )
     {
         String pid = encodeProjectId( project.getId() );
-        return getSubTree(KEY_PROJECTS).getSubTree( pid );
+        return getSubTree( KEY_PROJECTS ).getSubTree( pid );
     }
 
     public String getBuildVersion()
     {
-        return buildProperties.getProperty(BUILD_KEY_VERSION);
+        return buildProperties.getProperty( BUILD_KEY_VERSION );
     }
 
     public Date getBuildDate()
     {
         if ( parsedBuildDate == null )
         {
-            DateFormat formatter = new SimpleDateFormat("yyyy/MM/dd kk:mm");
-            try {
+            DateFormat formatter = new SimpleDateFormat( "yyyy/MM/dd kk:mm" );
+            try
+            {
                 parsedBuildDate = formatter.parse( buildProperties.getProperty( BUILD_KEY_DATE ) );
-            } catch (ParseException e) {
+            }
+            catch ( ParseException e )
+            {
                 Manager.getLogger( "HeadsUpConfiguration" ).error( "Failed to parse build date", e );
                 return new Date();
             }
