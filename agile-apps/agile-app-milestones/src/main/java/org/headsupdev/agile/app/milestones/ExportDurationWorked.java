@@ -23,7 +23,6 @@ import org.headsupdev.agile.api.Project;
 import org.headsupdev.agile.app.milestones.entityproviders.MilestoneProvider;
 import org.headsupdev.agile.app.milestones.permission.MilestoneViewPermission;
 import org.headsupdev.agile.storage.HibernateStorage;
-import org.headsupdev.agile.storage.resource.ResourceManagerImpl;
 import org.headsupdev.agile.storage.StoredProject;
 import org.headsupdev.agile.storage.issues.*;
 import org.headsupdev.agile.storage.resource.DurationWorked;
@@ -209,12 +208,15 @@ public class ExportDurationWorked
             {
                 estimate = issue.getTimeEstimate();
 
-                Date firstDay = dates.get( 0 );
-                for ( DurationWorked worked : issue.getTimeWorked() )
+                if ( dates.size() > 0 )
                 {
-                    if ( estimate == null || ( worked.getDay().before( firstDay ) && worked.getUpdatedRequired() != null &&
-                            worked.getUpdatedRequired().getHours() < estimate.getHours() ) ) {
-                        estimate = worked.getUpdatedRequired();
+                    Date firstDay = dates.get( 0 );
+                    for ( DurationWorked worked : issue.getTimeWorked() )
+                    {
+                        if ( estimate == null || ( worked.getDay().before( firstDay ) && worked.getUpdatedRequired() != null &&
+                                worked.getUpdatedRequired().getHours() < estimate.getHours() ) ) {
+                            estimate = worked.getUpdatedRequired();
+                        }
                     }
                 }
             }
@@ -222,12 +224,15 @@ public class ExportDurationWorked
             {
                 estimate = new Duration( 0 );
 
-                Date firstDay = dates.get( 0 );
-                for ( DurationWorked worked : issue.getTimeWorked() )
+                if ( dates.size() > 0 )
                 {
-                    if ( worked.getDay().before( firstDay ) && worked.getUpdatedRequired() != null &&
-                            worked.getUpdatedRequired().getHours() > estimate.getHours() ) {
-                        estimate = worked.getUpdatedRequired();
+                    Date firstDay = dates.get( 0 );
+                    for ( DurationWorked worked : issue.getTimeWorked() )
+                    {
+                        if ( worked.getDay().before( firstDay ) && worked.getUpdatedRequired() != null &&
+                                worked.getUpdatedRequired().getHours() > estimate.getHours() ) {
+                            estimate = worked.getUpdatedRequired();
+                        }
                     }
                 }
             }
@@ -251,7 +256,10 @@ public class ExportDurationWorked
 
         ret.append( "\n\n" );
 
-        dates.remove( 0 );
+        if ( dates.size() > 0 )
+        {
+            dates.remove( 0 );
+        }
         ret.append( "Hours Logged\nId,Task,Status,Assignee,Worked" );
         for ( Date date : dates )
         {
