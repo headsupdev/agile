@@ -94,9 +94,9 @@ public class WorkRemainingTable
 
                 listItem.add( new Label( "user", user.getFullnameOrUsername() ) );
 
-                int estimate = 0;
-                int worked = 0;
-                int remaining = 0;
+                double estimate = 0;
+                double worked = 0;
+                double remaining = 0;
                 for ( Issue issue : issueSet )
                 {
                     if ( issue.getAssignee() != null && issue.getAssignee().equals( user ) )
