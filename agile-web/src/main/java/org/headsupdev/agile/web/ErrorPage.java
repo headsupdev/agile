@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2013 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -19,9 +19,10 @@
 package org.headsupdev.agile.web;
 
 import org.headsupdev.agile.api.Permission;
+import org.headsupdev.agile.api.Project;
 
 /**
- * TODO Document me!
+ * The parent to all error pages
  *
  * @author Andrew Williams
  * @version $Id$
@@ -53,5 +54,16 @@ public abstract class ErrorPage
     public boolean isErrorPage()
     {
         return true;
+    }
+
+    @Override
+    public Project getProject()
+    {
+        if ( getSession().getProject() != null )
+        {
+            return getSession().getProject();
+        }
+
+        return super.getProject();
     }
 }

@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2013 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -20,8 +20,6 @@ package org.headsupdev.agile.web;
 
 import org.apache.wicket.markup.html.CSSPackageResource;
 import org.headsupdev.agile.api.logging.Logger;
-import org.headsupdev.agile.storage.HibernateStorage;
-import org.headsupdev.agile.storage.resource.ResourceManagerImpl;
 import org.headsupdev.agile.web.auth.WebLoginManager;
 import org.headsupdev.agile.web.components.MarkedUpTextModel;
 import org.headsupdev.agile.web.components.AccountSummaryPanel;
@@ -129,7 +127,12 @@ public abstract class HeadsUpPage
             requirePermission( getRequiredPermission() );
         }
 
-        for ( MenuLink link : application.getLinks( project ) )
+        if ( !isErrorPage() )
+        {
+            getSession().setProject( getProject() );
+        }
+
+        for ( MenuLink link : application.getLinks( getProject() ) )
         {
             addLink( link );
         }
@@ -146,6 +149,7 @@ public abstract class HeadsUpPage
                 ApplicationPageMapper.get().getApplications( getSession().getUser() ) ) {
             protected void populateItem( ListItem<Application> listItem )
             {
+                Project project = getProject();
                 final Application app = listItem.getModelObject();
                 if ( "home".equals( app.getApplicationId() ) )
                 {
