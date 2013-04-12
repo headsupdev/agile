@@ -20,13 +20,16 @@ package org.headsupdev.agile.app.ci.builders;
 
 import org.headsupdev.agile.api.*;
 import org.headsupdev.agile.app.ci.CIBuilder;
+import org.headsupdev.support.java.ExecUtil;
 import org.headsupdev.support.java.IOUtil;
 import org.headsupdev.agile.api.logging.Logger;
 import org.headsupdev.agile.app.ci.CIApplication;
 import org.headsupdev.agile.storage.ci.Build;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 /**
  * The code used to build an ant based project - also parses JUnit test results if applicable.
@@ -50,8 +53,6 @@ public class AntBuildHandler
     {
         int result = -1;
         Writer buildOut = null;
-        Process process = null;
-        StreamGobbler serr = null, sout = null;
         try
         {
             buildOut = new FileWriter( output, true );
@@ -68,28 +69,15 @@ public class AntBuildHandler
             {
                 tasksProperty = (String) CIApplication.CONFIGURATION_ANT_TASKS.getDefault();
             }
-            String[] tasks = tasksProperty.split(" ");
+            List<String> commands = Arrays.asList( tasksProperty.split( " " ) );
 
             File antExe = new File( antHome, "ant" );
             if ( !antExe.exists() )
             {
                 antExe = new File( antHome, "ant.bat" );
             }
-            String[] commands = new String[1 + tasks.length];
-            commands[0] = antExe.getAbsolutePath();
-            System.arraycopy( tasks, 0, commands, 1, tasks.length );
-            process = Runtime.getRuntime().exec( commands, null, dir );
-
-            serr = new StreamGobbler( new InputStreamReader( process.getErrorStream() ), buildOut );
-            sout = new StreamGobbler( new InputStreamReader( process.getInputStream() ), buildOut );
-            serr.start();
-            sout.start();
-
-            result = process.waitFor();
-        }
-        catch ( InterruptedException e )
-        {
-            // TODO use this hook when we cancel the process
+            commands.add( 0, antExe.getAbsolutePath() );
+            result = ExecUtil.executeLoggingExceptions( commands, dir, buildOut, buildOut );
         }
         catch ( IOException e )
         {
@@ -98,32 +86,6 @@ public class AntBuildHandler
         }
         finally
         {
-            if ( process != null )
-            {
-                // defensively try to close the gobblers
-                if ( serr != null && sout != null )
-                {
-                    // check that our gobblers are finished...
-                    while ( !serr.isComplete() || !sout.isComplete() )
-                    {
-                        log.debug( "waiting 1s to close gobbler" );
-                        try
-                        {
-                            Thread.sleep( 1000 );
-                        }
-                        catch ( InterruptedException e )
-                        {
-                            // we were just trying to tidy up...
-                        }
-                    }
-                }
-
-                IOUtil.close( process.getOutputStream() );
-                IOUtil.close( process.getErrorStream() );
-                IOUtil.close( process.getInputStream() );
-                process.destroy();
-            }
-
             IOUtil.close( buildOut );
         }
 

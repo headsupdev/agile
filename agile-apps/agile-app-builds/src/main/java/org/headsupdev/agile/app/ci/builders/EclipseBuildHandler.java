@@ -20,6 +20,7 @@ package org.headsupdev.agile.app.ci.builders;
 
 import org.headsupdev.agile.api.Project;
 import org.headsupdev.agile.app.ci.CIBuilder;
+import org.headsupdev.support.java.ExecUtil;
 import org.headsupdev.support.java.FileUtil;
 import org.headsupdev.support.java.IOUtil;
 import org.headsupdev.agile.api.EclipseProject;
@@ -31,8 +32,9 @@ import org.headsupdev.agile.storage.ci.Build;
 
 import java.io.*;
 import java.net.URL;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 /**
  * The code to build a project using eclipse.
@@ -118,8 +120,6 @@ public class EclipseBuildHandler
 
         int result = -1;
         Writer buildOut = null;
-        Process process = null;
-        StreamGobbler serr = null, sout = null;
         try
         {
             buildOut = new FileWriter( output );
@@ -129,8 +129,7 @@ public class EclipseBuildHandler
             {
                 eclipseExe = new File( eclipseHome, "eclipse.exe" );
             }
-            String[] commands = new String[]
-            {
+            List<String> commands = Arrays.asList(
                 eclipseExe.getAbsolutePath(),
                 "-application",
                 "org.headsupdev.agile.build.eclipse.run",
@@ -141,19 +140,9 @@ public class EclipseBuildHandler
                 "-nosplash",
                 "-logVerbose",
                 "-logDebug"
-            };
-            process = Runtime.getRuntime().exec( commands, null, new File( eclipseHome ) );
+            );
 
-            serr = new StreamGobbler( new InputStreamReader( process.getErrorStream() ), buildOut );
-            sout = new StreamGobbler( new InputStreamReader( process.getInputStream() ), buildOut );
-            serr.start();
-            sout.start();
-
-            result = process.waitFor();
-        }
-        catch ( InterruptedException e )
-        {
-            // TODO use this hook when we cancel the process
+            result = ExecUtil.executeLoggingExceptions( commands, new File( eclipseHome ), buildOut, buildOut );
         }
         catch ( IOException e )
         {
@@ -162,32 +151,6 @@ public class EclipseBuildHandler
         }
         finally
         {
-            if ( process != null )
-            {
-                // defensively try to close the gobblers
-                if ( serr != null && sout != null )
-                {
-                    // check that our gobblers are finished...
-                    while ( !serr.isComplete() || !sout.isComplete() )
-                    {
-                        log.debug( "waiting 1s to close gobbler" );
-                        try
-                        {
-                            Thread.sleep( 1000 );
-                        }
-                        catch ( InterruptedException e )
-                        {
-                            // we were just trying to tidy up...
-                        }
-                    }
-                }
-
-                IOUtil.close( process.getOutputStream() );
-                IOUtil.close( process.getErrorStream() );
-                IOUtil.close( process.getInputStream() );
-                process.destroy();
-            }
-
             IOUtil.close( buildOut );
 
             pluginFile.delete();
@@ -247,28 +210,15 @@ public class EclipseBuildHandler
     protected boolean convertAndroidBuildToAnt( Project project, File buildDir, File output )
     {
         log.debug( "Converting eclipse project to ant in " + buildDir.getAbsolutePath() );
-        String[] commands = { "android", "update", "project", "-p", buildDir.getAbsolutePath() };
+        List<String> commands = Arrays.asList( "android", "update", "project", "-p", buildDir.getAbsolutePath() );
 
         int result = -1;
         Writer buildOut = null;
-        Process process = null;
-        StreamGobbler serr = null, sout = null;
         try
         {
             buildOut = new FileWriter( output );
 
-            process = Runtime.getRuntime().exec( commands );
-
-            serr = new StreamGobbler( new InputStreamReader( process.getErrorStream() ), buildOut );
-            sout = new StreamGobbler( new InputStreamReader( process.getInputStream() ), buildOut );
-            serr.start();
-            sout.start();
-
-            result = process.waitFor();
-        }
-        catch ( InterruptedException e )
-        {
-            // TODO use this hook when we cancel the process
+            result = ExecUtil.executeLoggingExceptions( commands, buildOut, buildOut );
         }
         catch ( IOException e )
         {
@@ -278,31 +228,6 @@ public class EclipseBuildHandler
         finally
         {
             IOUtil.close( buildOut );
-
-            if ( process != null )
-            {
-                // defensively try to close the gobblers
-                if ( serr != null && sout != null )
-                {
-                    // check that our gobblers are finished...
-                    while ( !serr.isComplete() || !sout.isComplete() )
-                    {
-                        log.debug( "waiting 1s to close gobbler" );
-                        try
-                        {
-                            Thread.sleep( 1000 );
-                        }
-                        catch ( InterruptedException e )
-                        {
-                            // we were just trying to tidy up...
-                        }
-                    }
-                }
-
-                IOUtil.close( process.getInputStream() );
-                IOUtil.close( process.getOutputStream() );
-                IOUtil.close( process.getErrorStream() );
-            }
         }
 
         return result == 0;

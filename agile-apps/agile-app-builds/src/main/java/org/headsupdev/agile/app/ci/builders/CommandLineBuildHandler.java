@@ -20,6 +20,7 @@ package org.headsupdev.agile.app.ci.builders;
 
 import org.headsupdev.agile.api.Project;
 import org.headsupdev.agile.app.ci.CIBuilder;
+import org.headsupdev.support.java.ExecUtil;
 import org.headsupdev.support.java.IOUtil;
 import org.headsupdev.agile.api.CommandLineProject;
 import org.headsupdev.agile.api.PropertyTree;
@@ -29,7 +30,9 @@ import org.headsupdev.agile.storage.ci.Build;
 import org.headsupdev.agile.app.ci.CIApplication;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 /**
  * The main code for building a command line project.
@@ -58,8 +61,6 @@ public class CommandLineBuildHandler
 
         int result = -1;
         Writer buildOut = null;
-        Process process = null;
-        StreamGobbler serr = null, sout = null;
         try
         {
             buildOut = new FileWriter( output );
@@ -71,22 +72,8 @@ public class CommandLineBuildHandler
             }
 
             // wrap it in a shell call so we can do things like "make && make install"
-            String[] commands = new String[3];
-            commands[0] = "sh";
-            commands[1] = "-c";
-            commands[2] = command;
-            process = Runtime.getRuntime().exec( commands, null, dir );
-
-            serr = new StreamGobbler( new InputStreamReader( process.getErrorStream() ), buildOut );
-            sout = new StreamGobbler( new InputStreamReader( process.getInputStream() ), buildOut );
-            serr.start();
-            sout.start();
-
-            result = process.waitFor();
-        }
-        catch ( InterruptedException e )
-        {
-            // TODO use this hook when we cancel the process
+            List<String> commands = Arrays.asList( "sh", "-c", command );
+            result = ExecUtil.executeLoggingExceptions( commands, dir, buildOut, buildOut );
         }
         catch ( IOException e )
         {
@@ -95,32 +82,6 @@ public class CommandLineBuildHandler
         }
         finally
         {
-            if ( process != null )
-            {
-                // defensively try to close the gobblers
-                if ( serr != null && sout != null )
-                {
-                    // check that our gobblers are finished...
-                    while ( !serr.isComplete() || !sout.isComplete() )
-                    {
-                        log.debug( "waiting 1s to close gobbler" );
-                        try
-                        {
-                            Thread.sleep( 1000 );
-                        }
-                        catch ( InterruptedException e )
-                        {
-                            // we were just trying to tidy up...
-                        }
-                    }
-                }
-
-                IOUtil.close( process.getOutputStream() );
-                IOUtil.close( process.getErrorStream() );
-                IOUtil.close( process.getInputStream() );
-                process.destroy();
-            }
-
             IOUtil.close( buildOut );
         }
 

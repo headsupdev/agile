@@ -22,6 +22,7 @@ import org.headsupdev.agile.app.ci.CIBuilder;
 import org.headsupdev.agile.storage.HibernateStorage;
 import org.headsupdev.agile.storage.ci.TestResult;
 import org.headsupdev.agile.storage.ci.TestResultSet;
+import org.headsupdev.support.java.ExecUtil;
 import org.headsupdev.support.java.FileUtil;
 import org.headsupdev.support.java.IOUtil;
 import org.headsupdev.agile.api.*;
@@ -70,8 +71,6 @@ public class XCodeBuildHandler
         int result = -1;
 
         Writer buildOut = null;
-        Process process = null;
-        StreamGobbler serr = null, sout = null;
         try
         {
             buildOut = new FileWriter( output );
@@ -82,60 +81,20 @@ public class XCodeBuildHandler
             appendXcodeCommands( project, config, commands, dir, null );
             commands.add( "clean" );
 
-            process = Runtime.getRuntime().exec( commands.toArray( new String[2] ), null, dir );
-
-            serr = new StreamGobbler( new InputStreamReader( process.getErrorStream() ), buildOut );
-            sout = new StreamGobbler( new InputStreamReader( process.getInputStream() ), buildOut );
-            serr.start();
-            sout.start();
-
-            result = process.waitFor();
+            result = ExecUtil.executeLoggingExceptions( commands, dir, buildOut, buildOut );
 
             if ( result == 0 )
             {
-                waitStreamGobblersToComplete( serr, sout );
-
-                IOUtil.close( process.getOutputStream() );
-                IOUtil.close( process.getErrorStream() );
-                IOUtil.close( process.getInputStream() );
-                process.destroy();
-
                 commands.clear();
                 appendXcodeCommands( project, config, commands, dir, null );
 
-                process = Runtime.getRuntime().exec( commands.toArray( new String[commands.size()] ), null, dir );
-
-                serr = new StreamGobbler( new InputStreamReader( process.getErrorStream() ), buildOut );
-                sout = new StreamGobbler( new InputStreamReader( process.getInputStream() ), buildOut );
-                serr.start();
-                sout.start();
-
-                result = process.waitFor();
+                result = ExecUtil.executeLoggingExceptions( commands, dir, buildOut, buildOut );
             }
-        }
-        catch ( InterruptedException e )
-        {
-            // TODO use this hook when we cancel the process
         }
         catch ( IOException e )
         {
             e.printStackTrace( new PrintWriter( buildOut ) );
             log.error( "Unable to write to build output file - reported in build log", e );
-        }
-        finally
-        {
-            if ( process != null )
-            {
-                // defensively try to close the gobblers
-                if ( serr != null && sout != null )
-                {
-                    waitStreamGobblersToComplete( serr, sout );
-                }
-                IOUtil.close( process.getOutputStream() );
-                IOUtil.close( process.getErrorStream() );
-                IOUtil.close( process.getInputStream() );
-                process.destroy();
-            }
         }
         IOUtil.close( buildOut );
 
@@ -190,55 +149,13 @@ public class XCodeBuildHandler
         commands.add( "repo" );
         commands.add( "update" );
         commands.add( "--no-color" );
-        runCommand( commands, dir, buildOut );
+        ExecUtil.executeLoggingExceptions( commands, dir, buildOut, buildOut );
 
         commands.clear();
         commands.add( "pod" );
         commands.add( "install" );
         commands.add( "--no-color" );
-        runCommand( commands, dir, buildOut );
-    }
-
-    private void runCommand( ArrayList<String> commands, File dir, Writer buildOut )
-    {
-        Process process = null;
-        StreamGobbler serr = null, sout = null;
-        try
-        {
-
-            process = Runtime.getRuntime().exec( commands.toArray( new String[2] ), null, dir );
-
-            serr = new StreamGobbler( new InputStreamReader( process.getErrorStream() ), buildOut );
-            sout = new StreamGobbler( new InputStreamReader( process.getInputStream() ), buildOut );
-            serr.start();
-            sout.start();
-
-            process.waitFor();
-        }
-        catch ( InterruptedException e )
-        {
-            // TODO use this hook when we cancel the process
-        }
-        catch ( IOException e )
-        {
-            e.printStackTrace( new PrintWriter( buildOut ) );
-            log.error( "Unable to write to build output file - reported in build log", e );
-        }
-        finally
-        {
-            if ( process != null )
-            {
-                // defensively try to close the gobblers
-                if ( serr != null && sout != null )
-                {
-                    waitStreamGobblersToComplete( serr, sout );
-                }
-                IOUtil.close( process.getOutputStream() );
-                IOUtil.close( process.getErrorStream() );
-                IOUtil.close( process.getInputStream() );
-                process.destroy();
-            }
-        }
+        ExecUtil.executeLoggingExceptions( commands, dir, buildOut, buildOut );
     }
 
     public static boolean canFindScanBuild()
@@ -396,24 +313,6 @@ public class XCodeBuildHandler
         }
     }
 
-    private static void waitStreamGobblersToComplete( StreamGobbler serr, StreamGobbler sout )
-    {
-        // defensively try to close the gobblers
-        // check that our gobblers are finished...
-        while ( !serr.isComplete() || !sout.isComplete() )
-        {
-            log.debug( "waiting 1s to close gobbler" );
-            try
-            {
-                Thread.sleep( 1000 );
-            }
-            catch ( InterruptedException e )
-            {
-                // we were just trying to tidy up...
-            }
-        }
-    }
-
     protected static void parseDatFiles( File dir, Build build )
     {
         if ( dir.isDirectory() )
@@ -567,25 +466,8 @@ public class XCodeBuildHandler
 
                     appendXcodeCommands( project, config, commands, dir, "Debug" );
 
-                    Process process = Runtime.getRuntime().exec( commands.toArray( new String[commands.size()] ), null, dir );
-
-                    StreamGobbler serr = new StreamGobbler( new InputStreamReader( process.getErrorStream() ), buildOut );
-                    StreamGobbler sout = new StreamGobbler( new InputStreamReader( process.getInputStream() ), buildOut );
-                    serr.start();
-                    sout.start();
-
-                    process.waitFor();
-                    waitStreamGobblersToComplete( serr, sout );
-
-                    IOUtil.close( process.getOutputStream() );
-                    IOUtil.close( process.getErrorStream() );
-                    IOUtil.close( process.getInputStream() );
-                    process.destroy();
+                    ExecUtil.execute( commands, dir, buildOut, buildOut );
                 }
-            }
-            catch ( InterruptedException e )
-            {
-                // here we are done executing, parse what was written as normal
             }
             catch ( IOException e )
             {

@@ -19,6 +19,7 @@
 package org.headsupdev.agile.app.ci.builders;
 
 import org.headsupdev.agile.app.ci.CIBuilder;
+import org.headsupdev.support.java.ExecUtil;
 import org.headsupdev.support.java.FileUtil;
 import org.headsupdev.support.java.IOUtil;
 import org.headsupdev.support.java.StringUtil;
@@ -338,24 +339,6 @@ public class MavenTwoBuildHandler
         return exe;
     }
 
-    private static void waitStreamGobblersToComplete( StreamGobbler serr, StreamGobbler sout )
-    {
-        // defensively try to close the gobblers
-        // check that our gobblers are finished...
-        while ( !serr.isComplete() || !sout.isComplete() )
-        {
-            log.debug( "waiting 1s to close gobbler" );
-            try
-            {
-                Thread.sleep( 1000 );
-            }
-            catch ( InterruptedException e )
-            {
-                // we were just trying to tidy up...
-            }
-        }
-    }
-
     public static boolean canFindLint()
     {
         // try and find a binary called lint.
@@ -388,10 +371,6 @@ public class MavenTwoBuildHandler
                 {
                     RunLint( project, dir, build, buildOut );
                 }
-            }
-            catch ( InterruptedException e )
-            {
-                // here we are done executing, parse what was written as normal
             }
             catch ( IOException e )
             {
@@ -533,7 +512,6 @@ public class MavenTwoBuildHandler
     }
 
     private void RunLint( Project project, File dir, Build build, Writer buildOut )
-            throws IOException, InterruptedException
     {
         log.debug( "Running Lint" );
 
@@ -554,21 +532,7 @@ public class MavenTwoBuildHandler
         }
 
         log.debug( "Running Lint:" + dir.getPath() + " withOutput:" + outputPath );
-
-        Process process = Runtime.getRuntime().exec( commands.toArray( new String[commands.size()] ), null, dir );
-
-        StreamGobbler serr = new StreamGobbler( new InputStreamReader( process.getErrorStream() ), buildOut );
-        StreamGobbler sout = new StreamGobbler( new InputStreamReader( process.getInputStream() ), buildOut );
-        serr.start();
-        sout.start();
-
-        process.waitFor();
-        waitStreamGobblersToComplete( serr, sout );
-
-        IOUtil.close( process.getOutputStream() );
-        IOUtil.close( process.getErrorStream() );
-        IOUtil.close( process.getInputStream() );
-        process.destroy();
+        ExecUtil.executeLoggingExceptions( commands, dir, buildOut, buildOut );
     }
 
     private String replaceUrlSeperatorsWithColons( String colonedPath )
