@@ -95,8 +95,13 @@ public class CreateComment
     {
     }
 
-    protected void submitChild()
+    protected void submitChild( Comment comment )
     {
+    }
+
+    protected boolean willChildConsumeComment()
+    {
+        return false;
     }
 
     public void setSubmitLabel( String submitLabel )
@@ -134,7 +139,6 @@ public class CreateComment
         public void onSubmit()
         {
             getDocument(); // make sure we are merged into the new session
-            submitChild();
 
             Date now = new Date();
             if ( create.getComment() != null )
@@ -143,8 +147,14 @@ public class CreateComment
                 create.setCreated( now );
                 ( (HibernateStorage) getStorage() ).save( create );
 
-                doc.getComments().add( create );
+                if ( !willChildConsumeComment() )
+                {
+                    doc.getComments().add( create );
+                }
+
             }
+
+            submitChild( create );
 
             // this line is needed by things that extend our form...
             doc.setUpdated( now );

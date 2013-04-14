@@ -45,7 +45,7 @@ public class CreateAttachment
         form.setMultiPart(true);
         form.add( attachmentPanel = new AttachmentPanel( "attachmentPanel", this ) );
         attachmentPanel.setRequired( true );
-        form.setMaxSize(Bytes.megabytes(100));
+        form.setMaxSize( Bytes.megabytes( 100 ) );
 
         setSubmitLabel( "Create Attachment" );
     }
@@ -54,11 +54,19 @@ public class CreateAttachment
     protected void submitChild( Comment comment )
     {
         getIssue().getAttachments().add( attachmentPanel.getAttachment() );
+
+        attachmentPanel.getAttachment().setComment( comment );
     }
 
     protected Event getUpdateEvent( Comment comment )
     {
         return new UpdateIssueEvent( getIssue(), getIssue().getProject(), getSession().getUser(), comment,
                 "Attached file \"" + attachmentPanel.getFilename() + "\" to" );
+    }
+
+    @Override
+    protected boolean willChildConsumeComment()
+    {
+        return true;
     }
 }

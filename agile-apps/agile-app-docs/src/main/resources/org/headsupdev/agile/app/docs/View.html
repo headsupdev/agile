@@ -31,7 +31,7 @@
       <div wicket:id="details">
         <table class="attachments">
           <tr>
-            <th class="attachments" colspan="3">attachments</th>
+            <th class="attachments" colspan="3">Attachments</th>
           </tr>
           <wicket:container wicket:id="attachments">
           <tr>
@@ -41,12 +41,19 @@
             <td class="attachment-username" wicket:id="username">username</td>
             <td class="attachment-created" wicket:id="created">created</td>
           </tr>
+            <wicket:enclosure>
+              <tr>
+                <td colspan="3">
+                  <div wicket:id="comment"></div>
+                </td>
+              </tr>
+            </wicket:enclosure>
           </wicket:container>
         </table>
 
         <table class="comments">
           <tr>
-            <th class="comments" colspan="2">comments</th>
+            <th class="comments" colspan="2">Comments</th>
           </tr>
           <wicket:container wicket:id="comments">
             <wicket:container wicket:id="comment">[comment]</wicket:container>

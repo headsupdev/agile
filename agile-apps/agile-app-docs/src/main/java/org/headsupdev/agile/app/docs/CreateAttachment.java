@@ -46,7 +46,7 @@ public class CreateAttachment
         form.setMultiPart(true);
         form.add( attachmentPanel = new AttachmentPanel( "attachmentPanel", this ) );
         attachmentPanel.setRequired( true );
-        form.setMaxSize(Bytes.megabytes(100));
+        form.setMaxSize( Bytes.megabytes( 100 ) );
     }
 
     protected UpdateDocumentEvent getUpdateEvent( Comment comment )
@@ -56,9 +56,17 @@ public class CreateAttachment
     }
 
     @Override
-    protected void submitChild()
+    protected void submitChild( Comment comment )
     {
-        super.submitChild();
+        super.submitChild( comment );
+
+        attachmentPanel.getAttachment().setComment( comment );
         getDocument().getAttachments().add( attachmentPanel.getAttachment() );
+    }
+
+    @Override
+    protected boolean willChildConsumeComment()
+    {
+        return true;
     }
 }

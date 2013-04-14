@@ -55,6 +55,10 @@ public class Attachment
     @Field
     private String filename;
 
+    @OneToOne
+    @IndexedEmbedded
+    private Comment comment;
+
     public long getId()
     {
         return id;
@@ -88,6 +92,19 @@ public class Attachment
     public void setCreated( Date created )
     {
         this.created = created;
+    }
+
+    public Comment getComment()
+    {
+        return comment;
+    }
+
+    public void setComment( Comment comment )
+    {
+        if ( comment != null && comment.getComment() != null )
+        {
+            this.comment = comment;
+        }
     }
 
     public boolean equals( Object o )

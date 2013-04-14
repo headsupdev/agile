@@ -21,7 +21,7 @@
     <wicket:extend>
       <wicket:container wicket:id="issue">issue</wicket:container>
 
-      <table class="comments vertical">
+      <table class="comments">
         <tr>
           <th class="comments" colspan="2">Comments</th>
         </tr>
@@ -30,7 +30,7 @@
         </wicket:container>
       </table>
 
-      <table class="attachments vertical">
+      <table class="attachments">
         <tr>
           <th class="attachments" colspan="3">Attachments</th>
         </tr>
@@ -42,6 +42,13 @@
           <td class="attachment-username" wicket:id="username">username</td>
           <td class="attachment-created" wicket:id="created">created</td>
         </tr>
+        <wicket:enclosure>
+          <tr>
+            <td colspan="3">
+              <div wicket:id="comment"></div>
+            </td>
+          </tr>
+        </wicket:enclosure>
         <wicket:enclosure>
         <tr>
           <td colspan="3">

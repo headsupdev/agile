@@ -40,6 +40,11 @@ tr.details td {
     vertical-align: top;
 }
 
+table.comments td, table.attachments td {
+    border-left: none;
+    padding: 0 3px;
+}
+
 .sidebar {
     border-left: 1px solid #c3c3c3 !important;
 }

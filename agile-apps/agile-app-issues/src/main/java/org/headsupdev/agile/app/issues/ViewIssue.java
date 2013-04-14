@@ -18,6 +18,7 @@
 
 package org.headsupdev.agile.app.issues;
 
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.headsupdev.agile.api.Manager;
 import org.headsupdev.agile.storage.HibernateStorage;
 import org.headsupdev.agile.storage.StoredProject;
@@ -34,6 +35,7 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.link.DownloadLink;
 import org.apache.wicket.ResourceReference;
 import org.apache.wicket.PageParameters;
+import org.headsupdev.agile.web.components.MarkedUpTextModel;
 import org.headsupdev.agile.web.components.issues.IssueListPanel;
 import org.headsupdev.agile.web.components.FormattedDateModel;
 import org.headsupdev.agile.api.mime.Mime;
@@ -144,6 +146,18 @@ public class ViewIssue
                 Link download = new DownloadLink( "attachment-link", file );
                 download.add( new Label( "attachment-label", attachment.getFilename() ) );
                 listItem.add( download );
+
+                Comment comment = attachment.getComment();
+                if ( comment != null     )
+                {
+                    Label commentLabel = new Label( "comment", new MarkedUpTextModel( comment.getComment(), getProject() ) );
+                    commentLabel.setEscapeModelStrings( false );
+                    listItem.add( commentLabel );
+                }
+                else
+                {
+                    listItem.add( new WebMarkupContainer( "comment" ).setVisible( false ) );
+                }
             }
         } );
 
