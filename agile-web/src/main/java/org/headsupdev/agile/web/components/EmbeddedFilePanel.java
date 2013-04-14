@@ -62,18 +62,24 @@ public class EmbeddedFilePanel
 
         final Mime mime = Mime.get( file.getName() );
 
-        if ( mime.isEmbeddableImage() ) {
+        if ( mime.isEmbeddableImage() )
+        {
             WebMarkupContainer image = new WebMarkupContainer( "image-content" );
-            image.add( new Image( "image", new DynamicImageResource() {
-                protected byte[] getImageData() {
-                    try {
+            image.add( new Image( "image", new DynamicImageResource()
+            {
+                protected byte[] getImageData()
+                {
+                    try
+                    {
                         return toImageData( ImageIO.read( file ) );
-                    } catch (IOException e) {
-                        Manager.getLogger("BrowseFile").error( "Unable to load data to image", e );
+                    }
+                    catch ( IOException e )
+                    {
+                        Manager.getLogger( "BrowseFile" ).error( "Unable to load data to image", e );
                         return null;
                     }
                 }
-            } ) );
+            }.setCacheable( false ) ) );
             add( image );
 
             add( new WebMarkupContainer( "text-content" ).setVisible( false ) );
@@ -81,7 +87,8 @@ public class EmbeddedFilePanel
             add( new WebMarkupContainer( "object-content" ).setVisible( false ) );
             return;
         }
-        if ( mime.isEmbeddableAudio() || mime.isEmbeddableVideo() ) {
+        if ( mime.isEmbeddableAudio() || mime.isEmbeddableVideo() )
+        {
             WebMarkupContainer container = new WebMarkupContainer( "object-content" );
             final WebMarkupContainer object = new WebMarkupContainer( "object" );
             object.add( new AttributeModifier( "type", true, new Model<String>()
@@ -90,9 +97,12 @@ public class EmbeddedFilePanel
                 public String getObject()
                 {
                     // TODO add real mime types to the mime library
-                    if ( mime.isEmbeddableAudio() ) {
+                    if ( mime.isEmbeddableAudio() )
+                    {
                         return "audio/" + mime.getExtension();
-                    } else {
+                    }
+                    else
+                    {
                         return "video/" + mime.getExtension();
                     }
                 }
