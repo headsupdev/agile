@@ -46,6 +46,17 @@ public class Velocity
     }
 
     @Override
+    public boolean equals( Object o )
+    {
+        return o instanceof Velocity && equals( (Velocity) o );
+    }
+
+    public boolean equals( Velocity v )
+    {
+        return getVelocity().equals( v.getVelocity() );
+    }
+
+    @Override
     public String toString()
     {
         return "Velocity " + velocity + " (based on " + estimatedHours + " over " + daysWorked + " days)";
