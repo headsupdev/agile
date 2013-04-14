@@ -27,6 +27,7 @@ import org.headsupdev.agile.app.ci.CIApplication;
 import org.headsupdev.agile.storage.ci.Build;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -69,7 +70,7 @@ public class AntBuildHandler
             {
                 tasksProperty = (String) CIApplication.CONFIGURATION_ANT_TASKS.getDefault();
             }
-            List<String> commands = Arrays.asList( tasksProperty.split( " " ) );
+            List<String> commands = new ArrayList<String>( Arrays.asList( tasksProperty.split( " " ) ) );
 
             File antExe = new File( antHome, "ant" );
             if ( !antExe.exists() )
