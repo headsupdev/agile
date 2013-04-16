@@ -170,6 +170,11 @@ public class Account
             protected void populateItem( ListItem<DurationWorked> listItem )
             {
                 DurationWorked worked = listItem.getModelObject();
+                if ( worked.getIssue() == null )
+                {
+                    listItem.setVisible( false );
+                    return;
+                }
 
                 WebMarkupContainer workedTitle = new WebMarkupContainer( "worked-title" );
                 listItem.add( new Image( "icon", new ResourceReference( HeadsUpPage.class, "images/worked.png" ) ) );
