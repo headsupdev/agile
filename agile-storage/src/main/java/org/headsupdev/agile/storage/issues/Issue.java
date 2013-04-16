@@ -138,8 +138,7 @@ public class Issue
     })
     private Duration timeRequired;
 
-    // TODO mappedBy = "issue" (once move complete)
-    @OneToMany
+    @OneToMany(mappedBy = "issue")
     private Set<DurationWorked> timeWorked = new HashSet<DurationWorked>();
 
     @OneToMany
