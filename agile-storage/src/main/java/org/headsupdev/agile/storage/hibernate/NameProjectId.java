@@ -81,6 +81,12 @@ public class NameProjectId
         this.name = name;
     }
 
+    @Override
+    public String toString()
+    {
+        return project.getId() + "/" + name;
+    }
+
     public int hashCode()
     {
         return ( project.getId() + name ).hashCode();

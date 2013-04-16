@@ -67,6 +67,12 @@ public class IdProjectId
         return id;
     }
 
+    @Override
+    public String toString()
+    {
+        return project.getId() + "/" + id;
+    }
+
     public int hashCode()
     {
         return ( project.getId() + String.valueOf( id ) ).hashCode();
