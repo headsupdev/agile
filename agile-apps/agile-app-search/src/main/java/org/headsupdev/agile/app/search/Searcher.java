@@ -31,6 +31,7 @@ import org.headsupdev.agile.storage.StoredProject;
 import org.headsupdev.support.java.StringUtil;
 
 import org.hibernate.Session;
+import org.hibernate.proxy.HibernateProxyHelper;
 import org.hibernate.search.FullTextQuery;
 import org.hibernate.search.FullTextSession;
 
@@ -194,7 +195,7 @@ public class Searcher
             }
         }
 
-        return getClassImageName( o.getClass() );
+        return getClassImageName( HibernateProxyHelper.getClassWithoutInitializingProxy( o ) );
     }
 
 
@@ -205,14 +206,7 @@ public class Searcher
             return "images/type/System.png";
         }
 
-        int start = type.getPackage().getName().length() + 1;
-        int end = type.getName().length();
-        if ( type.getName().contains( "$" ) )
-        {
-            end = type.getName().indexOf( '$' );
-        }
-
-        String image = "images/type/" + type.getName().substring( start, end ) + ".png";
+        String image = "images/type/" + type.getSimpleName() + ".png";
         if ( PackageResource.exists( HeadsUpResourceMarker.class, image, null, null ) )
         {
             return image;
