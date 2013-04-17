@@ -184,6 +184,12 @@ public class ScmChangeSet
         return "/" + getProject().getId() + "/files/change/id/" + getId();
     }
 
+    @Override
+    public String getAppId()
+    {
+        return "files";
+    }
+
     public String toString()
     {
         return "ScmChangeSet by " + author + " \"" + comment + "\"";

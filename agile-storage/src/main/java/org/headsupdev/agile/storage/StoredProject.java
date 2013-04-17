@@ -413,6 +413,12 @@ public class StoredProject
         return "/" + getId() + "/show";
     }
 
+    @Override
+    public String getAppId()
+    {
+        return "home";
+    }
+
     public PropertyTree getConfiguration()
     {
         return Manager.getStorageInstance().getGlobalConfiguration().getProjectConfiguration( this );

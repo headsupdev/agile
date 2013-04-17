@@ -119,6 +119,12 @@ public class File
         }
     }
 
+    @Override
+    public String getAppId()
+    {
+        return "files";
+    }
+
     public String toString()
     {
         return getName();

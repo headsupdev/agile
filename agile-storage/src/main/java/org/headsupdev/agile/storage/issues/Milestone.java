@@ -233,6 +233,12 @@ public class Milestone
         return "/" + getProject().getId() + "/milestones/view/id/" + getName();
     }
 
+    @Override
+    public String getAppId()
+    {
+        return "milestones";
+    }
+
     public String toString()
     {
         return getName();

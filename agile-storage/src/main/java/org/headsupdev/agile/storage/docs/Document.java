@@ -155,6 +155,12 @@ public class Document
         return "/" + getProject().getId() + "/docs/page/" + getName();
     }
 
+    @Override
+    public String getAppId()
+    {
+        return "docs";
+    }
+
     public String toString()
     {
         return getName();

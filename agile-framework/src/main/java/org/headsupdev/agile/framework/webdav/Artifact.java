@@ -103,6 +103,12 @@ public class Artifact
         return "/artifacts/" + repository + "/path/" + path;
     }
 
+    @Override
+    public String getAppId()
+    {
+        return "artifacts";
+    }
+
     public String toString()
     {
         return getPath();

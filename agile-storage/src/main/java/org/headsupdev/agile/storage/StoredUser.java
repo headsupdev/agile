@@ -263,6 +263,12 @@ public class StoredUser
         return "/account/username/" + getUsername();
     }
 
+    @Override
+    public String getAppId()
+    {
+        return "home";
+    }
+
     public String getTimeZoneId()
     {
         return timeZoneId;

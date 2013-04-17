@@ -18,9 +18,15 @@
 
 package org.headsupdev.agile.app.search;
 
+import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.markup.html.form.Button;
+import org.apache.wicket.markup.html.form.CheckBox;
+import org.apache.wicket.model.Model;
 import org.headsupdev.agile.app.search.permission.SearchPermission;
 import org.headsupdev.agile.storage.StoredProject;
+import org.headsupdev.agile.web.ApplicationPageMapper;
 import org.headsupdev.agile.web.HeadsUpPage;
+import org.headsupdev.agile.web.components.FilterBorder;
 import org.headsupdev.agile.web.components.HeadsUpResourceReference;
 import org.headsupdev.agile.api.*;
 
@@ -57,6 +63,9 @@ public class Search
     private WebMarkupContainer noresults;
     private BookmarkablePageLink moreresultsLink, notallprojectsLink;
 
+    private List<String> allApps;
+    final Map<String,Boolean> appsVisible = new HashMap<String,Boolean>();
+
     public Permission getRequiredPermission() {
         return new SearchPermission();
     }
@@ -77,6 +86,14 @@ public class Search
         noresults = new WebMarkupContainer( "noresults" );
         noresults.setOutputMarkupPlaceholderTag( true );
         add( noresults.setVisible( false ) );
+
+        allApps = ApplicationPageMapper.get().getApplicationIds();
+        for ( String app : allApps )
+        {
+            appsVisible.put( app, true );
+        }
+        loadFilters();
+        layoutFilter();
 
         PageParameters params = getPageParameters();
         params.remove( "project" );
@@ -117,6 +134,14 @@ public class Search
                     listItem.setVisible( false );
                     return;
                 }
+                if ( ( ( result.match instanceof SearchResult ) &&
+                        !appsVisible.get( ( (SearchResult) result.match ).getAppId() ) ) ||
+                        ( !( result.match instanceof SearchResult ) &&
+                                !appsVisible.get( "home" ) ) )
+                {
+                    listItem.setVisible( false );
+                    return;
+                }
 
                 ResourceReference icon = new HeadsUpResourceReference( Searcher.getClassImageName( result.match ) );
                 listItem.add( new Image( "icon", icon ) );
@@ -146,6 +171,102 @@ public class Search
                     .setEscapeModelStrings( false ) );
             }
         });
+    }
+
+    private void layoutFilter()
+    {
+
+        FilterBorder filter = new FilterBorder( "filter" );
+        add( filter );
+
+        final Form filterForm = new Form( "filterform" )
+        {
+            @Override
+            protected void onSubmit() {
+                super.onSubmit();
+
+                saveFilters();
+            }
+        };
+        filter.add( filterForm.setOutputMarkupId( true ) );
+        Button cancelButton = new Button( "cancelbutton" );
+        filterForm.add( cancelButton );
+        cancelButton.add( new AttributeModifier( "onclick", true, new Model<String>() {
+            public String getObject() {
+                return "filterbuttonAnimator.reverse();";
+            }
+        } ) );
+
+        Button applyButton = new Button( "applybutton" );
+        filterForm.add( applyButton );
+        applyButton.add( new AttributeModifier( "onclick", true, new Model<String>() {
+            public String getObject() {
+                return "filterbuttonAnimator.reverse();";
+            }
+        } ) );
+
+        filterForm.add( new ListView<String>( "applist", allApps )
+        {
+            protected void populateItem( final ListItem<String> listItem )
+            {
+                final String appId = listItem.getModelObject();
+
+                listItem.add( new Label( "app-label", appId ) );
+                listItem.add( new CheckBox( "app-check", new Model<Boolean>()
+                {
+                    public Boolean getObject()
+                    {
+                        return appsVisible.get( appId );
+                    }
+
+                    public void setObject( Boolean b )
+                    {
+                        appsVisible.put( appId, b );
+                    }
+                } ) );
+            }
+        } );
+    }
+
+    private void loadFilters()
+    {
+        String typeStr = getSession().getUser().getPreference( "filter.search.types", (String) null );
+
+        if ( typeStr != null )
+        {
+            for ( String appId : allApps )
+            {
+                appsVisible.put( appId, false );
+            }
+            for ( String appId : Arrays.asList( typeStr.split( "," ) ) )
+            {
+                appsVisible.put( appId, true );
+            }
+        }
+    }
+
+    private void saveFilters()
+    {
+        StringBuilder typeStr = new StringBuilder();
+        boolean first = true;
+        for ( String appId : allApps )
+        {
+            if ( !first )
+            {
+                typeStr.append( "," );
+            }
+            else
+            {
+                first = false;
+            }
+
+            if ( appsVisible.get( appId ) )
+            {
+                typeStr.append( appId );
+            }
+        }
+
+        getSession().getUser().setPreference( "filter.search.types", typeStr.toString() );
     }
 
     @Override

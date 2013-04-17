@@ -440,6 +440,12 @@ public class Issue
         return "/" + getProject().getId() + "/issues/view/id/" + getId();
     }
 
+    @Override
+    public String getAppId()
+    {
+        return "issues";
+    }
+
     public Boolean getIncludeInInitialEstimates()
     {
         if ( includeInInitialEstimates == null )

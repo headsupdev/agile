@@ -203,6 +203,12 @@ public class Build
         return "/" + getProject().getId() + "/builds/view/id/" + getId();
     }
 
+    @Override
+    public String getAppId()
+    {
+        return "builds";
+    }
+
     public String toString()
     {
         String statusName;

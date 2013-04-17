@@ -30,4 +30,6 @@ public interface SearchResult
     String getIconPath();
 
     String getLink();
+
+    String getAppId();
 }

@@ -259,6 +259,12 @@ public class MilestoneGroup
         return "/" + getProject().getId() + "/milestones/viewgroup/id/" + getName();
     }
 
+    @Override
+    public String getAppId()
+    {
+        return "milestones";
+    }
+
     public String toString()
     {
         return getName();
