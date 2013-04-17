@@ -57,7 +57,6 @@ public class Document
     @Type( type = "text" )
     @Field( index = Index.TOKENIZED )
     private String content;
-    private String format = "apt";
 
     @ManyToOne( targetEntity = StoredUser.class )
     private User creator;
@@ -106,15 +105,6 @@ public class Document
     public void setContent( String content )
     {
         this.content = content;
-    }
-
-    public String getFormat() {
-        return format;
-    }
-
-    public void setFormat( String format )
-    {
-        this.format = format;
     }
 
     public User getCreator() {
