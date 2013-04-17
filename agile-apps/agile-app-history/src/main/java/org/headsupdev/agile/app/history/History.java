@@ -26,7 +26,6 @@ import org.headsupdev.agile.app.history.permission.HistoryViewPermission;
 import org.headsupdev.agile.security.permission.ProjectListPermission;
 import org.headsupdev.agile.web.components.history.HistoryPanel;
 import org.headsupdev.agile.web.components.FilterBorder;
-import org.headsupdev.agile.web.components.StripedListView;
 import org.headsupdev.agile.web.*;
 import org.headsupdev.agile.storage.StoredProject;
 
@@ -34,7 +33,6 @@ import java.util.*;
 
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.markup.html.form.*;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -59,6 +57,9 @@ public class History
     private List<String> types;
     private long before;
 
+    private List<String> allApps;
+    final Map<String,Boolean> appsVisible = new HashMap<String,Boolean>();
+
     public Permission getRequiredPermission() {
         return new HistoryViewPermission();
     }
@@ -67,22 +68,20 @@ public class History
     {
         super.layout();
         types = new LinkedList<String>();
-        List<String> apps = ApplicationPageMapper.get().getApplicationIds();
+        allApps = ApplicationPageMapper.get().getApplicationIds();
 
-        Iterator<String> iter = apps.iterator();
-        while ( iter.hasNext() )
+        for ( String app : allApps )
         {
-            String appId = iter.next();
-            List<String> typesInApp = ApplicationPageMapper.get().getApplication( appId ).getEventTypes();
-
-            if ( typesInApp == null || typesInApp.size() == 0 )
-            {
-                iter.remove();
-            }
-
-            types.addAll( typesInApp );
+            appsVisible.put( app, true );
         }
         loadFilters();
+        for ( String appId : allApps )
+        {
+            if ( appsVisible.get( appId ) )
+            {
+                types.addAll( ApplicationPageMapper.get().getApplication( appId ).getEventTypes() );
+            }
+        }
 
         FilterBorder filter = new FilterBorder( "filter" );
         add( filter );
@@ -113,19 +112,10 @@ public class History
             }
         } ) );
 
-        CheckGroup typeGroup = new CheckGroup( "types", new PropertyModel( this, "types" ) );
-        filterForm.add( typeGroup );
-
-        final Map<String,Boolean> appsVisible = new HashMap<String,Boolean>();
-        for ( String app : apps )
-        {
-            appsVisible.put( app, true );
-        }
-        typeGroup.add( new StripedListView<String>( "applist", apps )
+        filterForm.add( new ListView<String>( "applist", allApps )
         {
             protected void populateItem( final ListItem<String> listItem )
             {
-                super.populateItem( listItem );
                 final String appId = listItem.getModelObject();
 
                 listItem.add( new Label( "app-label", appId ) );
@@ -147,12 +137,10 @@ public class History
                         if ( appsVisible.get( appId ) )
                         {
                             types.addAll( ApplicationPageMapper.get().getApplication( appId ).getEventTypes() );
-                            target.addComponent( filterForm );
                         }
                         else
                         {
                             types.removeAll( ApplicationPageMapper.get().getApplication( appId ).getEventTypes() );
-                            target.addComponent( filterForm );
                         }
                     }
                 } );
@@ -229,12 +217,18 @@ public class History
 
     private void loadFilters()
     {
-        String typeStr = getSession().getUser().getPreference( "filter.history.types", (String) null );
+        String typeStr = getSession().getUser().getPreference( "filter.history.apps", (String) null );
 
         if ( typeStr != null )
         {
-            types.clear();
-            types.addAll( Arrays.asList( typeStr.split( "," ) ) );
+            for ( String appId : allApps )
+            {
+                appsVisible.put( appId, false );
+            }
+            for ( String appId : Arrays.asList( typeStr.split( "," ) ) )
+            {
+                appsVisible.put( appId, true );
+            }
         }
     }
 
@@ -242,7 +236,7 @@ public class History
     {
         StringBuilder typeStr = new StringBuilder();
         boolean first = true;
-        for ( String type : types )
+        for ( String appId : allApps )
         {
             if ( !first )
             {
@@ -253,9 +247,12 @@ public class History
                 first = false;
             }
 
-            typeStr.append( type );
+            if ( appsVisible.get( appId ) )
+            {
+                typeStr.append( appId );
+            }
         }
 
-        getSession().getUser().setPreference( "filter.history.types", typeStr.toString() );
+        getSession().getUser().setPreference( "filter.history.apps", typeStr.toString() );
     }
 }

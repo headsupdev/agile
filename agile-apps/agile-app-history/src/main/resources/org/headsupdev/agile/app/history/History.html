@@ -22,19 +22,13 @@
       <div wicket:id="filter">
         <form wicket:id="filterform">
           <table class="listing">
-            <tr><th colspan="2">Event Type</th></tr>
-            <wicket:container wicket:id="types">
-            <tr wicket:id="applist">
-              <td class="filterapp">
-               <span class="filter-item"><input type="checkbox" wicket:id="app-check" />
-               <span wicket:id="app-label">type</span></span>
-              </td>
-              <td><wicket:container wicket:id="type">
-                <span class="filter-item"><input type="checkbox" wicket:id="type-check" />
-                <span wicket:id="name">typeid</span></span>
-              </wicket:container></td>
-            </tr>
-            </wicket:container>
+            <tr><th colspan="2">Application Filter</th></tr>
+            <tr><td colspan="2">
+            <div wicket:id="applist" class="filterapp">
+             <span class="filter-item"><input type="checkbox" wicket:id="app-check" />
+             <span wicket:id="app-label">type</span></span>
+            </div>
+            </td></tr>
             <tr><td class="buttons" colspan="2">
               <input type="submit" value="Apply" wicket:id="applybutton" />
               <input type="reset" value="Cancel" wicket:id="cancelbutton" />

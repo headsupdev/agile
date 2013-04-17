@@ -105,10 +105,11 @@
     display: inline-block;
 }
 
-td.filterapp {
-    border-right: 1px solid black;
+div.filterapp {
+    padding: 5px;
     font-weight: bold;
-    width: 100px;
+    width: 150px;
+    float: left;
 }
 
 .activity-group {
