@@ -201,7 +201,6 @@ public class Search
         extends AbstractReadOnlyModel<List<Searcher.Result>>
     {
         Searcher searcher = new Searcher( query, from );
-        int newFrom;
 
         public SearchModel()
         {
@@ -213,7 +212,7 @@ public class Search
                 noresults.setVisible( results.size() == 0 );
                 notallprojectsLink.setVisible( results.size() == 0 && !getProject().equals( StoredProject.getDefault() ) );
                 moreresultsLink.setVisible( results.size() == Searcher.PAGE_SIZE );
-                moreresultsLink.setParameter( "from", newFrom );
+                moreresultsLink.setParameter( "from", from + Searcher.PAGE_SIZE );
             }
         }
 
