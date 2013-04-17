@@ -18,6 +18,7 @@
 
 package org.headsupdev.agile.web.components.configuration;
 
+import org.apache.wicket.ajax.form.OnChangeAjaxBehavior;
 import org.headsupdev.agile.storage.DatabaseRegistry;
 
 import org.apache.wicket.markup.html.panel.Panel;
@@ -75,12 +76,12 @@ public class SQLURLField
                 updateModelObject();
             }
         });
-        urlField.setOutputMarkupId( true );
+        urlField.setMarkupId( "sqlurl" ).setOutputMarkupId( true );
         final DropDownChoice types = new DropDownChoice<String>( "type", new PropertyModel<String>( this, "type" ),
             DatabaseRegistry.getTypes() );
-        types.add( new AjaxFormComponentUpdatingBehavior( "onchange" )
+        types.add( new OnChangeAjaxBehavior()
         {
-            protected void onUpdate( AjaxRequestTarget target )
+            protected void onUpdate( final AjaxRequestTarget target )
             {
                 String newType = (String) types.getModelObject();
 
@@ -88,12 +89,12 @@ public class SQLURLField
                 target.addComponent( urlField );
                 updateModelObject();
 
-                self.onUpdate( target );
+                target.appendJavascript( "document.getElementById('sqlurl').onblur()" );
             }
         } );
         add( types );
 
-        urlField.add( new AjaxFormComponentUpdatingBehavior( "onchange" )
+        urlField.add( new AjaxFormComponentUpdatingBehavior( "onblur" )
         {
             protected void onUpdate( AjaxRequestTarget target )
             {
