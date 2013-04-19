@@ -22,6 +22,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.headsupdev.agile.api.Application;
 import org.headsupdev.agile.api.Event;
 import org.headsupdev.agile.api.Permission;
 import org.headsupdev.agile.api.Project;
@@ -29,6 +30,7 @@ import org.headsupdev.agile.app.history.permission.HistoryViewPermission;
 import org.headsupdev.agile.security.permission.ProjectListPermission;
 import org.headsupdev.agile.storage.StoredProject;
 import org.headsupdev.agile.web.*;
+import org.headsupdev.agile.web.components.filters.ApplicationFilterPanel;
 import org.headsupdev.agile.web.components.history.HistoryPanel;
 
 import java.util.*;
@@ -39,8 +41,11 @@ public class GroupedActivity
 {
     public static final int ROWS_IN_GROUP = 10;
 
+    private List<String> appIds;
     private Map<String, List<String>> types;
     private long before;
+
+    private ApplicationFilterPanel filter;
 
     public Permission getRequiredPermission() {
         return new HistoryViewPermission();
@@ -58,24 +63,16 @@ public class GroupedActivity
         }
 
         types = new HashMap<String, List<String>>();
-        List<String> appIds = ApplicationPageMapper.get().getApplicationIds();
-        Collections.sort( appIds, new ApplicationIdComparator() );
-        String homeId = appIds.remove( 0 );
-        appIds.add( appIds.size(), homeId );
-
-        Iterator<String> iter = appIds.iterator();
-        while ( iter.hasNext() )
+        appIds = new ArrayList<String>();
+        add( filter = new ApplicationFilterPanel( "filter", "history-grouped" )
         {
-            String appId = iter.next();
-            List<String> typesInApp = ApplicationPageMapper.get().getApplication( appId ).getEventTypes();
-
-            if ( typesInApp == null || typesInApp.size() == 0 )
+            @Override
+            public void onFilterUpdated()
             {
-                iter.remove();
+                resetFilter();
             }
-
-            types.put( appId, typesInApp );
-        }
+        });
+        resetFilter();
 
         try
         {
@@ -91,28 +88,62 @@ public class GroupedActivity
             protected void populateItem( final ListItem<String> listItem )
             {
                 final String appId = listItem.getModelObject();
-
-                String label = appId;
-                if ( appId.equals( "home" ) )
-                {
-                    label = "system";
-                }
-                listItem.add( new Label( "app-label", label ) );
+                listItem.add( new Label( "app-label", appId ) );
 
                 final List<String> appTypes = types.get( appId );
-                listItem.add(new HistoryPanel("history", new AbstractReadOnlyModel<List<? extends Event>>() {
+                listItem.add(new HistoryPanel( "history", new AbstractReadOnlyModel<List<? extends Event>>() {
                     public List<? extends Event> getObject() {
                         if (allProject) {
-                            return ((HistoryApplication) getHeadsUpApplication()).getEvents(before, appTypes, ROWS_IN_GROUP);
+                            return ((HistoryApplication) getHeadsUpApplication()).getEvents( before, appTypes, ROWS_IN_GROUP );
                         } else {
-                            return ((HistoryApplication) getHeadsUpApplication()).getEventsForProject(project, before, appTypes, ROWS_IN_GROUP);
+                            return ((HistoryApplication) getHeadsUpApplication()).getEventsForProject( project, before, appTypes, ROWS_IN_GROUP );
                         }
                     }
-                }, allProject));
+                }, allProject ) );
             }
         } );
 
         // link to the main view for event listings
         addLink( new BookmarkableMenuLink( History.class, null, "list" ) );
+    }
+
+
+    private void resetFilter()
+    {
+        appIds.clear();
+        for ( String appId : filter.getApplications().keySet() )
+        {
+            if ( filter.getApplications().get( appId ) )
+            {
+                appIds.add( appId );
+            }
+        }
+
+        Collections.sort( appIds, new ApplicationIdComparator() );
+        if ( appIds.get( 0 ).equals( "system" ) )
+        {
+            String homeId = appIds.remove( 0 );
+            appIds.add( appIds.size(), homeId );
+        }
+
+        types.clear();
+        for ( String appId : appIds )
+        {
+            if ( filter.getApplications().get( appId ) )
+            {
+                if ( appId.equals( "system" ) )
+                {
+                    types.put( appId, ApplicationPageMapper.get().getApplication( "home" ).getEventTypes() );
+                }
+                else
+                {
+                    Application app = ApplicationPageMapper.get().getApplication( appId );
+                    if ( app != null )
+                    {
+                        types.put( appId, app.getEventTypes() );
+                    }
+                }
+            }
+        }
     }
 }
