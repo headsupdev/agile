@@ -65,7 +65,7 @@ public class Issues
         }
         else
         {
-            provider = IssuesApplication.getIssueProviderForProject( getProject(),  filter );
+            provider = IssuesApplication.getIssueProviderForProject( getProject(), filter );
         }
         add( new IssueListPanel( "issues", provider, this, !getProject().equals( StoredProject.getDefault() ), false ) );
     }

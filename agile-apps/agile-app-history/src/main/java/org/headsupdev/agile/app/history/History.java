@@ -24,23 +24,15 @@ import org.headsupdev.agile.api.Event;
 import org.headsupdev.agile.api.SimpleMenuLink;
 import org.headsupdev.agile.app.history.permission.HistoryViewPermission;
 import org.headsupdev.agile.security.permission.ProjectListPermission;
+import org.headsupdev.agile.web.components.filters.ApplicationFilterPanel;
 import org.headsupdev.agile.web.components.history.HistoryPanel;
-import org.headsupdev.agile.web.components.FilterBorder;
 import org.headsupdev.agile.web.*;
 import org.headsupdev.agile.storage.StoredProject;
 
 import java.util.*;
 
 import org.apache.wicket.model.AbstractReadOnlyModel;
-import org.apache.wicket.model.Model;
-import org.apache.wicket.markup.html.form.*;
-import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.PageParameters;
-import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
-import org.apache.wicket.ajax.AjaxRequestTarget;
 
 /**
  * History home page
@@ -57,8 +49,7 @@ public class History
     private List<String> types;
     private long before;
 
-    private List<String> allApps;
-    final Map<String,Boolean> appsVisible = new HashMap<String,Boolean>();
+    private ApplicationFilterPanel filter;
 
     public Permission getRequiredPermission() {
         return new HistoryViewPermission();
@@ -68,95 +59,16 @@ public class History
     {
         super.layout();
         types = new LinkedList<String>();
-        allApps = ApplicationPageMapper.get().getApplicationIds();
 
-        for ( String app : allApps )
-        {
-            appsVisible.put( app, true );
-        }
-        loadFilters();
-        for ( String appId : allApps )
-        {
-            if ( appsVisible.get( appId ) )
-            {
-                types.addAll( ApplicationPageMapper.get().getApplication( appId ).getEventTypes() );
-            }
-        }
-
-        FilterBorder filter = new FilterBorder( "filter" );
-        add( filter );
-
-        final Form filterForm = new Form( "filterform" )
+        add( filter = new ApplicationFilterPanel( "filter", "history" )
         {
             @Override
-            protected void onSubmit() {
-                super.onSubmit();
-
-                saveFilters();
-            }
-        };
-        filter.add( filterForm.setOutputMarkupId( true ) );
-        Button cancelButton = new Button( "cancelbutton" );
-        filterForm.add( cancelButton );
-        cancelButton.add( new AttributeModifier( "onclick", true, new Model<String>() {
-            public String getObject() {
-                return "filterbuttonAnimator.reverse();";
-            }
-        } ) );
-
-        Button applyButton = new Button( "applybutton" );
-        filterForm.add( applyButton );
-        applyButton.add( new AttributeModifier( "onclick", true, new Model<String>() {
-            public String getObject() {
-                return "filterbuttonAnimator.reverse();";
-            }
-        } ) );
-
-        filterForm.add( new ListView<String>( "applist", allApps )
-        {
-            protected void populateItem( final ListItem<String> listItem )
+            public void onFilterUpdated()
             {
-                final String appId = listItem.getModelObject();
-
-                listItem.add( new Label( "app-label", appId ) );
-                listItem.add( new AjaxCheckBox( "app-check", new Model<Boolean>()
-                {
-                    public Boolean getObject()
-                    {
-                        return appsVisible.get( appId );
-                    }
-
-                    public void setObject( Boolean b )
-                    {
-                        appsVisible.put( appId, b );
-                    }
-                })
-                {
-                    protected void onUpdate( AjaxRequestTarget target )
-                    {
-                        if ( appsVisible.get( appId ) )
-                        {
-                            types.addAll( ApplicationPageMapper.get().getApplication( appId ).getEventTypes() );
-                        }
-                        else
-                        {
-                            types.removeAll( ApplicationPageMapper.get().getApplication( appId ).getEventTypes() );
-                        }
-                    }
-                } );
-
-                listItem.add( new ListView<String>( "type" , ApplicationPageMapper.get().getApplication( appId ).getEventTypes() )
-                {
-                    protected void populateItem( ListItem<String> typeListItem )
-                    {
-                        final String typeId = typeListItem.getModelObject();
-
-                        typeListItem.add( new Label( "name", typeId ) );
-                        typeListItem.add( new Check<String>( "type-check", typeListItem.getModel() ));
-                    }
-                } );
+                resetTypes();
             }
-        } );
+        });
+        resetTypes();
 
         final Project project = getProject();
         final boolean allProject = getProject().equals( StoredProject.getDefault() );
@@ -215,44 +127,16 @@ public class History
         addLink( new SimpleMenuLink( "grouped" ) );
     }
 
-    private void loadFilters()
+    private void resetTypes()
     {
-        String typeStr = getSession().getUser().getPreference( "filter.history.apps", (String) null );
-
-        if ( typeStr != null )
-        {
-            for ( String appId : allApps )
-            {
-                appsVisible.put( appId, false );
-            }
-            for ( String appId : Arrays.asList( typeStr.split( "," ) ) )
-            {
-                appsVisible.put( appId, true );
-            }
-        }
-    }
-
-    private void saveFilters()
-    {
-        StringBuilder typeStr = new StringBuilder();
-        boolean first = true;
+        types.clear();
+        List<String> allApps = ApplicationPageMapper.get().getApplicationIds();
         for ( String appId : allApps )
         {
-            if ( !first )
+            if ( filter.getApplications().get( appId ) )
             {
-                typeStr.append( "," );
-            }
-            else
-            {
-                first = false;
-            }
-
-            if ( appsVisible.get( appId ) )
-            {
-                typeStr.append( appId );
+                types.addAll( ApplicationPageMapper.get().getApplication( appId ).getEventTypes() );
             }
         }
-
-        getSession().getUser().setPreference( "filter.history.apps", typeStr.toString() );
     }
 }

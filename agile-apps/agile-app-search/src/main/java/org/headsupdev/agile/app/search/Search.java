@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2013 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -18,15 +18,10 @@
 
 package org.headsupdev.agile.app.search;
 
-import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.markup.html.form.Button;
-import org.apache.wicket.markup.html.form.CheckBox;
-import org.apache.wicket.model.Model;
+
 import org.headsupdev.agile.app.search.permission.SearchPermission;
 import org.headsupdev.agile.storage.StoredProject;
-import org.headsupdev.agile.web.ApplicationPageMapper;
 import org.headsupdev.agile.web.HeadsUpPage;
-import org.headsupdev.agile.web.components.FilterBorder;
 import org.headsupdev.agile.web.components.HeadsUpResourceReference;
 import org.headsupdev.agile.api.*;
 
@@ -47,6 +42,7 @@ import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.ResourceReference;
 import org.apache.lucene.search.Explanation;
+import org.headsupdev.agile.web.components.filters.ApplicationFilterPanel;
 
 /**
  * Search home page
@@ -63,9 +59,8 @@ public class Search
     private WebMarkupContainer noresults;
     private BookmarkablePageLink moreresultsLink, notallprojectsLink;
 
-    SearchModel searchModel;
-    private List<String> allApps;
-    final Map<String,Boolean> appsVisible = new HashMap<String,Boolean>();
+    private ApplicationFilterPanel filter;
+    private SearchModel searchModel;
 
     public Permission getRequiredPermission() {
         return new SearchPermission();
@@ -88,13 +83,14 @@ public class Search
         noresults.setOutputMarkupPlaceholderTag( true );
         add( noresults.setVisible( false ) );
 
-        allApps = ApplicationPageMapper.get().getApplicationIds();
-        for ( String app : allApps )
+        add( filter = new ApplicationFilterPanel( "filter", "search" )
         {
-            appsVisible.put( app, true );
-        }
-        loadFilters();
-        layoutFilter();
+            @Override
+            public void onFilterUpdated()
+            {
+                searchModel.filterUpdated();
+            }
+        });
 
         PageParameters params = getPageParameters();
         params.remove( "project" );
@@ -161,103 +157,6 @@ public class Search
         });
     }
 
-    private void layoutFilter()
-    {
-
-        FilterBorder filter = new FilterBorder( "filter" );
-        add( filter );
-
-        final Form filterForm = new Form( "filterform" )
-        {
-            @Override
-            protected void onSubmit() {
-                super.onSubmit();
-
-                saveFilters();
-            }
-        };
-        filter.add( filterForm.setOutputMarkupId( true ) );
-        Button cancelButton = new Button( "cancelbutton" );
-        filterForm.add( cancelButton );
-        cancelButton.add( new AttributeModifier( "onclick", true, new Model<String>() {
-            public String getObject() {
-                return "filterbuttonAnimator.reverse();";
-            }
-        } ) );
-
-        Button applyButton = new Button( "applybutton" );
-        filterForm.add( applyButton );
-        applyButton.add( new AttributeModifier( "onclick", true, new Model<String>() {
-            public String getObject() {
-                return "filterbuttonAnimator.reverse();";
-            }
-        } ) );
-
-        filterForm.add( new ListView<String>( "applist", allApps )
-        {
-            protected void populateItem( final ListItem<String> listItem )
-            {
-                final String appId = listItem.getModelObject();
-
-                listItem.add( new Label( "app-label", appId ) );
-                listItem.add( new CheckBox( "app-check", new Model<Boolean>()
-                {
-                    public Boolean getObject()
-                    {
-                        return appsVisible.get( appId );
-                    }
-
-                    public void setObject( Boolean b )
-                    {
-                        appsVisible.put( appId, b );
-                        searchModel.setAppFilter( appsVisible );
-                    }
-                } ) );
-            }
-        } );
-    }
-
-    private void loadFilters()
-    {
-        String typeStr = getSession().getUser().getPreference( "filter.search.types", (String) null );
-
-        if ( typeStr != null )
-        {
-            for ( String appId : allApps )
-            {
-                appsVisible.put( appId, false );
-            }
-            for ( String appId : Arrays.asList( typeStr.split( "," ) ) )
-            {
-                appsVisible.put( appId, true );
-            }
-        }
-    }
-
-    private void saveFilters()
-    {
-        StringBuilder typeStr = new StringBuilder();
-        boolean first = true;
-        for ( String appId : allApps )
-        {
-            if ( !first )
-            {
-                typeStr.append( "," );
-            }
-            else
-            {
-                first = false;
-            }
-
-            if ( appsVisible.get( appId ) )
-            {
-                typeStr.append( appId );
-            }
-        }
-
-        getSession().getUser().setPreference( "filter.search.types", typeStr.toString() );
-    }
-
     @Override
     public String getTitle()
     {
@@ -317,7 +216,7 @@ public class Search
             if ( query != null )
             {
                 searcher.setProject( getProject() );
-                searcher.setAppFilter( appsVisible );
+                searcher.setAppFilter( filter.getApplications() );
                 List<Searcher.Result> results = searcher.getResults();
 
                 noresults.setVisible( results.size() == 0 );
@@ -332,9 +231,9 @@ public class Search
             return searcher.getResults();
         }
 
-        public void setAppFilter( Map<String, Boolean> appFilter )
+        public void filterUpdated()
         {
-            searcher.setAppFilter( appFilter );
+            searcher.setAppFilter( filter.getApplications() );
         }
     }
 }
