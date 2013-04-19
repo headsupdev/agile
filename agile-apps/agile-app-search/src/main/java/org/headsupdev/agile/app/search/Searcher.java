@@ -186,11 +186,16 @@ public class Searcher
 
         if ( object instanceof SearchResult )
         {
-            return appFilter.get( ( (SearchResult) object ).getAppId() );
+            String id = ( (SearchResult) object ).getAppId();
+            if ( id .equals( "home" ) )
+            {
+                id = "system";
+            }
+            return appFilter.get( id );
         }
         else
         {
-            return appFilter.get( "home" );
+            return appFilter.get( "system" );
         }
     }
 

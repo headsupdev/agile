@@ -18,10 +18,7 @@
 
 package org.headsupdev.agile.app.history;
 
-import org.headsupdev.agile.api.Permission;
-import org.headsupdev.agile.api.Project;
-import org.headsupdev.agile.api.Event;
-import org.headsupdev.agile.api.SimpleMenuLink;
+import org.headsupdev.agile.api.*;
 import org.headsupdev.agile.app.history.permission.HistoryViewPermission;
 import org.headsupdev.agile.security.permission.ProjectListPermission;
 import org.headsupdev.agile.web.components.filters.ApplicationFilterPanel;
@@ -130,12 +127,23 @@ public class History
     private void resetTypes()
     {
         types.clear();
-        List<String> allApps = ApplicationPageMapper.get().getApplicationIds();
+        Set<String> allApps = filter.getApplications().keySet();
         for ( String appId : allApps )
         {
             if ( filter.getApplications().get( appId ) )
             {
-                types.addAll( ApplicationPageMapper.get().getApplication( appId ).getEventTypes() );
+                if ( appId.equals( "system" ) )
+                {
+                    types.addAll( ApplicationPageMapper.get().getApplication( "home" ).getEventTypes() );
+                }
+                else
+                {
+                    Application app = ApplicationPageMapper.get().getApplication( appId );
+                    if ( app != null )
+                    {
+                        types.addAll( app.getEventTypes() );
+                    }
+                }
             }
         }
     }

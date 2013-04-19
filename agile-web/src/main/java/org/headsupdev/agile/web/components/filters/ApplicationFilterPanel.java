@@ -27,14 +27,12 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
+import org.headsupdev.agile.web.ApplicationIdComparator;
 import org.headsupdev.agile.web.ApplicationPageMapper;
 import org.headsupdev.agile.web.HeadsUpSession;
 import org.headsupdev.agile.web.components.FilterBorder;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * A filter panel that allows pages to select which applications should provide content for the current view.
@@ -68,6 +66,21 @@ public abstract class ApplicationFilterPanel
     protected void setupFilter()
     {
         allApps = ApplicationPageMapper.get().getApplicationIds();
+        Iterator<String> iter = allApps.iterator();
+        while ( iter.hasNext() )
+        {
+            String appId = iter.next();
+            List<String> typesInApp = ApplicationPageMapper.get().getApplication( appId ).getEventTypes();
+
+            if ( typesInApp == null || typesInApp.size() == 0 )
+            {
+                iter.remove();
+            }
+        }
+        allApps.remove( "home" );
+        Collections.sort( allApps, new ApplicationIdComparator() );
+        allApps.add( "system" );
+
         loadFilters();
     }
 
