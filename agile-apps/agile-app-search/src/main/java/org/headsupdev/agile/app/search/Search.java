@@ -63,6 +63,7 @@ public class Search
     private WebMarkupContainer noresults;
     private BookmarkablePageLink moreresultsLink, notallprojectsLink;
 
+    SearchModel searchModel;
     private List<String> allApps;
     final Map<String,Boolean> appsVisible = new HashMap<String,Boolean>();
 
@@ -123,25 +124,12 @@ public class Search
         form.add( new TextField<String>( "query", new PropertyModel<String>( this, "query" ) ) );
 
         final Map<String,Integer> colors = new HashMap<String,Integer>();
-        add( new ListView<Searcher.Result>( "result", new SearchModel() )
+        searchModel = new SearchModel();
+        add( new ListView<Searcher.Result>( "result", searchModel )
         {
             protected void populateItem( ListItem<Searcher.Result> listItem )
             {
                 Searcher.Result result = listItem.getModelObject();
-
-                if ( result.match == null )
-                {
-                    listItem.setVisible( false );
-                    return;
-                }
-                if ( ( ( result.match instanceof SearchResult ) &&
-                        !appsVisible.get( ( (SearchResult) result.match ).getAppId() ) ) ||
-                        ( !( result.match instanceof SearchResult ) &&
-                                !appsVisible.get( "home" ) ) )
-                {
-                    listItem.setVisible( false );
-                    return;
-                }
 
                 ResourceReference icon = new HeadsUpResourceReference( Searcher.getClassImageName( result.match ) );
                 listItem.add( new Image( "icon", icon ) );
@@ -222,6 +210,7 @@ public class Search
                     public void setObject( Boolean b )
                     {
                         appsVisible.put( appId, b );
+                        searchModel.setAppFilter( appsVisible );
                     }
                 } ) );
             }
@@ -328,6 +317,7 @@ public class Search
             if ( query != null )
             {
                 searcher.setProject( getProject() );
+                searcher.setAppFilter( appsVisible );
                 List<Searcher.Result> results = searcher.getResults();
 
                 noresults.setVisible( results.size() == 0 );
@@ -340,6 +330,11 @@ public class Search
         public List<Searcher.Result> getObject()
         {
             return searcher.getResults();
+        }
+
+        public void setAppFilter( Map<String, Boolean> appFilter )
+        {
+            searcher.setAppFilter( appFilter );
         }
     }
 }

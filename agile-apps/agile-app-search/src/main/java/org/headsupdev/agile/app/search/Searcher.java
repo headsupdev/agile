@@ -45,6 +45,7 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Map;
 
 /**
  * A class to handle the search logic for search page and API
@@ -60,6 +61,8 @@ public class Searcher
     public static final int PAGE_SIZE = 25;
 
     private String query;
+    private Map<String, Boolean> appFilter;
+
     private int from = 0;
     private int newFrom;
 
@@ -102,7 +105,7 @@ public class Searcher
     public ArrayList<Result> calculateResults()
     {
         results = new ArrayList<Result>();
-        if ( StringUtil.isEmpty( query ) )
+        if ( StringUtil.isEmpty( query ) || ( appFilter != null && appFilter.size() == 0 ) )
         {
             return results;
         }
@@ -146,6 +149,16 @@ public class Searcher
             try
             {
                 Object[] result = (Object[]) i.next();
+                if ( result[1] == null )
+                {
+                    continue;
+                }
+
+                if ( !resultMatchesAppFilter( result[1] ) )
+                {
+                    continue;
+                }
+
 
                 if ( getProject().equals( StoredProject.getDefault() ) || getProject().equals(
                         getProjectFromResult( result ) ) )
@@ -162,6 +175,23 @@ public class Searcher
         }
 
         return textQuery.getResultSize() == PAGE_SIZE;
+    }
+
+    private boolean resultMatchesAppFilter( Object object )
+    {
+        if ( appFilter == null )
+        {
+            return true;
+        }
+
+        if ( object instanceof SearchResult )
+        {
+            return appFilter.get( ( (SearchResult) object ).getAppId() );
+        }
+        else
+        {
+            return appFilter.get( "home" );
+        }
     }
 
     private Project getProjectFromResult( Object[] result )
@@ -213,6 +243,12 @@ public class Searcher
         }
 
         return getClassImageName( type.getSuperclass() );
+    }
+
+    public void setAppFilter( Map<String, Boolean> appFilter )
+    {
+        this.appFilter = appFilter;
+        results = null;
     }
 
     public class Result
