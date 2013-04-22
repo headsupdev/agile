@@ -62,7 +62,8 @@ public class BrowseApplication
     }
 
     @Override
-    public void start(BundleContext bc) {
+    public void start( BundleContext bc )
+    {
         super.start( bc );
 
         Dictionary props = new Properties();
