@@ -5,6 +5,7 @@
 * Deffer (once) builds of maven projects that have a dependency also in the build queue
 * Add "never" option to build schedules
 * Don't forget the project when displaying an error page
+* Issue:42 Filter search results by application
 
 * Fixed marked up text to render URLs as links
 * Fix some issues with memory constraints when updating
@@ -12,6 +13,9 @@
 * Improvements to document edit styling to better match document view styles
 * Fix issue with hour remaining calculations
 * Fix some errors with milestone exports
+* Issue:38 Attach comments to attachments when adding a file
+* Fix 'NaN' velocity rendering errors
+* Issue:41 Filter milestones in milestone group edit page
 
 2.0-beta3
 
