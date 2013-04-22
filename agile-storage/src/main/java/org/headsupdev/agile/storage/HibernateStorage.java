@@ -364,10 +364,10 @@ public class HibernateStorage
         session.saveOrUpdate( item );
         tx.commit();
 
-        if ( requiresReload )
-        {
-            reloadGlobalConfiguration();
-        }
+//        if ( requiresReload )
+//        {
+//            reloadGlobalConfiguration();
+//        }
     }
 
     public void removeConfigurationItem( String name )
@@ -425,6 +425,7 @@ public class HibernateStorage
     {
         if ( globalConfig == null )
         {
+            // TODO does this need to invalidate session?
             globalConfig = new HeadsUpConfiguration( getConfigurationItems( "" ) );
         }
 
