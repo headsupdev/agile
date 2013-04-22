@@ -25,6 +25,7 @@ import org.apache.wicket.markup.html.form.*;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.Model;
 import org.headsupdev.agile.api.Project;
 import org.headsupdev.agile.app.milestones.entityproviders.MilestoneProvider;
 import org.headsupdev.agile.storage.HibernateUtil;
@@ -42,7 +43,6 @@ import org.hibernate.criterion.Restrictions;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.List;
 
 /**
  * The form used when editing / creating a milestone group
@@ -54,8 +54,10 @@ import java.util.List;
 public class EditMilestoneGroupForm
         extends Panel
 {
-    MilestoneGroup group;
-    boolean creating;
+    private MilestoneGroup group;
+    private boolean creating;
+
+    private MilestoneFilterPanel filter;
 
     public EditMilestoneGroupForm( String id, final MilestoneGroup milestoneGroup, final boolean creating,
                                    final HeadsUpPage owner )
@@ -71,7 +73,7 @@ public class EditMilestoneGroupForm
             {
                 Session session = HibernateUtil.getCurrentSession();
 
-                for ( Milestone milestone : getMilestones( group.getProject() ) )
+                for ( Milestone milestone : getMilestones() )
                 {
                     if ( group.getMilestones().contains( milestone ) )
                     {
@@ -100,6 +102,7 @@ public class EditMilestoneGroupForm
             }
         };
 
+        form.add( setupFilter() );
         layout( form );
         add( form );
     }
@@ -117,7 +120,6 @@ public class EditMilestoneGroupForm
     protected void layout( Form<MilestoneGroup> form )
     {
         form.setModel( new CompoundPropertyModel<MilestoneGroup>( group ) );
-        List<Milestone> milestones = getMilestones( group.getProject() );
 
         form.add( new Label( "project", group.getProject().getAlias() ) );
         if ( creating )
@@ -138,7 +140,14 @@ public class EditMilestoneGroupForm
         CheckGroup<Milestone> checkGroup = new CheckGroup<Milestone>( "milestones" );
         form.add( checkGroup );
 
-        checkGroup.add( new StripedListView<Milestone>( "list", milestones )
+        checkGroup.add( new StripedListView<Milestone>( "list", new Model<ArrayList<? extends Milestone>>()
+        {
+            @Override
+            public ArrayList<? extends Milestone> getObject()
+            {
+                return getMilestones();
+            }
+        } )
         {
             protected void populateItem( ListItem<Milestone> listItem )
             {
@@ -169,10 +178,10 @@ public class EditMilestoneGroupForm
         } );
     }
 
-    private List<Milestone> getMilestones( Project project )
+    private ArrayList<Milestone> getMilestones()
     {
-        SortableEntityProvider<Milestone> milestoneProvider = getMilestoneProvider( project );
-        List<Milestone> ret = new ArrayList<Milestone>( milestoneProvider.size() );
+        SortableEntityProvider<Milestone> milestoneProvider = createProvider( group.getProject() );
+        ArrayList<Milestone> ret = new ArrayList<Milestone>( milestoneProvider.size() );
 
         Iterator<Milestone> iterator = milestoneProvider.iterator( 0, milestoneProvider.size() );
         while ( iterator.hasNext() )
@@ -183,25 +192,35 @@ public class EditMilestoneGroupForm
         return ret;
     }
 
-    private SortableEntityProvider<Milestone> getMilestoneProvider( Project project )
+    private Panel setupFilter()
     {
-        MilestoneFilter filter = new MilestoneFilter()
+        filter = new MilestoneFilterPanel( "filter", ( (HeadsUpSession) getSession() ).getUser() )
         {
-            public Criterion getCompletedCriterion()
-            {
-                return Restrictions.isNull( "completed" );
-            }
-
             public Criterion getDueCriterion()
             {
+                Criterion dueFilter = super.getDueCriterion();
+                Criterion groupFilter;
                 if ( creating )
                 {
-                    return Restrictions.isNull( "group" );
+                    groupFilter = Restrictions.isNull( "group" );
+                }
+                else
+                {
+                    groupFilter = Restrictions.or( Restrictions.isNull( "group" ), Restrictions.eq( "group", group ) );
                 }
 
-                return Restrictions.or( Restrictions.isNull( "group" ), Restrictions.eq( "group", group ) );
+                if ( dueFilter == null )
+                {
+                    return groupFilter;
+                }
+                return Restrictions.and( dueFilter, groupFilter );
             }
         };
+        return filter;
+    }
+
+    protected SortableEntityProvider<Milestone> createProvider( Project project )
+    {
         if ( project.equals( StoredProject.getDefault() ) )
         {
             return new MilestoneProvider( filter );

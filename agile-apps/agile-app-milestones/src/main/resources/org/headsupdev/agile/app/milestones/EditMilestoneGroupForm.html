@@ -33,7 +33,7 @@
           <!--</tr>-->
         </table>
 
-        <table class="details">
+        <table class="details comments">
           <tr>
             <th colspan="4" class="description">description</th>
           </tr>
@@ -42,31 +42,32 @@
           </tr>
 
           <wicket:child />
+        </table>
 
+        <h2>Milestones</h2>
+        <div wicket:id="filter">filters</div>
+
+        <table class="milestones listing">
           <tr>
-              <table class="milestones listing">
-                  <tr>
-                      <th class="milestone-check">&nbsp;</th>
-                      <th class="name">Name</th>
-                      <th class="percent">Progress</th>
-                      <th class="issues">Issues</th>
-                      <th class="open">Open</th>
-                      <th class="due">Due</th>
-                  </tr>
-                  <wicket:container wicket:id="milestones">
-                  <tr wicket:id="list">
-                      <td class="milestone-check"><input type="checkbox" wicket:id="check" /></td>
-                      <td wicket:id="id" class="name">id</td>
-                      <td wicket:id="bar" class="bar">bar</td>
-                      <td wicket:id="issues" class="issues">0</td>
-                      <td wicket:id="open" class="open">0</td>
-                      <td wicket:id="due" class="due">due</td>
-                  </tr>
-                  </wicket:container>
-              </table>
+            <th class="milestone-check">&nbsp;</th>
+            <th class="name">Name</th>
+            <th class="percent">Progress</th>
+            <th class="issues">Issues</th>
+            <th class="open">Open</th>
+            <th class="due">Due</th>
           </tr>
+          <wicket:container wicket:id="milestones">
+            <tr wicket:id="list">
+              <td class="milestone-check"><input type="checkbox" wicket:id="check" /></td>
+              <td wicket:id="id" class="name">id</td>
+              <td wicket:id="bar" class="bar">bar</td>
+              <td wicket:id="issues" class="issues">0</td>
+              <td wicket:id="open" class="open">0</td>
+              <td wicket:id="due" class="due">due</td>
+            </tr>
+          </wicket:container>
           <tr>
-            <td><input type="submit" value="Save" /></td>
+            <td colspan="6"><input type="submit" value="Save" /></td>
           </tr>
         </table>
       </form>

@@ -69,7 +69,7 @@ public class Milestones
 
         final boolean hideProject = !getProject().equals( StoredProject.getDefault() );
 
-        List<MilestoneGroup> groups = MilestonesApplication.getMilestoneGroups( getProject() );
+        List<MilestoneGroup> groups = MilestonesApplication.getMilestoneGroups( getProject(), filter );
         boolean hasGroups = groups.size() > 0;
 
         add( new ListView<MilestoneGroup>( "group", groups )
@@ -78,7 +78,8 @@ public class Milestones
             protected void populateItem( ListItem<MilestoneGroup>listItem )
             {
                 MilestoneGroup group = listItem.getModelObject();
-                PageParameters params = getProjectPageParameters();
+                PageParameters params = new PageParameters();
+                params.add( "project", group.getProject().getId() );
                 params.add( "id", group.getName() );
                 BookmarkablePageLink nameLink = new BookmarkablePageLink( "grouplink",
                         getPageClass( "milestones/viewgroup" ), params );

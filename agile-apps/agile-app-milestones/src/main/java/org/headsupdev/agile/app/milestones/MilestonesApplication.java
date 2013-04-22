@@ -20,6 +20,7 @@ package org.headsupdev.agile.app.milestones;
 
 import org.headsupdev.agile.api.*;
 import org.headsupdev.agile.app.milestones.event.*;
+import org.headsupdev.agile.storage.StoredProject;
 import org.headsupdev.agile.storage.issues.Milestone;
 import org.headsupdev.agile.storage.HibernateStorage;
 import org.headsupdev.agile.storage.issues.MilestoneGroup;
@@ -27,9 +28,12 @@ import org.headsupdev.agile.web.WebApplication;
 import org.headsupdev.agile.app.milestones.permission.MilestoneViewPermission;
 import org.headsupdev.agile.app.milestones.permission.MilestoneListPermission;
 import org.headsupdev.agile.app.milestones.permission.MilestoneEditPermission;
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.Query;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Restrictions;
 
 import java.util.*;
 
@@ -132,14 +136,26 @@ public class MilestonesApplication
         return (Milestone) q.uniqueResult();
     }
 
-    public static List<MilestoneGroup> getMilestoneGroups( Project project )
+    public static List<MilestoneGroup> getMilestoneGroups( Project project, MilestoneFilter filter )
     {
         Session session = ( (HibernateStorage) Manager.getStorageInstance() ).getHibernateSession();
 
-        Query q = session.createQuery( "from MilestoneGroup g where name.project.id = :pid" );
-        q.setString( "pid", project.getId() );
+        Criteria c = session.createCriteria( MilestoneGroup.class );
+        c.setResultTransformer( Criteria.DISTINCT_ROOT_ENTITY );
 
-        return (List<MilestoneGroup>) q.list();
+        Criterion completed = filter.getCompletedCriterion();
+        if ( completed != null )
+        {
+            c.add( completed );
+        }
+
+        Query q;
+        if ( project != null && !project.equals( StoredProject.getDefault() ) )
+        {
+            c.add( Restrictions.eq( "name.project", project) );
+        }
+
+        return (List<MilestoneGroup>) c.list();
     }
 
     public static MilestoneGroup getMilestoneGroup( String name, Project project )

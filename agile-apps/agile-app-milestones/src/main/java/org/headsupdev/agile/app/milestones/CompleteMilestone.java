@@ -21,6 +21,8 @@ package org.headsupdev.agile.app.milestones;
 import org.headsupdev.agile.api.Event;
 import org.headsupdev.agile.storage.Comment;
 import org.headsupdev.agile.app.milestones.event.CompleteMilestoneEvent;
+import org.headsupdev.agile.storage.issues.Milestone;
+import org.headsupdev.agile.storage.issues.MilestoneGroup;
 import org.headsupdev.agile.web.MountPoint;
 
 import java.util.Date;
@@ -46,6 +48,23 @@ public class CompleteMilestone
     protected void submitChild()
     {
         getMilestone().setCompletedDate( new Date() );
+        if ( getMilestone().getGroup() != null )
+        {
+            checkGroupCompletion( getMilestone().getGroup() );
+        }
+    }
+
+    protected void checkGroupCompletion( MilestoneGroup group )
+    {
+        for ( Milestone milestone : group.getMilestones() )
+        {
+            if ( !milestone.isCompleted() )
+            {
+                return;
+            }
+        }
+
+        group.setCompletedDate( new Date() );
     }
 
     @Override

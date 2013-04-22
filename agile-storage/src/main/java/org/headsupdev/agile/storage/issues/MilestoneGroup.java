@@ -59,7 +59,7 @@ public class MilestoneGroup
     String description;
 
     @Temporal(TemporalType.TIMESTAMP)
-    Date created, updated;
+    Date created, updated, completed;
 
     @OneToMany(mappedBy = "group")
     private Set<Milestone> milestones = new HashSet<Milestone>();
@@ -170,33 +170,20 @@ public class MilestoneGroup
         return latest;
     }
 
+
     public Date getCompletedDate()
     {
-        if ( milestones.size() == 0 )
-        {
-            return null;
-        }
+        return completed;
+    }
 
-        Date latest = null;
-        for ( Milestone milestone : milestones )
-        {
-            if ( milestone.getCompletedDate() == null )
-            {
-                return null;
-            }
-
-            if ( latest == null || latest.before( milestone.getDueDate() ) )
-            {
-                latest = milestone.getDueDate();
-            }
-        }
-
-        return latest;
+    public void setCompletedDate( Date completed )
+    {
+        this.completed = completed;
     }
 
     public boolean isCompleted()
     {
-        return getCompletedDate() != null;
+        return completed != null;
     }
 
     public Set<Milestone> getMilestones()
