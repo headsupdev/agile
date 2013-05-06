@@ -78,7 +78,19 @@ public class XCodeBuildHandler
 
             // execute a clean first of all
             ArrayList<String> commands = new ArrayList<String>();
-            appendXcodeCommands( project, config, commands, dir, null );
+            try
+            {
+                appendXcodeCommands( project, config, commands, dir, null );
+            }
+            catch ( FileNotFoundException e )
+            {
+                buildOut.write( "Could not build as Xcode workspace not found - perhaps you need to install CocoaPods?" );
+                IOUtil.close( buildOut );
+
+                build.setStatus( Build.BUILD_FAILED );
+                build.setEndTime( new Date() );
+                return;
+            }
             commands.add( "clean" );
 
             result = ExecUtil.executeLoggingExceptions( commands, dir, buildOut, buildOut );
@@ -168,6 +180,7 @@ public class XCodeBuildHandler
 
     protected static void appendXcodeCommands( Project project, PropertyTree config, ArrayList<String> commands,
                                                File dir, String overrideConfig )
+            throws FileNotFoundException
     {
         boolean buildWorkspace = config.getProperty( CIApplication.CONFIGURATION_XCODE_BUILD_WORKSPACE.getKey(),
                 (String) CIApplication.CONFIGURATION_XCODE_SDK.getDefault() ).equals( "true" );
@@ -233,6 +246,7 @@ public class XCodeBuildHandler
     }
 
     private static void setupWorkspaceCommand( Project project, PropertyTree config, ArrayList<String> commands, File dir )
+            throws FileNotFoundException
     {
         String workspace = config.getProperty( CIApplication.CONFIGURATION_XCODE_WORKSPACE.getKey(),
                 (String) CIApplication.CONFIGURATION_XCODE_TARGET.getDefault() );
@@ -246,9 +260,15 @@ public class XCodeBuildHandler
         if ( !StringUtil.isEmpty( workspace ) )
         {
             commands.add( workspace + ".xcworkspace" );
+            // if we specify a workspace fall back to this rather than the default if no scheme specified
+            defaultWorkspace = workspace;
         }
         else
         {
+            if ( defaultWorkspace == null )
+            {
+                throw new FileNotFoundException( "No workspace found for workspace build" );
+            }
             commands.add( defaultWorkspace + ".xcworkspace" );
         }
 
