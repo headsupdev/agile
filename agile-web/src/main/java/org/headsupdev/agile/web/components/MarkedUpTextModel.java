@@ -34,6 +34,7 @@ import java.util.StringTokenizer;
  * @since 1.0
  */
 public class MarkedUpTextModel extends Model<String> {
+    private static final String BROKEN_LINK_HINT = "Item could not be found";
     private String in, out = null;
     private Project project;
 
@@ -89,7 +90,9 @@ public class MarkedUpTextModel extends Model<String> {
                     ret.append( "\"" );
                     if ( broken )
                     {
-                        ret.append( " class=\"brokenlink\"" );
+                        ret.append( " class=\"brokenlink\" title=\"" );
+                        ret.append( BROKEN_LINK_HINT );
+                        ret.append( "\"" );
                     }
                     ret.append( ">" );
                     ret.append( encode( next ) );
@@ -97,7 +100,9 @@ public class MarkedUpTextModel extends Model<String> {
                 }
                 if ( broken )
                 {
-                    ret.append( "<span class=\"brokenlinkhint\">[?]</span>" );
+                    ret.append( "<span class=\"brokenlinkhint\" title=\"" );
+                    ret.append( BROKEN_LINK_HINT );
+                    ret.append( "\">[?]</span>" );
                 }
             }
             else
