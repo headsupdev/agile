@@ -95,6 +95,7 @@ public abstract class Manager
 
     public abstract Date getInstallDate();
     public abstract double getInstallVersion();
+    public abstract void setupCompleted();
 
     public abstract boolean isUpdateAvailable();
     protected abstract Logger getLoggerForComponent( String component );

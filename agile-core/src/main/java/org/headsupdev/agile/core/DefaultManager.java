@@ -429,6 +429,11 @@ public class DefaultManager
         return installVersion;
     }
 
+    public void setupCompleted()
+    {
+
+    }
+
     public boolean isUpdateAvailable()
     {
         return availableUpdates.size() > 0;

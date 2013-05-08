@@ -112,6 +112,8 @@ public class Setup
             String body = renderAbout();
             getHeadsUpApplication().addEvent( new SystemEvent( getStorage().getGlobalConfiguration().getProductName() + " installed :)",
                     getStorage().getGlobalConfiguration().getProductName() + " has been installed - congratulations", body ) );
+
+            getManager().setupCompleted();
             tabSelected[3] = true;
         }
 
