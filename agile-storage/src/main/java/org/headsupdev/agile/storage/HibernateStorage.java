@@ -527,9 +527,9 @@ public class HibernateStorage
         Session session = getHibernateSession();
         Query q = session.createQuery( "from StoredEvent e where time >= :start order by time desc" );
         q.setDate( "start", start );
-        List<Event> list = q.list();
 
-        return list;
+        q.setReadOnly( true );
+        return (List<Event>) q.list();
     }
 
     public List<Event> getEvents( Date start, Date end )
@@ -538,9 +538,9 @@ public class HibernateStorage
         Query q = session.createQuery( "from StoredEvent e where time >= :start and time < :end order by time desc" );
         q.setDate( "start", start );
         q.setDate( "end", end );
-        List<Event> list = q.list();
 
-        return list;
+        q.setReadOnly( true );
+        return (List<Event>) q.list();
     }
 
     public List<Event> getEvents( Application app, Date start, Date end )
@@ -550,9 +550,9 @@ public class HibernateStorage
         q.setString( "appId", app.getApplicationId() );
         q.setTimestamp( "start", start );
         q.setTimestamp( "end", end );
-        List<Event> list = q.list();
 
-        return list;
+        q.setReadOnly( true );
+        return (List<Event>) q.list();
     }
 
     public List<Event> getEventsForProject( Project project, Date start, Date end )
@@ -621,6 +621,7 @@ public class HibernateStorage
             q.setTimestamp( "end", end );
         }
 
+        q.setReadOnly( true );
         List<Event> list = q.list();
         tx.commit();
 
@@ -667,6 +668,7 @@ public class HibernateStorage
             q.setString( "nameLike", user.getUsername() );
         }
 
+        q.setReadOnly( true );
         List<Event> list = q.list();
         tx.commit();
 
