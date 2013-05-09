@@ -1,3 +1,11 @@
+2.0-rc1
+
+* Group "other" user dashboard issues by project
+
+* Fix issue where time logged when resolving an issue was not being saved
+* Various DB optimisations
+
+
 2.0-beta4
 
 * Add a grouped history page for better visibility of which apps are active
