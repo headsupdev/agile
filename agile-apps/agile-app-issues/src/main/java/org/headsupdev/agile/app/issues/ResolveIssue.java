@@ -177,6 +177,7 @@ public class ResolveIssue
             if ( timeEnabled )
             {
                 DurationWorked worked = new DurationWorked();
+                worked.setIssue( getIssue() );
                 worked.setWorked( additionalTime );
                 worked.setUpdatedRequired( new Duration( 0 ) );
                 worked.setDay( new Date() );
