@@ -31,6 +31,7 @@ import org.headsupdev.agile.storage.resource.ResourceManagerImpl;
 import java.io.File;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -422,5 +423,54 @@ public class ResourceManagerImplTest
                 return 0;
             }
         };
+    }
+
+    public void testIssueNotMissingEstimate()
+    {
+        Issue issue = new Issue( getProject( "true" ) );
+
+        issue.setTimeEstimate( new Duration( 4 ) );
+        Set<DurationWorked> timeWorked = new HashSet<DurationWorked>();
+        DurationWorked workedHalf = new DurationWorked();
+        workedHalf.setUpdatedRequired( new Duration( 2 ) );
+        workedHalf.setWorked( new Duration( 2 ) );
+        timeWorked.add( workedHalf );
+        issue.setTimeWorked( timeWorked );
+        issue.setTimeRequired( new Duration( 2 ) );
+
+        assertFalse( resourceManager.isIssueMissingEstimate( issue ) );
+        assertFalse( resourceManager.isIssueSeriouslyMissingEstimate( issue ) );
+    }
+
+    public void testIssueNotSeriouslyMissingEstimate()
+    {
+        Issue issue = new Issue( getProject( "true" ) );
+        issue.setTimeEstimate( new Duration( 4 ) );
+        Set<DurationWorked> timeWorked = new HashSet<DurationWorked>();
+        DurationWorked workedHalf = new DurationWorked();
+        workedHalf.setUpdatedRequired( new Duration( 2 ) );
+        workedHalf.setWorked( new Duration( 4 ) );
+        timeWorked.add( workedHalf );
+        issue.setTimeWorked( timeWorked );
+        issue.setTimeRequired( new Duration( 2 ) );
+
+        assertTrue( resourceManager.isIssueMissingEstimate( issue ) );
+        assertFalse( resourceManager.isIssueSeriouslyMissingEstimate( issue ) );
+    }
+
+    public void testIssueSeriouslyMissingEstimate()
+    {
+        Issue issue = new Issue( getProject( "true" ) );
+        issue.setTimeEstimate( new Duration( 4 ) );
+        Set<DurationWorked> timeWorked = new HashSet<DurationWorked>();
+        DurationWorked workedHalf = new DurationWorked();
+        workedHalf.setUpdatedRequired( new Duration( 5 ) );
+        workedHalf.setWorked( new Duration( 4 ) );
+        timeWorked.add( workedHalf );
+        issue.setTimeWorked( timeWorked );
+        issue.setTimeRequired( new Duration( 5 ) );
+
+        assertTrue( resourceManager.isIssueMissingEstimate( issue ) );
+        assertTrue( resourceManager.isIssueSeriouslyMissingEstimate( issue ) );
     }
 }

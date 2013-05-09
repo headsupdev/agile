@@ -18,7 +18,6 @@
 
 package org.headsupdev.agile.web.components.issues;
 
-
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.model.PropertyModel;
@@ -28,7 +27,6 @@ import org.headsupdev.agile.api.Permission;
 import org.headsupdev.agile.api.User;
 import org.headsupdev.agile.storage.HibernateStorage;
 import org.headsupdev.agile.storage.StoredProject;
-import org.headsupdev.agile.storage.resource.DurationWorked;
 import org.headsupdev.agile.storage.issues.Issue;
 import org.headsupdev.agile.storage.issues.Milestone;
 import org.headsupdev.agile.web.HeadsUpPage;
@@ -72,8 +70,6 @@ public class IssuePanelRow
 
         final boolean timeEnabled = Boolean.parseBoolean( page.getProject().getConfigurationValue(
                 StoredProject.CONFIGURATION_TIMETRACKING_ENABLED ) );
-        final boolean burndown = Boolean.parseBoolean( page.getProject().getConfigurationValue(
-                StoredProject.CONFIGURATION_TIMETRACKING_BURNDOWN ) );
 
         PageParameters params = new PageParameters();
         params.add( "project", issue.getProject().getId() );
@@ -164,45 +160,20 @@ public class IssuePanelRow
             type.add( new Image( "priority-icon", new ResourceReference( IssueListPanel.class, image ) ) );
         }
 
-        String warning = null;
-        if ( burndown )
+        if ( ( (HibernateStorage) Manager.getStorageInstance() ).getResourceManager().isIssueMissingEstimate( issue ) )
         {
-            if ( issue.getTimeEstimate() != null && issue.getTimeEstimate().getHours() > 0 &&
-                    issue.getTimeWorked() != null )
+            if ( ( (HibernateStorage) Manager.getStorageInstance() ).getResourceManager().isIssueSeriouslyMissingEstimate( issue ) )
             {
-                double estimate = issue.getTimeEstimate().getHours();
-                double remain = estimate;
-                for ( DurationWorked worked : issue.getTimeWorked() )
-                {
-                    if ( worked.getWorked() != null )
-                    {
-                        remain -= worked.getWorked().getHours();
-                    }
-                }
-
-                if ( issue.getTimeRequired() == null ) {
-                    remain -= estimate;
-                } else {
-                    remain -= issue.getTimeRequired().getHours();
-                }
-
-                if ( remain < ( estimate / 2 ) * -1 )
-                {
-                    warning = "images/fail.png";
-                }
-                else if ( remain < 0 )
-                {
-                    warning = "images/warn.png";
-                }
+                type.add( new Image( "overworked-icon", new ResourceReference( HeadsUpPage.class, "images/fail.png" ) ) );
             }
-        }
-        if ( warning == null )
-        {
-            type.add( new WebMarkupContainer( "overworked-icon" ).setVisible( false ) );
+            else
+            {
+                type.add( new Image( "overworked-icon", new ResourceReference( HeadsUpPage.class, "images/warn.png" ) ) );
+            }
         }
         else
         {
-            type.add( new Image( "overworked-icon", new ResourceReference( HeadsUpPage.class, warning ) ) );
+            type.add( new WebMarkupContainer( "overworked-icon" ).setVisible( false ) );
         }
 
         boolean attachments = issue.getAttachments().size() > 0;

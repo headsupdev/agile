@@ -837,4 +837,86 @@ public class ResourceManagerImpl
 
         return new Duration( hoursLogged );
     }
+
+    /**
+     * Determine if an issue is going to miss it's target amount of work.
+     * This is based on how much work has been logged and the initial estimate of the issue.
+     *
+     * @param issue The issue to check
+     * @return True if the issue is over the estimated amount of work required to complete.
+     */
+    public boolean isIssueMissingEstimate( Issue issue )
+    {
+        final boolean burndown = Boolean.parseBoolean( issue.getProject().getConfigurationValue(
+                StoredProject.CONFIGURATION_TIMETRACKING_BURNDOWN ) );
+
+        if ( burndown )
+        {
+            if ( issue.getTimeEstimate() != null && issue.getTimeEstimate().getHours() > 0 &&
+                    issue.getTimeWorked() != null )
+            {
+                double remain = getWorkRemainingForIssue( issue );
+
+                return remain < 0;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Determine if an issue is going to miss it's target amount of work by a significant margin.
+     * This is based on how much work has been logged and the initial estimate of the issue.
+     * The margin is defined as 50% over the estimated amount of work.
+     *
+     * @param issue The issue to check
+     * @return True if the issue is over the estimated amount of work required to complete.
+     */
+    public boolean isIssueSeriouslyMissingEstimate( Issue issue )
+    {
+        final double AMOUNT_OVER_TO_BE_SERIOUS = .5;
+        final boolean burndown = Boolean.parseBoolean( issue.getProject().getConfigurationValue(
+                StoredProject.CONFIGURATION_TIMETRACKING_BURNDOWN ) );
+
+        if ( burndown )
+        {
+            if ( issue.getTimeEstimate() != null && issue.getTimeEstimate().getHours() > 0 &&
+                    issue.getTimeWorked() != null )
+            {
+                double estimate = getEstimateMultiplier( issue ) * issue.getTimeEstimate().getHours();
+                double remain = getWorkRemainingForIssue( issue );
+
+                return remain < ( estimate * AMOUNT_OVER_TO_BE_SERIOUS ) * -1;
+            }
+        }
+
+        return false;
+    }
+
+    protected double getWorkRemainingForIssue( Issue issue )
+    {
+        double estimate = getEstimateMultiplier( issue ) * issue.getTimeEstimate().getHours();
+        double remain = estimate;
+        for ( DurationWorked worked : issue.getTimeWorked() )
+        {
+            if ( worked.getWorked() != null )
+            {
+                remain -= worked.getWorked().getHours();
+            }
+        }
+
+        if ( issue.getTimeRequired() == null ) {
+            remain -= estimate;
+        } else {
+            remain -= issue.getTimeRequired().getHours();
+        }
+
+        return remain;
+    }
+
+    protected double getEstimateMultiplier( Issue issue )
+    {
+        System.out.println( "1" );
+        return 1;
+    }
 }
