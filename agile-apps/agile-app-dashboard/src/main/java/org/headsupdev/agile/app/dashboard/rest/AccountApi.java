@@ -54,6 +54,12 @@ public class AccountApi
     }
 
     @Override
+    protected boolean shouldCollapseUsers()
+    {
+        return false;
+    }
+
+    @Override
     public Permission getRequiredPermission()
     {
         return new MemberListPermission();

@@ -57,6 +57,12 @@ public class ProjectApi
     }
 
     @Override
+    protected boolean shouldCollapseProjects()
+    {
+        return false;
+    }
+
+    @Override
     public Permission getRequiredPermission()
     {
         return new ProjectListPermission();

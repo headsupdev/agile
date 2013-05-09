@@ -18,6 +18,7 @@
 
 package org.headsupdev.agile.web.rest;
 
+import com.google.gson.*;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.protocol.http.WebResponse;
@@ -28,6 +29,7 @@ import org.headsupdev.agile.web.auth.AuthenticationHelper;
 import org.headsupdev.agile.web.auth.WebLoginManager;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 
 /**
  * An extension of the Api definition that handles authentication and other web related issues. 
@@ -50,6 +52,22 @@ public abstract class HeadsUpApi
     public HeadsUpApi( PageParameters params, Class clazz )
     {
         super( params, clazz );
+    }
+
+    @Override
+    public void setupJson( GsonBuilder builder )
+    {
+        super.setupJson( builder );
+
+        if ( shouldCollapseProjects() )
+        {
+            getBuilder().registerTypeHierarchyAdapter( Project.class, new ProjectAdapter() );
+        }
+
+        if ( shouldCollapseUsers() )
+        {
+            getBuilder().registerTypeHierarchyAdapter( User.class, new UserAdapter() );
+        }
     }
 
     @Override
@@ -123,5 +141,33 @@ public abstract class HeadsUpApi
             project = StoredProject.getDefault();
         }
         return project;
+    }
+
+    protected boolean shouldCollapseProjects()
+    {
+        return true;
+    }
+
+    private class ProjectAdapter implements JsonSerializer<Project>
+    {
+        @Override
+        public JsonElement serialize( Project project, Type type, JsonSerializationContext jsonSerializationContext )
+        {
+            return new JsonPrimitive( project.getId() );
+        }
+    }
+
+    protected boolean shouldCollapseUsers()
+    {
+        return true;
+    }
+
+    private class UserAdapter implements JsonSerializer<User>
+    {
+        @Override
+        public JsonElement serialize( User user, Type type, JsonSerializationContext jsonSerializationContext )
+        {
+            return new JsonPrimitive( user.getUsername() );
+        }
     }
 }

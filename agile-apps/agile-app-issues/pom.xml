@@ -75,6 +75,7 @@
                 org.headsupdev.support.java.*,
                 org.apache.wicket.*,
                 org.hibernate,org.hibernate.criterion,org.hibernate.transform,javax.persistence.*,
+                com.google.gson.*,
                 javax.imageio
             </Import-Package>
             <Embed-Transitive>true</Embed-Transitive>

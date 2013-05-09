@@ -21,6 +21,7 @@ package org.headsupdev.agile.storage.issues;
 import org.headsupdev.agile.api.Project;
 import org.headsupdev.agile.api.SearchResult;
 import org.headsupdev.agile.api.User;
+import org.headsupdev.agile.api.rest.Publish;
 import org.headsupdev.agile.api.service.ChangeSet;
 import org.headsupdev.agile.storage.Attachment;
 import org.headsupdev.agile.storage.Comment;
@@ -101,22 +102,29 @@ public class Issue
     @DocumentId
     @FieldBridge(impl = IdProjectBridge.class)
     @Field
+    @Publish
     private IdProjectId id;
 
     @Type(type = "text")
     @Field(index = Index.TOKENIZED)
+    @Publish
     private String summary, body, testNotes;
 
     @ManyToOne(targetEntity = StoredUser.class)
+    @Publish
     private User reporter;
 
     @ManyToOne(targetEntity = StoredUser.class)
+    @Publish
     private User assignee;
 
     @Temporal(TemporalType.TIMESTAMP)
+    @Publish
     private Date created, updated;
 
+    @Publish
     private int type, priority = PRIORITY_MAJOR, status, resolution;
+    @Publish
     private String version, environment;
 
     private Integer reopened;

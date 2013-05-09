@@ -25,12 +25,14 @@ import org.headsupdev.agile.api.Page;
 import org.headsupdev.agile.api.Permission;
 import org.headsupdev.agile.api.Project;
 import org.headsupdev.agile.api.SimpleMenuLink;
+import org.headsupdev.agile.api.rest.Api;
 import org.headsupdev.agile.app.issues.event.CloseIssueEvent;
 import org.headsupdev.agile.app.issues.event.CreateIssueEvent;
 import org.headsupdev.agile.app.issues.event.UpdateIssueEvent;
 import org.headsupdev.agile.app.issues.permission.IssueEditPermission;
 import org.headsupdev.agile.app.issues.permission.IssueListPermission;
 import org.headsupdev.agile.app.issues.permission.IssueViewPermission;
+import org.headsupdev.agile.app.issues.rest.IssuesApi;
 import org.headsupdev.agile.storage.Comment;
 import org.headsupdev.agile.storage.HibernateStorage;
 import org.headsupdev.agile.storage.issues.Issue;
@@ -122,6 +124,12 @@ public class IssuesApplication
     @Override
     public Class<? extends Page> getHomePage() {
         return Issues.class;
+    }
+
+    @Override
+    public Class<? extends Api>[] getApis()
+    {
+        return new Class[]{ IssuesApi.class };
     }
 
     @Override
