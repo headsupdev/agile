@@ -101,7 +101,7 @@ public class UserDashboard extends Panel
 
                 // hide project label if we have already started listing that project's milestones
                 Label label = new Label( "project", milestone.getProject().toString() );
-                listItem.add( label .setVisible( displayed == null || !displayed.equals( milestone.getProject() ) ));
+                listItem.add( label.setVisible( displayed == null || !displayed.equals( milestone.getProject() ) ));
                 displayed = milestone.getProject();
 
                 label = new Label( "due", new FormattedDateModel( milestone.getDueDate(),
@@ -124,9 +124,16 @@ public class UserDashboard extends Panel
         List<Issue> noMilestone = getIssuesInMilestoneAssignedTo( null, user );
         add( new ListView<Issue>( "issuelist", noMilestone )
         {
+            private Project displayed;
+
             protected void populateItem( ListItem<Issue> listItem )
             {
                 Issue issue = listItem.getModelObject();
+
+                // hide project label if we have already started listing that project's milestones
+                Label label = new Label( "project", issue.getProject().toString() );
+                listItem.add( label .setVisible( displayed == null || !displayed.equals( issue.getProject() ) ));
+                displayed = issue.getProject();
 
                 listItem.add( new IssuePanelRow( "issue", issue, page, true, true, true ) );
             }

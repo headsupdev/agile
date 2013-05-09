@@ -39,6 +39,11 @@
       <div class="project">Others</div>
     </td></tr>
     <wicket:container wicket:id="issuelist">
+      <wicket:enclosure>
+        <tr><td colspan="6" class="dashmilestone">
+          <div class="milestone">Project: <span wicket:id="project" class="project">project</span></div>
+        </td></tr>
+      </wicket:enclosure>
       <wicket:container wicket:id="issue"></wicket:container>
     </wicket:container>
     </wicket:enclosure>
