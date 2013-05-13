@@ -3,6 +3,7 @@
 * Group "other" user dashboard issues by project
 
 * Fix issue where time logged when resolving an issue was not being saved
+* Issue:57 Random ordering of durationworkeds if times match
 * Various DB optimisations
 
 
