@@ -81,7 +81,7 @@ public class ResourceManagerImpl
             // for this Worked object to be considered valid it must be worked before the day in question
             if ( workedDay.before( endOfDayInQuestion ) )
             {
-                if ( lastEstimateDate == null || workedDay.after( lastEstimateDate ) )
+                if ( lastEstimateDate == null || !workedDay.before( lastEstimateDate ) )
                 {
                     estimate = worked.getUpdatedRequired();
                     lastEstimateDate = workedDay;
@@ -126,7 +126,7 @@ public class ResourceManagerImpl
                 continue;
             }
 
-            if ( lastEstimateDate == null || ( worked.getDay() != null && worked.getDay().after( lastEstimateDate ) ) )
+            if ( lastEstimateDate == null || ( worked.getDay() != null && !worked.getDay().before( lastEstimateDate ) ) )
             {
                 estimate = worked.getUpdatedRequired();
                 lastEstimateDate = worked.getDay();
@@ -203,7 +203,7 @@ public class ResourceManagerImpl
                     continue;
                 }
 
-                if ( first.after( worked.getDay() ) )
+                if ( !first.before( worked.getDay() ) )
                 {
                     first = worked.getDay();
                 }
@@ -916,7 +916,6 @@ public class ResourceManagerImpl
 
     protected double getEstimateMultiplier( Issue issue )
     {
-        System.out.println( "1" );
         return 1;
     }
 }
