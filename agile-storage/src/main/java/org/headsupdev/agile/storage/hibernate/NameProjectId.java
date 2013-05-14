@@ -19,6 +19,7 @@
 package org.headsupdev.agile.storage.hibernate;
 
 import org.headsupdev.agile.api.Project;
+import org.headsupdev.agile.api.rest.Publish;
 import org.headsupdev.agile.storage.StoredProject;
 
 import javax.persistence.Embeddable;
@@ -41,10 +42,12 @@ public class NameProjectId
     implements Serializable
 {
     @ManyToOne( targetEntity = StoredProject.class, optional = false )
+    @Publish
     Project project;
 
     @Column( nullable = false )
     @Field( index = Index.TOKENIZED )
+    @Publish
     String name;
 
     public NameProjectId()

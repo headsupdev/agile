@@ -21,6 +21,7 @@ package org.headsupdev.agile.storage.issues;
 import org.headsupdev.agile.api.Manager;
 import org.headsupdev.agile.api.Project;
 import org.headsupdev.agile.api.SearchResult;
+import org.headsupdev.agile.api.rest.Publish;
 import org.headsupdev.agile.storage.Comment;
 import org.headsupdev.agile.storage.HibernateStorage;
 import org.headsupdev.agile.storage.resource.ResourceManagerImpl;
@@ -57,16 +58,20 @@ public class Milestone
     @DocumentId
     @FieldBridge(impl = NameProjectBridge.class)
     @Field
+    @Publish
     NameProjectId name;
 
     @Type(type = "text")
     @Field(index = Index.TOKENIZED)
+    @Publish
     String description;
 
     @Temporal(TemporalType.TIMESTAMP)
+    @Publish
     Date created, updated, start, due, completed;
 
     @OneToMany(mappedBy = "milestone")
+    @Publish
     private Set<Issue> issues = new HashSet<Issue>();
 
     @ManyToOne

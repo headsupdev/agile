@@ -19,7 +19,9 @@
 package org.headsupdev.agile.app.milestones;
 
 import org.headsupdev.agile.api.*;
+import org.headsupdev.agile.api.rest.Api;
 import org.headsupdev.agile.app.milestones.event.*;
+import org.headsupdev.agile.app.milestones.rest.MilestonesApi;
 import org.headsupdev.agile.storage.StoredProject;
 import org.headsupdev.agile.storage.issues.Milestone;
 import org.headsupdev.agile.storage.HibernateStorage;
@@ -98,6 +100,12 @@ public class MilestonesApplication
     @Override
     public Class<? extends Page> getHomePage() {
         return Milestones.class;
+    }
+
+    @Override
+    public Class<? extends Api>[] getApis()
+    {
+        return new Class[]{ MilestonesApi.class };
     }
 
     @Override
