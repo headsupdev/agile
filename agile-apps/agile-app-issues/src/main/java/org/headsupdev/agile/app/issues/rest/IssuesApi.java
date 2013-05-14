@@ -41,7 +41,7 @@ import org.apache.wicket.PageParameters;
 public class IssuesApi
         extends HeadsUpApi
 {
-    IssuesDAO dao = new IssuesDAO();
+    private IssuesDAO dao = new IssuesDAO();
 
     public IssuesApi( PageParameters params )
     {
