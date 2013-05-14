@@ -21,6 +21,7 @@ package org.headsupdev.agile.app.dashboard;
 import org.headsupdev.agile.api.*;
 import org.headsupdev.agile.api.rest.Api;
 import org.headsupdev.agile.app.dashboard.rest.AccountApi;
+import org.headsupdev.agile.app.dashboard.rest.UserDashboardApi;
 import org.headsupdev.agile.web.WebApplication;
 import org.headsupdev.agile.app.dashboard.permission.ProjectViewPermission;
 import org.headsupdev.agile.app.dashboard.permission.MemberViewPermission;
@@ -86,7 +87,7 @@ public class DashboardApplication
     @Override
     public Class<? extends Api>[] getApis()
     {
-        return (Class<? extends Api>[]) new Class[]{ AccountApi.class };
+        return (Class<? extends Api>[]) new Class[]{ AccountApi.class, UserDashboardApi.class };
     }
 
     @Override
