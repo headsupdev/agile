@@ -45,9 +45,9 @@ public class MilestoneWithUserIssues
     Date created, updated, start, due, completed;
 
     @Publish
-    private List<Issue> userIssues = new ArrayList<Issue>();
+    private Set<Issue> issues = new HashSet<Issue>();
 
-    public MilestoneWithUserIssues( Milestone milestone, List<Issue> userIssues )
+    public MilestoneWithUserIssues( Milestone milestone, Collection<Issue> userIssues )
     {
         this.name = milestone.getInternalId();
         this.description = milestone.getDescription();
@@ -58,6 +58,6 @@ public class MilestoneWithUserIssues
         this.due = milestone.getDueDate();
         this.completed = milestone.getCompletedDate();
 
-        this.userIssues = userIssues;
+        this.issues = new HashSet<Issue>( userIssues );
     }
 }
