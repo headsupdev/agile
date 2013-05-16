@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2012 Heads Up Development Ltd.
+ * Copyright 2012-2013 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -34,7 +34,7 @@ public class BuildHandlerFactory
     {
         return project instanceof MavenTwoProject || project instanceof AntProject ||
                 project instanceof EclipseProject || project instanceof XCodeProject ||
-                project instanceof CommandLineProject;
+                project instanceof GradleProject || project instanceof CommandLineProject;
     }
 
     public BuildHandler getBuildHandler( Project project )
@@ -54,6 +54,10 @@ public class BuildHandlerFactory
         else if ( project instanceof XCodeProject)
         {
             return new XCodeBuildHandler();
+        }
+        else if ( project instanceof GradleProject)
+        {
+            return new GradleBuildHandler();
         }
         else if ( project instanceof CommandLineProject )
         {

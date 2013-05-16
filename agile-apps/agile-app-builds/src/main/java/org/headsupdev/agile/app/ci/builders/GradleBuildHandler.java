@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2013 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -18,13 +18,15 @@
 
 package org.headsupdev.agile.app.ci.builders;
 
-import org.headsupdev.agile.api.*;
-import org.headsupdev.agile.app.ci.CIBuilder;
-import org.headsupdev.support.java.ExecUtil;
-import org.headsupdev.support.java.IOUtil;
+import org.headsupdev.agile.api.Manager;
+import org.headsupdev.agile.api.Project;
+import org.headsupdev.agile.api.PropertyTree;
 import org.headsupdev.agile.api.logging.Logger;
 import org.headsupdev.agile.app.ci.CIApplication;
+import org.headsupdev.agile.app.ci.CIBuilder;
 import org.headsupdev.agile.storage.ci.Build;
+import org.headsupdev.support.java.ExecUtil;
+import org.headsupdev.support.java.IOUtil;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -33,15 +35,15 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * The code used to build an ant based project - also parses JUnit test results if applicable.
+ * The code used to build a gradle based project - also parses JUnit test results if applicable.
  *
  * @author Andrew Williams
- * @since 1.0
+ * @since 2.0
  */
-public class AntBuildHandler
+public class GradleBuildHandler
     extends MavenTwoBuildHandler
 {
-    private static Logger log = Manager.getLogger( AntBuildHandler.class.getName() );
+    private static Logger log = Manager.getLogger( GradleBuildHandler.class.getName() );
 
     @Override
     public boolean isReadyToBuild( Project project, CIBuilder builder )
@@ -58,26 +60,26 @@ public class AntBuildHandler
         {
             buildOut = new FileWriter( output, true );
 
-            String antHome = MavenTwoBuildHandler.lookupBuildExecutable( CIApplication.CONFIGURATION_ANT_HOME,
+            String gradleHome = MavenTwoBuildHandler.lookupBuildExecutable( CIApplication.CONFIGURATION_GRADLE_HOME,
                     config, appConfig, build, output );
-            if ( antHome == null )
+            if ( gradleHome == null )
             {
                 return;
             }
 
-            String tasksProperty = config.getProperty( CIApplication.CONFIGURATION_ANT_TASKS.getKey() );
+            String tasksProperty = config.getProperty( CIApplication.CONFIGURATION_GRADLE_TASKS.getKey() );
             if ( tasksProperty == null )
             {
-                tasksProperty = (String) CIApplication.CONFIGURATION_ANT_TASKS.getDefault();
+                tasksProperty = (String) CIApplication.CONFIGURATION_GRADLE_TASKS.getDefault();
             }
             List<String> commands = new ArrayList<String>( Arrays.asList( tasksProperty.split( " " ) ) );
 
-            File antExe = new File( antHome, "ant" );
-            if ( !antExe.exists() )
+            File gradleExe = new File( gradleHome, "gradle" );
+            if ( !gradleExe.exists() )
             {
-                antExe = new File( antHome, "ant.bat" );
+                gradleExe = new File( gradleHome, "gradle.bat" );
             }
-            commands.add( 0, antExe.getAbsolutePath() );
+            commands.add( 0, gradleExe.getAbsolutePath() );
             result = ExecUtil.executeLoggingExceptions( commands, dir, buildOut, buildOut );
         }
         catch ( IOException e )
@@ -107,7 +109,7 @@ public class AntBuildHandler
 
     protected static File findJUnitReports( File inDir )
     {
-        return new File( new File( inDir, "target" ), "surefire-reports" );
+        return new File( inDir, "reports" );
     }
 
     @Override

@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2013 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -75,11 +75,17 @@ public class CIApplication
     public static final ConfigurationItem CONFIGURATION_ANT_HOME = new ConfigurationItem( "ant.home",
         "", "Ant Home Directory", "Change this parameter if you wish to use a particular version of ant " +
         "or if your ant installation is not in the system path" );
+    public static final ConfigurationItem CONFIGURATION_GRADLE_HOME = new ConfigurationItem( "gradle.home",
+            "", "Gradle Home Directory", "Change this parameter if you wish to use a particular version of gradle " +
+            "or if your gradle installation is not in the system path" );
     public static final ConfigurationItem CONFIGURATION_ECLIPSE_HOME = new ConfigurationItem( "eclipse.home",
         "", "Eclipse home directory", "The directory where Eclipse is installed" );
 
     public static final ConfigurationItem CONFIGURATION_ANT_TASKS = new ConfigurationItem( "ant.tasks",
             "", "Ant build tasks", "A space separated list of ant tasks to run when building" );
+
+    public static final ConfigurationItem CONFIGURATION_GRADLE_TASKS = new ConfigurationItem( "gradle.tasks",
+            "", "Gradle build tasks", "A space separated list of gradle tasks to run when building" );
 
     public static final ConfigurationItem CONFIGURATION_MAVEN_GOALS = new ConfigurationItem( "maven.goals",
         "clean install", "Maven build goals", "A space separated list of maven goals and phases to run when building" );
@@ -108,6 +114,19 @@ public class CIApplication
             PropertyTree appConfig = CIApplication.this.getConfiguration();
 
             return appConfig.getProperty( CONFIGURATION_ANT_HOME.getKey(), (String) CONFIGURATION_ANT_HOME.getDefault() );
+        }
+    };
+
+    public final ConfigurationItem CONFIGURATION_GRADLE_HOME_OVERRIDE = new ConfigurationItem( "gradle.home",
+            "", "Gradle Home Directory", "Use this option to specify a different gradle installation for " +
+            "this build schedule" )
+    {
+        @Override
+        public Object getDefault()
+        {
+            PropertyTree appConfig = CIApplication.this.getConfiguration();
+
+            return appConfig.getProperty( CONFIGURATION_GRADLE_HOME.getKey(), (String) CONFIGURATION_GRADLE_HOME.getDefault() );
         }
     };
 
@@ -159,6 +178,7 @@ public class CIApplication
     protected List<ConfigurationItem> globalItems = new LinkedList<ConfigurationItem>();
 
     protected List<ConfigurationItem> antProjectItems = new LinkedList<ConfigurationItem>();
+    protected List<ConfigurationItem> gradleProjectItems = new LinkedList<ConfigurationItem>();
     protected List<ConfigurationItem> eclipseProjectItems = new LinkedList<ConfigurationItem>();
     protected List<ConfigurationItem> cmdProjectItems = new LinkedList<ConfigurationItem>();
     protected List<ConfigurationItem> xcodeProjectItems = new LinkedList<ConfigurationItem>();
@@ -216,6 +236,19 @@ public class CIApplication
         items.add( CONFIGURATION_ANT_HOME_OVERRIDE );
         items.add( CONFIGURATION_CRON_EXPRESSION );
         antProjectItems.add( new ConfigurationItem( "schedule", "Build Schedule",
+                new ConfigurationItem( "schedule", "Build Schedule", items ) ) );
+
+        items = new LinkedList<ConfigurationItem>();
+        items.add( CONFIGURATION_BUILD_NAME );
+        items.add( CONFIGURATION_GRADLE_TASKS );
+        items.add( CONFIGURATION_GRADLE_HOME_OVERRIDE );
+        gradleProjectItems.add( new ConfigurationItem( "schedule.default", "Default Build Schedule", items ) );
+        items = new LinkedList<ConfigurationItem>();
+        items.add( CONFIGURATION_BUILD_NAME );
+        items.add( CONFIGURATION_GRADLE_TASKS );
+        items.add( CONFIGURATION_GRADLE_HOME_OVERRIDE );
+        items.add( CONFIGURATION_CRON_EXPRESSION );
+        gradleProjectItems.add( new ConfigurationItem( "schedule", "Build Schedule",
                 new ConfigurationItem( "schedule", "Build Schedule", items ) ) );
 
         items = new LinkedList<ConfigurationItem>();
@@ -308,6 +341,17 @@ public class CIApplication
         if ( ant != null )
         {
             CONFIGURATION_ANT_HOME.setDefault( ant.getAbsolutePath() );
+        }
+
+        // find a sensible default for gradle.home
+        File gradle = FileUtil.lookupParentInPath( "gradle" );
+        if ( gradle == null )
+        {
+            gradle = FileUtil.lookupParentInPath( "gradle.bat" );
+        }
+        if ( gradle != null )
+        {
+            CONFIGURATION_GRADLE_HOME.setDefault( gradle.getAbsolutePath() );
         }
 
         // lookup the different binaries for eclipse...
@@ -428,6 +472,10 @@ public class CIApplication
         else if ( project instanceof AntProject )
         {
             return antProjectItems;
+        }
+        else if ( project instanceof GradleProject )
+        {
+            return gradleProjectItems;
         }
         else if ( project instanceof EclipseProject )
         {

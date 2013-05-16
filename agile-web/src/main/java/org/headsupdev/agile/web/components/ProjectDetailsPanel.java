@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2013 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -18,13 +18,7 @@
 
 package org.headsupdev.agile.web.components;
 
-import org.headsupdev.agile.api.AntProject;
-import org.headsupdev.agile.api.EclipseProject;
-import org.headsupdev.agile.api.HeadsUpConfiguration;
-import org.headsupdev.agile.api.Manager;
-import org.headsupdev.agile.api.MavenTwoProject;
-import org.headsupdev.agile.api.Project;
-import org.headsupdev.agile.api.XCodeProject;
+import org.headsupdev.agile.api.*;
 import org.headsupdev.agile.storage.issues.IssueHelper;
 import org.headsupdev.agile.web.HeadsUpPage;
 import org.apache.wicket.AttributeModifier;
@@ -37,7 +31,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 
 /**
- * TODO document me
+ * Displaying details for the various types of project
  *
  * @author Andrew Williams
  * @since 1.0
@@ -101,6 +95,24 @@ public class ProjectDetailsPanel
             add( new WebMarkupContainer( "xcode-version" ).setVisible( false ) );
             add( new WebMarkupContainer( "xcode-platform" ).setVisible( false ) );
             add( new WebMarkupContainer( "xcode-bundleid" ).setVisible( false ) );
+        }
+        else if ( project instanceof GradleProject )
+        {
+            add( new Image( "type-icon", new ResourceReference( HeadsUpPage.class, "images/packaging/gradle.png" ) ) );
+            add( new Label( "groupId", ( (GradleProject) project ).getGroup() ) );
+            add( new Label( "version", ( (GradleProject) project ).getVersion() ) );
+//            add( new Label( "description", ( (GradleProject) project ).getDescription() ) );
+
+            add( new WebMarkupContainer( "artifactId" ).setVisible( false ) );
+            add( new WebMarkupContainer( "packaging" ).setVisible( false ) );
+            add( new WebMarkupContainer( "packaging-icon" ).setVisible( false ) );
+            add( new WebMarkupContainer( "xcode-version" ).setVisible( false ) );
+            add( new WebMarkupContainer( "xcode-platform" ).setVisible( false ) );
+            add( new WebMarkupContainer( "xcode-bundleid" ).setVisible( false ) );
+
+            add( new WebMarkupContainer( "module" ).setVisible( false ) );
+            add( new WebMarkupContainer( "org" ).setVisible( false ) );
+            add( new WebMarkupContainer( "revision" ).setVisible( false ) );
         }
         else if ( project instanceof EclipseProject )
         {

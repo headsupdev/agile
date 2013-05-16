@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2013 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -158,7 +158,18 @@ public class AddProject
                     }
                 };
             }
-            else if ( ( new StoredAntProject() ).foundMetadata( checkoutDir ) )
+            else if ( ( new StoredGradleProject() ).foundMetadata( checkoutDir ) )
+            {
+                importer = new GradleProjectImporter( "detail", AddProject.this, checkoutDir )
+                {
+                    @Override
+                    protected void submitForm( Form form )
+                    {
+                        super.submitForm( form );
+                        detailsSubmitted();
+                    }
+                };
+            }            else if ( ( new StoredAntProject() ).foundMetadata( checkoutDir ) )
             {
                 importer = new AntProjectImporter( "detail", AddProject.this, checkoutDir )
                 {

@@ -1,6 +1,6 @@
 <!--
   ~ HeadsUp Agile
-  ~ Copyright 2009-2012 Heads Up Development Ltd.
+  ~ Copyright 2009-2013 Heads Up Development Ltd.
   ~
   ~ This program is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU Affero General Public License as
@@ -44,6 +44,7 @@
     <mapping class="org.headsupdev.agile.storage.StoredProject" />
     <mapping class="org.headsupdev.agile.storage.StoredMavenTwoProject" />
     <mapping class="org.headsupdev.agile.storage.StoredAntProject" />
+    <mapping class="org.headsupdev.agile.storage.StoredGradleProject" />
     <mapping class="org.headsupdev.agile.storage.StoredEclipseProject" />
     <mapping class="org.headsupdev.agile.storage.StoredXCodeProject" />
     <mapping class="org.headsupdev.agile.storage.StoredFileProject" />
