@@ -219,6 +219,7 @@ public class EclipseBuildHandler
             buildOut = new FileWriter( output );
 
             result = ExecUtil.executeLoggingExceptions( commands, buildOut, buildOut );
+            convertAndroidBuildLibraries( buildDir, buildOut );
         }
         catch ( IOException e )
         {
@@ -231,6 +232,45 @@ public class EclipseBuildHandler
         }
 
         return result == 0;
+    }
+
+    protected void convertAndroidBuildLibraries( File buildDir, Writer buildOut )
+    {
+        try
+        {
+            BufferedReader reader = new BufferedReader( new FileReader( new File( buildDir, "project.properties" ) ) );
+
+            String line;
+            while ( ( line = reader.readLine() ) != null )
+            {
+                if ( line.trim().startsWith( "android.library.reference." ) )
+                {
+                    String path = line.substring( line.indexOf( "=" ) + 1 ).trim();
+                    convertAndroidBuildDirectoryToLibrary( buildDir, path, buildOut );
+                }
+            }
+        }
+        catch ( IOException e )
+        {
+            try
+            {
+                buildOut.write( "Error reading project.properties: " + e.getMessage() );
+            }
+            catch ( IOException e1 )
+            {
+                // ignore this one
+            }
+        }
+    }
+
+    protected void convertAndroidBuildDirectoryToLibrary( File buildDir, String dirName, Writer buildOut )
+    {
+        log.debug( "Converting eclipse subdirectory to library for " + dirName );
+
+        File libDir = new File( buildDir, dirName );
+        List<String> commands = Arrays.asList( "android", "update", "lib-project", "--path", libDir.getAbsolutePath() );
+
+        ExecUtil.executeLoggingExceptions( commands, buildOut, buildOut );
     }
 
     protected void runAndroidAntBuild( Project project, final PropertyTree eclipseConfig, PropertyTree appConfig, String target,
