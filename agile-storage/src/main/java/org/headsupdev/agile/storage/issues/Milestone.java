@@ -24,7 +24,6 @@ import org.headsupdev.agile.api.SearchResult;
 import org.headsupdev.agile.api.rest.Publish;
 import org.headsupdev.agile.storage.Comment;
 import org.headsupdev.agile.storage.HibernateStorage;
-import org.headsupdev.agile.storage.resource.ResourceManagerImpl;
 import org.headsupdev.agile.storage.hibernate.NameProjectBridge;
 import org.headsupdev.agile.storage.hibernate.NameProjectId;
 import org.hibernate.annotations.Type;
