@@ -3,6 +3,7 @@
 * Group "other" user dashboard issues by project
 * Added issues, milestones and userdashboard endpoints to the available APIs
 * Add Gradle project support
+* Add QR codes for easier access to app install links
 
 * Fix issue where time logged when resolving an issue was not being saved
 * Fix issue where eclipse android projects could not reference local libraries

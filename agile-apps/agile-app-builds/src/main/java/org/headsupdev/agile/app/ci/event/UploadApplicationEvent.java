@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2013 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -51,7 +51,8 @@ public class UploadApplicationEvent
     {
         super( type + " " + name + getVersionString( version ) + " (build " + build.getId() + ") deployed",
             getVersionTitle( version ) + type.toLowerCase() + " " + name + " was deployed to the " +
-             repoName + " repository<br /><a href=\"" + path + "\">Install</a>", new Date() );
+                    repoName + " repository<br /><a href=\"" + path + "\">Install</a>" +
+                    "<img src=\"/qrcode.png?path=" + path + "\" style=\"margin-top: -108px;height: 150px;float:right;\">", new Date() );
 
         setApplicationId( "artifacts" );
         setProject( build.getProject() );

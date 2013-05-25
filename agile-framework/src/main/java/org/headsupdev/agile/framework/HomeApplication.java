@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2013 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -23,6 +23,7 @@ import org.headsupdev.agile.api.rest.Api;
 import org.headsupdev.agile.framework.rest.ConfigurationApi;
 import org.headsupdev.agile.web.LoadingPage;
 import org.headsupdev.agile.web.AbstractApplication;
+import org.headsupdev.agile.web.QRCode;
 import org.headsupdev.agile.web.SystemEvent;
 import org.headsupdev.agile.framework.rest.ProjectApi;
 import org.headsupdev.agile.framework.error.*;
@@ -112,7 +113,7 @@ public class HomeApplication
 
     @Override
     public Class[] getResources() {
-        return new Class[]{ DynamicEmbed.class };
+        return new Class[]{ DynamicEmbed.class, QRCode.class };
     }
 
     public Class<? extends Page>[] getPages()

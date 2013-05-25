@@ -1,6 +1,6 @@
 <!--
   ~ HeadsUp Agile
-  ~ Copyright 2009-2012 Heads Up Development Ltd.
+  ~ Copyright 2009-2013 Heads Up Development Ltd.
   ~
   ~ This program is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU Affero General Public License as
@@ -101,6 +101,12 @@
       <scope>provided</scope>
     </dependency>
 
+    <dependency>
+      <groupId>com.google.zxing</groupId>
+      <artifactId>core</artifactId>
+      <version>2.2</version>
+    </dependency>
+
     <!-- Wicket dependency -->
     <dependency>
       <groupId>org.slf4j</groupId>
@@ -131,7 +137,7 @@
               org.joda.time.*;version="1.6.0",
               javax.servlet.*
             ]]></Export-Package>
-            <Private-Package>org.headsupdev.agile,org.json.simple.*,org.apache.log4j.*,${bundle.namespace}.*</Private-Package>
+            <Private-Package>org.headsupdev.agile,org.json.simple.*,org.apache.log4j.*,com.google.zxing.*,${bundle.namespace}.*</Private-Package>
             <Import-Package><![CDATA[
               org.headsupdev.agile.api.*,
               org.headsupdev.agile.security.*,
