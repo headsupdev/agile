@@ -39,6 +39,7 @@ import java.util.List;
 
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.headsupdev.support.java.StringUtil;
 
 /**
  * Event added when a CI build is successful
@@ -65,12 +66,24 @@ public class BuildSucceededEvent
 
     protected BuildSucceededEvent( Build build, String result )
     {
-        super( "Build " + build.getId() + " " + result, "Completed in " +
+        super( getTitleForBuildEvent( build, result ), "Completed in " +
                 FormattedDurationModel.parseDuration( build.getStartTime(), build.getEndTime() ), build.getEndTime() );
 
         setApplicationId( CIApplication.ID );
         setProject( build.getProject() );
         setObjectId( String.valueOf( build.getId() ) );
+    }
+
+    protected static String getTitleForBuildEvent( Build build, String result )
+    {
+        String title = "Build " + build.getId();
+
+        if ( !StringUtil.isEmpty( build.getConfigName() ) )
+        {
+            title += " \"" + build.getConfigName() + "\"";
+        }
+
+        return title + " " + result;
     }
 
     public String getBody()

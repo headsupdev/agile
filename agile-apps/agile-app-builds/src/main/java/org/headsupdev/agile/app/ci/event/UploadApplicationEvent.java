@@ -20,6 +20,7 @@ package org.headsupdev.agile.app.ci.event;
 
 import org.headsupdev.agile.storage.ci.Build;
 import org.headsupdev.agile.web.AbstractEvent;
+import org.headsupdev.support.java.StringUtil;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -49,7 +50,7 @@ public class UploadApplicationEvent
     protected UploadApplicationEvent( String name, String version, String repoName, String path, Build build,
                                    String type )
     {
-        super( type + " " + name + getVersionString( version ) + " (build " + build.getId() + ") deployed",
+        super( getTitleForBuildEvent( name, version, build, type ),
             getVersionTitle( version ) + type.toLowerCase() + " " + name + " was deployed to the " +
                     repoName + " repository<br /><a href=\"" + path + "\">Install</a>" +
                     "<img src=\"/qrcode.png?path=" + path + "\" style=\"margin-top: -108px;height: 150px;float:right;\">", new Date() );
@@ -57,6 +58,18 @@ public class UploadApplicationEvent
         setApplicationId( "artifacts" );
         setProject( build.getProject() );
         setObjectId( repoName + ',' + path );
+    }
+
+    protected static String getTitleForBuildEvent( String name, String version, Build build, String type )
+    {
+
+        String title = type + " " + name + getVersionString( version ) + " (build " + build.getId();
+        if ( !StringUtil.isEmpty( build.getConfigName() ) )
+        {
+            title += " \"" + build.getConfigName() + "\"";
+        }
+
+        return title + ") deployed";
     }
 
     public String getLink()

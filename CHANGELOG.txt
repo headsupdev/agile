@@ -9,6 +9,7 @@
 * Fix issue where eclipse android projects could not reference local libraries
 * Issue:57 Random ordering of durationworkeds if times match
 * Various DB optimisations
+* Issue:55 Include build config name in artefact upload events and build events
 
 
 2.0-beta4
