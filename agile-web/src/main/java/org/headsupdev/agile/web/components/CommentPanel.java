@@ -94,7 +94,7 @@ public class CommentPanel extends Panel
             DurationWorked worked = (DurationWorked) o;
             if ( worked.getWorked() == null || worked.getWorked().getHours() == 0 )
             {
-                setVisible(false);
+                setVisible( false );
                 return;
             }
             String time = "";

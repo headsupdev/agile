@@ -175,6 +175,11 @@ public class Account
                     listItem.setVisible( false );
                     return;
                 }
+                if ( worked.getWorked() == null || worked.getWorked().getHours() == 0 )
+                {
+                    listItem.setVisible( false );
+                    return;
+                }
 
                 WebMarkupContainer workedTitle = new WebMarkupContainer( "worked-title" );
                 listItem.add( new Image( "icon", new ResourceReference( HeadsUpPage.class, "images/worked.png" ) ) );
