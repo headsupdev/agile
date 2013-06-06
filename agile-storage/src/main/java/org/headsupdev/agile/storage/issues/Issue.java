@@ -164,6 +164,7 @@ public class Issue
     private Set<IssueRelationship> reverseRelationships = new HashSet<IssueRelationship>();
 
     @ManyToOne
+    @Publish
     private Milestone milestone;
 
     @ManyToMany(targetEntity = ScmChangeSet.class)

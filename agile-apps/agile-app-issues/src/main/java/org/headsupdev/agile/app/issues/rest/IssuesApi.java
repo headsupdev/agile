@@ -18,16 +18,20 @@
 
 package org.headsupdev.agile.app.issues.rest;
 
+import com.google.gson.*;
 import org.apache.wicket.model.util.ListModel;
 import org.headsupdev.agile.api.Permission;
 import org.headsupdev.agile.app.issues.dao.IssuesDAO;
 import org.headsupdev.agile.app.issues.permission.IssueListPermission;
 import org.headsupdev.agile.storage.StoredProject;
 import org.headsupdev.agile.storage.issues.Issue;
+import org.headsupdev.agile.storage.issues.Milestone;
 import org.headsupdev.agile.web.MountPoint;
 import org.headsupdev.agile.web.rest.HeadsUpApi;
 
 import org.apache.wicket.PageParameters;
+
+import java.lang.reflect.Type;
 
 /**
  * An issues API that provides a simple list of issues per project.
@@ -49,6 +53,14 @@ public class IssuesApi
     }
 
     @Override
+    public void setupJson( GsonBuilder builder )
+    {
+        super.setupJson( builder );
+
+        builder.registerTypeHierarchyAdapter( Milestone.class, new MilestoneAdapter() );
+    }
+
+    @Override
     public Permission getRequiredPermission()
     {
         return new IssueListPermission();
@@ -64,6 +76,15 @@ public class IssuesApi
         else
         {
             setModel( new ListModel<Issue>( dao.findAll( getProject() ) ) );
+        }
+    }
+
+    private class MilestoneAdapter implements JsonSerializer<Milestone>
+    {
+        @Override
+        public JsonElement serialize( Milestone milestone, Type type, JsonSerializationContext jsonSerializationContext )
+        {
+            return new JsonPrimitive( milestone.getName() );
         }
     }
 }
