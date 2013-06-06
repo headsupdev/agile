@@ -200,7 +200,7 @@
       <dependency>
         <groupId>ms.ajwillia</groupId>
         <artifactId>wicket-rest-api</artifactId>
-        <version>0.4</version>
+        <version>0.4.1</version>
       </dependency>
       <dependency>
         <groupId>org.opensymphony.quartz</groupId>
