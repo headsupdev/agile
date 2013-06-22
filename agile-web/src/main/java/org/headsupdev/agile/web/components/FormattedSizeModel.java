@@ -22,7 +22,7 @@ import com.ibm.icu.text.DecimalFormat;
 import org.apache.wicket.model.Model;
 
 /**
- * TODO Document me!
+ * A rendering for file sizes using the IEC standard notation - http://members.optus.net/alexey/prefBin.xhtml
  *
  * @author Andrew Williams
  * @version $Id$

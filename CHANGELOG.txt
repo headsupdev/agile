@@ -11,6 +11,8 @@
 * Various DB optimisations
 * Issue:55 Include build config name in artefact upload events and build events
 * Correct encoding of JSON API (to UTF-8)
+* Correct rendering of file sizes to IEC standards
+* Fix an issue with the file "updates" page hanging
 
 
 2.0-beta4
