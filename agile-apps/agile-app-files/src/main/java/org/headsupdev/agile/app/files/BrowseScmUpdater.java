@@ -61,7 +61,7 @@ public class BrowseScmUpdater
 
     public BrowseScmUpdater()
     {
-        updater = new Thread()
+        updater = new Thread( "PollingFileUpdater" )
         {
             public void run()
             {
@@ -143,6 +143,23 @@ public class BrowseScmUpdater
     }
 
     protected void updateProjects()
+    {
+        if ( updating )
+        {
+            return;
+        }
+
+        new Thread( "ManualFileUpdater" )
+        {
+            @Override
+            public void run()
+            {
+                doUpdateProjects();
+            }
+        }.start();
+    }
+
+    protected void doUpdateProjects()
     {
         if ( updating )
         {

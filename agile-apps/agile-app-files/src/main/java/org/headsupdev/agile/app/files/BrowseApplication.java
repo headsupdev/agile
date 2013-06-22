@@ -53,6 +53,7 @@ public class BrowseApplication
     public BrowseApplication()
     {
         links = new LinkedList<MenuLink>();
+        links.add( new SimpleMenuLink( "update" ) );
 
         eventTypes = new LinkedList<String>();
         eventTypes.add( "filechangeset" );
