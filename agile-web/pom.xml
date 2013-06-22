@@ -106,6 +106,11 @@
       <artifactId>core</artifactId>
       <version>2.2</version>
     </dependency>
+    <dependency>
+      <groupId>com.ibm.icu</groupId>
+      <artifactId>icu4j</artifactId>
+      <version>4.8.1.1</version>
+    </dependency>
 
     <!-- Wicket dependency -->
     <dependency>
@@ -137,7 +142,7 @@
               org.joda.time.*;version="1.6.0",
               javax.servlet.*
             ]]></Export-Package>
-            <Private-Package>org.headsupdev.agile,org.json.simple.*,org.apache.log4j.*,com.google.zxing.*,${bundle.namespace}.*</Private-Package>
+            <Private-Package>org.headsupdev.agile,org.json.simple.*,org.apache.log4j.*,com.google.zxing.*,com.ibm.icu.*,${bundle.namespace}.*</Private-Package>
             <Import-Package><![CDATA[
               org.headsupdev.agile.api.*,
               org.headsupdev.agile.security.*,

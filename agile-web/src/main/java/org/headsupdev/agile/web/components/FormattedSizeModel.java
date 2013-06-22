@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2013 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -18,6 +18,7 @@
 
 package org.headsupdev.agile.web.components;
 
+import com.ibm.icu.text.DecimalFormat;
 import org.apache.wicket.model.Model;
 
 /**
@@ -31,6 +32,7 @@ public class FormattedSizeModel
     extends Model<String>
 {
     private long size;
+    private static ThreadLocal<DecimalFormat> formatterLocal = new ThreadLocal<DecimalFormat>();
 
     public FormattedSizeModel( long size )
     {
@@ -42,24 +44,41 @@ public class FormattedSizeModel
         return formatSize( size );
     }
 
-    public static String formatSize( long size )
+    public static String formatSize( long bytes )
     {
+        double size = bytes;
         if ( size < 1024 ) {
-            return String.valueOf( size ) + " bytes";
+            return getFormatter().format( size ) + " Bytes";
         }
         size /= 1024;
         if ( size < 1024 ) {
-            return String.valueOf( size ) + " kB";
+            return getFormatter().format( size ) + " KiB";
         }
         size /= 1024;
         if ( size < 1024 ) {
-            return String.valueOf( size ) + " MB";
+            return getFormatter().format( size ) + " MiB";
         }
         size /= 1024;
         if ( size < 1024 ) {
-            return String.valueOf( size ) + " GB";
+            return getFormatter().format( size ) + " GiB";
         }
         size /= 1024;
-        return String.valueOf( size ) + " TB";
+        return getFormatter().format( size ) + " TiB";
+    }
+
+    protected static DecimalFormat getFormatter()
+    {
+        DecimalFormat formatter = formatterLocal.get();
+        if ( formatter != null )
+        {
+            return formatter;
+        }
+
+        formatter = new DecimalFormat();
+        formatter.setMaximumSignificantDigits( 3 );
+        formatter.setSignificantDigitsUsed( true );
+
+        formatterLocal.set( formatter );
+        return formatter;
     }
 }
