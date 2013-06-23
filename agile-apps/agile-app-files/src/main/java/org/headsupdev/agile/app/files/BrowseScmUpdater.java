@@ -133,7 +133,7 @@ public class BrowseScmUpdater
 
     public void queueProject( Project project )
     {
-        if ( !pendingUpdates.contains( project ) )
+        if ( !pendingUpdates.contains( project.getId() ) )
         {
             if ( project.getParent() == null )
             {
@@ -382,6 +382,7 @@ public class BrowseScmUpdater
                 }
                 log.info( "Found " + diff.getChangedFiles() + " file diffs" );
 
+                boolean shouldNotify = !importing || !changeList.hasNext();
                 session = HibernateUtil.openSession();
                 tx = session.beginTransaction();
                 try {
@@ -454,11 +455,11 @@ public class BrowseScmUpdater
                     {
                         if ( variant.isTransactional() )
                         {
-                            affected.add( updateFile( project, file.getName(), revision, session, importing ) );
+                            affected.add( updateFile( project, file.getName(), revision, session, shouldNotify ) );
                         }
                         else
                         {
-                            affected.add( updateFile( project, file.getName(), file.getRevision(), session, importing ) );
+                            affected.add( updateFile( project, file.getName(), file.getRevision(), session, shouldNotify ) );
                         }
                     }
 
@@ -499,7 +500,7 @@ e.printStackTrace();
 
                 for ( Project affect : affected )
                 {
-                    application.addEvent( new FileChangeSetEvent( set, affect ), !importing );
+                    application.addEvent( new FileChangeSetEvent( set, affect ), shouldNotify );
                 }
             }
         }
@@ -555,7 +556,7 @@ e.printStackTrace();
     {
     }
 
-    protected Project updateFile( Project project, String path, String revision, Session session, boolean importing )
+    protected Project updateFile( Project project, String path, String revision, Session session, boolean shouldNotify )
     {
         File file = new File( path );
         session.merge( new org.headsupdev.agile.storage.files.File( path, revision, project ) );
@@ -567,10 +568,10 @@ e.printStackTrace();
             session.merge( new org.headsupdev.agile.storage.files.File( file.getPath(), revision, project ) );
         }
 
-        return getChangedProjects( path, project, "", session, importing );
+        return getChangedProjects( path, project, "", session, shouldNotify );
     }
 
-    private Project getChangedProjects( String path, Project project, String rel, Session session, boolean importing )
+    private Project getChangedProjects( String path, Project project, String rel, Session session, boolean shouldNotify )
     {
         char sep;
         String test = rel;
@@ -594,7 +595,7 @@ e.printStackTrace();
         {
             int scmDiff = child.getScm().length() - project.getScm().length();
             Project possible = getChangedProjects( path, child, rel + child.getScm().substring( child.getScm().length() - scmDiff ),
-                session, importing );
+                session, shouldNotify );
 
             if ( possible != null )
             {
@@ -602,7 +603,7 @@ e.printStackTrace();
             }
         }
 
-        if ( !importing )
+        if ( shouldNotify )
         {
             Project root = project;
             while ( root.getParent() != null )

@@ -67,11 +67,14 @@ public class CIBuilder
             return;
         }
 
-        if ( !isProjectQueued( project ) )
+        synchronized ( pendingBuilds )
         {
-            queueBuild(new CIQueuedBuild(project, id, config, notify));
+            if ( !isProjectQueued( project ) )
+            {
+                queueBuild( new CIQueuedBuild( project, id, config, notify ) );
 
-            buildProjects();
+                buildProjects();
+            }
         }
     }
 
@@ -150,10 +153,19 @@ public class CIBuilder
         }
 
         building = true;
-        new Thread()
+        new Thread( "CIBuilderWorker" )
         {
             public void run()
             {
+                try
+                {
+                    Thread.sleep( 15000 );
+                }
+                catch ( InterruptedException e )
+                {
+                    // ignore, we were just pausing to avoid dupes...
+                }
+
                 try
                 {
                     while ( pendingBuilds.size() > 0 )

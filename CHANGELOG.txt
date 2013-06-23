@@ -4,6 +4,7 @@
 * Added issues, milestones and userdashboard endpoints to the available APIs
 * Add Gradle project support
 * Add QR codes for easier access to app install links
+* issue:agile-app-builds:1 Build projects once their import is complete
 
 * Fix issue where time logged when resolving an issue was not being saved
 * Fix issue where eclipse android projects could not reference local libraries
@@ -13,6 +14,7 @@
 * Correct encoding of JSON API (to UTF-8)
 * Correct rendering of file sizes to IEC standards
 * Fix an issue with the file "updates" page hanging
+* Fix a problem where projects would simetimes build more than once for a single changeset
 
 
 2.0-beta4
