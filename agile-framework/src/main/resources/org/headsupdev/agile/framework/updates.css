@@ -39,8 +39,3 @@ div.error {
 div.progress {
     padding-bottom: 10px;
 }
-
-div.wicketstuff-progressbar span.bar {
-    background-color: #000000;
-    background-image: url( images/progress-bg.png );
-}
