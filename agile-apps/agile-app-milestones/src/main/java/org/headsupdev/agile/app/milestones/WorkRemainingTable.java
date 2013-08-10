@@ -23,6 +23,7 @@ import org.headsupdev.agile.api.User;
 import org.headsupdev.agile.storage.StoredProject;
 import org.headsupdev.agile.storage.issues.*;
 import org.headsupdev.agile.storage.resource.DurationWorked;
+import org.headsupdev.agile.web.components.AccountFallbackLink;
 import org.headsupdev.agile.web.components.StripedListView;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -92,7 +93,7 @@ public class WorkRemainingTable
                     return;
                 }
 
-                listItem.add( new Label( "user", user.getFullnameOrUsername() ) );
+                listItem.add( new AccountFallbackLink( "user", user ) );
 
                 double estimate = 0;
                 double worked = 0;
