@@ -184,11 +184,6 @@ table.vertical th.horizontal, th.horizontal {
 
 h1, h2, h3, h4, h5, h6 {
     margin: 0;
-    white-space: nowrap;
-}
-
-h1 span.summary {
-    white-space: normal;
 }
 
 img {

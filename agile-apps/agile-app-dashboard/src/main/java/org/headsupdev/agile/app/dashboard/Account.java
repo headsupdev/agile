@@ -165,17 +165,12 @@ public class Account
         Duration durationWeek = getResourceManager().getLoggedTimeForUser( user, startOfWeek, endOfWeek );
         add( new Label( "loggedtimeweek", durationWeek == null ? " - " : durationWeek.toString() ) );
 
-        add( new ListView<DurationWorked>( "comments", getRecentDurationWorked( user ) )
+        add( new ListView<DurationWorked>( "comments", getResourceManager().getDurationWorkedForUser( user, startOfWeek, endOfWeek ) )
         {
             protected void populateItem( ListItem<DurationWorked> listItem )
             {
                 DurationWorked worked = listItem.getModelObject();
                 if ( worked.getIssue() == null )
-                {
-                    listItem.setVisible( false );
-                    return;
-                }
-                if ( worked.getWorked() == null || worked.getWorked().getHours() == 0 )
                 {
                     listItem.setVisible( false );
                     return;
@@ -251,16 +246,6 @@ public class Account
                         Order.asc( "status" ), Order.asc( "id.id" ) );
             }
         };
-    }
-
-    public List<DurationWorked> getRecentDurationWorked( org.headsupdev.agile.api.User user )
-    {
-        Session session = ( (HibernateStorage) getStorage() ).getHibernateSession();
-
-        Query q = session.createQuery( "from DurationWorked d where user = :user order by day desc" );
-        q.setEntity( "user", user );
-        q.setMaxResults( 10 );
-        return q.list();
     }
 
     public List<Event> getEventsForUser( org.headsupdev.agile.api.User user )

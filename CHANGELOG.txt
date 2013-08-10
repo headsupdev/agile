@@ -15,6 +15,7 @@
 * Correct rendering of file sizes to IEC standards
 * Fix an issue with the file "updates" page hanging
 * Fix a problem where projects would simetimes build more than once for a single changeset
+* Issue:60 Upgrade progress bar not updating
 
 
 2.0-beta4

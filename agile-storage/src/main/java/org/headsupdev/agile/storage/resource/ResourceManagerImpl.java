@@ -782,7 +782,7 @@ public class ResourceManagerImpl
         return total / daysWorked;
     }
 
-    protected List<DurationWorked> getDurationWorkedForUser( User user )
+    public List<DurationWorked> getDurationWorkedForUser( User user )
     {
         Session session = ( (HibernateStorage) Manager.getStorageInstance() ).getHibernateSession();
 
@@ -793,7 +793,7 @@ public class ResourceManagerImpl
         return c.list();
     }
 
-    protected List<DurationWorked> getDurationWorkedForUser( User user, Date start, Date end )
+    public List<DurationWorked> getDurationWorkedForUser( User user, Date start, Date end )
     {
         List<DurationWorked> workedList = new ArrayList<DurationWorked>();
         Session session = ( (HibernateStorage) Manager.getStorageInstance() ).getHibernateSession();

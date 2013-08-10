@@ -845,6 +845,13 @@ div.filterborder {
     color: #3ccfff;
 }
 
+/* progress bar */
+div.wicketstuff-progressbar span.bar{
+    background-image: url(/resources/org.headsupdev.agile.web.HeadsUpPage/images/progress-bg.png) !important;
+    background-color: #000 !important;
+    border-color: #000 !important;
+}
+
 /* error page output */
 #stacktrace {
     font-size: 9pt;
