@@ -32,6 +32,7 @@ import org.headsupdev.agile.storage.issues.Milestone;
 import org.headsupdev.agile.web.ApplicationPageMapper;
 import org.headsupdev.agile.web.HeadsUpSession;
 import org.headsupdev.agile.web.RenderUtil;
+import org.headsupdev.agile.web.components.AccountFallbackLink;
 import org.headsupdev.agile.web.components.FormattedDateModel;
 import org.headsupdev.agile.web.components.MarkedUpTextModel;
 import org.headsupdev.agile.web.components.issues.IssueHoursEstimateModel;
@@ -284,6 +285,7 @@ public class IssuePanel
                 }
                 link.add( new Label( "set", "change:" + changeId ) );
                 listItem.add( link );
+                listItem.add( new AccountFallbackLink( "user", change.getAuthor() ) );
                 listItem.add( new Label( "summary", MarkedUpTextModel.markUp( change.getComment(), change.getProject() ) ).setEscapeModelStrings( false ) );
             }
         } );
@@ -296,19 +298,7 @@ public class IssuePanel
         reporterLink.add( new Label( "reporter", issue.getReporter().getFullnameOrUsername() ) );
         add( reporterLink );
 
-        if ( issue.getAssignee() != null )
-        {
-            params = getProjectPageParameters( issue.getProject() );
-            params.add( "username", issue.getAssignee().getUsername() );
-            Link assignedLink = new BookmarkablePageLink( "assigned-link", userPage, params );
-            assignedLink.add( new Label( "assigned", new PropertyModel( issue, "assignee" ) ) );
-            add( assignedLink );
-        }
-        else
-        {
-            add( new WebMarkupContainer( "assigned-link" ).setVisible( false ) );
-        }
-
+        add( new AccountFallbackLink( "assigned-link", issue.getAssignee() ) );
         if ( isSessionUserAssignedToIssue( issue ) )
         {
             addDropIssueButton( issue );

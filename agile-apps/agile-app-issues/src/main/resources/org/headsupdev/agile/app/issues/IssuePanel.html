@@ -50,7 +50,7 @@
           <td class="reporter"><a wicket:id="reporter-link"><span wicket:id="reporter">reporter</span></a></td>
           <th class="assigned">Assigned To</th>
           <td class="assigned">
-              <a wicket:id="assigned-link"><span wicket:id="assigned">assigned</span></a>
+              <span wicket:id="assigned-link">assigned</span>
               <form wicket:id="drop-issue-form" style="display: inline">
                   <input type="submit" wicket:id="drop-issue" value="drop" />
               </form>
@@ -142,9 +142,10 @@
               <tr>
                 <td>
                   <div wicket:id="changeset">
-                    <span class="changeset">is related to changeset</span>
+                    <span class="changeset">is related to</span>
                     <a wicket:id="set-link"><span class="relatedset" wicket:id="set">set</span></a>
-                    <span class="relatedset" wicket:id="summary">summary</span>
+                    <span class="changeset">by <span class="changeuser" wicket:id="user">user</span>
+                    "<span class="relatedset" wicket:id="summary">summary</span>"</span>
                   </div>
                 </td>
               </tr>

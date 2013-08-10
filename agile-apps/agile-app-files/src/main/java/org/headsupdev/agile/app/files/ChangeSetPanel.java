@@ -35,6 +35,7 @@ import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.PageParameters;
+import org.headsupdev.agile.web.components.AccountFallbackLink;
 import org.headsupdev.agile.web.components.FormattedDateModel;
 import org.headsupdev.agile.web.components.MarkedUpTextModel;
 import org.headsupdev.agile.web.RenderUtil;
@@ -68,26 +69,7 @@ public class ChangeSetPanel
             add( new WebMarkupContainer( "revision" ).setVisible( false ) );
         }
 
-        Label authorLabel = new Label( "author-label", changeSet.getAuthor() );
-        Link authorLink;
-        User user = Manager.getSecurityInstance().getUserByUsernameEmailOrFullname( changeSet.getAuthor() );
-        if ( user != null )
-        {
-            PageParameters params = new PageParameters();
-            params.add( "username", user.getUsername() );
-            authorLink = new BookmarkablePageLink( "author-link", RenderUtil.getPageClass( "account" ), params );
-
-            authorLabel = new Label( "author-label", user.getFullnameOrUsername() );
-            authorLink.add( authorLabel );
-            add( authorLink );
-            add( new WebMarkupContainer( "author-label" ).setVisible( false ) );
-        }
-        else
-        {
-            add( new WebMarkupContainer( "author-link" ).setVisible( false ) );
-            add( authorLabel );
-        }
-
+        add( new AccountFallbackLink( "author-link", changeSet.getAuthor() ) );
         add( new Label( "date", new FormattedDateModel( changeSet.getDate(),
                 ( (HeadsUpSession) getSession() ).getTimeZone() ) ) );
         add( new Label( "comment", new MarkedUpTextModel( changeSet.getComment(), changeSet.getProject() ) )
