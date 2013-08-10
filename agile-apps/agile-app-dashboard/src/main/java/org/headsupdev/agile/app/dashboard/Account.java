@@ -154,18 +154,20 @@ public class Account
         add( new Label( "issues-name", user.getFullnameOrUsername() ) );
         add( new IssueListPanel( "issues", getIssuesWatchedBy( finalUser ), this, false, false ) );
 
-        Calendar calendar = Calendar.getInstance();
-        Date startOfWeek = DateUtil.getStartOfWeekCurrent( calendar );
-        Date endOfWeek = DateUtil.getEndOfWeekCurrent( calendar );
+        Calendar calendar = Calendar.getInstance( user.getTimeZone() );
         Date startOfToday = DateUtil.getStartOfToday( calendar );
         Date endOfToday = DateUtil.getEndOfToday( calendar );
 
+        calendar.setTime( startOfToday );
+        calendar.add( Calendar.DATE, -7 );
+        Date startOfWeek = calendar.getTime();
+
         Duration durationDay = getResourceManager().getLoggedTimeForUser( user, startOfToday, endOfToday );
         add( new Label( "loggedtimeday", durationDay == null ? " - " : durationDay.toString() ) );
-        Duration durationWeek = getResourceManager().getLoggedTimeForUser( user, startOfWeek, endOfWeek );
+        Duration durationWeek = getResourceManager().getLoggedTimeForUser( user, startOfWeek, endOfToday );
         add( new Label( "loggedtimeweek", durationWeek == null ? " - " : durationWeek.toString() ) );
 
-        add( new ListView<DurationWorked>( "comments", getResourceManager().getDurationWorkedForUser( user, startOfWeek, endOfWeek ) )
+        add( new ListView<DurationWorked>( "comments", getResourceManager().getDurationWorkedForUser( user, startOfWeek, endOfToday ) )
         {
             protected void populateItem( ListItem<DurationWorked> listItem )
             {
