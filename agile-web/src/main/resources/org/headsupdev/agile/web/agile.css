@@ -845,6 +845,33 @@ div.filterborder {
     color: #3ccfff;
 }
 
+/* autocomplete */
+div.wicket-aa {
+    border: 1px solid lightgray;
+}
+
+div.wicket-aa ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+div.wicket-aa li {
+    color: #545A5A;
+    font-size: 12pt;
+    text-align: left;
+    padding: 2px 4px;
+
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+div.wicket-aa li.selected {
+    color: #1298c4;
+    background-color: #F0F1EA;
+    cursor: pointer;
+}
+
 /* progress bar */
 div.wicketstuff-progressbar span.bar{
     background-image: url(/resources/org.headsupdev.agile.web.HeadsUpPage/images/progress-bg.png) !important;

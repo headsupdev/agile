@@ -4,6 +4,7 @@
 
 * Fix issue:64 where progressing an issue can appear to alter the time remaining incorrectly
 * Fix issue:62 - don't reset the platform in an xcode project unless the info file is being parsed
+* Fix issue:agile-app-issues:1 autocomplete issue titles when creating relationships
 
 2.0-rc1
 

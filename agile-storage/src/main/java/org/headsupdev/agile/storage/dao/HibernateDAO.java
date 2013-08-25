@@ -38,7 +38,7 @@ import java.util.List;
  * @author Andrew Williams
  * @since 2.0
  */
-public abstract class HibernateDAO<T, U extends Serializable>
+public abstract class HibernateDAO<T, U extends Serializable> implements Serializable
 {
     protected abstract Class<T> getPersistentClass();
     protected Class<T> persistentClass = getPersistentClass();

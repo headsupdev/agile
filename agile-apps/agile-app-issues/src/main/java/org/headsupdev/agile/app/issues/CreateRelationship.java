@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2013 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -18,6 +18,8 @@
 
 package org.headsupdev.agile.app.issues;
 
+import org.apache.wicket.extensions.ajax.markup.html.autocomplete.*;
+import org.headsupdev.agile.app.issues.dao.IssuesDAO;
 import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.BookmarkableMenuLink;
 import org.headsupdev.agile.web.MountPoint;
@@ -31,12 +33,13 @@ import org.headsupdev.agile.storage.issues.IssueRelationship;
 import org.headsupdev.agile.app.issues.permission.IssueEditPermission;
 import org.apache.wicket.markup.html.CSSPackageResource;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.hibernate.criterion.Restrictions;
 
 import java.util.Date;
+import java.util.Iterator;
 
 /**
  * Add a relationship for an issue
@@ -50,6 +53,7 @@ public class CreateRelationship
     extends HeadsUpPage
 {
     private Issue issue;
+    private IssuesDAO dao;
 
     public Permission getRequiredPermission()
     {
@@ -79,6 +83,7 @@ public class CreateRelationship
             return;
         }
 
+        this.dao = new IssuesDAO();
         addLink( new BookmarkableMenuLink( getPageClass( "issues/view" ), getPageParameters(), "view" ) );
         this.issue = issue;
 
@@ -95,7 +100,7 @@ public class CreateRelationship
         extends Form
     {
         private Project relatedProject = issue.getProject();
-        private int relatedIssueId = 0;
+        private String relatedIssueText;
         private int type = IssueRelationship.TYPE_LINKED;
 
         public RelationshipForm( String id )
@@ -103,8 +108,47 @@ public class CreateRelationship
             super( id );
             setModel( new CompoundPropertyModel( this ) );
 
-            add( new ProjectTreeDropDownChoice( "relatedProject" ) );
-            add( new TextField( "relatedIssueId" ) );
+            add( new ProjectTreeDropDownChoice( "relatedProject" )
+            {
+                @Override
+                protected boolean wantOnSelectionChangedNotifications()
+                {
+                    return true;
+                }
+            } );
+            add( new AutoCompleteTextField<Issue>( "relatedIssueText" )
+            {
+                @Override
+                protected AutoCompleteBehavior<Issue> newAutoCompleteBehavior( IAutoCompleteRenderer<Issue> renderer,
+                                                                              AutoCompleteSettings settings )
+                {
+                    return super.newAutoCompleteBehavior( new AbstractAutoCompleteTextRenderer<Issue>()
+                    {
+                        @Override
+                        protected String getTextValue( Issue issue )
+                        {
+                            return issue.getId() + ": " + issue.getSummary();
+                        }
+                    }, settings );
+                }
+
+                @Override
+                protected Iterator<Issue> getChoices( String text )
+                {
+                    String searchText = "%" + text + "%";
+                    long maybeId = 0;
+                    try
+                    {
+                        maybeId = Long.parseLong( text );
+                    }
+                    catch ( NumberFormatException e )
+                    {
+                        // ignore
+                    }
+                    return dao.search( Restrictions.or( Restrictions.eq( "id.id", maybeId ),
+                            Restrictions.like( "summary", searchText ) ), relatedProject ).iterator();
+                }
+            } );
 
             add( new DropDownChoice( "type", IssueUtils.getRelationships() ).setChoiceRenderer( new ChoiceRenderer()
             {
@@ -118,10 +162,16 @@ public class CreateRelationship
         public void onSubmit()
         {
             issue = (Issue) ( (HibernateStorage) getStorage() ).getHibernateSession().merge( issue );
+            long relatedIssueId = getIdFromAutocomplete( relatedIssueText );
             Issue related = IssuesApplication.getIssue( relatedIssueId, relatedProject );
             if ( related == null )
             {
-                error( "Could not find issue " + relatedIssueId + " in project " + relatedProject );
+                error( "Could not find issue " + relatedIssueText + " in project " + relatedProject );
+                return;
+            }
+            if ( related.equals( issue ) )
+            {
+                error( "Cannot relate to the current issue" );
                 return;
             }
 
@@ -154,6 +204,34 @@ public class CreateRelationship
             issue.setUpdated( new Date() );
 
             setResponsePage( getPageClass( "issues/view" ), getPageParameters() );
+        }
+    }
+
+    protected long getIdFromAutocomplete( String autocompleteText )
+    {
+        if ( autocompleteText == null )
+        {
+            return 0;
+        }
+
+        int colonPos = autocompleteText.indexOf( ':' );
+        String idString;
+        if ( colonPos == -1 )
+        {
+            idString = autocompleteText;
+        }
+        else
+        {
+            idString = autocompleteText.substring( 0, colonPos );
+        }
+
+        try
+        {
+            return Long.parseLong( idString );
+        }
+        catch ( NumberFormatException e )
+        {
+            return 0;
         }
     }
 }
