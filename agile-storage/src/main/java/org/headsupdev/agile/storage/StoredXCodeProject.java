@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2013 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -269,9 +269,12 @@ public class StoredXCodeProject
             in = null;
 
             File infoFile = null;
-            if ( infoFileName != null ) {
+            if ( infoFileName != null )
+            {
                 infoFile = new File( projectFile.getParentFile().getParentFile(), infoFileName );
-            } else {
+            }
+            else
+            {
                 for ( File possible : projectFile.getParentFile().getParentFile().listFiles() )
                 {
                     if ( possible.getName().endsWith( "Info.plist" ) )
@@ -302,11 +305,11 @@ public class StoredXCodeProject
         BufferedReader in = null;
         try
         {
-            platform = XCODE_PLATFORM_MACOSX;
             if ( infoFile != null ) {
                 Manager.getLogger( getClass().getName() ).info( "Loading extra XCode metadata from " +
                         infoFile.getPath() );
                 boolean foundShortString = false;
+                platform = XCODE_PLATFORM_MACOSX;
 
                 String line;
                 in = new BufferedReader( new InputStreamReader( new FileInputStream( infoFile ) ) );
@@ -340,7 +343,7 @@ public class StoredXCodeProject
                     }
                     else if ( line.contains( ">LSRequiresIPhoneOS<" ) )
                     {
-                        platform = "iOS";
+                        platform = XCODE_PLATFORM_IOS;
                     }
                 }
             }
