@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2013 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -24,6 +24,7 @@ import org.headsupdev.agile.storage.Comment;
 import org.headsupdev.agile.storage.HibernateStorage;
 import org.headsupdev.agile.storage.StoredProject;
 import org.headsupdev.agile.storage.issues.Duration;
+import org.headsupdev.agile.storage.issues.Issue;
 import org.headsupdev.agile.storage.resource.DurationWorked;
 import org.headsupdev.agile.web.HeadsUpSession;
 import org.headsupdev.agile.web.MountPoint;
@@ -130,9 +131,11 @@ public class ProgressIssue
 
         if ( getIssue().getAssignee() == null )
         {
-            getIssue().setAssignee( getSession().getUser() );
-            getIssue().getWatchers().add( getSession().getUser() );
+            getIssue().setAssignee(getSession().getUser());
         }
+
+        getIssue().getWatchers().add( getSession().getUser() );
+        getIssue().setStatus(Issue.STATUS_INPROGRESS);
     }
 
     @Override

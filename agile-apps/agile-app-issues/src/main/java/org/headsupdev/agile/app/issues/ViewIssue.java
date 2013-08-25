@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2013 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -246,16 +246,9 @@ public class ViewIssue
 
             if ( issue.getStatus() < Issue.STATUS_RESOLVED )
             {
-                if ( issue.getStatus() >= Issue.STATUS_INPROGRESS )
+                if ( Boolean.parseBoolean( issue.getProject().getConfigurationValue( StoredProject.CONFIGURATION_TIMETRACKING_ENABLED ) ) )
                 {
-                    if ( Boolean.parseBoolean( issue.getProject().getConfigurationValue( StoredProject.CONFIGURATION_TIMETRACKING_ENABLED ) ) )
-                    {
-                        links.add( new BookmarkableMenuLink( RenderUtil.getPageClass( "issues/progress" ), pageParams, "progress" ) );
-                    }
-                }
-                else
-                {
-                    links.add( new BookmarkableMenuLink( RenderUtil.getPageClass( "issues/begin" ), pageParams, "begin" ) );
+                    links.add( new BookmarkableMenuLink( RenderUtil.getPageClass( "issues/progress" ), pageParams, "progress" ) );
                 }
                 links.add( new BookmarkableMenuLink( RenderUtil.getPageClass( "issues/resolve" ), pageParams, "resolve" ) );
             }
