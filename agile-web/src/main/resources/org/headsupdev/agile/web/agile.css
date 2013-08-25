@@ -848,6 +848,7 @@ div.filterborder {
 /* autocomplete */
 div.wicket-aa {
     border: 1px solid lightgray;
+    background-color: white;
 }
 
 div.wicket-aa ul {
