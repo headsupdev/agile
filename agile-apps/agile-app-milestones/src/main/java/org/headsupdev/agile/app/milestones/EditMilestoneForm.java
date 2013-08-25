@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2013 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -21,10 +21,9 @@ package org.headsupdev.agile.app.milestones;
 import org.headsupdev.agile.storage.HibernateStorage;
 import org.headsupdev.agile.storage.issues.Milestone;
 import org.headsupdev.agile.web.HeadsUpPage;
-import org.headsupdev.agile.web.HeadsUpSession;
+import org.headsupdev.agile.web.components.DateTimeWithTimeZoneField;
 import org.headsupdev.agile.web.components.IdPatternValidator;
 import org.apache.wicket.PageParameters;
-import org.apache.wicket.extensions.yui.calendar.DateTimeField;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
@@ -34,7 +33,6 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 
 import java.util.Date;
-import java.util.TimeZone;
 
 /**
  * The form used when editing / creating a milestone
@@ -95,20 +93,8 @@ public class EditMilestoneForm
             form.add( new WebMarkupContainer( "name" ).setVisible( false ) );
 //            form.add( new Label( "created", new FormattedDateModel( milestone.getCreated() ) ) );
         }
-        form.add( new DateTimeField( "startDate" )
-        {
-            protected TimeZone getClientTimeZone()
-            {
-                return ((HeadsUpSession) getSession()).getTimeZone();
-            }
-        } );
-        form.add( new DateTimeField( "dueDate" )
-        {
-            protected TimeZone getClientTimeZone()
-            {
-                return ((HeadsUpSession) getSession()).getTimeZone();
-            }
-        } );
+        form.add( new DateTimeWithTimeZoneField( "startDate" ) );
+        form.add( new DateTimeWithTimeZoneField( "dueDate" ) );
 
         form.add( new TextArea( "description" ) );
     }

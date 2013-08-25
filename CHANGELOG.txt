@@ -2,6 +2,8 @@
 
 * Remove the unnecessary "begin" issue page - just use progress instead
 
+* Fix bug where progressing an issue can appear to alter the time remaining incorrectly
+
 2.0-rc1
 
 * Group "other" user dashboard issues by project

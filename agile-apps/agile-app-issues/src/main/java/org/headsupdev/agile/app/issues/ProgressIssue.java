@@ -26,17 +26,15 @@ import org.headsupdev.agile.storage.StoredProject;
 import org.headsupdev.agile.storage.issues.Duration;
 import org.headsupdev.agile.storage.issues.Issue;
 import org.headsupdev.agile.storage.resource.DurationWorked;
-import org.headsupdev.agile.web.HeadsUpSession;
 import org.headsupdev.agile.web.MountPoint;
+import org.headsupdev.agile.web.components.DateTimeWithSecondField;
 import org.headsupdev.agile.web.components.DurationEditPanel;
-import org.apache.wicket.extensions.yui.calendar.DateTimeField;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
 import java.util.Date;
-import java.util.TimeZone;
 
 /**
  * A page that allows you to register time worked against an issue.
@@ -72,13 +70,7 @@ public class ProgressIssue
         form.add( update );
 
         duration.setDay( new Date() );
-        form.add( new DateTimeField( "day", new PropertyModel<Date>( duration, "day" ) )
-        {
-            protected TimeZone getClientTimeZone()
-            {
-                return ( (HeadsUpSession) getSession() ).getTimeZone();
-            }
-        } );
+        form.add( new DateTimeWithSecondField( "day", new PropertyModel<Date>( duration, "day" ) ) );
 
         setSubmitLabel( "Progress Issue" );
 
