@@ -225,7 +225,7 @@ public class ViewIssue
     @Override
     public String getPageTitle()
     {
-        return super.getPageTitle() + " :: Issue:" + issueId;
+        return "Issue:" + issueId + PAGE_TITLE_SEPARATOR + super.getPageTitle();
     }
 
     public static List<MenuLink> getLinks( Issue issue )

@@ -77,6 +77,7 @@ public abstract class HeadsUpPage
     public static final Pattern ID_PATTERN = Pattern.compile( "[a-zA-Z0-9-_\\.]*" );
 
     protected static final String DIALOG_PANEL_ID = "agile-dialog";
+    protected static final String PAGE_TITLE_SEPARATOR = " :: ";
 
     private Application application;
     private Project project;
@@ -474,13 +475,15 @@ public abstract class HeadsUpPage
 
     public String getPageTitle()
     {
+        String appProductTitle = getHeadsUpApplication().getName() + PAGE_TITLE_SEPARATOR +
+                getStorage().getGlobalConfiguration().getProductName();
+
         if ( getTitle() == null || getTitle().trim().length() == 0 )
         {
-            return getStorage().getGlobalConfiguration().getProductName() + " :: " + getHeadsUpApplication().getName();
+            return appProductTitle;
         }
 
-        return getStorage().getGlobalConfiguration().getProductName() + " :: " + getHeadsUpApplication().getName() + " :: " +
-            getTitle();
+        return getTitle() + PAGE_TITLE_SEPARATOR + appProductTitle;
     }
 
     @Override

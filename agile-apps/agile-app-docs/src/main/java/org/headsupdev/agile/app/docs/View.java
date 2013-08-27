@@ -200,7 +200,7 @@ public class View
     @Override
     public String getPageTitle()
     {
-        return super.getPageTitle() + " :: " + title;
+        return title + PAGE_TITLE_SEPARATOR + super.getPageTitle();
     }
 
     public static String getContent( Document doc )

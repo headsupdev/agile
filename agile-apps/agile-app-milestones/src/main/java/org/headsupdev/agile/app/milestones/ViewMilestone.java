@@ -174,7 +174,7 @@ public class ViewMilestone
     @Override
     public String getPageTitle()
     {
-        return super.getPageTitle() + " :: " + milestone.getName();
+        return "Milestone:" + milestone.getName() + PAGE_TITLE_SEPARATOR + super.getPageTitle();
     }
 
     protected void addDetails()
