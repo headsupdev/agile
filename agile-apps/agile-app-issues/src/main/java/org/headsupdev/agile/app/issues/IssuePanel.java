@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2013 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -18,7 +18,6 @@
 
 package org.headsupdev.agile.app.issues;
 
-import org.apache.wicket.model.PropertyModel;
 import org.headsupdev.agile.api.Manager;
 import org.headsupdev.agile.api.Project;
 import org.headsupdev.agile.api.User;
@@ -291,7 +290,14 @@ public class IssuePanel
         } );
 
         add( new Label( "status", IssueUtils.getStatusDescription( issue ) ) );
-
+        if ( canSessionUserBeginIssue(issue) )
+        {
+            addBeginIssueButton(issue);
+        }
+        else
+        {
+            add( new Form( "begin-issue-form" ).setVisible( false ) );
+        }
         params = getProjectPageParameters( issue.getProject() );
         params.add( "username", issue.getReporter().getUsername() );
         Link reporterLink = new BookmarkablePageLink( "reporter-link", userPage, params );
@@ -351,6 +357,11 @@ public class IssuePanel
         return issue.getAssignee() != null && issue.getAssignee().equals( getSessionUser() );
     }
 
+    private boolean canSessionUserBeginIssue( Issue issue )
+    {
+        return issue.getStatus() < Issue.STATUS_INPROGRESS && !getSessionUser().equals( HeadsUpSession.ANONYMOUS_USER );
+    }
+
     private User getSessionUser()
     {
         return ((HeadsUpSession) getSession()).getUser();
@@ -372,7 +383,7 @@ public class IssuePanel
                 issue.setStatus( Issue.STATUS_NEW );
                 issue.setUpdated( new Date() );
 
-                Session session = ((HibernateStorage) Manager.getStorageInstance()).getHibernateSession();
+                Session session = ( (HibernateStorage) Manager.getStorageInstance() ).getHibernateSession();
                 Transaction tx = session.beginTransaction();
                 session.update( issue );
                 tx.commit();
@@ -381,6 +392,37 @@ public class IssuePanel
 
                 ApplicationPageMapper.get().getApplication( "issues" ).addEvent(
                         new UpdateIssueEvent( issue, issue.getProject(), getSessionUser(), "dropped" ) );
+            }
+        };
+
+        add( form.add( button.setDefaultFormProcessing( false ) ) );
+    }
+
+    private void addBeginIssueButton( final Issue issue )
+    {
+        final Form form = new Form( "begin-issue-form" );
+
+        Button button = new Button( "begin-issue" )
+        {
+            @Override
+            public void onSubmit()
+            {
+                super.onSubmit();
+
+                issue.setAssignee( getSessionUser() );
+                issue.getWatchers().add(getSessionUser());
+                issue.setStatus( Issue.STATUS_INPROGRESS );
+                issue.setUpdated( new Date() );
+
+                Session session = ( (HibernateStorage) Manager.getStorageInstance() ).getHibernateSession();
+                Transaction tx = session.beginTransaction();
+                session.update( issue );
+                tx.commit();
+
+                setResponsePage( ViewIssue.class, getPage().getPageParameters() );
+
+                ApplicationPageMapper.get().getApplication( "issues" ).addEvent(
+                        new UpdateIssueEvent( issue, issue.getProject(), getSessionUser(), "began" ) );
             }
         };
 

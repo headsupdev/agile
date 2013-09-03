@@ -1,6 +1,6 @@
 2.0-rc2
 
-* Remove the unnecessary "begin" issue page - just use progress instead
+* Move the "begin" issue page to a button so it's optional
 * Change ordering of page titles to view real content on browser tabs
 
 * Fix issue:64 where progressing an issue can appear to alter the time remaining incorrectly
