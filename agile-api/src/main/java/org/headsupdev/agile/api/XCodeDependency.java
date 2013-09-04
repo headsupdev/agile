@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2013 Heads Up Development Ltd.
+ * Copyright 2013 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -18,26 +18,15 @@
 
 package org.headsupdev.agile.api;
 
-import java.util.List;
-
 /**
- * A simple project that calls the xcodebuild command for compiling XCode projects
+ * A simple dependency object for describing artifacts our projects depend upon.
  *
  * @author Andrew Williams
  * @version $Id$
- * @since 1.0
+ * @since 2.0
  */
-public interface XCodeProject
-    extends Project
-{
-    public static final String XCODE_PLATFORM_MACOSX = "Mac OSX";
-    public static final String XCODE_PLATFORM_IOS = "iOS";
+public interface XCodeDependency {
+    public String getName();
 
-    String getVersion();
-
-    String getBundleId();
-
-    String getPlatform();
-
-    List<XCodeDependency> getDependencies();
+    public String getVersion();
 }

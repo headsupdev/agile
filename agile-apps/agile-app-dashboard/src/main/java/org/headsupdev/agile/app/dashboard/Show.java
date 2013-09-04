@@ -35,11 +35,12 @@ import org.headsupdev.agile.web.components.MavenTwoProjectDetailsPanel;
 import org.headsupdev.agile.web.MountPoint;
 import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.storage.StoredProject;
+import org.headsupdev.agile.web.components.XCodeProjectDetailsPanel;
 
 import java.util.LinkedList;
 
 /**
- * TODO Document me!
+ * Show the full details of a project and summarise it's activity too
  *
  * @author Andrew Williams
  * @version $Id$
@@ -90,6 +91,15 @@ public class Show extends HeadsUpPage
         else
         {
             add( new WebMarkupContainer( "m2" ).setVisible( false ) );
+        }
+
+        if ( project instanceof XCodeProject )
+        {
+            add( new XCodeProjectDetailsPanel( "xcode", (XCodeProject) project ) );
+        }
+        else
+        {
+            add( new WebMarkupContainer( "xcode" ).setVisible( false ) );
         }
 
         add( new ListView<Project>( "projectlist", new LinkedList<Project>( project.getChildProjects() ) ) {
