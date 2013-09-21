@@ -389,12 +389,21 @@ public class StoredXCodeProject
                     if ( line.startsWith( "pod ") )
                     {
                         String[] parts = line.substring( 4 ).split( "," );
-                        if ( parts.length != 2 )
+                        if ( parts.length > 2 )
                         {
                             continue;
                         }
 
-                        CocoaPodDependency dep = new CocoaPodDependency(trimValue(parts[0]), trimValue(parts[1]));
+                        CocoaPodDependency dep;
+                        if ( parts.length == 1 )
+                        {
+                            dep = new CocoaPodDependency( trimValue( parts[0] ), "" );
+                        }
+                        else
+                        {
+                            dep = new CocoaPodDependency( trimValue( parts[0] ), trimValue( parts[1] ) );
+                        }
+
                         String depStr = dep.getName() + ":" + dep.getVersion();
                         if ( !first )
                         {
