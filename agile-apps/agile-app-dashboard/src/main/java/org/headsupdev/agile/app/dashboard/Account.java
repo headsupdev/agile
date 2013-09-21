@@ -74,7 +74,7 @@ import java.util.List;
 public class Account
         extends HeadsUpPage
 {
-    private String username;
+    private User user;
 
     public Permission getRequiredPermission()
     {
@@ -86,8 +86,8 @@ public class Account
         super.layout();
         add( CSSPackageResource.getHeaderContribution( getClass(), "account.css" ) );
 
-        org.headsupdev.agile.api.User user = getSession().getUser();
-        username = getPageParameters().getString( "username" );
+        user = getSession().getUser();
+        String username = getPageParameters().getString( "username" );
         if ( username != null )
         {
             user = getSecurityManager().getUserByUsername( username );
@@ -214,7 +214,7 @@ public class Account
     @Override
     public String getPageTitle()
     {
-        return "Account:" + username + PAGE_TITLE_SEPARATOR + super.getPageTitle();
+        return "Account:" + user.getUsername() + PAGE_TITLE_SEPARATOR + super.getPageTitle();
     }
 
     private boolean shouldShowFullDetails()
