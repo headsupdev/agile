@@ -18,8 +18,10 @@
 
 package org.headsupdev.agile.storage;
 
+import org.headsupdev.agile.api.*;
 import org.headsupdev.agile.api.rest.Publish;
 import org.headsupdev.support.java.IOUtil;
+import org.hibernate.annotations.Type;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
@@ -28,9 +30,8 @@ import javax.persistence.Entity;
 import javax.persistence.DiscriminatorValue;
 import java.io.*;
 import java.util.Date;
-
-import org.headsupdev.agile.api.XCodeProject;
-import org.headsupdev.agile.api.Manager;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * TODO Document me!
@@ -57,6 +58,10 @@ public class StoredXCodeProject
     @Field(index = Index.TOKENIZED)
     @Publish
     protected String platform;
+
+    @Type( type = "text" )
+    @Publish
+    protected String dependencies;
 
     public StoredXCodeProject()
     {
@@ -286,6 +291,9 @@ public class StoredXCodeProject
             }
 
             loadFromInfoFile( infoFile );
+
+            File podFile = new File( projectFile.getParentFile().getParentFile(), "Podfile" );
+            loadFromPodFile( podFile );
         }
         catch ( IOException e )
         {
@@ -305,7 +313,8 @@ public class StoredXCodeProject
         BufferedReader in = null;
         try
         {
-            if ( infoFile != null ) {
+            if ( infoFile != null )
+            {
                 Manager.getLogger( getClass().getName() ).info( "Loading extra XCode metadata from " +
                         infoFile.getPath() );
                 boolean foundShortString = false;
@@ -359,6 +368,72 @@ public class StoredXCodeProject
                 IOUtil.close(in);
             }
         }
+    }
+
+    protected void loadFromPodFile( File podFile )
+    {
+        BufferedReader in = null;
+        try
+        {
+            if ( podFile != null )
+            {
+                Manager.getLogger( getClass().getName() ).info( "Loading CocoaPods metadata from " +
+                        podFile.getPath() );
+
+                String line;
+                boolean first = true;
+                StringBuilder dependencies = new StringBuilder();
+                in = new BufferedReader( new InputStreamReader( new FileInputStream( podFile ) ) );
+                while ( ( line = in.readLine() ) != null )
+                {
+                    if ( line.startsWith( "pod ") )
+                    {
+                        String[] parts = line.substring( 4 ).split( "," );
+                        if ( parts.length != 2 )
+                        {
+                            continue;
+                        }
+
+                        CocoaPodDependency dep = new CocoaPodDependency(trimValue(parts[0]), trimValue(parts[1]));
+                        String depStr = dep.getName() + ":" + dep.getVersion();
+                        if ( !first )
+                        {
+                            dependencies.append( ',' );
+                        }
+
+                        dependencies.append( depStr );
+                        first = false;
+                    }
+                }
+                this.dependencies = dependencies.toString();
+            }
+        }
+        catch ( IOException e )
+        {
+            Manager.getLogger( getClass().getName() ).error( "Error parsing CocoaPods file", e );
+        }
+        finally
+        {
+            if ( in != null )
+            {
+                IOUtil.close(in);
+            }
+        }
+    }
+
+    private String trimValue( String part )
+    {
+        if ( part == null )
+        {
+            return null;
+        }
+
+        part = part.trim();
+        if ( part.startsWith( "'" ) && part.length() >= 2 )
+        {
+            return part.substring( 1, part.length() - 1 );
+        }
+        return part;
     }
 
     public String getVersion()
@@ -443,8 +518,48 @@ public class StoredXCodeProject
         return false;
     }
 
+    public List<XCodeDependency> getDependencies()
+    {
+        List<XCodeDependency> ret = new LinkedList<XCodeDependency>();
+        if ( dependencies == null || dependencies.length() == 0 )
+        {
+            return ret;
+        }
+
+        String[] dependencyList = dependencies.split( "," );
+        for ( String dependency : dependencyList )
+        {
+            final String[] values = dependency.split( ":" );
+            ret.add( new CocoaPodDependency( values[0], values[1] ) );
+        }
+
+        return ret;
+    }
+
     public String getTypeName()
     {
         return "XCode";
+    }
+}
+
+class CocoaPodDependency
+    implements XCodeDependency, Serializable
+{
+    private String name, version;
+
+    public CocoaPodDependency( String name, String version )
+    {
+        this.name = name;
+        this.version = version;
+    }
+
+    public String getName()
+    {
+        return name;
+    }
+
+    public String getVersion()
+    {
+        return version;
     }
 }

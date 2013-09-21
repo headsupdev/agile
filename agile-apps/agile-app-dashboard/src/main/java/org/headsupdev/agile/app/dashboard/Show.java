@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2013 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -35,11 +35,12 @@ import org.headsupdev.agile.web.components.MavenTwoProjectDetailsPanel;
 import org.headsupdev.agile.web.MountPoint;
 import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.storage.StoredProject;
+import org.headsupdev.agile.web.components.XCodeProjectDetailsPanel;
 
 import java.util.LinkedList;
 
 /**
- * TODO Document me!
+ * Show the full details of a project and summarise it's activity too
  *
  * @author Andrew Williams
  * @version $Id$
@@ -92,6 +93,15 @@ public class Show extends HeadsUpPage
             add( new WebMarkupContainer( "m2" ).setVisible( false ) );
         }
 
+        if ( project instanceof XCodeProject )
+        {
+            add( new XCodeProjectDetailsPanel( "xcode", (XCodeProject) project ) );
+        }
+        else
+        {
+            add( new WebMarkupContainer( "xcode" ).setVisible( false ) );
+        }
+
         add( new ListView<Project>( "projectlist", new LinkedList<Project>( project.getChildProjects() ) ) {
             protected void populateItem( ListItem<Project> listItem )
             {
@@ -113,6 +123,6 @@ public class Show extends HeadsUpPage
     @Override
     public String getPageTitle()
     {
-        return super.getPageTitle() + " :: " + name;
+        return name + PAGE_TITLE_SEPARATOR + super.getPageTitle();
     }
 }

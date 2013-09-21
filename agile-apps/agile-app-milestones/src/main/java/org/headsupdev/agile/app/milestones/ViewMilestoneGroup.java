@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2013 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -170,7 +170,7 @@ public class ViewMilestoneGroup
     @Override
     public String getPageTitle()
     {
-        return super.getPageTitle() + " :: " + group.getName();
+        return "Milestonegroup:" + group.getName() + PAGE_TITLE_SEPARATOR + super.getPageTitle();
     }
 
     protected void addDetails()

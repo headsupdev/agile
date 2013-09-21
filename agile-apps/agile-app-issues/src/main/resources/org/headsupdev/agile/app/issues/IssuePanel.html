@@ -1,6 +1,6 @@
 <!--
   ~ HeadsUp Agile
-  ~ Copyright 2009-2012 Heads Up Development Ltd.
+  ~ Copyright 2009-2013 Heads Up Development Ltd.
   ~
   ~ This program is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU Affero General Public License as
@@ -36,7 +36,12 @@
         </tr>
         <tr>
           <th class="status">Status</th>
-          <td wicket:id="status" class="status new">status</td>
+          <td class="status new">
+              <span wicket:id="status">status</span>
+              <form wicket:id="begin-issue-form" style="display: inline">
+                  <input type="submit" wicket:id="begin-issue" value="begin" />
+              </form>
+          </td>
           <th class="milestone">Milestone</th>
           <td class="milestone">
             <a wicket:id="milestone-link"><span wicket:id="milestone">milestone</span></a>
