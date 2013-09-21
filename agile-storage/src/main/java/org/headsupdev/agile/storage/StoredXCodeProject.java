@@ -313,7 +313,7 @@ public class StoredXCodeProject
         BufferedReader in = null;
         try
         {
-            if ( infoFile != null )
+            if ( infoFile != null && infoFile.exists() )
             {
                 Manager.getLogger( getClass().getName() ).info( "Loading extra XCode metadata from " +
                         infoFile.getPath() );
@@ -375,7 +375,7 @@ public class StoredXCodeProject
         BufferedReader in = null;
         try
         {
-            if ( podFile != null )
+            if ( podFile != null && podFile.exists() )
             {
                 Manager.getLogger( getClass().getName() ).info( "Loading CocoaPods metadata from " +
                         podFile.getPath() );
