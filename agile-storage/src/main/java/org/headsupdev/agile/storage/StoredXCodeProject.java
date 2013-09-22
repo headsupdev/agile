@@ -539,7 +539,14 @@ public class StoredXCodeProject
         for ( String dependency : dependencyList )
         {
             final String[] values = dependency.split( ":" );
-            ret.add( new CocoaPodDependency( values[0], values[1] ) );
+            if ( values.length < 2 )
+            {
+                ret.add( new CocoaPodDependency( values[0], "" ) );
+            }
+            else
+            {
+                ret.add( new CocoaPodDependency( values[0], values[1] ) );
+            }
         }
 
         return ret;
