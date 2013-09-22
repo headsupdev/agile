@@ -138,7 +138,7 @@ public class StoredXCodeProject
             in = new BufferedReader( new InputStreamReader( new FileInputStream( file ) ) );
 
             String line;
-            while ( ( line = in.readLine() ) != null && line.indexOf( "targets = (" ) == -1 )
+            while ( ( line = in.readLine() ) != null && !line.contains( "targets = (" ) )
             {
                 // ignore these lines
             }
@@ -168,17 +168,17 @@ public class StoredXCodeProject
             in = new BufferedReader( new InputStreamReader( new FileInputStream( file ) ) );
 
             String line;
-            while ( ( line = in.readLine() ) != null && line.indexOf( buildConfigList ) == -1 )
+            while ( ( line = in.readLine() ) != null && !line.contains( buildConfigList ) )
             {
                 // ignore these lines
             }
 
-            while ( ( line = in.readLine() ) != null && line.indexOf( buildConfigList ) == -1 )
+            while ( ( line = in.readLine() ) != null && !line.contains( buildConfigList ) )
             {
                 // ignore these lines again
             }
 
-            while ( ( line = in.readLine() ) != null && line.indexOf( "buildConfigurations" ) == -1 )
+            while ( ( line = in.readLine() ) != null && !line.contains("buildConfigurations"))
             {
                 // ignore these lines
             }
@@ -208,12 +208,12 @@ public class StoredXCodeProject
             in = new BufferedReader( new InputStreamReader( new FileInputStream( file ) ) );
 
             String line;
-            while ( ( line = in.readLine() ) != null && line.indexOf( target ) == -1 )
+            while ( ( line = in.readLine() ) != null && !line.contains( target ) )
             {
                 // ignore these lines
             }
 
-            while ( ( line = in.readLine() ) != null && line.indexOf( "buildConfigurationList" ) == -1 )
+            while ( ( line = in.readLine() ) != null && !line.contains( "buildConfigurationList" ) )
             {
                 // ignore these lines
             }
@@ -248,11 +248,11 @@ public class StoredXCodeProject
         BufferedReader in = null;
         try
         {
-            in = new BufferedReader( new InputStreamReader( new FileInputStream( projectFile ) ) );
+            in = new BufferedReader( new InputStreamReader( new FileInputStream( projectFile ), "UTF-8" ) );
 
             // skip to buildConfiguration
             String line;
-            while ( ( line = in.readLine() ) != null && line.indexOf( configuration ) == -1 )
+            while ( ( line = in.readLine() ) != null && !line.contains( configuration ) )
             {
                 // ignore these lines
             }
@@ -260,11 +260,11 @@ public class StoredXCodeProject
             String infoFileName = null;
             while ( ( line = in.readLine() ) != null )
             {
-                if ( line.indexOf( "INFOPLIST_FILE =" ) != -1 )
+                if ( line.contains( "INFOPLIST_FILE =" ) )
                 {
                     infoFileName = getProjectFileValue( line );
                 }
-                else if ( line.indexOf( "PRODUCT_NAME =" ) != -1 )
+                else if ( line.contains( "PRODUCT_NAME =" ) )
                 {
                     name = getProjectFileValue( line );
                     break; // note that if we parse further blocks a break will not be enough
@@ -321,7 +321,7 @@ public class StoredXCodeProject
                 platform = XCODE_PLATFORM_MACOSX;
 
                 String line;
-                in = new BufferedReader( new InputStreamReader( new FileInputStream( infoFile ) ) );
+                in = new BufferedReader( new InputStreamReader( new FileInputStream( infoFile ), "UTF-8" ) );
                 while ( ( line = in.readLine() ) != null )
                 {
                     if ( line.contains( ">CFBundleShortVersionString<") )
@@ -383,7 +383,7 @@ public class StoredXCodeProject
                 String line;
                 boolean first = true;
                 StringBuilder dependencies = new StringBuilder();
-                in = new BufferedReader( new InputStreamReader( new FileInputStream( podFile ) ) );
+                in = new BufferedReader( new InputStreamReader( new FileInputStream( podFile ), "UTF-8" ) );
                 while ( ( line = in.readLine() ) != null )
                 {
                     if ( line.startsWith( "pod ") )
