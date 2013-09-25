@@ -21,10 +21,14 @@ package org.headsupdev.agile.storage.issues;
 import org.headsupdev.agile.api.Manager;
 import org.headsupdev.agile.api.Project;
 import org.headsupdev.agile.storage.HibernateStorage;
+import org.headsupdev.agile.storage.resource.ResourceManagerImpl;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
 * TODO Add documentation
@@ -78,5 +82,38 @@ public class IssueHelper
         criteria.add( Restrictions.eq( "id.project", project ) );
         criteria.setProjection( Projections.count( "id.project" ) );
         return ( (Number) criteria.uniqueResult() ).intValue();
+    }
+
+    public static List<Issue> getOverworkedIssuesForMilestone( Milestone milestone )
+    {
+        if ( milestone == null )
+        {
+            return new ArrayList<Issue>();
+        }
+
+        Session session = ( (HibernateStorage) Manager.getStorageInstance() ).getHibernateSession();
+        Criteria criteria = session.createCriteria( Issue.class );
+        criteria.setResultTransformer( Criteria.DISTINCT_ROOT_ENTITY );
+        criteria.add( Restrictions.lt( "status", Issue.STATUS_RESOLVED ) );
+        criteria.add( Restrictions.eq( "milestone", milestone ) );
+
+        return findOverworkedIssues( criteria.list() );
+    }
+
+
+    private static List<Issue> findOverworkedIssues( List<Issue> issues )
+    {
+        ResourceManagerImpl resourceManager = ( (HibernateStorage) Manager.getStorageInstance() ).getResourceManager();
+
+        List<Issue> overworkedIssues = new ArrayList<Issue>();
+        for ( Issue issue : issues )
+        {
+            if ( resourceManager.isIssueMissingEstimate( issue ) )
+            {
+                overworkedIssues.add( issue );
+            }
+        }
+
+        return overworkedIssues;
     }
 }
