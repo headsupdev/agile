@@ -463,8 +463,8 @@ public class ResourceManagerImpl
             return userVelocities.get( user );
         }
 
-        List<DurationWorked> worked = getDurationWorkedForUser(user);
-        Velocity velocity = calculateVelocity( worked, user );
+        List<DurationWorked> worked = getDurationWorkedForUser( user );
+        Velocity velocity = calculateVelocity( worked, user, null, null );
 
         userVelocities.put( user, velocity );
         return velocity;
@@ -480,7 +480,7 @@ public class ResourceManagerImpl
         Calendar cal = Calendar.getInstance();
         cal.add( Calendar.WEEK_OF_YEAR, -1 );
         List<DurationWorked> worked = getDurationWorkedForUser(user, cal.getTime(), new Date());
-        Velocity velocity = calculateVelocity( worked, user );
+        Velocity velocity = calculateVelocity( worked, user, cal.getTime(), new Date() );
 
 //        userVelocities.put( user, velocity );
         return velocity;
@@ -500,8 +500,8 @@ public class ResourceManagerImpl
         // TODO midnight next week is not included now - right?
         cal.add( Calendar.MILLISECOND, -1 );
 
-        List<DurationWorked> worked = getDurationWorkedForUser(user, week, cal.getTime());
-        Velocity velocity = calculateVelocity( worked, user );
+        List<DurationWorked> worked = getDurationWorkedForUser( user, week, cal.getTime() );
+        Velocity velocity = calculateVelocity( worked, user, week, cal.getTime() );
 
 //        userVelocities.put( user, velocity );
         return velocity;
@@ -525,7 +525,7 @@ public class ResourceManagerImpl
         Date start = new Date();
         Date end = new Date( 0 );
         boolean calculateRange = true;
-        if (setStart != null )
+        if ( setStart != null )
         {
             start = setStart;
             end = setDue;
@@ -558,8 +558,8 @@ public class ResourceManagerImpl
                 continue;
             }
 
-            Velocity vel = calculateVelocity( worked, user );
-            if ( !vel.equals( Double.NaN ) )
+            Velocity vel = calculateVelocity( worked, user, start, end );
+            if ( !vel.equals( Velocity.INVALID ) )
             {
                 velocities += vel.getVelocity();
                 velocityCount++;
@@ -569,7 +569,7 @@ public class ResourceManagerImpl
         return new Velocity( velocities, (double) velocityCount );
     }
 
-    private Velocity calculateVelocity( List<DurationWorked> workedList, User user )
+    private Velocity calculateVelocity( List<DurationWorked> workedList, User user, Date start, Date end )
     {
         if ( user.isHiddenInTimeTracking() )
         {
@@ -655,6 +655,11 @@ public class ResourceManagerImpl
 
             for ( DurationWorked worked : listWorked )
             {
+                if ( ( start != null && start.after( worked.getDay() ) ) ||
+                        ( end != null && end.before( worked.getDay() ) ) )
+                {
+                    continue;
+                }
                 // ignore empty work but respect it's estimate
                 if ( worked.getWorked() == null || worked.getWorked().getHours() == 0 )
                 {
