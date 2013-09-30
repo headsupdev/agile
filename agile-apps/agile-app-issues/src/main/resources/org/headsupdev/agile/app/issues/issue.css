@@ -26,13 +26,6 @@ table.info td.type img, table.info td.priority img {
     text-decoration: line-through;
 }
 
-tr.details hr {
-    margin: 10px 0;
-    height: 1px;
-    border: none;
-    border-top: 1px solid #c3c3c3;
-}
-
 tr.details td {
     border-left: none;
     font-weight: normal;

@@ -172,6 +172,13 @@ table.vertical th.horizontal, th.horizontal {
     border-left: 1px solid #c3c3c3;
 }
 
+tr.details hr {
+    margin: 10px 0;
+    height: 1px;
+    border: none;
+    border-top: 1px solid #c3c3c3;
+}
+
 .comments .comment-title {
     color: #9fa0a2;
     padding-left: 0;
