@@ -258,6 +258,17 @@ public class Duration
 
     public String toHoursWithFractionString()
     {
+        // handle negative fractions without extra maths
+        if ( getHours() < 0 )
+        {
+            return "-" + new Duration( getHours() * -1 ).toHoursWithFractionString();
+        }
+        // handle zero correctly
+        if ( getHours() == 0 )
+        {
+            return "0h";
+        }
+
         int hours = getWholeHours();
         int minuteType = 0;
 
@@ -292,6 +303,13 @@ public class Duration
         }
 
         String ret = String.valueOf( hours );
+
+        // removing the 0 prefix when not actually 0
+        if ( ret.equals( "0" ) )
+        {
+            ret = "";
+        }
+
         switch ( minuteType )
         {
             case 1:

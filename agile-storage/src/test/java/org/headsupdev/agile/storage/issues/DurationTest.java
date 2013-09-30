@@ -82,4 +82,22 @@ public class DurationTest
         hours = new Duration( 47, Duration.UNIT_HOURS );
         TestCase.assertEquals( "Wrong rendering for weeks + hours duration", "1w 7h", hours.toString() );
     }
+
+    public void testToStringWithZero()
+    {
+        Duration hours = new Duration( 0 );
+        TestCase.assertEquals( "Should return 0h for 0", "0h", hours.toString() );
+
+        hours = new Duration( -0 );
+        TestCase.assertEquals( "Should return 0h for -0", "0h", hours.toString() );
+    }
+
+    public void testToFractionStringWithZero()
+    {
+        Duration hours = new Duration( 0.75 );
+        TestCase.assertEquals( "Should not have a 0h prefix to a fraction", "¾h", hours.toHoursWithFractionString() );
+
+        hours = new Duration( -0.75 );
+        TestCase.assertEquals( "Should not have a 0h prefix to a fraction", "-¾h", hours.toHoursWithFractionString() );
+    }
 }
