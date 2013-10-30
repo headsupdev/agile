@@ -38,6 +38,11 @@ public class MailUtil
     public static void sendEmail( String to, String from, String subject, String body, String host,
                                   String username, String password, boolean secure )
     {
+        if ( host == null || to == null || from == null )
+        {
+            Manager.getLogger( MailUtil.class.getName() ).info( "Cannot send email due to missing configuration" );
+            return;
+        }
         Properties mailProps = new Properties();
         mailProps.setProperty( "mail.transport.protocol", "smtp" );
         mailProps.setProperty( "mail.smtp.host", host );
