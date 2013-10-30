@@ -18,6 +18,7 @@
 
 package org.headsupdev.agile.security;
 
+import org.headsupdev.agile.security.permission.ProjectListPermission;
 import org.headsupdev.agile.storage.*;
 import org.hibernate.Transaction;
 import org.hibernate.Session;
@@ -273,5 +274,10 @@ public class DefaultSecurityManager
 
         Set<String> permissionIds = anon.getPermissions();
         return permissionIds.contains( permId );
+    }
+
+    public boolean userCanListProject( User user, Project project )
+    {
+        return userHasPermission( user, new ProjectListPermission(), project );
     }
 }

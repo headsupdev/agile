@@ -611,17 +611,20 @@ public abstract class HeadsUpPage
         projectmenu.setMarkupId( "projectmenu" );
 
         List<Project> recent = getStorage().getRecentRootProjects( user );
+        recent = getProjectsPermitted( recent );
         projectmenu.add( new ProjectListPanel( "recent-project-tree", recent, getPageClass( pageHint ), getProject() )
                 .setVisible( userHasPermission( user, new ProjectListPermission(), null ) && recent.size() > 0 ) );
 
         List<Project> active = new ArrayList<Project>( getStorage().getActiveRootProjects() );
         active.removeAll( recent );
+        active = getProjectsPermitted( active );
         projectmenu.add( new ProjectListPanel( "active-project-tree", active, getPageClass( pageHint ), getProject() )
                 .setVisible( userHasPermission( user, new ProjectListPermission(), null ) && active.size() > 0 ) );
 
         List<Project> other = new ArrayList<Project>( getStorage().getRootProjects() );
         other.removeAll( recent );
         other.removeAll( active );
+        other = getProjectsPermitted( other );
         projectmenu.add( new ProjectListPanel( "other-project-tree", other, getPageClass( pageHint ), getProject() )
                 .setVisible( userHasPermission( user, new ProjectListPermission(), null ) && other.size() > 0 ) );
 
@@ -838,5 +841,19 @@ public abstract class HeadsUpPage
         {
             target.addComponent( panel );
         }
+    }
+
+    protected List<Project> getProjectsPermitted( List<Project> projects )
+    {
+        List<Project> permitted = new ArrayList<Project>( projects.size() );
+        for ( Project project : projects )
+        {
+            if ( getSecurityManager().userCanListProject( getSession().getUser(), project ) )
+            {
+                permitted.add( project );
+            }
+        }
+
+        return permitted;
     }
 }

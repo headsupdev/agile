@@ -56,18 +56,21 @@ public class Welcome extends HeadsUpPage
         add( CSSPackageResource.getHeaderContribution( getClass(), "welcome.css" ) );
 
         List<Project> recent = getStorage().getRecentRootProjects( getSession().getUser() );
+        recent = getProjectsPermitted( recent );
         Collections.sort( recent );
         addProjectGraphListView( "recentprojects", recent );
 
         List<Project> active = new ArrayList<Project>( getStorage().getActiveRootProjects() );
         active.removeAll( recent );
         Collections.sort( active );
+        active = getProjectsPermitted( active );
         addProjectGraphListView( "activeprojects", active );
 
         List<Project> inactive = new ArrayList<Project>( getStorage().getRootProjects() );
         inactive.removeAll( recent );
         inactive.removeAll( active );
         Collections.sort( inactive );
+        inactive = getProjectsPermitted( inactive );
         addProjectGraphListView( "inactiveprojects", inactive );
     }
 
@@ -104,5 +107,19 @@ public class Welcome extends HeadsUpPage
                 listItem.add( projectLink );
             }
         }.setVisible( projects.size() > 0 ) );
+    }
+
+    protected List<Project> getProjectsPermitted( List<Project> projects )
+    {
+        List<Project> permitted = new ArrayList<Project>( projects.size() );
+        for ( Project project : projects )
+        {
+            if ( getSecurityManager().userCanListProject( getSession().getUser(), project ) )
+            {
+                permitted.add( project );
+            }
+        }
+
+        return permitted;
     }
 }

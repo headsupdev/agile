@@ -46,4 +46,6 @@ public interface SecurityManager
     Permission getPermissionById( String id );
 
     boolean userHasPermission( User user, Permission permission, Project project );
+
+    boolean userCanListProject( User user, Project project );
 }
