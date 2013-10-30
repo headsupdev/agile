@@ -805,7 +805,14 @@ public abstract class HeadsUpPage
 
         if ( !userHasPermission( user, permission, getProject() ) )
         {
-            throw new RestartResponseAtInterceptPageException( getPageClass( "login" ) );
+            if ( user == null || user.equals( HeadsUpSession.ANONYMOUS_USER ) )
+            {
+                throw new RestartResponseAtInterceptPageException( getPageClass( "login" ) );
+            }
+            else
+            {
+                throw new RestartResponseException( getPageClass( "permissiondenied" ) );
+            }
         }
     }
 
