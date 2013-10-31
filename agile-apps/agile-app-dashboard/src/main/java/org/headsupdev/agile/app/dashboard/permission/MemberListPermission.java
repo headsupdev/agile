@@ -19,6 +19,7 @@
 package org.headsupdev.agile.app.dashboard.permission;
 
 import org.headsupdev.agile.api.Permission;
+import org.headsupdev.agile.api.MemberPermission;
 
 import java.util.List;
 import java.util.LinkedList;
@@ -31,7 +32,7 @@ import java.util.LinkedList;
  * @since 1.0
  */
 public class MemberListPermission
-    implements Permission
+    implements MemberPermission
 {
     private String id = "MEMBER-LIST";
     private String description = "List members permission";

@@ -254,6 +254,11 @@ public class DefaultSecurityManager
             {
                 if ( role.equals( new MemberRole() ) )
                 {
+                    if ( permission instanceof MemberPermission && !user.getUsername().equals( "anonymous" ) )
+                    {
+                        return true;
+                    }
+
                     if ( !( project == null || project.getUsers().contains( user ) ) )
                     {
                         continue;
