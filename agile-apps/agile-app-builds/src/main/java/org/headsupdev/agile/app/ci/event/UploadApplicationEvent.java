@@ -44,7 +44,7 @@ public class UploadApplicationEvent
 
     public UploadApplicationEvent( Build build, String version, String type, String repoName, String path )
     {
-        this( build.getProject().getName(), version, repoName, path, build, type + " Application" );
+        this( build.getProject().getAlias(), version, repoName, path, build, type + " Application" );
     }
 
     protected UploadApplicationEvent( String name, String version, String repoName, String path, Build build,
