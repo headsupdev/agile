@@ -59,9 +59,16 @@ public abstract class ErrorPage
     @Override
     public Project getProject()
     {
-        if ( getSession().getProject() != null )
+        try
         {
-            return getSession().getProject();
+            if ( getSession().getProject() != null )
+            {
+                return getSession().getProject();
+            }
+        }
+        catch ( java.lang.IllegalStateException e )
+        {
+            // we'll ignore this as the main error has been caught - that's why we're rendering!
         }
 
         return super.getProject();
