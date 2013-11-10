@@ -176,11 +176,13 @@ public class ScmChangeSet
         this.issues = issues;
     }
 
-    public String getIconPath() {
+    public String getIconPath()
+    {
         return null;
     }
 
-    public String getLink() {
+    public String getLink()
+    {
         return "/" + getProject().getId() + "/files/change/id/" + getId();
     }
 
@@ -206,7 +208,8 @@ public class ScmChangeSet
         return set != null && id.equals( set.id );
     }
 
-    public int hashCode() {
+    public int hashCode()
+    {
         return id.hashCode();
     }
 }

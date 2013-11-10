@@ -47,11 +47,13 @@ public class View
 {
     private long buildId;
 
-    public Permission getRequiredPermission() {
+    public Permission getRequiredPermission()
+    {
         return new BuildViewPermission();
     }
 
-    public void layout() {
+    public void layout()
+    {
         super.layout();
         add( CSSPackageResource.getHeaderContribution( getClass(), "ci.css" ) );
 
