@@ -21,6 +21,7 @@ package org.headsupdev.agile.app.ci;
 import org.headsupdev.agile.api.Manager;
 import org.headsupdev.agile.api.Project;
 import org.headsupdev.agile.api.User;
+import org.headsupdev.agile.api.logging.Logger;
 import org.headsupdev.agile.api.service.ChangeSet;
 import org.headsupdev.agile.storage.TransactionalScmChangeSet;
 import org.headsupdev.agile.web.HeadsUpSession;
@@ -42,6 +43,7 @@ import org.apache.wicket.model.CompoundPropertyModel;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -53,6 +55,8 @@ import java.util.List;
 public class BuildPanel
     extends Panel
 {
+    private Logger log = Manager.getLogger( getClass().getName() );
+
     public BuildPanel( String id, final Build build )
     {
         super( id );
@@ -125,6 +129,24 @@ public class BuildPanel
 
             changes = Manager.getInstance().getScmService().getChangesBetweenRevisions( passed.getRevision(),
                     build.getRevision(), root );
+
+            // TODO issue:36 - figure how to not need this - the changeset can be up to the current if the passed revision
+            // was not a direct parent of the from build revision
+            Iterator<ChangeSet> changeIter = changes.iterator();
+            boolean removed = false;
+            while ( changeIter.hasNext() )
+            {
+                ChangeSet set = changeIter.next();
+                if ( set.getDate().after( build.getStartTime() ) )
+                {
+                    removed = true;
+                    changeIter.remove();
+                }
+            }
+            if ( removed )
+            {
+                log.info( "Could not traverse path from rev " + passed.getRevision() + " and " + build.getRevision() );
+            }
 
             params = new PageParameters();
             params.add( "project", build.getProject().getId() );

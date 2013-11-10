@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2013 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -64,5 +64,20 @@ public class TransactionalScmChangeSet
     public String toString()
     {
         return "ScmChangeSet " + revision + " by " + getAuthor() + " \"" + getComment() + "\"";
+    }
+
+    public boolean equals( Object o )
+    {
+        return o instanceof TransactionalScmChangeSet && equals( (TransactionalScmChangeSet) o );
+    }
+
+    public boolean equals( TransactionalScmChangeSet set )
+    {
+        return set != null && getRevision().equals( set.getRevision() );
+    }
+
+    public int hashCode()
+    {
+        return getRevision().hashCode();
     }
 }

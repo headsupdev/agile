@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2013 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -27,6 +27,7 @@ import org.headsupdev.agile.storage.ScmChangeSet;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -58,38 +59,40 @@ public class BrowseScmService implements ScmService
 
     public List<ChangeSet> getChangesSinceRevision( String fromRevision, Project project )
     {
-        Session session = ( (HibernateStorage) Manager.getStorageInstance() ).getHibernateSession();
-
-        Query q = session.createQuery( "from ScmChangeSet c where id.project = :project and revision >= :revision" );
-        q.setEntity( "project", project );
-        q.setString( "revision", fromRevision );
-
-        return (List<ChangeSet>) q.list();
+        return getChangesBetweenRevisions( fromRevision, null, project );
     }
 
     public List<ChangeSet> getChangesBetweenRevisions( String fromRevision, String toRevision, Project project )
     {
         ChangeSet from = getChangeSet( project, fromRevision );
-        ChangeSet to = getChangeSet( project, toRevision );
+        ChangeSet to = null;
+        if ( toRevision != null )
+        {
+            to = getChangeSet( project, toRevision );
+        }
 
         List<ChangeSet> ret = new LinkedList<ChangeSet>();
-        if ( from != null && from.equals( to ) )
+        if ( from == null || from.equals( to ) )
         {
             return ret;
         }
 
-        ChangeSet set = to;
+        ChangeSet set = from.getNext();
         while ( set != null )
         {
             ret.add( set );
 
-            set = set.getPrevious();
-            if ( set != null && from != null && set.equals( from ) )
+            if ( to != null && set.equals( to ) )
             {
-                set = null;
+                break;
             }
+
+            set = set.getNext();
         }
 
+        // TODO issue:36 - the above list may not be accurate if to cannot be traced to from simply
+
+        Collections.reverse( ret );
         return ret;
     }
 }

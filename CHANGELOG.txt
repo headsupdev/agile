@@ -11,6 +11,7 @@
 * Fix issue:agile-app-issues:1 autocomplete issue titles when creating relationships
 * Fix some velocity calculations
 * Fix issue where restricted users could not edit their own details
+* Fix issue:65 Build change list showing complete history when revision before is recent
 
 2.0-rc1
 
