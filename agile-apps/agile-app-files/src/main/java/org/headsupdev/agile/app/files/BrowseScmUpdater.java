@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2013 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -41,7 +41,7 @@ import java.io.File;
 import java.util.*;
 
 /**
- * A class used to run the scm updater thread - this keeps projects up to date and loads the metadata about the chates.
+ * A class used to run the scm updater thread - this keeps projects up to date and loads the metadata about the changes.
  *
  * @author Andrew Williams
  * @version $Id$
@@ -68,7 +68,7 @@ public class BrowseScmUpdater
                 // wait before starting
                 try
                 {
-                    Thread.sleep( 1000 * 60 * 15/* 60 */);
+                    Thread.sleep( getUpdateDelay() );
                 }
                 catch ( InterruptedException e )
                 {
@@ -93,7 +93,7 @@ public class BrowseScmUpdater
 
                     try
                     {
-                        Thread.sleep( 1000 * 60 * 15/* 60 */);
+                        Thread.sleep( getUpdateDelay() );
                     }
                     catch ( InterruptedException e )
                     {
@@ -105,6 +105,19 @@ public class BrowseScmUpdater
         };
 
         updater.start();
+    }
+
+    protected int getUpdateDelay()
+    {
+        int delay = (Integer) BrowseApplication.CONFIGURATION_UPDATE_DELAY.getDefault();
+        String delayStr = Manager.getStorageInstance().getGlobalConfiguration().getApplicationConfiguration( BrowseApplication.ID )
+                .getProperty( BrowseApplication.CONFIGURATION_UPDATE_DELAY.getKey() );
+        if ( delayStr != null )
+        {
+            delay = Integer.parseInt( delayStr );
+        }
+
+        return delay * 1000 * 60;
     }
 
     public void stop()

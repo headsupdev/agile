@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2013 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -47,6 +47,13 @@ public class BrowseApplication
 
     static transient BrowseScmUpdater updater = new BrowseScmUpdater();
 
+    public static final ConfigurationItem CONFIGURATION_UPDATE_DELAY = new ConfigurationItem(
+            "update.delay", 15, "Number of minutes between checking for updated files",
+            "If your source control is on a remote server or public repository leave this as 15 minutes." +
+            "If the files are on the same server you can reduce this value to check more often." );
+
+    protected List<ConfigurationItem> globalItems = new LinkedList<ConfigurationItem>();
+
     List<MenuLink> links;
     List<String> eventTypes;
 
@@ -69,6 +76,8 @@ public class BrowseApplication
 
         Dictionary props = new Properties();
         bc.registerService( ScmService.class.getName(), new BrowseScmService(), props );
+
+        globalItems.add( CONFIGURATION_UPDATE_DELAY );
     }
 
     public static BrowseScmUpdater getUpdater()
@@ -128,6 +137,12 @@ public class BrowseApplication
         super.stop( bc );
 
         updater.stop();
+    }
+
+    @Override
+    public List<ConfigurationItem> getConfigurationItems()
+    {
+        return globalItems;
     }
 
     public List<File> getProjectFiles( Project project )
