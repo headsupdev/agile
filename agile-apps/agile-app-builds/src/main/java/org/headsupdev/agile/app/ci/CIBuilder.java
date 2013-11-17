@@ -45,8 +45,50 @@ public class CIBuilder
     private static boolean building = false;
 
     private CIApplication application;
+    private boolean buildNow;
 
     private Logger log = Manager.getLogger( getClass().getName() );
+
+    public void buildProject( Project project )
+    {
+        buildProject( project, true );
+    }
+
+    public void buildProject( Project project, boolean notify )
+    {
+        PropertyTree config = Manager.getStorageInstance().getGlobalConfiguration().
+                getApplicationConfigurationForProject( CIApplication.ID, project ).getSubTree( "schedule.default" );
+        buildProject( project, "default", config, notify );
+    }
+
+    public void buildProject( Project project, String id, PropertyTree config, boolean notify )
+    {
+        if ( !CIApplication.getHandlerFactory().supportsBuilding( project ) )
+        {
+            return;
+        }
+
+        synchronized ( pendingBuilds )
+        {
+            CIQueuedBuild building = new CIQueuedBuild( project, id, config, notify );
+            Iterator<CIQueuedBuild> queue = pendingBuilds.iterator();
+            while ( queue.hasNext() )
+            {
+                CIQueuedBuild build = queue.next();
+
+                if ( build != null && build.getProject() != null && build.getProject().equals( project ) &&
+                        build.getConfigName().equals( building.getConfigName() ) )
+                {
+                    queue.remove();
+                }
+            }
+
+            pendingBuilds.add( 0, building );
+        }
+
+        buildNow = true;
+        buildQueuedProjects();
+    }
 
     public void queueProject( Project project )
     {
@@ -73,7 +115,7 @@ public class CIBuilder
             {
                 queueBuild( new CIQueuedBuild( project, id, config, notify ) );
 
-                buildProjects();
+                buildQueuedProjects();
             }
         }
     }
@@ -145,10 +187,11 @@ public class CIBuilder
         }
     }
 
-    protected void buildProjects()
+    protected void buildQueuedProjects()
     {
         if ( building )
         {
+            buildNow = false;
             return;
         }
 
@@ -157,14 +200,18 @@ public class CIBuilder
         {
             public void run()
             {
-                try
+                if ( !buildNow )
                 {
-                    Thread.sleep( 15000 );
+                    try
+                    {
+                        Thread.sleep( 15000 );
+                    }
+                    catch ( InterruptedException e )
+                    {
+                        // ignore, we were just pausing to avoid dupes...
+                    }
                 }
-                catch ( InterruptedException e )
-                {
-                    // ignore, we were just pausing to avoid dupes...
-                }
+                buildNow = false;
 
                 try
                 {
@@ -184,7 +231,7 @@ public class CIBuilder
                             }
                         }
 
-                        buildProject( build );
+                        buildQueuedProject( build );
                     }
                 }
                 catch ( Exception e )
@@ -199,7 +246,7 @@ public class CIBuilder
         }.start();
     }
 
-    private void buildProject( CIQueuedBuild queued )
+    private void buildQueuedProject( CIQueuedBuild queued )
     {
         Project project = queued.getProject();
         BuildHandler buildHandler = CIApplication.getHandlerFactory().getBuildHandler( project );

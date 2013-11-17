@@ -13,6 +13,7 @@
 * Fix some velocity calculations
 * Fix issue where restricted users could not edit their own details
 * Fix issue:65 Build change list showing complete history when revision before is recent
+* Fix an issue that would cause builds started through the interface to delay in starting
 
 2.0-rc1
 

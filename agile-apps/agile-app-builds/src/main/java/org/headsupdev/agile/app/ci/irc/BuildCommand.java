@@ -98,7 +98,7 @@ public class BuildCommand
                         {
                             conn.sendMessage( channel, "Queued project \"" + project.getAlias() + "\"" );
 
-                            CIApplication.getBuilder().queueProject( project );
+                            CIApplication.getBuilder().buildProject( project );
                         }
                     }
                 }

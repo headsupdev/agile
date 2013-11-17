@@ -169,7 +169,7 @@ public class CI
                     {
                         public void onClick()
                         {
-                            queueBuild( getProject() );
+                            buildProject( getProject() );
                         }
                     } );
 
@@ -210,7 +210,7 @@ public class CI
                                 @Override
                                 public void onClick()
                                 {
-                                    queueBuild( getProject(), configId, config );
+                                    buildProject( getProject(), configId, config );
                                 }
                             };
                             build.add( new Label( "name", configName ) );
@@ -251,14 +251,14 @@ public class CI
                     {
                         public void onClick()
                         {
-                            dequeueBuild( getProject() );
+                            dequeueProject( getProject() );
                         }
                     } );
                     addLink( new DynamicMenuLink( "dequeue" )
                     {
                         public void onClick()
                         {
-                            dequeueBuild( getProject() );
+                            dequeueProject( getProject() );
                         }
                     } );
                 }
@@ -315,7 +315,7 @@ public class CI
             {
                 if ( queued )
                 {
-                    dequeueBuild( project );
+                    dequeueProject( project );
                 }
                 else if ( build != null && build.getStatus() == Build.BUILD_RUNNING )
                 {
@@ -323,7 +323,7 @@ public class CI
                 }
                 else
                 {
-                    queueBuild( project );
+                    buildProject( project );
                 }
             }
         };
@@ -454,17 +454,17 @@ public class CI
         }
     }
 
-    protected void queueBuild( Project project )
+    protected void buildProject( Project project )
     {
-        CIApplication.getBuilder().queueProject( project, false );
+        CIApplication.getBuilder().buildProject( project, false );
     }
 
-    protected void queueBuild( Project project, String id, PropertyTree config )
+    protected void buildProject( Project project, String id, PropertyTree config )
     {
-        CIApplication.getBuilder().queueProject( project, id, config, false );
+        CIApplication.getBuilder().buildProject( project, id, config, false );
     }
 
-    protected void dequeueBuild( Project project )
+    protected void dequeueProject( Project project )
     {
         CIApplication.getBuilder().dequeueProject( project );
     }
