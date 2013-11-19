@@ -18,6 +18,8 @@
 
 package org.headsupdev.agile.app.search;
 
+import org.headsupdev.support.java.CollectionUtil;
+
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.string.Strings;
 
@@ -72,7 +74,7 @@ public class SearchRenderModel
             summary.append( field );
             summary.append( "</span> " );
 
-            List<String> matches = fields.get( field );
+            List<String> matches = CollectionUtil.uniqueList( fields.get( field ) );
             String content = getFieldContent( object, field, matches );
             if ( content == null )
             {
