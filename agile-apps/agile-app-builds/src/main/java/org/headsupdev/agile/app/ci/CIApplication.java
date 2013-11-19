@@ -163,6 +163,8 @@ public class CIApplication
         "Release", "Project Configuration", "The xcode configuation to build this project" );
     public static final ConfigurationItem CONFIGURATION_XCODE_SDK = new ConfigurationItem( "xcode.sdk",
         "", "Project SDK", "The SDK to build this project against - mainly used for testing (optional)" );
+    public static final ConfigurationItem CONFIGURATION_XCODE_RUN_TESTS = new ConfigurationItem( "xcode.runtests",
+            false, "Run Tests", "Compile and run any tests defined in the project configuration (requires a scheme name)" );
     public static final ConfigurationItem CONFIGURATION_ANALYZE = new ConfigurationItem( "analyze",
         false, "Analyze", "Check for common coding errors" );
 
@@ -285,6 +287,7 @@ public class CIApplication
 
         items.add( CONFIGURATION_XCODE_CONFIG );
         items.add( CONFIGURATION_XCODE_SDK ) ;
+        items.add( CONFIGURATION_XCODE_RUN_TESTS );
         items.add( CONFIGURATION_ANALYZE );
         xcodeProjectItems.add( new ConfigurationItem( "schedule.default", "Default Build Schedule", items ) );
 
@@ -300,6 +303,7 @@ public class CIApplication
 
         items.add( CONFIGURATION_XCODE_CONFIG );
         items.add( CONFIGURATION_XCODE_SDK );
+        items.add( CONFIGURATION_XCODE_RUN_TESTS );
         items.add( CONFIGURATION_ANALYZE );
         items.add( CONFIGURATION_CRON_EXPRESSION );
         xcodeProjectItems.add( new ConfigurationItem( "schedule", "Build Schedule",

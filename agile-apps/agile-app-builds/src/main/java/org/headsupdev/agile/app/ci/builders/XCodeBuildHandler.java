@@ -92,16 +92,16 @@ public class XCodeBuildHandler
                 return;
             }
             commands.add( "clean" );
+            commands.add( "build" );
+
+            boolean runTests = "true".equals( config.getProperty( CIApplication.CONFIGURATION_XCODE_RUN_TESTS.getKey(),
+                    CIApplication.CONFIGURATION_XCODE_RUN_TESTS.getDefault().toString() ) );
+            if ( runTests )
+            {
+                commands.add( "test" );
+            }
 
             result = ExecUtil.executeLoggingExceptions( commands, dir, buildOut, buildOut );
-
-            if ( result == 0 )
-            {
-                commands.clear();
-                appendXcodeCommands( project, config, commands, dir, null );
-
-                result = ExecUtil.executeLoggingExceptions( commands, dir, buildOut, buildOut );
-            }
         }
         catch ( IOException e )
         {

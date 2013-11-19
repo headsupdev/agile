@@ -6,6 +6,7 @@
 * Add a permission denied page rather than always rendering a login screen
 * Hide projects in the menu and project list screen that the user does not have permission to view
 * Add a configuration for the frequency of changeset loading
+* Add support for Xcode 5 test handling
 
 * Fix issue:64 where progressing an issue can appear to alter the time remaining incorrectly
 * Fix issue:62 - don't reset the platform in an xcode project unless the info file is being parsed
