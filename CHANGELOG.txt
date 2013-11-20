@@ -16,6 +16,7 @@
 * Fix issue:65 Build change list showing complete history when revision before is recent
 * Fix an issue that would cause builds started through the interface to delay in starting
 * Fix an issue where searches with a duplicate term could fail to render
+* Fix issue:67 where text markup could link words ending in :
 
 2.0-rc1
 
