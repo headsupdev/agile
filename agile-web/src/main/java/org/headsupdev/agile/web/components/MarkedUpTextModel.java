@@ -69,7 +69,7 @@ public class MarkedUpTextModel extends Model<String> {
         {
             String next = tokenizer.nextToken();
 
-            if ( next.indexOf( ':' ) != -1 )
+            if ( isValidLink( next ) )
             {
                 // compensate from not splitting on "." we still want to split ". "
                 if ( next.endsWith( "." ) )
@@ -112,6 +112,27 @@ public class MarkedUpTextModel extends Model<String> {
         }
 
         return ret.toString();
+    }
+
+    public static boolean isValidLink( String text )
+    {
+        if ( text == null || text.indexOf( ':' ) == -1 )
+        {
+            return false;
+        }
+
+
+        if ( text.charAt( 0 ) == ':' || text.charAt( text.length() - 1 ) == ':' )
+        {
+            return false;
+        }
+
+        if ( text.charAt( text.indexOf( ':' ) + 1 ) == ':' )
+        {
+            return false;
+        }
+
+        return true;
     }
 
     public static String getLink( String text, Project fallback, Map<String, LinkProvider> providers )
