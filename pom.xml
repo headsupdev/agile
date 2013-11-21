@@ -317,6 +317,7 @@
           <version>2.0</version>
           <configuration>
             <useReleaseProfile>false</useReleaseProfile>
+            <goals>deploy</goals>
           </configuration>
         </plugin>
 
