@@ -18,7 +18,9 @@
 
 package org.headsupdev.agile.app.ci;
 
+import org.headsupdev.agile.api.rest.Api;
 import org.headsupdev.agile.app.ci.builders.BuildHandlerFactory;
+import org.headsupdev.agile.app.ci.rest.BuildStatusApi;
 import org.headsupdev.support.java.FileUtil;
 import org.headsupdev.agile.app.ci.irc.BuildCommand;
 import org.headsupdev.agile.storage.StoredProject;
@@ -406,6 +408,12 @@ public class CIApplication
     }
 
     @Override
+    public Class<? extends Api>[] getApis()
+    {
+        return (Class<? extends Api>[]) new Class[]{ BuildStatusApi.class };
+    }
+
+    @Override
     public Class<? extends Page> getHomePage()
     {
         return CI.class;
@@ -509,7 +517,7 @@ public class CIApplication
         scheduler.resetProject( project );
     }
 
-    public List<Build> getBuildsForProject( Project project )
+    public static List<Build> getBuildsForProject( Project project )
     {
         Session session = ( (HibernateStorage) Manager.getStorageInstance() ).getHibernateSession();
 
@@ -541,7 +549,7 @@ public class CIApplication
         return (Build) q.uniqueResult();
     }
 
-    public Build getLatestBuildForProject( Project project )
+    public static Build getLatestBuildForProject( Project project )
     {
         Build build = null;
         Session session = ( (HibernateStorage) Manager.getStorageInstance() ).getHibernateSession();
@@ -558,7 +566,7 @@ public class CIApplication
         return build;
     }
 
-    public static String getLastChangePassed( Project project )
+    public static Build getLatestPassedBuildForProject( Project project )
     {
         Build build = null;
         Session session = ( (HibernateStorage) Manager.getStorageInstance() ).getHibernateSession();
@@ -573,6 +581,13 @@ public class CIApplication
             build = builds.get( 0 );
         }
 
+        return build;
+    }
+
+    public static String getLatestChangePassed( Project project )
+    {
+        Build build = getLatestPassedBuildForProject( project );
+
         if ( build == null )
         {
             return "";
@@ -580,7 +595,7 @@ public class CIApplication
         return build.getRevision();
     }
 
-    public static Build getPreviousLastChangePassed( Build current, Project project )
+    public static Build getPreviousChangePassed( Build current, Project project )
     {
         Build build = null;
         Session session = ( (HibernateStorage) Manager.getStorageInstance() ).getHibernateSession();

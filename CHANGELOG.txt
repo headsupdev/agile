@@ -1,3 +1,7 @@
+2.0-rc3
+
+* Add build status endpoint to APIs
+
 2.0-rc2
 
 * Move the "begin" issue page to a button so it's optional

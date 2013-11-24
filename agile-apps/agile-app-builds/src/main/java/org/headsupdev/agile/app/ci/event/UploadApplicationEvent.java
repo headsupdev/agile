@@ -51,8 +51,8 @@ public class UploadApplicationEvent
                                    String type )
     {
         super( getTitleForBuildEvent( name, version, build, type ),
-            getVersionTitle( version ) + type.toLowerCase() + " " + name + " was deployed to the " +
-                    repoName + " repository<br /><a href=\"" + path + "\">Install</a>" +
+            getVersionTitle( version ) + type + " " + name + " was deployed to the " + repoName +
+                    " repository<br /><a href=\"" + path + "\">Install</a>" +
                     "<img src=\"/qrcode.png?path=" + path + "\" style=\"margin-top: -108px;height: 150px;float:right;\">", new Date() );
 
         setApplicationId( "artifacts" );
@@ -80,12 +80,26 @@ public class UploadApplicationEvent
         return getBody().substring( start, end );
     }
 
-    public String getBuildNumber()
+    public long getBuildNumber()
     {
         int start = getTitle().indexOf( "(build" ) + 6;
         int end = getTitle().indexOf( ")", start );
+        String buildString = getTitle().substring( start, end ).trim();
 
-        return getTitle().substring( start, end );
+        return Long.parseLong( buildString );
+    }
+
+    public String getVersion()
+    {
+        if ( !getTitle().contains( ":" ) )
+        {
+            return null;
+        }
+
+        int start = getTitle().indexOf( ":" ) + 1;
+        int end = getTitle().indexOf( " ", start );
+
+        return getTitle().substring( start, end ).trim();
     }
 
     private static String getVersionString( String version )

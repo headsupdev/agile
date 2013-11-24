@@ -116,7 +116,7 @@ public class BuildPanel
         {
             root = root.getParent();
         }
-        Build passed = CIApplication.getPreviousLastChangePassed( build, build.getProject() );
+        Build passed = CIApplication.getPreviousChangePassed(build, build.getProject());
         List<ChangeSet> changes;
         if ( passed != null )
         {

@@ -20,6 +20,7 @@ package org.headsupdev.agile.storage.ci;
 
 import org.headsupdev.agile.api.Project;
 import org.headsupdev.agile.api.SearchResult;
+import org.headsupdev.agile.api.rest.Publish;
 import org.headsupdev.agile.storage.hibernate.IdProjectBridge;
 import org.headsupdev.agile.storage.hibernate.IdProjectId;
 
@@ -58,24 +59,32 @@ public class Build
     @DocumentId
     @FieldBridge( impl = IdProjectBridge.class )
     @Field
+    @Publish
     private IdProjectId id;
 
     @Field
+    @Publish
     private String revision;
 
     @Temporal( TemporalType.TIMESTAMP )
+    @Publish
     private Date startTime = new Date(), endTime;
 
     private String configName;
 
+    @Publish
     private int status = 0;
 
     @OneToMany
     private Set<TestResultSet> testResults = new HashSet<TestResultSet>();
 
+    @Publish
     private Integer tests = 0;
+    @Publish
     private Integer failures = 0;
+    @Publish
     private Integer errors = 0;
+    @Publish
     private Integer warnings = 0;
 
     Build()

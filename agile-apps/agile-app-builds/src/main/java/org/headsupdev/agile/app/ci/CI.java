@@ -82,7 +82,7 @@ public class CI
         }
         else
         {
-            builds.add( new StripedListView<Build>( "builds", getApp().getBuildsForProject( getProject() ) )
+            builds.add( new StripedListView<Build>( "builds", CIApplication.getBuildsForProject( getProject() ) )
             {
                 protected void populateItem( ListItem<Build> listItem )
                 {
@@ -102,7 +102,7 @@ public class CI
         {
             protected void populateProjectItem( ListItem listItem, Project project )
             {
-                renderBuild( getApp().getLatestBuildForProject( project ), project,
+                renderBuild( CIApplication.getLatestBuildForProject( project ), project,
                     true, CIBuilder.isProjectQueued( project ), listItem );
 
             }
@@ -126,7 +126,7 @@ public class CI
             return button.setVisible( false );
         }
 
-        UploadApplicationEvent upload = CIApplication.getLatestUploadEvent(getProject());
+        UploadApplicationEvent upload = CIApplication.getLatestUploadEvent( getProject() );
         if ( upload == null )
         {
             return button.setVisible( false );
@@ -148,7 +148,7 @@ public class CI
     {
         if ( !projectList )
         {
-            Build latest = getApp().getLatestBuildForProject( getProject() );
+            Build latest = CIApplication.getLatestBuildForProject( getProject() );
             int status = Build.BUILD_SUCCEEDED;
             if ( latest != null )
             {
@@ -471,7 +471,7 @@ public class CI
 
     protected void cancelBuild( Project project )
     {
-        Build b = getApp().getLatestBuildForProject( project );
+        Build b = CIApplication.getLatestBuildForProject( project );
         if ( b.getEndTime() == null )
         {
             b.setEndTime( new Date() );
@@ -484,11 +484,6 @@ public class CI
 
     public Permission getRequiredPermission() {
         return new BuildListPermission();
-    }
-
-    CIApplication getApp()
-    {
-        return (CIApplication) getHeadsUpApplication();
     }
 
     private void saveBuild( Build build )
