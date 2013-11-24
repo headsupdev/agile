@@ -77,6 +77,11 @@ public class UploadApplicationEvent
         int start = getBody().indexOf( "href=\"" ) + 6;
         int end = getBody().indexOf( "\"", start );
 
+        if ( start == -1 || end < start )
+        {
+            return null;
+        }
+
         return getBody().substring( start, end );
     }
 
@@ -127,7 +132,7 @@ public class UploadApplicationEvent
         int start = getTitle().indexOf( ":" ) + 1;
         int end = getTitle().indexOf( " ", start );
 
-        return getTitle().substring( start, end ).trim();
+        return getTitle().substring(start, end).trim();
     }
 
     private static String getVersionString( String version )

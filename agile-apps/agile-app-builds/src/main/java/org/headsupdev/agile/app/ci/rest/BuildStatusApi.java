@@ -111,7 +111,7 @@ public class BuildStatusApi
             this.latestBuild = latest;
             if ( latest.getStatus() != Build.BUILD_SUCCEEDED )
             {
-                this.latestSuccessfulBuild = CIApplication.getLatestPassedBuildForProject( getProject() );
+                this.latestSuccessfulBuild = CIApplication.getLatestPassedBuildForProject( latest.getProject() );
             }
             getDownloadDetailsForProject( latest.getProject() );
         }

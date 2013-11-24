@@ -141,7 +141,7 @@ public class CI
 
     protected String getButtonLabel( UploadApplicationEvent upload )
     {
-        return "Download (build" + upload.getBuildNumber() + ")";
+        return "Download (build " + upload.getBuildNumber() + ")";
     }
 
     void renderTopLinks( boolean projectList )
