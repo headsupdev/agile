@@ -80,13 +80,41 @@ public class UploadApplicationEvent
         return getBody().substring( start, end );
     }
 
-    public long getBuildNumber()
+    protected String getBuildTitle()
     {
         int start = getTitle().indexOf( "(build" ) + 6;
         int end = getTitle().indexOf( ")", start );
-        String buildString = getTitle().substring( start, end ).trim();
+        return getTitle().substring( start, end ).trim();
+    }
+
+    public long getBuildNumber()
+    {
+        String buildString = getBuildTitle();
+        if ( buildString.contains( "\"" ) )
+        {
+            int pos = buildString.indexOf( "\"" );
+            return Long.parseLong( buildString.substring( 0, pos ).trim() );
+        }
 
         return Long.parseLong( buildString );
+    }
+
+    public String getBuildConfigName()
+    {
+        String buildString = getBuildTitle();
+        if ( !buildString.contains( "\"" ) )
+        {
+            return null;
+        }
+
+        int start = buildString.indexOf( "\"" ) + 1;
+        int end = buildString.lastIndexOf( "\"" );
+        if ( end == -1 || end <= start )
+        {
+            return null;
+        }
+
+        return buildString.substring( start, end ).trim();
     }
 
     public String getVersion()

@@ -86,7 +86,7 @@ public class BuildStatusApi
             implements Serializable
     {
         @Publish
-        public String projectId, icon, downloadLink, downloadVersion;
+        public String projectId, icon, downloadLink, downloadVersion, downloadBuildConfigName;
 
         @Publish
         public Long downloadBuildNumber;
@@ -146,6 +146,7 @@ public class BuildStatusApi
 
             this.downloadLink = upload.getLink();
             this.downloadBuildNumber = upload.getBuildNumber();
+            this.downloadBuildConfigName = upload.getBuildConfigName();
             this.downloadVersion = upload.getVersion();
         }
     }
