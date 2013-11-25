@@ -70,6 +70,7 @@ public class Build
     @Publish
     private Date startTime = new Date(), endTime;
 
+    @Publish
     private String configName;
 
     @Publish
