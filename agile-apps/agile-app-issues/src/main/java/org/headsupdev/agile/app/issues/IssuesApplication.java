@@ -18,6 +18,7 @@
 
 package org.headsupdev.agile.app.issues;
 
+import org.apache.wicket.extensions.markup.html.repeater.util.SortParam;
 import org.headsupdev.agile.api.LinkProvider;
 import org.headsupdev.agile.api.Manager;
 import org.headsupdev.agile.api.MenuLink;
@@ -26,6 +27,7 @@ import org.headsupdev.agile.api.Permission;
 import org.headsupdev.agile.api.Project;
 import org.headsupdev.agile.api.SimpleMenuLink;
 import org.headsupdev.agile.api.rest.Api;
+import org.headsupdev.agile.app.issues.dao.SortableIssuesProvider;
 import org.headsupdev.agile.app.issues.event.CloseIssueEvent;
 import org.headsupdev.agile.app.issues.event.CreateIssueEvent;
 import org.headsupdev.agile.app.issues.event.UpdateIssueEvent;
@@ -145,56 +147,19 @@ public class IssuesApplication
 
     public static SortableEntityProvider<Issue> getIssueProvider( final IssueFilterPanel filter )
     {
-        return new SortableEntityProvider<Issue>() {
-            @Override
-            protected Criteria createCriteria() {
-                Session session = ( (HibernateStorage) Manager.getStorageInstance() ).getHibernateSession();
-
-                Criteria c = session.createCriteria( Issue.class );
-                c.setResultTransformer( Criteria.DISTINCT_ROOT_ENTITY );
-                c.add( filter.getStatusCriterion() );
-                Criterion assignmentRestriction = filter.getAssignmentCriterion();
-                if ( assignmentRestriction != null )
-                {
-                    c.add( assignmentRestriction );
-                }
-
-                return c;
-            }
-
-            @Override
-            protected List<Order> getDefaultOrder() {
-                return Arrays.asList( Order.asc( "priority" ),
-                    Order.asc( "rank" ), Order.asc( "status" ), Order.asc( "id.id" ) );
-            }
-        };
+        return new SortableIssuesProvider( filter );
     }
 
     public static SortableEntityProvider<Issue> getIssueProviderForProject( final Project project,
                                                                             final IssueFilterPanel filter )
     {
-        return new SortableEntityProvider<Issue>() {
+        return new SortableIssuesProvider( filter ) {
             @Override
             protected Criteria createCriteria() {
-                Session session = ( (HibernateStorage) Manager.getStorageInstance() ).getHibernateSession();
-
-                Criteria c = session.createCriteria( Issue.class );
-                c.setResultTransformer( Criteria.DISTINCT_ROOT_ENTITY );
-                c.add( filter.getStatusCriterion() );
-                Criterion assignmentRestriction = filter.getAssignmentCriterion();
-                if ( assignmentRestriction != null )
-                {
-                    c.add( assignmentRestriction );
-                }
+                Criteria c = super.createCriteria();
 
                 c.add( Restrictions.eq( "id.project", project ) );
                 return c;
-            }
-
-            @Override
-            protected List<Order> getDefaultOrder() {
-                return Arrays.asList( Order.asc( "priority" ),
-                    Order.asc( "rank" ), Order.asc( "status" ), Order.asc( "id.id" ) );
             }
         };
     }

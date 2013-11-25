@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2013 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -18,6 +18,7 @@
 
 package org.headsupdev.agile.web.wicket;
 
+import org.apache.wicket.extensions.markup.html.repeater.util.SortParam;
 import org.apache.wicket.extensions.markup.html.repeater.util.SortableDataProvider;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
@@ -25,6 +26,7 @@ import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -42,18 +44,26 @@ public abstract class SortableEntityProvider<T> extends SortableDataProvider<T>
 
     protected abstract List<Order> getDefaultOrder();
 
+    protected List<Order> getOrder( SortParam sort )
+    {
+        if ( sort.isAscending() )
+        {
+            return Arrays.asList( Order.asc( sort.getProperty() ).ignoreCase() );
+        }
+        else
+        {
+            return Arrays.asList( Order.desc(sort.getProperty()).ignoreCase() );
+        }
+    }
+
     public Iterator<T> iterator( int start, int limit )
     {
         Criteria criteria = createCriteria();
         if ( getSort() != null )
         {
-            if ( getSort().isAscending() )
+            for ( Order order : getOrder( getSort() ) )
             {
-                criteria.addOrder( Order.asc( getSort().getProperty() ).ignoreCase() );
-            }
-            else
-            {
-                criteria.addOrder( Order.desc( getSort().getProperty() ).ignoreCase() );
+                criteria.addOrder( order );
             }
         }
         else

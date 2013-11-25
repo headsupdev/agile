@@ -2,6 +2,8 @@
 
 * Add build status endpoint to APIs
 
+* Fix issue where ordering issues by type only ordered by priority
+
 2.0-rc2
 
 * Move the "begin" issue page to a button so it's optional
