@@ -374,7 +374,8 @@ public class XCodeBuildHandler
         {
             if ( line.length() > 1 && line.charAt( 0 ) == 'o' )
             {
-                if ( line.startsWith( "oTest Suite" ) && !line.contains( rootPath ) )
+                if ( ( line.startsWith( "oTest Suite" ) || line.startsWith( "Test Suite" ) ) &&
+                        !line.contains( rootPath ) )
                 {
                     int pos1 = line.indexOf( "\'" );
                     int pos2 = line.indexOf( "\'", pos1 + 1 );
@@ -408,7 +409,8 @@ public class XCodeBuildHandler
                         totalMillis = 0;
                     }
                 }
-                else if ( line.startsWith( "oTest Case" ) && !line.endsWith( "started." ) )
+                else if ( ( line.startsWith( "oTest Case" ) || line.startsWith( "Test Case" ) ) &&
+                        !line.endsWith( "started." ) )
                 {
                     int pos1 = line.indexOf( "\'" );
                     int pos2 = line.indexOf( "\'", pos1 + 1 );
@@ -444,7 +446,7 @@ public class XCodeBuildHandler
                     storage.save( testResult );
                     currentSuite.getResults().add( testResult );
                 }
-                else if ( line.startsWith( "oExecuted" ) )
+                else if ( line.startsWith( "oExecuted" ) || line.startsWith( "Executed" ) )
                 {
                     // don't think we need this
                 }
