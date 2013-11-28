@@ -110,7 +110,7 @@ public class XCodeBuildHandler
         }
         IOUtil.close( buildOut );
 
-        parseDatFiles( dir, build );
+        parseTestResults( output, build );
 
         build.setEndTime( new Date() );
         if ( result != 0 )
@@ -333,32 +333,19 @@ public class XCodeBuildHandler
         }
     }
 
-    protected static void parseDatFiles( File dir, Build build )
+    protected static void parseTestResults( File output, Build build )
     {
-        if ( dir.isDirectory() )
+        try
         {
-            if ( dir.listFiles() != null )
-            {
-                for ( File file : dir.listFiles() )
-                {
-                    parseDatFiles( file, build );
-                }
-            }
+            tryParsingTestResults( output, build );
         }
-        else if ( dir.getName().endsWith( ".dat" ) )
+        catch ( IOException e )
         {
-            try
-            {
-                parseDatFile( dir, build );
-            }
-            catch ( IOException e )
-            {
-                System.err.println( "Failure in parsing build .dat file: " + dir.getName() + " (" + e.getMessage() + ")" );
-            }
+            System.err.println( "Failure in parsing build output for test results: " + " (" + e.getMessage() + ")" );
         }
     }
 
-    protected static void parseDatFile( File dat, Build build )
+    protected static void tryParsingTestResults( File dat, Build build )
             throws IOException
     {
         BufferedReader reader = new BufferedReader( new FileReader( dat ) );
