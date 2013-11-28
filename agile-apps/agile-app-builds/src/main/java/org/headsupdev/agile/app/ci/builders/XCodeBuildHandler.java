@@ -359,84 +359,85 @@ public class XCodeBuildHandler
         int totalTests = 0, totalFailed = 0;
         while ( ( line = reader.readLine() ) != null )
         {
-            if ( line.length() > 1 && line.charAt( 0 ) == 'o' )
+            if ( line.length() <= 1 )
             {
-                if ( ( line.startsWith( "oTest Suite" ) || line.startsWith( "Test Suite" ) ) &&
-                        !line.contains( rootPath ) )
+                continue;
+            }
+            if ( ( line.startsWith( "oTest Suite" ) || line.startsWith( "Test Suite" ) ) &&
+                    !line.contains( rootPath ) )
+            {
+                int pos1 = line.indexOf( "\'" );
+                int pos2 = line.indexOf( "\'", pos1 + 1 );
+                String suiteName = line.substring( pos1 + 1, pos2 );
+
+                if ( line.contains( " started at " ) )
                 {
-                    int pos1 = line.indexOf( "\'" );
-                    int pos2 = line.indexOf( "\'", pos1 + 1 );
-                    String suiteName = line.substring( pos1 + 1, pos2 );
 
-                    if ( line.contains( " started at " ) )
-                    {
-
-                        currentSuite = new TestResultSet( suiteName, null );
-                    }
-                    else if ( line.contains( " finished at " ) )
-                    {
-                        if ( currentSuite == null )
-                        {
-                            System.err.println( "No Test Suite to close for '" + suiteName + "'" );
-                            continue;
-                        }
-
-                        currentSuite.setTests( setTests );
-                        currentSuite.setFailures( failedTests );
-                        currentSuite.setDuration( totalMillis );
-
-                        storage.save( currentSuite );
-                        build.getTestResults().add( currentSuite );
-                        build.setTests( totalTests );
-                        build.setFailures( totalFailed );
-
-                        // reset for next test
-                        currentSuite = null;
-                        setTests = failedTests = 0;
-                        totalMillis = 0;
-                    }
+                    currentSuite = new TestResultSet( suiteName, null );
                 }
-                else if ( ( line.startsWith( "oTest Case" ) || line.startsWith( "Test Case" ) ) &&
-                        !line.endsWith( "started." ) )
+                else if ( line.contains( " finished at " ) )
                 {
-                    int pos1 = line.indexOf( "\'" );
-                    int pos2 = line.indexOf( "\'", pos1 + 1 );
-                    String testName = line.substring( pos1 + 1, pos2 );
-
                     if ( currentSuite == null )
                     {
-                        System.err.println( "No Test Suite for test '" + testName + "'" );
+                        System.err.println( "No Test Suite to close for '" + suiteName + "'" );
                         continue;
                     }
 
-                    pos1 = line.indexOf( "(", pos2 );
-                    pos2 = line.indexOf( " ", pos1 + 1 );
-                    String testTime = line.substring( pos1 + 1, pos2 );
-                    long millis = (long) ( Double.parseDouble( testTime ) * 1000 );
-                    totalMillis += millis;
+                    currentSuite.setTests( setTests );
+                    currentSuite.setFailures( failedTests );
+                    currentSuite.setDuration( totalMillis );
 
-                    setTests++;
-                    totalTests++;
-                    int status;// = TestResult.STATUS_ERROR;
-                    if ( line.contains( " passed (" ) )
-                    {
-                        status = TestResult.STATUS_PASSED;
-                    }
-                    else
-                    {
-                        status = TestResult.STATUS_FAILED;
-                        failedTests++;
-                        totalFailed++;
-                    }
+                    storage.save( currentSuite );
+                    build.getTestResults().add( currentSuite );
+                    build.setTests( totalTests );
+                    build.setFailures( totalFailed );
 
-                    TestResult testResult = new TestResult( testName, status, millis, "", null );
-                    storage.save( testResult );
-                    currentSuite.getResults().add( testResult );
+                    // reset for next test
+                    currentSuite = null;
+                    setTests = failedTests = 0;
+                    totalMillis = 0;
                 }
-                else if ( line.startsWith( "oExecuted" ) || line.startsWith( "Executed" ) )
+            }
+            else if ( ( line.startsWith( "oTest Case" ) || line.startsWith( "Test Case" ) ) &&
+                    !line.endsWith( "started." ) )
+            {
+                int pos1 = line.indexOf( "\'" );
+                int pos2 = line.indexOf( "\'", pos1 + 1 );
+                String testName = line.substring( pos1 + 1, pos2 );
+
+                if ( currentSuite == null )
                 {
-                    // don't think we need this
+                    System.err.println( "No Test Suite for test '" + testName + "'" );
+                    continue;
                 }
+
+                pos1 = line.indexOf( "(", pos2 );
+                pos2 = line.indexOf( " ", pos1 + 1 );
+                String testTime = line.substring( pos1 + 1, pos2 );
+                long millis = (long) ( Double.parseDouble( testTime ) * 1000 );
+                totalMillis += millis;
+
+                setTests++;
+                totalTests++;
+                int status;// = TestResult.STATUS_ERROR;
+                if ( line.contains( " passed (" ) )
+                {
+                    status = TestResult.STATUS_PASSED;
+                }
+                else
+                {
+                    status = TestResult.STATUS_FAILED;
+                    failedTests++;
+                    totalFailed++;
+                }
+
+                TestResult testResult = new TestResult( testName, status, millis, "", null );
+                storage.save( testResult );
+                currentSuite.getResults().add( testResult );
+            }
+            else if ( line.startsWith( "oExecuted" ) || line.startsWith( "Executed" ) )
+            {
+                // don't think we need this
             }
         }
 
