@@ -33,6 +33,7 @@ import org.headsupdev.support.java.StringUtil;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -46,7 +47,7 @@ import java.util.regex.Pattern;
 public class XCodeBuildHandler
     implements BuildHandler
 {
-
+    public static final String ITEM_PREFIX = "▸ ";
     public static final Pattern BUILD_LOG_BUGS_COUNT_PATTERN = Pattern.compile( "scan-build: ([0-9]*) bugs found." );
     public static final Pattern BUILD_LOG_OUTPUT_DIR_PATTERN = Pattern.compile( "scan-build: Run 'scan-view ([^']*)' to examine bug reports." );
 
@@ -74,7 +75,14 @@ public class XCodeBuildHandler
         try
         {
             buildOut = new FileWriter( output );
-            prepareProject( project, dir, buildOut );
+            if ( !prepareProject( project, dir, buildOut ) )
+            {
+                IOUtil.close( buildOut );
+
+                build.setStatus( Build.BUILD_FAILED );
+                build.setEndTime( new Date() );
+                return;
+            }
 
             // execute a clean first of all
             ArrayList<String> commands = new ArrayList<String>();
@@ -111,6 +119,7 @@ public class XCodeBuildHandler
         IOUtil.close( buildOut );
 
         parseTestResults( output, build );
+        tidyOutput( output, dir );
 
         build.setEndTime( new Date() );
         if ( result != 0 )
@@ -143,15 +152,17 @@ public class XCodeBuildHandler
         }
     }
 
-    private void prepareProject( Project project, File dir, Writer buildOut )
+    private boolean prepareProject( Project project, File dir, Writer buildOut )
     {
-        if ( new File( dir, "Podfile" ).exists() )
+        if ( usesCocoaPods( dir ) )
         {
-            prepareCocoaPods( dir, buildOut );
+            return prepareCocoaPods( dir, buildOut );
         }
+
+        return true;
     }
 
-    private void prepareCocoaPods( File dir, Writer buildOut )
+    private boolean prepareCocoaPods( File dir, Writer buildOut )
     {
         log.debug( "running pod install to set up workspace" );
 
@@ -161,13 +172,18 @@ public class XCodeBuildHandler
         commands.add( "repo" );
         commands.add( "update" );
         commands.add( "--no-color" );
-        ExecUtil.executeLoggingExceptions( commands, dir, buildOut, buildOut );
+        int ret = ExecUtil.executeLoggingExceptions( commands, dir, buildOut, buildOut );
+        if ( ret != 0 )
+        {
+            return false;
+        }
 
         commands.clear();
         commands.add( "pod" );
         commands.add( "install" );
         commands.add( "--no-color" );
-        ExecUtil.executeLoggingExceptions( commands, dir, buildOut, buildOut );
+        ret = ExecUtil.executeLoggingExceptions( commands, dir, buildOut, buildOut );
+        return ret == 0;
     }
 
     public static boolean canFindScanBuild()
@@ -626,6 +642,64 @@ public class XCodeBuildHandler
             if ( reader != null )
             {
                 IOUtil.close( reader );
+            }
+        }
+    }
+
+    protected boolean usesCocoaPods( File dir )
+    {
+        return new File( dir, "Podfile" ).exists();
+    }
+
+    public static boolean canFindXCPretty()
+    {
+        // try and find a binary called xcpretty.
+        File lint = FileUtil.lookupInPath( "xcpretty" );
+
+        return lint != null;
+    }
+
+    protected void tidyOutput( File output, File dir )
+    {
+        if ( !canFindXCPretty() )
+        {
+            return;
+        }
+
+        String oldName = output.getAbsolutePath();
+        String tmpName = output.getAbsolutePath() + "-old";
+        File tmpFile = new File( tmpName );
+        output.renameTo( tmpFile );
+
+        try
+        {
+            Writer buildOut = new FileWriter( output );
+            if ( usesCocoaPods( dir ) )
+            {
+                buildOut.write( ITEM_PREFIX + "Updating CocoaPods\n" );
+            }
+            buildOut.close();
+
+            String[] cmd = { "/bin/sh", "-c",
+                "cat \"" + tmpName + "\" | xcpretty >> \"" + output.getAbsolutePath() + "\"" };
+
+            ExecUtil.execute( Arrays.asList( cmd ), dir );
+            tmpFile.delete();
+        }
+        catch ( IOException e )
+        {
+            output.renameTo( new File( oldName ) );
+
+            Writer buildOut;
+            try
+            {
+                buildOut = new FileWriter( output );
+                e.printStackTrace( new PrintWriter( buildOut ) );
+                buildOut.close();
+            }
+            catch ( IOException e1 )
+            {
+                // ignore
             }
         }
     }
