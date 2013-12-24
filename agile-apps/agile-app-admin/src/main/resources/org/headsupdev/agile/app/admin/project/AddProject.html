@@ -39,16 +39,16 @@
         <p>Enter the scm URL (and username and password if needed) for the project you wish to add.</p>
         <table class="importproject vertical">
           <tr>
-            <th>Scm url</th>
+            <th><label for="scmurl">Scm url</label></th>
             <td colspan="3"><span class="input">
-                scm:<select wicket:id="provider"><option>svn</option></select>:
-                <input type="text" wicket:id="scm" /></span></td>
+                <label for="scm">scm:</label><select id="scm" wicket:id="provider"><option>svn</option></select>:
+                <input type="text" id="scmurl" wicket:id="scm" /></span></td>
           </tr>
           <tr>
-            <th>Username (optional)</th>
-            <td><input type="text" wicket:id="username" /></td>
-            <th>Password (optional)</th>
-            <td><input type="password" wicket:id="password" /></td>
+            <th style="width:25%"><label for="username">Username (optional)</label></th>
+            <td style="width:25%"><input type="text" id="username" wicket:id="username" /></td>
+            <th style="width:25%"><label for="password">Password (optional)</label></th>
+            <td style="width:25%"><input type="password" id="password" wicket:id="password" /></td>
           </tr>
         </table>
 
