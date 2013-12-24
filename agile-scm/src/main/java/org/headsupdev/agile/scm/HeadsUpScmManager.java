@@ -42,9 +42,9 @@ public class HeadsUpScmManager extends BasicScmManager
 
     static
     {
-        SCM_IDS.add( "svn" );
         SCM_IDS.add( "git" );
         SCM_IDS.add( "hg" );
+        SCM_IDS.add( "svn" );
     }
 
     public static HeadsUpScmManager getInstance()
