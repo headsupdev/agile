@@ -613,6 +613,15 @@ div.tabs div.tab-row li.selected a {
     color: #25b6e6;
 }
 
+/* advanced panels */
+
+#advanced.advancedhidden {
+    display: none;
+}
+
+#advanced.advancedvisible {
+    display: inline;
+}
 
 /* dialog style */
 

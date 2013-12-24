@@ -136,6 +136,7 @@
                 org.headsupdev.agile.security.*,
                 org.headsupdev.support.java.*,
                 org.apache.wicket.*,
+                org.wicketstuff.*,
                 org.hibernate,org.hibernate.criterion,org.hibernate.transform,org.hibernate.classic,javax.persistence.*,
                 com.google.gson.*
             </Import-Package>

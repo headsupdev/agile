@@ -2,6 +2,7 @@
 
 * Add build status endpoint to APIs
 * Use XCPretty to tidy XCode build output, if installed
+* Add option for projects to be added from SCM branches
 
 * Fix issue where ordering issues by type only ordered by priority
 * Correctly parse Xcode 5 test logs

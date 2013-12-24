@@ -122,6 +122,7 @@
                 org.headsupdev.support.java.*,
                 org.apache.maven.scm.*,
                 org.apache.wicket.*,
+                org.wicketstuff.*,
                 org.hibernate,org.hibernate.classic,org.hibernate.jdbc,
                 org.quartz.*,
                 javax.persistence,!com.sun.management.*,

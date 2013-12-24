@@ -51,6 +51,19 @@
             <td><input type="password" wicket:id="password" /></td>
           </tr>
         </table>
+
+        <p>
+          <span id="advbutton" class="button" onclick="advbuttonAnimator.toggle();">Advanced</span>
+        </p>
+        <div class="advancedhidden" id="advanced">
+          <table class="importproject vertical" style="display:block">
+            <tr>
+              <th colspan="3"><label for="scmBranch">Branch - you may also specify a branch if you don't want to track the main branch</label></th>
+              <td><input value="" id="scmBranch" name="scmBranch"/></td>
+            </tr>
+          </table>
+        </div>
+
         <input type="submit" value="Add Project" />
       </form>
 

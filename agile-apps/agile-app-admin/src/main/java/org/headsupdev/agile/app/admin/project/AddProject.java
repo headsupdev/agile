@@ -18,6 +18,9 @@
 
 package org.headsupdev.agile.app.admin.project;
 
+import org.apache.maven.scm.AbstractScmVersion;
+import org.apache.maven.scm.ScmBranch;
+import org.apache.maven.scm.ScmVersion;
 import org.apache.wicket.markup.html.CSSPackageResource;
 import org.headsupdev.support.java.StringUtil;
 import org.headsupdev.agile.security.permission.AdminPermission;
@@ -40,6 +43,8 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.model.Model;
 import org.headsupdev.support.java.FileUtil;
+import org.wicketstuff.animator.Animator;
+import org.wicketstuff.animator.MarkupIdModel;
 
 import java.io.File;
 import java.io.IOException;
@@ -119,7 +124,7 @@ public class AddProject
 
         String provider = providers.get( 0 );
         String scm = "http://";
-        String username = null, password = null, scmUrl;
+        String username = null, password = null, scmUrl, scmBranch = null;
         File checkoutDir;
         Maven2ProjectImporter importer;
 
@@ -132,12 +137,23 @@ public class AddProject
             add( new TextField( "scm" ).setRequired( true ) );
             add( new TextField( "username" ).setRequired( false ) );
             add( new PasswordTextField( "password" ).setRequired( false ) );
+            add( new TextField( "scmBranch" ).setRequired( false ) );
+
+            WebMarkupContainer advanced = new WebMarkupContainer( "advanced" );
+            advanced.setMarkupId( "advanced" );
+            WebMarkupContainer button = new WebMarkupContainer( "advbutton" );
+            button.setMarkupId( "advbutton" );
+            add( button );
+
+            Animator animator = new Animator();
+            animator.addCssStyleSubject( new MarkupIdModel( advanced ), "advancedhidden", "advancedvisible" );
+            animator.attachTo( button, "onclick", Animator.Action.toggle() );
         }
 
         public void onSubmit()
         {
             scmUrl = "scm:" + provider + ":" + scm;
-            checkoutDir = checkOut( scmUrl, username, password );
+            checkoutDir = checkOut( scmUrl, username, password, scmBranch );
 
             if ( checkoutDir == null || !checkoutDir.exists() )
             {
@@ -169,7 +185,8 @@ public class AddProject
                         detailsSubmitted();
                     }
                 };
-            }            else if ( ( new StoredAntProject() ).foundMetadata( checkoutDir ) )
+            }
+            else if ( ( new StoredAntProject() ).foundMetadata( checkoutDir ) )
             {
                 importer = new AntProjectImporter( "detail", AddProject.this, checkoutDir )
                 {
@@ -339,7 +356,7 @@ public class AddProject
         working = getStorage().getWorkingDirectory( root );
     }
 
-    public File checkOut( String scm, String user, String password )
+    public File checkOut( String scm, String user, String password, String branch )
     {
         projectTree.clear();
         try
@@ -355,8 +372,14 @@ public class AddProject
                 repository.getProviderRepository().setPassword( password );
             }
 
+            ScmVersion version = null;
+            if ( branch != null )
+            {
+                version = new ScmBranch( branch );
+            }
+
             File working = FileUtil.createTempDir( "checkout-", "", getStorage().getDataDirectory() );
-            CheckOutScmResult result = scmManager.checkOut( repository, new ScmFileSet( working ) );
+            CheckOutScmResult result = scmManager.checkOut( repository, new ScmFileSet( working ), version );
 
             if ( !result.isSuccess() )
             {
