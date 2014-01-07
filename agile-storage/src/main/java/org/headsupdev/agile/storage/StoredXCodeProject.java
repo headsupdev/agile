@@ -29,9 +29,7 @@ import org.hibernate.search.annotations.Indexed;
 import javax.persistence.Entity;
 import javax.persistence.DiscriminatorValue;
 import java.io.*;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * TODO Document me!
@@ -85,9 +83,23 @@ public class StoredXCodeProject
 
     }
 
-    protected String replaceVariables( String in )
+    protected String replaceVariables( String in, Map<String, String> variables )
     {
-        return in.replace( "$(SRCROOT)/", "" );
+        String ret = in.replace( "$(SRCROOT)/", "" );
+
+        for ( String key : variables.keySet() )
+        {
+            ret = ret.replaceAll( "\\$[({]" + key + "[)}]", variables.get( key ) );
+
+            ret = ret.replaceAll( "\\$[({]" + key + ":rfc1034identifier[)}]", getRFC1034( variables.get( key ) ) );
+        }
+
+        return ret;
+    }
+
+    public String getRFC1034( String in )
+    {
+        return in.replaceAll("[^A-Za-z0-9]", "_");
     }
 
     protected String stripComments( String in )
@@ -103,7 +115,7 @@ public class StoredXCodeProject
         return out.trim();
     }
 
-    private String getProjectFileValue( String line )
+    private String getProjectFileValue( String line, Map<String, String> variables )
     {
         String ret;
         int start = line.indexOf( "=" ) + 1;
@@ -127,7 +139,7 @@ public class StoredXCodeProject
             }
         }
 
-        return stripComments( replaceVariables( ret ) );
+        return stripComments( replaceVariables( ret, variables ) );
     }
 
     protected String getFirstTarget( File file )
@@ -178,7 +190,7 @@ public class StoredXCodeProject
                 // ignore these lines again
             }
 
-            while ( ( line = in.readLine() ) != null && !line.contains("buildConfigurations"))
+            while ( ( line = in.readLine() ) != null && !line.contains( "buildConfigurations" ) )
             {
                 // ignore these lines
             }
@@ -200,7 +212,7 @@ public class StoredXCodeProject
         return null;
     }
 
-    protected String getBuildConfigurationListForTarget( File file, String target )
+    protected String getBuildConfigurationListForTarget( File file, String target, Map<String, String> variables )
     {
         BufferedReader in = null;
         try
@@ -218,7 +230,7 @@ public class StoredXCodeProject
                 // ignore these lines
             }
 
-            return getProjectFileValue( line );
+            return getProjectFileValue( line, variables );
         }
         catch ( IOException e )
         {
@@ -238,10 +250,11 @@ public class StoredXCodeProject
     protected void loadFromProjectFile( File projectFile )
     {
         Manager.getLogger( getClass().getName() ).info( "Parsing XCode metadata from " + projectFile.getPath() );
+        Map<String, String> variables = new HashMap<String, String>();
 
         String firstTarget = getFirstTarget( projectFile );
 
-        String buildConfigurationList = getBuildConfigurationListForTarget( projectFile, firstTarget );
+        String buildConfigurationList = getBuildConfigurationListForTarget( projectFile, firstTarget, variables );
 
         String configuration = getFirstBuildConfigurationInList( projectFile, buildConfigurationList );
 
@@ -254,7 +267,19 @@ public class StoredXCodeProject
             String line;
             while ( ( line = in.readLine() ) != null && !line.contains( configuration ) )
             {
-                // ignore these lines
+                if ( line.contains( "targets =" ) )
+                {
+                    String next = in.readLine();
+                    int start = next.indexOf( "/*" );
+                    if ( start == -1 )
+                    {
+                        continue;
+                    }
+
+                    int end = next.indexOf( "*/", start );
+                    String targetName = next.substring( start + 2, end ).trim();
+                    variables.put( "TARGET_NAME", targetName );
+                }
             }
 
             String infoFileName = null;
@@ -262,11 +287,12 @@ public class StoredXCodeProject
             {
                 if ( line.contains( "INFOPLIST_FILE =" ) )
                 {
-                    infoFileName = getProjectFileValue( line );
+                    infoFileName = getProjectFileValue( line, variables );
                 }
                 else if ( line.contains( "PRODUCT_NAME =" ) )
                 {
-                    name = getProjectFileValue( line );
+                    name = getProjectFileValue( line, variables );
+                    variables.put( "PRODUCT_NAME", replaceVariables( name, variables ) );
                     break; // note that if we parse further blocks a break will not be enough
                 }
             }
@@ -290,7 +316,7 @@ public class StoredXCodeProject
                 }
             }
 
-            loadFromInfoFile( infoFile );
+            loadFromInfoFile( infoFile, variables );
 
             File podFile = new File( projectFile.getParentFile().getParentFile(), "Podfile" );
             loadFromPodFile( podFile );
@@ -308,7 +334,7 @@ public class StoredXCodeProject
         }
     }
 
-    protected void loadFromInfoFile( File infoFile )
+    protected void loadFromInfoFile( File infoFile, Map<String, String> variables )
     {
         BufferedReader in = null;
         try
@@ -331,7 +357,7 @@ public class StoredXCodeProject
                         String versionString = in.readLine();
                         int start = versionString.indexOf( '>' ) + 1;
                         int stop = versionString.indexOf( '<', start );
-                        this.version = versionString.substring( start, stop );
+                        this.version = replaceVariables( versionString.substring( start, stop ), variables );
                     }
                     else if ( line.contains( ">CFBundleVersion<") )
                     {
@@ -340,7 +366,7 @@ public class StoredXCodeProject
                             String versionString = in.readLine();
                             int start = versionString.indexOf( '>' ) + 1;
                             int stop = versionString.indexOf( '<', start );
-                            this.version = versionString.substring( start, stop );
+                            this.version = replaceVariables( versionString.substring( start, stop ), variables );
                         }
                     }
                     else if ( line.contains( ">CFBundleIdentifier<" ) )
@@ -348,7 +374,7 @@ public class StoredXCodeProject
                         String bundleString = in.readLine();
                         int start = bundleString.indexOf( '>' ) + 1;
                         int stop = bundleString.indexOf( '<', start );
-                        this.bundleId = bundleString.substring( start, stop );
+                        this.bundleId = replaceVariables( bundleString.substring( start, stop ), variables );
                     }
                     else if ( line.contains( ">LSRequiresIPhoneOS<" ) )
                     {
