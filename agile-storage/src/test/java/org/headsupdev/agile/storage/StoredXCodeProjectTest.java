@@ -32,6 +32,18 @@ public class StoredXCodeProjectTest
         assertEquals( XCodeDependency.UNVERSIONED, deps.get( 2 ).getVersion() );
     }
 
+    public void testDependencyLoadingLegacy()
+    {
+        // note the trailing colon here which older versions of the serialisation would leave...
+        final String depString = "name1:version1,name2:version2,name3:";
+        StoredXCodeProject project = new StoredXCodeProject();
+        project.dependencies = depString;
+
+        List<XCodeDependency> deps = project.getDependencies();
+        assertEquals( 3, deps.size() );
+        assertEquals( XCodeDependency.UNVERSIONED, deps.get( 2 ).getVersion() );
+    }
+
     public void testDependencyStoring()
     {
         List<XCodeDependency> deps = new LinkedList<XCodeDependency>();
