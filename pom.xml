@@ -327,14 +327,6 @@
             <goals>deploy</goals>
           </configuration>
         </plugin>
-
-        <plugin>
-          <artifactId>maven-site-plugin</artifactId>
-          <version>3.0</version>
-          <configuration>
-            <skip>true</skip>
-          </configuration>
-        </plugin>
       </plugins>
     </pluginManagement>
   </build>
@@ -422,7 +414,6 @@
 
       <build>
         <plugins>
-<!--
           <plugin>
             <inherited>true</inherited>
             <groupId>org.apache.maven.plugins</groupId>
@@ -437,8 +428,6 @@
               </execution>
             </executions>
           </plugin>
--->
-<!--
           <plugin>
             <inherited>true</inherited>
             <groupId>org.apache.maven.plugins</groupId>
@@ -453,7 +442,7 @@
               </execution>
             </executions>
           </plugin>
--->
+
           <plugin>
             <inherited>true</inherited>
             <groupId>org.apache.maven.plugins</groupId>
