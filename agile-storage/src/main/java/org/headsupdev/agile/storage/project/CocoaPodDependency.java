@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2013 - 2014 Heads Up Development Ltd.
+ * Copyright 2013-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -16,20 +16,43 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.headsupdev.agile.api;
+package org.headsupdev.agile.storage.project;
+
+import org.headsupdev.agile.api.XCodeDependency;
+
+import java.io.Serializable;
 
 /**
- * A simple dependency object for describing artifacts our projects depend upon.
+ * A simple dependency for XCode projects using CocoaPods
+ * <p/>
+ * Created: 07/01/2014
  *
  * @author Andrew Williams
- * @version $Id$
  * @since 2.0
  */
-public interface XCodeDependency
+public class CocoaPodDependency
+    implements XCodeDependency, Serializable
 {
-    public static final String UNVERSIONED = "";
+    private String name, version;
 
-    public String getName();
+    public CocoaPodDependency( String name )
+    {
+        this( name, UNVERSIONED );
+    }
 
-    public String getVersion();
+    public CocoaPodDependency( String name, String version )
+    {
+        this.name = name;
+        this.version = version;
+    }
+
+    public String getName()
+    {
+        return name;
+    }
+
+    public String getVersion()
+    {
+        return version;
+    }
 }

@@ -2,159 +2,45 @@ package org.headsupdev.agile.storage;
 
 import junit.framework.TestCase;
 import org.headsupdev.agile.api.*;
-import org.headsupdev.agile.api.logging.Logger;
-import org.headsupdev.agile.api.service.ScmService;
+import org.headsupdev.agile.storage.project.CocoaPodDependency;
 
-import java.io.File;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 /**
- * TODO: Document me
+ * Testing some xcode project serialisation
  * <p/>
  * Created: 05/01/2014
  *
  * @author Andrew Williams
- * @since 1.2
+ * @since 2.0
  */
-public class StoredXCodeProjectTest extends TestCase
+public class StoredXCodeProjectTest
+        extends TestCase
 {
-    private StoredXCodeProject project;
-
-    protected void setUp()
-            throws URISyntaxException
+    public void testDependencyLoading()
     {
-        Manager.setInstance( new Manager() {
-            @Override
-            public void addProjectListener(ProjectListener listener) {
-                //To change body of implemented methods use File | Settings | File Templates.
-            }
+        final String depString = "name1:version1,name2:version2,name3";
+        StoredXCodeProject project = new StoredXCodeProject();
+        project.dependencies = depString;
 
-            @Override
-            public void removeProjectListener(ProjectListener listener) {
-                //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            @Override
-            public void fireProjectAdded(Project project) {
-                //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            @Override
-            public void fireProjectModified(Project project) {
-                //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            @Override
-            public void fireProjectFileModified(Project project, String path, File file) {
-                //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            @Override
-            public void fireEventAdded(Event event) {
-                //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            @Override
-            public Map<String, LinkProvider> getLinkProviders() {
-                return null;  //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            @Override
-            public List<Task> getTasks() {
-                return null;  //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            @Override
-            public void addTask(Task task) {
-                //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            @Override
-            public void removeTask(Task task) {
-                //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            @Override
-            public Date getInstallDate() {
-                return null;  //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            @Override
-            public double getInstallVersion() {
-                return 0;  //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            @Override
-            public void setupCompleted() {
-                //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            @Override
-            public boolean isUpdateAvailable() {
-                return false;  //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            @Override
-            protected Logger getLoggerForComponent(String component) {
-                return new Logger(){
-                    @Override
-                    public void debug(String error) {
-                        //To change body of implemented methods use File | Settings | File Templates.
-                    }
-
-                    @Override
-                    public void info(String error) {
-                        //To change body of implemented methods use File | Settings | File Templates.
-                    }
-
-                    @Override
-                    public void warn(String error) {
-                        //To change body of implemented methods use File | Settings | File Templates.
-                    }
-
-                    @Override
-                    public void error(String error) {
-                        //To change body of implemented methods use File | Settings | File Templates.
-                    }
-
-                    @Override
-                    public void error(String error, Throwable t) {
-                        //To change body of implemented methods use File | Settings | File Templates.
-                    }
-
-                    @Override
-                    public void fatalError(String fatal) {
-                        //To change body of implemented methods use File | Settings | File Templates.
-                    }
-
-                    @Override
-                    public void fatalError(String fatal, Throwable t) {
-                        //To change body of implemented methods use File | Settings | File Templates.
-                    }
-                };
-            }
-
-            @Override
-            public ScmService getScmService() {
-                return null;  //To change body of implemented methods use File | Settings | File Templates.
-            }
-        });
-        URL url = Thread.currentThread().getContextClassLoader().getResource( "demo/project.pbxproj" );
-        project = new StoredXCodeProject( new File( url.toURI() ) );
+        List<XCodeDependency> deps = project.getDependencies();
+        assertEquals( 3, deps.size() );
+        assertEquals( "name1", deps.get( 0 ).getName() );
+        assertEquals( "version2", deps.get( 1 ).getVersion() );
+        assertEquals( "name3", deps.get( 2 ).getName() );
+        assertEquals( XCodeDependency.UNVERSIONED, deps.get( 2 ).getVersion() );
     }
 
-    public void testTargetNameFound()
+    public void testDependencyStoring()
     {
-        assertEquals( "iPhone Demo", project.getName() );
-        assertEquals( "com.yourcompany.iPhone_Demo", project.getBundleId() );
-    }
+        List<XCodeDependency> deps = new LinkedList<XCodeDependency>();
+        deps.add( new CocoaPodDependency( "name1", "version1" ) );
+        deps.add( new CocoaPodDependency( "name2", "version2" ) );
+        deps.add( new CocoaPodDependency( "name3" ) );
 
-    public void testEncoding()
-    {
-        assertEquals( "iPhone_Demo", project.getRFC1034( "iPhone Demo" ) );
+        StoredXCodeProject project = new StoredXCodeProject();
+        project.setDependencies( deps );
+        assertEquals( "name1:version1,name2:version2,name3", project.dependencies );
     }
 }
