@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -18,16 +18,18 @@
 
 package org.headsupdev.agile.app.milestones;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.markup.repeater.Item;
 import org.headsupdev.agile.app.milestones.entityproviders.GroupedMilestoneProvider;
+import org.headsupdev.agile.app.milestones.entityproviders.MilestoneGroupProvider;
 import org.headsupdev.agile.storage.issues.MilestoneGroup;
 import org.headsupdev.agile.web.components.PercentagePanel;
+import org.headsupdev.agile.web.components.StripedDataView;
 import org.headsupdev.agile.web.components.milestones.MilestoneListPanel;
 import org.headsupdev.agile.web.wicket.SortableEntityProvider;
 import org.apache.wicket.markup.html.CSSPackageResource;
@@ -50,6 +52,12 @@ import java.util.List;
 public class Milestones
     extends HeadsUpPage
 {
+    private SortableEntityProvider<Milestone> ungroupedProvider;
+    private boolean hasGroups = false;
+    private boolean hideProject = false;
+
+    private Component ungrouped, ungroupedMilestones;
+
     public Permission getRequiredPermission() {
         return new MilestoneListPermission();
     }
@@ -67,48 +75,60 @@ public class Milestones
         final MilestoneFilterPanel filter = new MilestoneFilterPanel( "filter", getSession().getUser() );
         add( filter );
 
-        final boolean hideProject = !getProject().equals( StoredProject.getDefault() );
+        hideProject = !getProject().equals( StoredProject.getDefault() );
 
+        SortableEntityProvider<MilestoneGroup> provider = new MilestoneGroupProvider( getProject(), filter );
         List<MilestoneGroup> groups = MilestonesApplication.getMilestoneGroups( getProject(), filter );
-        boolean hasGroups = groups.size() > 0;
+        hasGroups = groups.size() > 0;
 
-        add( new ListView<MilestoneGroup>( "group", groups )
+        add( new StripedDataView<MilestoneGroup>( "group", provider )
         {
             @Override
-            protected void populateItem( ListItem<MilestoneGroup>listItem )
+            protected void populateItem( Item<MilestoneGroup> item )
             {
-                MilestoneGroup group = listItem.getModelObject();
+                MilestoneGroup group = item.getModelObject();
                 PageParameters params = new PageParameters();
                 params.add( "project", group.getProject().getId() );
                 params.add( "id", group.getName() );
                 BookmarkablePageLink nameLink = new BookmarkablePageLink( "grouplink",
                         getPageClass( "milestones/viewgroup" ), params );
                 nameLink.add( new Label( "name", group.getName() ) );
-                listItem.add( nameLink );
+                item.add( nameLink );
 
                 double part = group.getCompleteness();
                 int percent = (int) ( part * 100 );
                 Panel panel = new PercentagePanel( "bar", percent );
-                listItem.add( panel );
+                item.add( panel );
 
                 SortableEntityProvider<Milestone> provider = new GroupedMilestoneProvider( group, filter );
-                listItem.add( new MilestoneListPanel( "milestones", provider, Milestones.this, hideProject ) );
+                item.add( new MilestoneListPanel( "milestones", provider, Milestones.this, hideProject ) );
             }
         } );
 
-        final SortableEntityProvider<Milestone> provider;
+        // TODO figure why the contents of this one does not update dynamically when those above do...
         if ( getProject().equals( StoredProject.getDefault() ) )
         {
-            provider = new GroupedMilestoneProvider( null, filter );
+            ungroupedProvider = new GroupedMilestoneProvider( null, filter );
         }
         else
         {
-            provider = new GroupedMilestoneProvider( null, getProject(), filter );
+            ungroupedProvider = new GroupedMilestoneProvider( null, getProject(), filter );
         }
 
-        boolean hasUngrouped = provider.size() > 0;
-        add( new WebMarkupContainer( "ungrouped" ).setVisible( hasUngrouped && hasGroups ) );
-        add( new MilestoneListPanel( "milestones", provider, this, hideProject ).setVisible( hasUngrouped ) );
+        add( ungrouped = new WebMarkupContainer( "ungrouped" ) );
+        ungrouped.setOutputMarkupPlaceholderTag( true );
+        add( ungroupedMilestones = new MilestoneListPanel( "milestones", ungroupedProvider, this, hideProject ) );
+        ungroupedMilestones.setOutputMarkupPlaceholderTag( true );
+    }
+
+    @Override
+    protected void onBeforeRender()
+    {
+        super.onBeforeRender();
+
+        boolean hasUngrouped = ungroupedProvider.size() > 0;
+        ungrouped.setVisible( hasUngrouped && hasGroups );
+        ungroupedMilestones.setVisible( hasUngrouped );
     }
 
     @Override
