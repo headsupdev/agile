@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2013 Heads Up Development Ltd.
+ * Copyright 2009-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -20,6 +20,7 @@ package org.headsupdev.agile.app.milestones;
 
 import org.headsupdev.agile.storage.HibernateStorage;
 import org.headsupdev.agile.storage.issues.Milestone;
+import org.headsupdev.agile.storage.issues.MilestoneGroup;
 import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.components.DateTimeWithTimeZoneField;
 import org.headsupdev.agile.web.components.IdPatternValidator;
@@ -62,6 +63,9 @@ public class EditMilestoneForm
                     milestone = (Milestone) ( (HibernateStorage) owner.getStorage() ).getHibernateSession().merge( milestone );
                 }
                 milestone.setUpdated( new Date() );
+                if (milestone.getGroup() != null) {
+                    updateGroupDue(milestone.getGroup());
+                }
                 submitParent();
 
                 PageParameters params = new PageParameters();
@@ -113,4 +117,22 @@ public class EditMilestoneForm
     {
         return creating;
     }
+
+    protected void updateGroupDue( MilestoneGroup group )
+    {
+        group.setDueDate( null );
+        for ( Milestone milestone : group.getMilestones() )
+        {
+            if ( milestone.getDueDate() == null )
+            {
+                continue;
+            }
+
+            if ( group.getDueDate() == null || milestone.getDueDate().after( group.getDueDate() ) )
+            {
+                group.setDueDate( milestone.getDueDate() );
+            }
+        }
+    }
+
 }

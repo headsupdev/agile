@@ -8,6 +8,7 @@
 * Correctly parse Xcode 5 test logs
 * Fix issue where xcode build directories are not correctly cleared if using CocoaPods
 * Fix issue with maven version parsing if a version range was used
+* Fix Issue:53 Milestone groups do not respect filter when changed (required tracking the completed date of a group)
 
 2.0-rc2
 

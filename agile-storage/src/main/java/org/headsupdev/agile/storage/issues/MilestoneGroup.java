@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -59,7 +59,7 @@ public class MilestoneGroup
     String description;
 
     @Temporal(TemporalType.TIMESTAMP)
-    Date created, updated, completed;
+    Date created, updated, due, completed;
 
     @OneToMany(mappedBy = "group")
     private Set<Milestone> milestones = new HashSet<Milestone>();
@@ -153,23 +153,13 @@ public class MilestoneGroup
 
     public Date getDueDate()
     {
-        if ( milestones.size() == 0 )
-        {
-            return null;
-        }
-
-        Date latest = null;
-        for ( Milestone milestone : milestones )
-        {
-            if ( latest == null || ( milestone.getDueDate() != null && latest.before(milestone.getDueDate()) ) )
-            {
-                latest = milestone.getDueDate();
-            }
-        }
-
-        return latest;
+        return due;
     }
 
+    public void setDueDate( Date due )
+    {
+        this.due = due;
+    }
 
     public Date getCompletedDate()
     {
