@@ -69,6 +69,8 @@ public class StoredMavenTwoProject
     @Publish
     protected String dependencies;
 
+    private static final String LIST_SPLIT_STRING = "|";
+
     protected StoredMavenTwoProject()
     {
     }
@@ -111,7 +113,7 @@ public class StoredMavenTwoProject
             {
                 if ( !first )
                 {
-                    developers.append( ',' );
+                    developers.append( LIST_SPLIT_STRING );
                 }
 
                 developers.append( developer.getId() );
@@ -125,7 +127,7 @@ public class StoredMavenTwoProject
             {
                 if ( !first )
                 {
-                    modules.append( ',' );
+                    modules.append( LIST_SPLIT_STRING );
                 }
 
                 modules.append( module );
@@ -141,7 +143,7 @@ public class StoredMavenTwoProject
                     dependency.getVersion() + ":" + dependency.getType();
                 if ( !first )
                 {
-                    dependencies.append( ',' );
+                    dependencies.append( LIST_SPLIT_STRING );
                 }
 
                 dependencies.append( depStr );
@@ -216,7 +218,7 @@ public class StoredMavenTwoProject
             return new LinkedList<String>();
         }
 
-        return Arrays.asList( developers.split( "," ) );
+        return Arrays.asList( developers.split( LIST_SPLIT_STRING ) );
     }
 
     public List<String> getModules()
@@ -226,7 +228,7 @@ public class StoredMavenTwoProject
             return new LinkedList<String>();
         }
 
-        return Arrays.asList( modules.split( "," ) );
+        return Arrays.asList( modules.split( LIST_SPLIT_STRING ) );
     }
 
     public List<Project> getOrderedChildProjects()
@@ -275,7 +277,7 @@ public class StoredMavenTwoProject
             return ret;
         }
 
-        String[] dependencyList = dependencies.split( "," );
+        String[] dependencyList = dependencies.split( LIST_SPLIT_STRING );
         for ( String dependency : dependencyList )
         {
             final String[] gav = dependency.split( ":" );
