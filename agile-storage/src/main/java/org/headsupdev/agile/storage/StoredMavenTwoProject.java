@@ -69,7 +69,7 @@ public class StoredMavenTwoProject
     @Publish
     protected String dependencies;
 
-    private static final String LIST_SPLIT_STRING = "|";
+    private static final String LIST_SPLIT_STRING = "\\|";
 
     protected StoredMavenTwoProject()
     {
