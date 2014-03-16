@@ -913,7 +913,7 @@ public class ResourceManagerImpl
         if ( issue.getTimeRequired() == null ) {
             remain -= estimate;
         } else {
-            remain -= issue.getTimeRequired().getHours();
+            remain -= getEstimateMultiplier( issue ) * issue.getTimeRequired().getHours();
         }
 
         return remain;
