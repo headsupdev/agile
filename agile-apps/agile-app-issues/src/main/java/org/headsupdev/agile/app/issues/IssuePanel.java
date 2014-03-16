@@ -29,6 +29,7 @@ import org.headsupdev.agile.storage.issues.Issue;
 import org.headsupdev.agile.storage.issues.IssueRelationship;
 import org.headsupdev.agile.storage.issues.Milestone;
 import org.headsupdev.agile.web.ApplicationPageMapper;
+import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.HeadsUpSession;
 import org.headsupdev.agile.web.RenderUtil;
 import org.headsupdev.agile.web.components.AccountFallbackLink;
@@ -342,6 +343,22 @@ public class IssuePanel
         else
         {
             add( new Label( "requiredLabel", "Taken" ) );
+        }
+
+        if ( ( (HibernateStorage) Manager.getStorageInstance() ).getResourceManager().isIssueMissingEstimate( issue ) )
+        {
+            if ( ( (HibernateStorage) Manager.getStorageInstance() ).getResourceManager().isIssueSeriouslyMissingEstimate( issue ) )
+            {
+                add( new Image( "overworked-icon", new ResourceReference( HeadsUpPage.class, "images/fail.png" ) ) );
+            }
+            else
+            {
+                add( new Image( "overworked-icon", new ResourceReference( HeadsUpPage.class, "images/warn.png" ) ) );
+            }
+        }
+        else
+        {
+            add( new WebMarkupContainer( "overworked-icon" ).setVisible( false ) );
         }
 
         add( new Label( "summary", issue.getSummary() ) );
