@@ -1,3 +1,7 @@
+2.0-rc4
+
+* Fix issue where overworked icons could appear against issues that have been re-estimated but not started
+
 2.0-rc3
 
 * Add build status endpoint to APIs
