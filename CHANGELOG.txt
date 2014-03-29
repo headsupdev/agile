@@ -1,4 +1,4 @@
-2.0-rc4
+2.0
 
 * Fix issue where overworked icons could appear against issues that have been re-estimated but not started
 
