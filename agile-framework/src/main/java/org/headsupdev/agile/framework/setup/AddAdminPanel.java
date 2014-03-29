@@ -54,7 +54,7 @@ public class AddAdminPanel
     class CreateAdminForm
         extends Form
     {
-        String password, password2, email, telephone;
+        String password, password2, email;
         String firstname, lastname;
 
         public CreateAdminForm( String id )
@@ -65,7 +65,6 @@ public class AddAdminPanel
             add( new TextField<String>( "firstname", new PropertyModel<String>( this, "firstname" ) ) );
             add( new TextField<String>( "lastname", new PropertyModel<String>( this, "lastname" ) ) );
             add( new TextField<String>( "email", new PropertyModel<String>( this, "email" ) ).setRequired( true ) );
-            add( new TextField<String>( "telephone", new PropertyModel<String>( this, "telephone" ) ) );
 
             PasswordTextField pass, pass2;
             pass = new PasswordTextField( "password", new PropertyModel<String>( this, "password" ) );
@@ -81,7 +80,6 @@ public class AddAdminPanel
             StoredUser created = new StoredUser( "admin" );
             created.setPassword( password );
             created.setEmail( email );
-            created.setTelephone( telephone );
             created.setFirstname( firstname );
             created.setLastname( lastname );
 
@@ -121,16 +119,6 @@ public class AddAdminPanel
         public void setEmail( String email )
         {
             this.email = email;
-        }
-
-        public String getTelephone()
-        {
-            return telephone;
-        }
-
-        public void setTelephone( String telephone )
-        {
-            this.telephone = telephone;
         }
 
         public String getFirstname()

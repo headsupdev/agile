@@ -76,7 +76,7 @@ public class AddAccount
 
     class CreateUserForm extends Form
     {
-        String username, password, password2, email;
+        String username, password, password2, email, telephone;
         String firstname, lastname = "";
 
         public CreateUserForm( String id )
@@ -88,6 +88,7 @@ public class AddAccount
             add( new TextField( "firstname", new PropertyModel( this, "firstname" ) ) );
             add( new TextField( "lastname", new PropertyModel( this, "lastname" ) ) );
             add( new TextField( "email", new PropertyModel( this, "email" ) ).setRequired( true ) );
+            add( new TextField<String>( "telephone", new PropertyModel<String>( this, "telephone" ) ) );
 
             PasswordTextField pass, pass2;
             pass = new PasswordTextField( "password", new PropertyModel( this, "password" ) );
@@ -110,6 +111,7 @@ public class AddAccount
             StoredUser created = new StoredUser( username );
             created.setPassword( password );
             created.setEmail( email );
+            created.setTelephone( telephone );
             created.setFirstname( firstname );
             created.setLastname( lastname );
 
@@ -175,6 +177,16 @@ public class AddAccount
         public void setEmail( String email )
         {
             this.email = email;
+        }
+
+        public String getTelephone()
+        {
+            return telephone;
+        }
+
+        public void setTelephone( String telephone )
+        {
+            this.telephone = telephone;
         }
 
         public String getFirstname()
