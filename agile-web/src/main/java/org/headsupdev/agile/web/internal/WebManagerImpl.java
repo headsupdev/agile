@@ -67,8 +67,8 @@ public class WebManagerImpl
     @Override
     public String getFooterCopyrightHTML()
     {
-        return "Copyright &copy; 2009 - 2013 <a href=\"http://headsupdev.com/\" target=\"_blank\">" +
-            "Heads Up Development Ltd</a>.";
+        return "Copyright &copy; 2009 - 2014 <a href=\"http://headsupdev.com/\" target=\"_blank\">" +
+            "Heads Up Development Ltd</a> and contributors.";
     }
 
     @Override
