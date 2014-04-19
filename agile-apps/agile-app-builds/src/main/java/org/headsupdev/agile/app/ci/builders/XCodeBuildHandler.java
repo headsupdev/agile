@@ -107,6 +107,7 @@ public class XCodeBuildHandler
             if ( runTests )
             {
                 commands.add( "test" );
+                appendTestDestinationCommand( config, commands );
             }
 
             result = ExecUtil.executeLoggingExceptions( commands, dir, buildOut, buildOut );
@@ -241,6 +242,27 @@ public class XCodeBuildHandler
         }
 
         commands.add( "ONLY_ACTIVE_ARCH=NO" );
+    }
+
+    protected void appendTestDestinationCommand( PropertyTree config, ArrayList<String> commands )
+    {
+        String sdkName = config.getProperty( CIApplication.CONFIGURATION_XCODE_SDK.getKey(),
+                (String) CIApplication.CONFIGURATION_XCODE_SDK.getDefault() );
+        String simulator = "iphonesimulator";
+        int versionIndex = simulator.length();
+
+        if ( !StringUtil.isEmpty( sdkName ) && sdkName.startsWith( simulator ) && sdkName.length() > versionIndex )
+        {
+            String sdkSimulatorVersion = sdkName.substring( versionIndex );
+
+            if ( sdkSimulatorVersion != null )
+            {
+                String simulatorDestination = String.format( "'platform=iOS Simulator,name=iPhone Retina (4-inch),OS=%s'", sdkSimulatorVersion );
+
+                commands.add( "-destination" );
+                commands.add( simulatorDestination );
+            }
+        }
     }
 
     private static String getDefaultWorkspace( Project project, File dir )
