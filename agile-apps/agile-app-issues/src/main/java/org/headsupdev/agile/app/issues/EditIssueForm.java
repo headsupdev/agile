@@ -257,9 +257,8 @@ class IssueForm
         {
             issue = (Issue) ( (HibernateStorage) owner.getStorage() ).getHibernateSession().merge( issue );
 
-            // if we are updating our total required but not the initial estimate then log the change
-            if ( issue.getTimeRequired() != null && !issue.getTimeRequired().equals( oldTimeRequired ) &&
-                    ( issue.getTimeEstimate() == null || !issue.getTimeRequired().equals( issue.getTimeEstimate() ) ) )
+            // if we are updating our total required then log the change
+            if ( issue.getTimeRequired() != null && !issue.getTimeRequired().equals( oldTimeRequired ) )
             {
                 DurationWorked simulate = new DurationWorked();
                 simulate.setUpdatedRequired( issue.getTimeRequired() );
