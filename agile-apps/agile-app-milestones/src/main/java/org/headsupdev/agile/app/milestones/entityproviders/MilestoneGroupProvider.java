@@ -18,7 +18,6 @@
 
 package org.headsupdev.agile.app.milestones.entityproviders;
 
-import org.apache.wicket.extensions.markup.html.repeater.util.SortParam;
 import org.headsupdev.agile.api.Manager;
 import org.headsupdev.agile.api.Project;
 import org.headsupdev.agile.app.milestones.MilestoneFilter;
@@ -98,5 +97,25 @@ public class MilestoneGroupProvider
     public String getCountProperty()
     {
         return "name.name";
+    }
+
+    @Override
+    public Iterator<MilestoneGroup> iterator( int start, int limit )
+    {
+        if ( getSort() != null && !getSort().getProperty().equals( "due" ) )
+        {
+            return super.iterator( start, limit );
+        }
+
+        Iterator<MilestoneGroup> iter = super.iterator( 0, size() );
+        List<MilestoneGroup> all = new ArrayList<MilestoneGroup>();
+
+        while ( iter.hasNext() )
+        {
+            all.add( iter.next() );
+        }
+
+        Collections.sort( all, new MilestoneGroupComparator( getSort() == null || getSort().isAscending() ) );
+        return all.subList( start, start + limit ).iterator();
     }
 }

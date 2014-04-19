@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2014 Heads Up Development Ltd.
+ * Copyright 2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -21,9 +21,9 @@ package org.headsupdev.agile.storage.issues;
 import java.util.Comparator;
 
 /**
- * Comparator for milestones to get round issues with sql null issues on due date sorting
+ * Comparator for milestone groups to get round issues with sql null issues on due date sorting
  * <p/>
- * Created: 04/03/2012
+ * Created: 05/02/2014
  *
  * @author Andrew Williams
  * @since 2.0
