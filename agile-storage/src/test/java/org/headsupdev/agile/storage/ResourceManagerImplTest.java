@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -40,7 +40,7 @@ import java.util.Set;
  * Created: 30/04/2012
  *
  * @author roberthewitt
- * @since 2.0-alpha-2-SNAPSHOT
+ * @since 2.0
  */
 public class ResourceManagerImplTest
         extends TestCase
@@ -472,5 +472,27 @@ public class ResourceManagerImplTest
 
         assertTrue( resourceManager.isIssueMissingEstimate( issue ) );
         assertTrue( resourceManager.isIssueSeriouslyMissingEstimate( issue ) );
+    }
+
+    public void testIssueNotMissingEstimateInTwoGoesWithTargetVelocity()
+    {
+        Issue issue = new Issue( getProject( "true" ) );
+
+        issue.setTimeEstimate( new Duration( 4 ) );
+        Set<DurationWorked> timeWorked = new HashSet<DurationWorked>();
+        DurationWorked worked = new DurationWorked();
+        worked.setUpdatedRequired( new Duration( 2 ) );
+        worked.setWorked( new Duration( 2 ) );
+        timeWorked.add( worked );
+
+        worked = new DurationWorked();
+        worked.setUpdatedRequired( new Duration( 1 ) );
+        worked.setWorked( new Duration( 1 ) );
+        timeWorked.add( worked );
+        issue.setTimeWorked( timeWorked );
+        issue.setTimeRequired( new Duration( 1 ) );
+
+        assertFalse( resourceManager.isIssueMissingEstimate( issue ) );
+        assertFalse( resourceManager.isIssueSeriouslyMissingEstimate( issue ) );
     }
 }
