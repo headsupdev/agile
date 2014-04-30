@@ -49,6 +49,6 @@ public class XCodeBuildHandlerTest extends TestCase
 
         handler.appendTestDestinationCommand( config, commands );
         assertTrue( commands.contains( "-destination" ) );
-        assertTrue( commands.contains( "'platform=iOS Simulator,name=iPhone Retina (4-inch),OS=6.1'" ) );
+        assertTrue( commands.contains( "platform=iOS Simulator,name=iPhone Retina (4-inch),OS=6.1" ) );
     }
 }

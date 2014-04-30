@@ -18,6 +18,7 @@
 
 package org.headsupdev.agile.app.ci.builders;
 
+import org.apache.wicket.util.string.Strings;
 import org.headsupdev.agile.app.ci.CIBuilder;
 import org.headsupdev.agile.storage.HibernateStorage;
 import org.headsupdev.agile.storage.ci.TestResult;
@@ -110,6 +111,7 @@ public class XCodeBuildHandler
                 appendTestDestinationCommand( config, commands );
             }
 
+            log.info( "Xcode build command: " + Arrays.toString( commands.toArray() ) );
             result = ExecUtil.executeLoggingExceptions( commands, dir, buildOut, buildOut );
         }
         catch ( IOException e )
@@ -257,7 +259,7 @@ public class XCodeBuildHandler
 
             if ( sdkSimulatorVersion != null )
             {
-                String simulatorDestination = String.format( "'platform=iOS Simulator,name=iPhone Retina (4-inch),OS=%s'", sdkSimulatorVersion );
+                String simulatorDestination = String.format( "platform=iOS Simulator,name=iPhone Retina (4-inch),OS=%s", sdkSimulatorVersion );
 
                 commands.add( "-destination" );
                 commands.add( simulatorDestination );
@@ -514,6 +516,7 @@ public class XCodeBuildHandler
 
                     appendXcodeCommands( project, config, commands, dir, "Debug" );
 
+                    log.info( "Xcode analyze command: " + Arrays.toString( commands.toArray() ) );
                     ExecUtil.execute( commands, dir, buildOut, buildOut );
                 }
             }

@@ -1,3 +1,7 @@
+2.0.1
+
+* For Xcode builds append appropriate -destination parameter when testing on simulator
+
 2.0
 
 * Fix issue where overworked icons could appear against issues that have been re-estimated but not started
