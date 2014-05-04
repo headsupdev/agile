@@ -18,6 +18,7 @@
 
 package org.headsupdev.agile.app.milestones;
 
+import org.headsupdev.agile.storage.dao.MilestonesDAO;
 import org.headsupdev.agile.storage.HibernateStorage;
 import org.headsupdev.agile.storage.StoredProject;
 import org.headsupdev.agile.web.wicket.SortableEntityProvider;
@@ -59,6 +60,8 @@ import java.util.*;
 public class ViewMilestone
         extends HeadsUpPage
 {
+    private MilestonesDAO dao = new MilestonesDAO();
+
     private Milestone milestone;
     private HeadsUpPage page;
     private IssueFilterPanel filter;
@@ -76,7 +79,7 @@ public class ViewMilestone
 
         String name = getPageParameters().getString( "id" );
 
-        milestone = MilestonesApplication.getMilestone( name, getProject() );
+        milestone = dao.find(name, getProject());
         if ( milestone == null )
         {
             notFoundError();

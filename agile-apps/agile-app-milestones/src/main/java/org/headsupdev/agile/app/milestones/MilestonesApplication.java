@@ -33,7 +33,6 @@ import org.headsupdev.agile.app.milestones.permission.MilestoneEditPermission;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.Query;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 
@@ -133,17 +132,6 @@ public class MilestonesApplication
         return new LinkProvider[]{ new MilestoneLinkProvider(), new MilestoneGroupLinkProvider() };
     }
 
-    public static Milestone getMilestone( String name, Project project )
-    {
-        Session session = ( (HibernateStorage) Manager.getStorageInstance() ).getHibernateSession();
-
-        Query q = session.createQuery( "from Milestone m where name.name = :name and name.project.id = :pid" );
-        q.setString( "name", name );
-        q.setString( "pid", project.getId() );
-
-        return (Milestone) q.uniqueResult();
-    }
-
     public static List<MilestoneGroup> getMilestoneGroups( Project project, MilestoneFilter filter )
     {
         Session session = ( (HibernateStorage) Manager.getStorageInstance() ).getHibernateSession();
@@ -157,24 +145,12 @@ public class MilestonesApplication
             c.add( completed );
         }
 
-        Query q;
         if ( project != null && !project.equals( StoredProject.getDefault() ) )
         {
             c.add( Restrictions.eq( "name.project", project) );
         }
 
         return (List<MilestoneGroup>) c.list();
-    }
-
-    public static MilestoneGroup getMilestoneGroup( String name, Project project )
-    {
-        Session session = ( (HibernateStorage) Manager.getStorageInstance() ).getHibernateSession();
-
-        Query q = session.createQuery( "from MilestoneGroup g where name.name = :name and name.project.id = :pid" );
-        q.setString( "name", name );
-        q.setString( "pid", project.getId() );
-
-        return (MilestoneGroup) q.uniqueResult();
     }
 
     public void addMilestone( Milestone milestone )

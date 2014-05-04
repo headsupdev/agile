@@ -20,6 +20,8 @@ package org.headsupdev.agile.app.milestones;
 
 import org.headsupdev.agile.api.Manager;
 import org.headsupdev.agile.api.Project;
+import org.headsupdev.agile.storage.dao.MilestoneGroupsDAO;
+import org.headsupdev.agile.storage.dao.MilestonesDAO;
 import org.headsupdev.agile.app.milestones.entityproviders.MilestoneProvider;
 import org.headsupdev.agile.app.milestones.permission.MilestoneViewPermission;
 import org.headsupdev.agile.storage.HibernateStorage;
@@ -53,6 +55,9 @@ import java.util.List;
 public class ExportDurationWorked
     extends WebResource
 {
+    private MilestonesDAO dao = new MilestonesDAO();
+    private MilestoneGroupsDAO groupDao = new MilestoneGroupsDAO();
+
     @Override
     protected void setHeaders( WebResponse response )
     {
@@ -93,7 +98,7 @@ public class ExportDurationWorked
         String milestoneId = getParameters().getString( "id" );
         if ( milestoneId != null && milestoneId.length() > 0 )
         {
-            Milestone milestone = MilestonesApplication.getMilestone( milestoneId, getProject() );
+            Milestone milestone = dao.find(milestoneId, getProject());
 
             if ( milestone != null )
             {
@@ -107,7 +112,7 @@ public class ExportDurationWorked
         String groupId = getParameters().getString( "groupId" );
         if ( groupId != null && groupId.length() > 0 )
         {
-            MilestoneGroup group = MilestonesApplication.getMilestoneGroup( groupId, getProject() );
+            MilestoneGroup group = groupDao.find(groupId, getProject());
 
             if ( group != null )
             {

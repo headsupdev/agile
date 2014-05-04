@@ -19,8 +19,8 @@
 package org.headsupdev.agile.app.milestones;
 
 import org.headsupdev.agile.api.Manager;
+import org.headsupdev.agile.storage.dao.MilestoneGroupsDAO;
 import org.headsupdev.agile.storage.HibernateStorage;
-import org.headsupdev.agile.storage.resource.ResourceManagerImpl;
 import org.headsupdev.agile.storage.issues.Duration;
 import org.headsupdev.agile.storage.issues.Issue;
 import org.headsupdev.agile.storage.issues.MilestoneGroup;
@@ -40,6 +40,8 @@ import java.util.Set;
 public class GroupBurndownGraph
         extends BurndownGraph
 {
+    private MilestoneGroupsDAO dao = new MilestoneGroupsDAO();
+
     private MilestoneGroup getMilestoneGroup()
     {
         String groupId = getParameters().getString( "id" );
@@ -48,7 +50,7 @@ public class GroupBurndownGraph
             return null;
         }
 
-        return MilestonesApplication.getMilestoneGroup( groupId, getProject() );
+        return dao.find(groupId, getProject());
     }
 
     protected Set<Issue> getIssues()

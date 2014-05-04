@@ -18,6 +18,7 @@
 
 package org.headsupdev.agile.app.milestones;
 
+import org.headsupdev.agile.storage.dao.MilestonesDAO;
 import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.BookmarkableMenuLink;
 import org.headsupdev.agile.web.MountPoint;
@@ -38,11 +39,12 @@ import org.apache.wicket.markup.html.CSSPackageResource;
 public class EditMilestone
     extends HeadsUpPage
 {
+    private MilestonesDAO dao = new MilestonesDAO();
+
     private String name;
 
     public Permission getRequiredPermission()
     {
-
         return new MilestoneEditPermission();
     }
 
@@ -53,7 +55,7 @@ public class EditMilestone
 
         name = getPageParameters().getString( "id" );
 
-        Milestone milestone = MilestonesApplication.getMilestone( name, getProject() );
+        Milestone milestone = dao.find(name, getProject());
         if ( milestone == null )
         {
             notFoundError();

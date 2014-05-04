@@ -20,9 +20,9 @@ package org.headsupdev.agile.app.milestones;
 
 import org.headsupdev.agile.api.Manager;
 import org.headsupdev.agile.api.Project;
+import org.headsupdev.agile.storage.dao.MilestonesDAO;
 import org.headsupdev.agile.app.milestones.permission.MilestoneViewPermission;
 import org.headsupdev.agile.storage.HibernateStorage;
-import org.headsupdev.agile.storage.resource.ResourceManagerImpl;
 import org.headsupdev.agile.storage.StoredProject;
 import org.headsupdev.agile.storage.issues.Duration;
 import org.headsupdev.agile.storage.issues.Issue;
@@ -52,6 +52,8 @@ import java.util.Set;
 public class BurndownGraph
         extends CachedImageResource
 {
+    private MilestonesDAO dao = new MilestonesDAO();
+
     final int HEIGHT = 360, WIDTH = 588, PAD = 15, MONTH_PAD = 20;
 
     private SimpleDateFormat dateFormat = new SimpleDateFormat( "dd" );
@@ -275,7 +277,7 @@ public class BurndownGraph
             return null;
         }
 
-        return MilestonesApplication.getMilestone( milestoneId, getProject() );
+        return dao.find(milestoneId, getProject());
     }
 
     protected Set<Issue> getIssues()

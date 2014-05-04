@@ -29,6 +29,7 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.util.value.ValueMap;
 import org.headsupdev.agile.api.MenuLink;
 import org.headsupdev.agile.api.Permission;
+import org.headsupdev.agile.storage.dao.MilestoneGroupsDAO;
 import org.headsupdev.agile.app.milestones.entityproviders.MilestoneProvider;
 import org.headsupdev.agile.app.milestones.permission.MilestoneViewPermission;
 import org.headsupdev.agile.storage.Comment;
@@ -56,6 +57,8 @@ import java.util.*;
 public class ViewMilestoneGroup
         extends HeadsUpPage
 {
+    private MilestoneGroupsDAO dao = new MilestoneGroupsDAO();
+
     private MilestoneGroup group;
     private HeadsUpPage page;
     private MilestoneFilterPanel filter;
@@ -73,7 +76,7 @@ public class ViewMilestoneGroup
 
         String name = getPageParameters().getString( "id" );
 
-        group = MilestonesApplication.getMilestoneGroup( name, getProject() );
+        group = dao.find(name, getProject());
         if ( group == null )
         {
             notFoundError();

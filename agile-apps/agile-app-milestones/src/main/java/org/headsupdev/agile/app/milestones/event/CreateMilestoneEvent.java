@@ -19,6 +19,7 @@
 package org.headsupdev.agile.app.milestones.event;
 
 import org.headsupdev.agile.api.*;
+import org.headsupdev.agile.storage.dao.MilestonesDAO;
 import org.headsupdev.agile.web.RenderUtil;
 import org.headsupdev.agile.web.AbstractEvent;
 import org.headsupdev.agile.web.components.PercentagePanel;
@@ -29,6 +30,7 @@ import org.headsupdev.agile.storage.issues.Milestone;
 
 import javax.persistence.Entity;
 import javax.persistence.DiscriminatorValue;
+import javax.persistence.Transient;
 
 import org.apache.wicket.markup.html.panel.Panel;
 
@@ -47,6 +49,9 @@ import java.util.LinkedList;
 public class CreateMilestoneEvent
     extends AbstractEvent
 {
+    @Transient
+    private MilestonesDAO dao = new MilestonesDAO();
+
     CreateMilestoneEvent()
     {
     }
@@ -64,7 +69,7 @@ public class CreateMilestoneEvent
 
     public String getBody() {
         String name = getObjectId();
-        Milestone milestone = MilestonesApplication.getMilestone( name, getProject() );
+        Milestone milestone = dao.find( name, getProject() );
         if ( milestone == null )
         {
             return "<p>Milestone " + getObjectId() + " does not exist for project " + getProject().getAlias() + "</p>";

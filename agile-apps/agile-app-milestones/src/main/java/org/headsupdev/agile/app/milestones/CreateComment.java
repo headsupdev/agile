@@ -24,6 +24,7 @@ import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
+import org.headsupdev.agile.storage.dao.MilestonesDAO;
 import org.headsupdev.agile.storage.issues.Milestone;
 import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.BookmarkableMenuLink;
@@ -48,6 +49,8 @@ import java.util.Date;
 public class CreateComment
     extends HeadsUpPage
 {
+    private MilestonesDAO dao = new MilestonesDAO();
+
     private Milestone milestone;
     private String submitLabel = "Create Comment";
 
@@ -62,7 +65,7 @@ public class CreateComment
 
         String name = getPageParameters().getString( "id" );
 
-        Milestone milestone = MilestonesApplication.getMilestone( name, getProject() );
+        Milestone milestone = dao.find(name, getProject());
         if ( milestone == null )
         {
             notFoundError();

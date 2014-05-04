@@ -20,6 +20,7 @@ package org.headsupdev.agile.app.milestones;
 
 import org.apache.wicket.markup.html.CSSPackageResource;
 import org.headsupdev.agile.api.Permission;
+import org.headsupdev.agile.storage.dao.MilestoneGroupsDAO;
 import org.headsupdev.agile.app.milestones.event.UpdateMilestoneGroupEvent;
 import org.headsupdev.agile.app.milestones.permission.MilestoneEditPermission;
 import org.headsupdev.agile.storage.issues.MilestoneGroup;
@@ -38,6 +39,8 @@ import org.headsupdev.agile.web.MountPoint;
 public class EditMilestoneGroup
     extends HeadsUpPage
 {
+    private MilestoneGroupsDAO dao = new MilestoneGroupsDAO();
+
     private String name;
 
     public Permission getRequiredPermission()
@@ -52,7 +55,7 @@ public class EditMilestoneGroup
 
         name = getPageParameters().getString( "id" );
 
-        MilestoneGroup group = MilestonesApplication.getMilestoneGroup(name, getProject());
+        MilestoneGroup group = dao.find(name, getProject());
         if ( group == null )
         {
             notFoundError();

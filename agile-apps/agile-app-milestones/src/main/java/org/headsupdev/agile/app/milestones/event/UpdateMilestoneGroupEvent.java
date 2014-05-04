@@ -22,6 +22,7 @@ import org.headsupdev.agile.api.Project;
 import org.headsupdev.agile.api.User;
 import org.headsupdev.agile.app.milestones.MilestonesApplication;
 import org.headsupdev.agile.app.milestones.ViewMilestoneGroup;
+import org.headsupdev.agile.storage.dao.MilestoneGroupsDAO;
 import org.headsupdev.agile.storage.Comment;
 import org.headsupdev.agile.storage.issues.MilestoneGroup;
 import org.headsupdev.agile.web.AbstractEvent;
@@ -29,6 +30,7 @@ import org.headsupdev.agile.web.components.PercentagePanel;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.Transient;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -44,6 +46,9 @@ import java.util.List;
 public class UpdateMilestoneGroupEvent
     extends AbstractEvent
 {
+    @Transient
+    private MilestoneGroupsDAO dao = new MilestoneGroupsDAO();
+
     UpdateMilestoneGroupEvent()
     {
     }
@@ -72,7 +77,7 @@ public class UpdateMilestoneGroupEvent
 
     public String getBody() {
         String name = getObjectId();
-        MilestoneGroup group = MilestonesApplication.getMilestoneGroup( name, getProject() );
+        MilestoneGroup group = dao.find(name, getProject());
         if ( group == null )
         {
             return "<p>Milestone group " + getObjectId() + " does not exist for project " + getProject().getAlias() + "</p>";

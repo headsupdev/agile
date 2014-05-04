@@ -20,6 +20,7 @@ package org.headsupdev.agile.app.milestones;
 
 import org.headsupdev.agile.api.LinkProvider;
 import org.headsupdev.agile.api.Project;
+import org.headsupdev.agile.storage.dao.MilestoneGroupsDAO;
 import org.headsupdev.agile.storage.issues.MilestoneGroup;
 
 /**
@@ -32,6 +33,8 @@ import org.headsupdev.agile.storage.issues.MilestoneGroup;
 public class MilestoneGroupLinkProvider
         extends LinkProvider
 {
+    private MilestoneGroupsDAO dao = new MilestoneGroupsDAO();
+
     @Override
     public String getId()
     {
@@ -51,7 +54,7 @@ public class MilestoneGroupLinkProvider
     @Override
     public boolean isLinkBroken( String params, Project project )
     {
-        MilestoneGroup group = MilestonesApplication.getMilestoneGroup( params, project );
+        MilestoneGroup group = dao.find(params, project);
         return group == null;
     }
 }
