@@ -16,25 +16,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.headsupdev.agile.app.milestones.dao;
+package org.headsupdev.agile.storage.dao;
 
-import org.headsupdev.agile.storage.dao.HibernateDAO;
-import org.headsupdev.agile.storage.issues.Milestone;
+import org.headsupdev.agile.storage.issues.MilestoneGroup;
 
 /**
- * A basic DAO for handling common milestone tasks
+ * A basic DAO for handling common milestone group tasks
  * <p/>
- * Created: 14/05/2013
+ * Created: 4/05/2014
  *
  * @author Andrew Williams
- * @since 2.0
+ * @since 2.1
  */
-public class MilestonesDAO
-    extends HibernateDAO<Milestone, String>
+public class MilestoneGroupsDAO
+    extends HibernateDAO<MilestoneGroup, String>
 {
     @Override
-    protected Class<Milestone> getPersistentClass()
+    protected Class<MilestoneGroup> getPersistentClass()
     {
-        return Milestone.class;
+        return MilestoneGroup.class;
     }
 }

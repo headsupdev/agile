@@ -20,7 +20,7 @@ package org.headsupdev.agile.app.milestones.rest;
 
 import org.apache.wicket.model.util.ListModel;
 import org.headsupdev.agile.api.Permission;
-import org.headsupdev.agile.app.milestones.dao.MilestonesDAO;
+import org.headsupdev.agile.storage.dao.MilestonesDAO;
 import org.headsupdev.agile.app.milestones.permission.MilestoneListPermission;
 import org.headsupdev.agile.storage.StoredProject;
 import org.headsupdev.agile.storage.issues.Milestone;
