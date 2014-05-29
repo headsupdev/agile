@@ -174,7 +174,7 @@ public class XCodeBuildHandler
         commands.add( "pod" );
         commands.add( "repo" );
         commands.add( "update" );
-        commands.add( "--no-color" );
+        commands.add( "--no-ansi" );
         int ret = ExecUtil.executeLoggingExceptions( commands, dir, buildOut, buildOut );
         if ( ret != 0 )
         {
@@ -184,7 +184,7 @@ public class XCodeBuildHandler
         commands.clear();
         commands.add( "pod" );
         commands.add( "install" );
-        commands.add( "--no-color" );
+        commands.add( "--no-ansi" );
         ret = ExecUtil.executeLoggingExceptions( commands, dir, buildOut, buildOut );
         return ret == 0;
     }
