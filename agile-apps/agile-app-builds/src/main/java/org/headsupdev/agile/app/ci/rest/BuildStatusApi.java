@@ -132,7 +132,7 @@ public class BuildStatusApi
                 iconName = "running";
             }
 
-            String image = "images/events/" + iconName + ".png";
+            String image = iconName + ".png";
             return getURLForPath( "/resources/" + CIApplication.class.getCanonicalName() + "/" + image );
         }
 
