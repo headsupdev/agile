@@ -18,9 +18,10 @@
 
 package org.headsupdev.agile.app.milestones;
 
+import org.apache.wicket.model.PropertyModel;
+import org.headsupdev.agile.api.Manager;
 import org.headsupdev.agile.storage.HibernateStorage;
 import org.headsupdev.agile.storage.issues.Milestone;
-import org.headsupdev.agile.storage.issues.MilestoneGroup;
 import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.components.DateTimeWithTimeZoneField;
 import org.headsupdev.agile.web.components.IdPatternValidator;
@@ -78,7 +79,7 @@ public class EditMilestoneForm
         add( form );
     }
 
-    public void layout( Form<Milestone> form )
+    public void layout( final Form<Milestone> form )
     {
         form.setModel( new CompoundPropertyModel<Milestone>( milestone ) );
 
@@ -96,7 +97,23 @@ public class EditMilestoneForm
 //            form.add( new Label( "created", new FormattedDateModel( milestone.getCreated() ) ) );
         }
         form.add( new DateTimeWithTimeZoneField( "startDate" ) );
-        form.add( new DateTimeWithTimeZoneField( "dueDate" ) );
+        form.add( new DateTimeWithTimeZoneField( "dueDate", new PropertyModel<Date>(
+                new PropertyModel<Milestone>( this, "milestone" ), "dueDate" )
+        {
+            @Override
+            public void setObject( Date object )
+            {
+                // this piece of work is ensuring that we attach the milestone to the model before the wicket value
+                // setting occurs which will require milestone lookup on a group if due is not null
+                if ( !creating )
+                {
+                    milestone = (Milestone) ( (HibernateStorage) Manager.getStorageInstance() ).getHibernateSession().merge( milestone );
+                    form.getModel().setObject( milestone );
+                }
+
+                super.setObject( object );
+            }
+        } ) );
 
         form.add( new TextArea( "description" ) );
     }
