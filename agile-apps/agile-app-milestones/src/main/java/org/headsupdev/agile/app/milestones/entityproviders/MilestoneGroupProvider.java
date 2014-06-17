@@ -47,12 +47,12 @@ public class MilestoneGroupProvider
     private MilestoneFilter filter;
     private Project project;
 
-    public MilestoneGroupProvider(MilestoneFilter filter)
+    public MilestoneGroupProvider( MilestoneFilter filter )
     {
         this.filter = filter;
     }
 
-    public MilestoneGroupProvider(Project project, MilestoneFilter filter)
+    public MilestoneGroupProvider( Project project, MilestoneFilter filter )
     {
         this( filter );
 
