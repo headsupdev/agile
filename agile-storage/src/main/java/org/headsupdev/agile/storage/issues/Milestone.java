@@ -27,12 +27,7 @@ import org.headsupdev.agile.storage.HibernateStorage;
 import org.headsupdev.agile.storage.hibernate.NameProjectBridge;
 import org.headsupdev.agile.storage.hibernate.NameProjectId;
 import org.hibernate.annotations.Type;
-import org.hibernate.search.annotations.DocumentId;
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.FieldBridge;
-import org.hibernate.search.annotations.Index;
-import org.hibernate.search.annotations.Indexed;
-import org.hibernate.search.annotations.IndexedEmbedded;
+import org.hibernate.search.annotations.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -162,6 +157,10 @@ public class Milestone
     public void setDueDate( Date due )
     {
         this.due = due;
+        if ( group != null )
+        {
+            group.updateDueDate();
+        }
     }
 
     public Date getCompletedDate()

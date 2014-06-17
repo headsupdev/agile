@@ -23,7 +23,6 @@ import org.headsupdev.agile.api.Project;
 import org.headsupdev.agile.api.SearchResult;
 import org.headsupdev.agile.storage.Comment;
 import org.headsupdev.agile.storage.HibernateStorage;
-import org.headsupdev.agile.storage.resource.ResourceManagerImpl;
 import org.headsupdev.agile.storage.hibernate.NameProjectBridge;
 import org.headsupdev.agile.storage.hibernate.NameProjectId;
 import org.hibernate.annotations.Type;
@@ -75,6 +74,11 @@ public class MilestoneGroup
     public MilestoneGroup( String name, Project project )
     {
         this.name = new NameProjectId( name, project );
+    }
+
+    public void addMilestone( Milestone milestone )
+    {
+        getMilestones().add( milestone );
     }
 
     public Project getProject()
@@ -156,9 +160,21 @@ public class MilestoneGroup
         return due;
     }
 
-    public void setDueDate( Date due )
+    public void updateDueDate()
     {
-        this.due = due;
+        due = null;
+        for ( Milestone milestone : getMilestones() )
+        {
+            if ( milestone.getDueDate() == null )
+            {
+                continue;
+            }
+
+            if ( getDueDate() == null || milestone.getDueDate().after( getDueDate() ) )
+            {
+                due = milestone.getDueDate();
+            }
+        }
     }
 
     public Date getCompletedDate()
@@ -174,6 +190,17 @@ public class MilestoneGroup
     public boolean isCompleted()
     {
         return completed != null;
+    }
+
+    public boolean hasValidTimePeriod()
+    {
+        Date startDate = getStartDate();
+        Date dueDate = getDueDate();
+        if ( startDate != null && dueDate != null )
+        {
+            return startDate.before( dueDate );
+        }
+        return false;
     }
 
     public Set<Milestone> getMilestones()
