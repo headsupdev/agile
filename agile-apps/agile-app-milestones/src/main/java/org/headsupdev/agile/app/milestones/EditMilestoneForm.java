@@ -64,6 +64,16 @@ public class EditMilestoneForm
                     milestone = (Milestone) ( (HibernateStorage) owner.getStorage() ).getHibernateSession().merge( milestone );
                 }
                 milestone.setUpdated( new Date() );
+                MilestonesDAO dao = new MilestonesDAO();
+                if ( creating )
+                {
+                    boolean alreadyExists = dao.find( milestone.getName(), milestone.getProject() ) != null;
+                    if ( alreadyExists )
+                    {
+                        warn( "Cannot create milestone. A milestone with that name already exists." );
+                        return;
+                    }
+                }
 
                 submitParent();
 

@@ -30,6 +30,7 @@ import org.headsupdev.agile.api.Project;
 import org.headsupdev.agile.app.milestones.entityproviders.MilestoneProvider;
 import org.headsupdev.agile.storage.HibernateUtil;
 import org.headsupdev.agile.storage.StoredProject;
+import org.headsupdev.agile.storage.dao.MilestoneGroupsDAO;
 import org.headsupdev.agile.storage.issues.Milestone;
 import org.headsupdev.agile.storage.issues.MilestoneGroup;
 import org.headsupdev.agile.web.HeadsUpPage;
@@ -91,8 +92,19 @@ public class EditMilestoneGroupForm
                 {
                     group = (MilestoneGroup) session.merge( group );
                 }
-                group.setUpdated( new Date() );
 
+                group.setUpdated( new Date() );
+                MilestoneGroupsDAO dao = new MilestoneGroupsDAO();
+
+                if ( creating )
+                {
+                    boolean alreadyExists = dao.find( group.getName(), group.getProject() ) != null;
+                    if ( alreadyExists )
+                    {
+                        warn( "Cannot create milestone group. A milestone group with that name already exists." );
+                        return;
+                    }
+                }
                 submitParent();
 
                 PageParameters params = new PageParameters();

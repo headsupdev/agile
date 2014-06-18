@@ -19,37 +19,40 @@
 package org.headsupdev.agile.app.docs;
 
 import org.apache.wicket.PageParameters;
-import org.headsupdev.agile.web.HeadsUpPage;
-import org.headsupdev.agile.web.HeadsUpSession;
-import org.headsupdev.agile.web.BookmarkableMenuLink;
-import org.headsupdev.agile.web.MountPoint;
-import org.headsupdev.agile.app.docs.permission.DocEditPermission;
-import org.headsupdev.agile.app.docs.event.CreateDocumentEvent;
-import org.headsupdev.agile.app.docs.event.UpdateDocumentEvent;
-import org.headsupdev.agile.api.Permission;
-import org.headsupdev.agile.api.User;
-import org.headsupdev.agile.storage.docs.Document;
-import org.headsupdev.agile.storage.HibernateStorage;
-import org.headsupdev.agile.web.components.IdPatternValidator;
-import org.headsupdev.agile.web.components.history.HistoryPanel;
 import org.apache.wicket.ResourceReference;
 import org.apache.wicket.markup.html.CSSPackageResource;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.form.*;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.TextArea;
+import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.headsupdev.agile.api.Permission;
+import org.headsupdev.agile.api.User;
+import org.headsupdev.agile.app.docs.event.CreateDocumentEvent;
+import org.headsupdev.agile.app.docs.event.UpdateDocumentEvent;
+import org.headsupdev.agile.app.docs.permission.DocEditPermission;
+import org.headsupdev.agile.storage.HibernateStorage;
+import org.headsupdev.agile.storage.docs.Document;
+import org.headsupdev.agile.web.BookmarkableMenuLink;
+import org.headsupdev.agile.web.HeadsUpPage;
+import org.headsupdev.agile.web.HeadsUpSession;
+import org.headsupdev.agile.web.MountPoint;
+import org.headsupdev.agile.web.components.IdPatternValidator;
+import org.headsupdev.agile.web.components.history.HistoryPanel;
+import org.headsupdev.support.java.StringUtil;
 import wicket.contrib.tinymce.TinyMceBehavior;
 import wicket.contrib.tinymce.settings.TinyMCESettings;
 
-import javax.swing.text.html.HTMLEditorKit;
-import javax.swing.text.html.HTML;
-import javax.swing.text.html.parser.ParserDelegator;
 import javax.swing.text.MutableAttributeSet;
+import javax.swing.text.html.HTML;
+import javax.swing.text.html.HTMLEditorKit;
+import javax.swing.text.html.parser.ParserDelegator;
+import java.io.IOException;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.Date;
 import java.util.StringTokenizer;
-import java.io.StringWriter;
-import java.io.StringReader;
-import java.io.IOException;
 
 /**
  * Documents edit page - edit the content of a page and show a preview if requested
@@ -58,14 +61,15 @@ import java.io.IOException;
  * @version $Id$
  * @since 1.0
  */
-@MountPoint( "edit" )
+@MountPoint("edit")
 public class Edit
-    extends HeadsUpPage
+        extends HeadsUpPage
 {
     private String name, content;
     boolean canEditTitle = false;
 
-    public Permission getRequiredPermission() {
+    public Permission getRequiredPermission()
+    {
         return new DocEditPermission();
     }
 
@@ -77,7 +81,6 @@ public class Edit
         name = getPageParameters().getString( "page" );
         if ( name == null || name.length() == 0 )
         {
-            name = "Untitled";
             canEditTitle = true;
         }
         else if ( !isValidName( name ) )
@@ -90,10 +93,21 @@ public class Edit
 
         Document doc = DocsApplication.getDocument( name, getProject() );
         boolean create = false;
+
         if ( doc == null )
         {
+
             doc = new Document( name, getProject() );
-            doc.setContent( "<html><body><h1>" + name + "</h1><p>This is a new page</p></body></html>" );
+            String sanitisedName;
+            if ( StringUtil.isEmpty( name ) )
+            {
+                sanitisedName = "Untitled";
+            }
+            else
+            {
+                sanitisedName = name;
+            }
+            doc.setContent( "<html><body><h1>" + sanitisedName + "</h1><p>This is a new page</p></body></html>" );
             create = true;
         }
         content = doc.getContent();
@@ -118,7 +132,8 @@ public class Edit
         return ID_PATTERN.matcher( name ).matches();
     }
 
-    class EditForm extends Form<Document>
+    class EditForm
+            extends Form<Document>
     {
         private Document doc;
         private boolean create;
@@ -132,12 +147,13 @@ public class Edit
 
             setModel( new CompoundPropertyModel( Edit.this ) );
             add( new Label( "label", doc.getName() ).setVisible( !canEditTitle ) );
-            add( new TextField<String>( "name" ).add( new IdPatternValidator() ).setVisible( canEditTitle ) );
+            add( new TextField<String>( "name" ).add( new IdPatternValidator() ).setRequired( true ).setVisible( canEditTitle ) );
 
             add( new Label( "verb", getVerb() ) );
             final TextArea contentArea = new TextArea<String>( "content" )
             {
-                protected boolean shouldTrimInput() {
+                protected boolean shouldTrimInput()
+                {
                     return false;
                 }
             };
@@ -168,7 +184,8 @@ public class Edit
             contentArea.add( new TinyMceBehavior( settings ) );
         }
 
-        protected void onSubmit() {
+        protected void onSubmit()
+        {
             if ( !save )
             {
                 save = true;
@@ -179,6 +196,13 @@ public class Edit
             if ( create )
             {
                 doc = new Document( name, doc.getProject() );
+                boolean alreadyExists = DocsApplication.getDocument( doc.getName(), doc.getProject() ) != null;
+                if ( alreadyExists )
+                {
+                    warn( "Cannot create document. A document with that name already exists." );
+                    return;
+                }
+
             }
             else
             {
@@ -221,7 +245,7 @@ public class Edit
         {
             final StringWriter text = new StringWriter();
 
-            HTMLEditorKit.ParserCallback callback = new HTMLEditorKit.ParserCallback ()
+            HTMLEditorKit.ParserCallback callback = new HTMLEditorKit.ParserCallback()
             {
                 int chars = 0;
                 boolean full = false;
@@ -235,7 +259,7 @@ public class Edit
                 public void handleText( char[] data, int pos )
                 {
                     StringTokenizer tokens = new StringTokenizer( new String( data ), " ", true );
-                    while (tokens.hasMoreElements() && !full )
+                    while ( tokens.hasMoreElements() && !full )
                     {
 
                         String token = (String) tokens.nextElement();
