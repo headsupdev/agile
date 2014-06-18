@@ -456,11 +456,13 @@ public class CI
 
     protected void buildProject( Project project )
     {
+        Manager.getInstance().getScmService().updateProject( project );
         CIApplication.getBuilder().buildProject( project, false );
     }
 
     protected void buildProject( Project project, String id, PropertyTree config )
     {
+        Manager.getInstance().getScmService().updateProject( project );
         CIApplication.getBuilder().buildProject( project, id, config, false );
     }
 

@@ -95,4 +95,9 @@ public class BrowseScmService implements ScmService
         Collections.reverse( ret );
         return ret;
     }
+
+    public void updateProject(Project project)
+    {
+        BrowseApplication.getUpdater().updateProject( project );
+    }
 }

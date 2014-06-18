@@ -38,4 +38,6 @@ public interface ScmService
     List<ChangeSet> getChangesSinceRevision( String fromRevision, Project project );
 
     List<ChangeSet> getChangesBetweenRevisions( String fromRevision, String toRevision, Project project );
+
+    void updateProject( Project project );
 }
