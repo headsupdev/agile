@@ -18,13 +18,6 @@
 
 package org.headsupdev.agile.app.milestones;
 
-import org.apache.wicket.model.PropertyModel;
-import org.headsupdev.agile.api.Manager;
-import org.headsupdev.agile.storage.HibernateStorage;
-import org.headsupdev.agile.storage.issues.Milestone;
-import org.headsupdev.agile.web.HeadsUpPage;
-import org.headsupdev.agile.web.components.DateTimeWithTimeZoneField;
-import org.headsupdev.agile.web.components.IdPatternValidator;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -33,6 +26,14 @@ import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.PropertyModel;
+import org.headsupdev.agile.api.Manager;
+import org.headsupdev.agile.storage.HibernateStorage;
+import org.headsupdev.agile.storage.dao.MilestonesDAO;
+import org.headsupdev.agile.storage.issues.Milestone;
+import org.headsupdev.agile.web.HeadsUpPage;
+import org.headsupdev.agile.web.components.DateTimeWithTimeZoneField;
+import org.headsupdev.agile.web.components.IdPatternValidator;
 
 import java.util.Date;
 
