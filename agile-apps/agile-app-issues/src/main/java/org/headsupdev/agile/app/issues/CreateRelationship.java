@@ -19,23 +19,23 @@
 package org.headsupdev.agile.app.issues;
 
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.*;
-import org.headsupdev.agile.app.issues.dao.IssuesDAO;
-import org.headsupdev.agile.web.HeadsUpPage;
-import org.headsupdev.agile.web.BookmarkableMenuLink;
-import org.headsupdev.agile.web.MountPoint;
-import org.headsupdev.agile.web.components.ProjectTreeDropDownChoice;
-import org.headsupdev.agile.web.components.issues.IssueUtils;
+import org.apache.wicket.markup.html.CSSPackageResource;
+import org.apache.wicket.markup.html.form.ChoiceRenderer;
+import org.apache.wicket.markup.html.form.DropDownChoice;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.model.CompoundPropertyModel;
 import org.headsupdev.agile.api.Permission;
 import org.headsupdev.agile.api.Project;
+import org.headsupdev.agile.app.issues.dao.IssuesDAO;
+import org.headsupdev.agile.app.issues.permission.IssueEditPermission;
 import org.headsupdev.agile.storage.HibernateStorage;
 import org.headsupdev.agile.storage.issues.Issue;
 import org.headsupdev.agile.storage.issues.IssueRelationship;
-import org.headsupdev.agile.app.issues.permission.IssueEditPermission;
-import org.apache.wicket.markup.html.CSSPackageResource;
-import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.DropDownChoice;
-import org.apache.wicket.markup.html.form.ChoiceRenderer;
-import org.apache.wicket.model.CompoundPropertyModel;
+import org.headsupdev.agile.web.BookmarkableMenuLink;
+import org.headsupdev.agile.web.HeadsUpPage;
+import org.headsupdev.agile.web.MountPoint;
+import org.headsupdev.agile.web.components.ProjectTreeDropDownChoice;
+import org.headsupdev.agile.web.components.issues.IssueUtils;
 import org.hibernate.criterion.Restrictions;
 
 import java.util.Date;
@@ -48,9 +48,9 @@ import java.util.Iterator;
  * @version $Id$
  * @since 1.0
  */
-@MountPoint( "relate" )
+@MountPoint("relate")
 public class CreateRelationship
-    extends HeadsUpPage
+        extends HeadsUpPage
 {
     private Issue issue;
     private IssuesDAO dao;
@@ -68,7 +68,7 @@ public class CreateRelationship
         long id;
         try
         {
-            id = getPageParameters().getLong("id");
+            id = getPageParameters().getLong( "id" );
         }
         catch ( NumberFormatException e )
         {
@@ -97,7 +97,7 @@ public class CreateRelationship
     }
 
     class RelationshipForm
-        extends Form
+            extends Form
     {
         private Project relatedProject = issue.getProject();
         private String relatedIssueText;
@@ -120,7 +120,7 @@ public class CreateRelationship
             {
                 @Override
                 protected AutoCompleteBehavior<Issue> newAutoCompleteBehavior( IAutoCompleteRenderer<Issue> renderer,
-                                                                              AutoCompleteSettings settings )
+                                                                               AutoCompleteSettings settings )
                 {
                     return super.newAutoCompleteBehavior( new AbstractAutoCompleteTextRenderer<Issue>()
                     {
