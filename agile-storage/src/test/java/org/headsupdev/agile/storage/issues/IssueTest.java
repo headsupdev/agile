@@ -23,7 +23,7 @@ import junit.framework.TestCase;
 import org.headsupdev.agile.storage.StoredFileProject;
 
 /**
- * A simple milestone to gather info on target releases.
+ * Tests for Issues
  *
  * @author gordonedwards
  * @since 2.1
@@ -41,8 +41,8 @@ public class IssueTest
         super.setUp();
         StoredFileProject project1 = new StoredFileProject( "proj1", "proj1" );
         StoredFileProject project2 = new StoredFileProject( "proj2", "proj2" );
-        issue1 = new Issue( project1 );
-        issue2 = new Issue( project2 );
+        issue1 = new UniqueIssue( project1 );
+        issue2 = new UniqueIssue( project2 );
     }
 
     public void testDetectDuplicateLinkedRelationships()
@@ -92,7 +92,7 @@ public class IssueTest
     public void testInvertEquivalenceBlockRelationships()
     {
         IssueRelationship relationship1 = new IssueRelationship( issue1, issue2, IssueRelationship.TYPE_BLOCKS );
-        IssueRelationship relationship2 = new IssueRelationship( issue2, issue1, IssueRelationship.TYPE_BLOCKS );
+        IssueRelationship relationship2 = new IssueRelationship( issue2, issue1, IssueRelationship.TYPE_BLOCKS + IssueRelationship.REVERSE_RELATIONSHIP );
 
         Assert.assertTrue( relationship1.isEquivalent( relationship2 ) );
     }
@@ -117,4 +117,56 @@ public class IssueTest
         IssueRelationship relationship = invertedRelationship.getInverseRelationship();
         Assert.assertTrue( relationship.equals( invertedRelationship.getInverseRelationship() ) );
     }
+
+    public void testHasRelationshipLinked()
+    {
+        IssueRelationship relationship = new IssueRelationship( issue1, issue2, IssueRelationship.TYPE_LINKED );
+        issue1.addRelationship( relationship );
+        assertTrue( issue1.hasRelationship( relationship ) );
+    }
+
+    public void testNotHasRelationshipBlocks()
+    {
+        StoredFileProject project3 = new StoredFileProject( "proj3", "proj3" );
+        Issue issue3 = new UniqueIssue( project3 );
+        IssueRelationship relationship1 = new IssueRelationship( issue1, issue2, IssueRelationship.TYPE_BLOCKS );
+        IssueRelationship relationship2 = new IssueRelationship( issue1, issue3, IssueRelationship.TYPE_BLOCKS );
+        issue1.addRelationship( relationship1 );
+        assertFalse( issue1.hasRelationship( relationship2 ) );
+    }
+
+    public void testNotHasRelationshipLinked()
+    {
+        StoredFileProject project3 = new StoredFileProject( "proj3", "proj3" );
+        Issue issue3 = new UniqueIssue( project3 );
+        IssueRelationship relationship1 = new IssueRelationship( issue1, issue2, IssueRelationship.TYPE_LINKED );
+        IssueRelationship relationship2 = new IssueRelationship( issue2, issue3, IssueRelationship.TYPE_LINKED );
+        issue1.addRelationship( relationship1 );
+        assertFalse( issue1.hasRelationship( relationship2 ) );
+    }
+
+    public void testHasRelationshipReversedLinked()
+    {
+        IssueRelationship relationship1 = new IssueRelationship( issue1, issue2, IssueRelationship.TYPE_LINKED );
+        IssueRelationship relationship2 = new IssueRelationship( issue2, issue1, IssueRelationship.TYPE_LINKED );
+        issue1.addRelationship( relationship1 );
+        assertTrue( issue2.hasRelationship( relationship2 ) );
+    }
+
+    public void testHasRelationshipReversedBlocks()
+    {
+        IssueRelationship relationship1 = new IssueRelationship( issue1, issue2, IssueRelationship.TYPE_BLOCKS );
+        IssueRelationship relationship2 = new IssueRelationship( issue2, issue1, IssueRelationship.TYPE_BLOCKS + IssueRelationship.REVERSE_RELATIONSHIP );
+        issue1.addRelationship( relationship1 );
+        assertTrue( issue2.hasRelationship( relationship2 ) );
+    }
+
+    public void testHasRelationshipIncorrectReversedBlocks()
+    {
+        IssueRelationship relationship1 = new IssueRelationship( issue1, issue2, IssueRelationship.TYPE_BLOCKS );
+        IssueRelationship relationship2 = new IssueRelationship( issue2, issue1, IssueRelationship.TYPE_BLOCKS );
+        issue1.addRelationship( relationship1 );
+        assertFalse( issue2.hasRelationship( relationship2 ) );
+    }
+
 }

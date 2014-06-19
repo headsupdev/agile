@@ -31,26 +31,9 @@ import org.headsupdev.agile.storage.hibernate.IdProjectBridge;
 import org.headsupdev.agile.storage.hibernate.IdProjectId;
 import org.headsupdev.agile.storage.resource.DurationWorked;
 import org.hibernate.annotations.Type;
-import org.hibernate.search.annotations.DocumentId;
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.FieldBridge;
-import org.hibernate.search.annotations.Index;
-import org.hibernate.search.annotations.Indexed;
-import org.hibernate.search.annotations.IndexedEmbedded;
+import org.hibernate.search.annotations.*;
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
@@ -181,6 +164,11 @@ public class Issue
     public Issue( Project project )
     {
         this.id = new IdProjectId( project );
+    }
+
+    public void addRelationship( IssueRelationship relationship )
+    {
+        relationships.add( relationship );
     }
 
     public long getId()
@@ -402,6 +390,28 @@ public class Issue
     public Set<IssueRelationship> getRelationships()
     {
         return relationships;
+    }
+
+    public boolean hasRelationship( IssueRelationship relationship )
+    {
+        for ( IssueRelationship comparedRelationship : getRelationships() )
+        {
+            if ( relationship.isEquivalent( comparedRelationship ) )
+            {
+                return true;
+            }
+        }
+
+        for ( IssueRelationship comparedRelationship : relationship.getRelated().getRelationships() )
+        {
+            if ( relationship.isEquivalent( comparedRelationship ) )
+            {
+                return true;
+            }
+        }
+
+
+        return false;
     }
 
     public Set<IssueRelationship> getReverseRelationships()

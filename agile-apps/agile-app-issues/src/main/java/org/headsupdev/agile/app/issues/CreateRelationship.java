@@ -175,29 +175,22 @@ public class CreateRelationship
                 return;
             }
 
-            for ( IssueRelationship relationship : issue.getRelationships() )
+            IssueRelationship relationship = new IssueRelationship( issue, related, type );
+            if ( issue.hasRelationship( relationship ) )
             {
-                if ( relationship.getType() == type &&
-                        relationship.getOwner().equals( issue ) &&
-                        relationship.getRelated().equals( related ) )
-                {
-                    error( "Cannot add a duplicate relationship" );
-                    return;
-                }
+                error( "Cannot add a duplicate relationship" );
+                return;
             }
 
             if ( type > IssueRelationship.REVERSE_RELATIONSHIP )
             {
-                type -= IssueRelationship.REVERSE_RELATIONSHIP;
-                IssueRelationship relationship = new IssueRelationship( related, issue, type );
+                relationship = relationship.getInverseRelationship();
 
                 ( (HibernateStorage) getStorage() ).save( relationship );
                 related.getRelationships().add( relationship );
             }
             else
             {
-                IssueRelationship relationship = new IssueRelationship( issue, related, type );
-
                 ( (HibernateStorage) getStorage() ).save( relationship );
                 issue.getRelationships().add( ( relationship ) );
             }

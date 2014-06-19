@@ -62,6 +62,67 @@ public class IssueRelationship
         this.type = type;
     }
 
+    public IssueRelationship getInverseRelationship()
+    {
+        if (type == TYPE_LINKED)
+        {
+            return new IssueRelationship( related, owner, type );
+        }
+        else if (type > IssueRelationship.REVERSE_RELATIONSHIP)
+        {
+            int invertedType = type - IssueRelationship.REVERSE_RELATIONSHIP;
+            return new IssueRelationship( related, owner, invertedType );
+        }
+        else
+        {
+            int invertedType = type + IssueRelationship.REVERSE_RELATIONSHIP;
+            return new IssueRelationship( related, owner, invertedType );
+        }
+
+    }
+
+    @Override
+    public boolean equals( Object o )
+    {
+        if ( this == o )
+        {
+            return true;
+        }
+        if ( o == null || getClass() != o.getClass() )
+        {
+            return false;
+        }
+
+        return this.equals( (IssueRelationship) o );
+    }
+
+    public boolean equals(IssueRelationship that)
+    {
+
+        if ( type != that.type )
+        {
+            return false;
+        }
+        if ( !owner.equals( that.owner ) )
+        {
+            return false;
+        }
+        if ( !related.equals( that.related ) )
+        {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        int result = owner.hashCode();
+        result = 31 * result + related.hashCode();
+        result = 31 * result + type;
+        return result;
+    }
+
     public Issue getOwner()
     {
         return owner;
@@ -90,5 +151,20 @@ public class IssueRelationship
     public void setType( int type )
     {
         this.type = type;
+    }
+
+    public boolean isEquivalent(IssueRelationship relationship)
+    {
+        if ( owner.equals( relationship.getOwner() ) && related.equals( relationship.getRelated() )
+                && relationship.getType() == type )
+        {
+            return true;
+        }
+
+        IssueRelationship inverseRelationship = relationship.getInverseRelationship();
+
+        return inverseRelationship.getOwner().equals( owner ) && inverseRelationship.getRelated().equals( related )
+                && inverseRelationship.getType() == type;
+
     }
 }
