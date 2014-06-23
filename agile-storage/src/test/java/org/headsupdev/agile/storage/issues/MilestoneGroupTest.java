@@ -24,7 +24,7 @@ import org.headsupdev.agile.storage.StoredCommandLineProject;
 import java.util.Date;
 
 /**
- * A simple milestone to gather info on target releases.
+ * Tests for milestone groups
  *
  * @author gordonedwards
  * @since 2.1

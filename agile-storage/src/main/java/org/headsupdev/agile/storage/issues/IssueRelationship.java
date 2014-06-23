@@ -28,9 +28,9 @@ import java.io.Serializable;
  * @since 1.0
  */
 @Entity
-@Table( name = "IssueRelationships" )
+@Table(name = "IssueRelationships")
 public class IssueRelationship
-    implements Serializable
+        implements Serializable
 {
     public static final int TYPE_BLOCKS = 1;
     public static final int TYPE_REQUIRES = 2;
@@ -64,11 +64,11 @@ public class IssueRelationship
 
     public IssueRelationship getInverseRelationship()
     {
-        if (type == TYPE_LINKED)
+        if ( type == TYPE_LINKED )
         {
             return new IssueRelationship( related, owner, type );
         }
-        else if (type > IssueRelationship.REVERSE_RELATIONSHIP)
+        else if ( type > IssueRelationship.REVERSE_RELATIONSHIP )
         {
             int invertedType = type - IssueRelationship.REVERSE_RELATIONSHIP;
             return new IssueRelationship( related, owner, invertedType );
@@ -96,7 +96,7 @@ public class IssueRelationship
         return this.equals( (IssueRelationship) o );
     }
 
-    public boolean equals(IssueRelationship that)
+    public boolean equals( IssueRelationship that )
     {
 
         if ( type != that.type )
@@ -153,7 +153,7 @@ public class IssueRelationship
         this.type = type;
     }
 
-    public boolean isEquivalent(IssueRelationship relationship)
+    public boolean isEquivalent( IssueRelationship relationship )
     {
         if ( owner.equals( relationship.getOwner() ) && related.equals( relationship.getRelated() )
                 && relationship.getType() == type )

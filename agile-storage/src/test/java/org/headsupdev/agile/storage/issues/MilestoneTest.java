@@ -23,7 +23,7 @@ import junit.framework.TestCase;
 import java.util.Date;
 
 /**
- * A simple milestone to gather info on target releases.
+ * Tests for Milestone
  *
  * @author gordonedwards
  * @since 2.1
