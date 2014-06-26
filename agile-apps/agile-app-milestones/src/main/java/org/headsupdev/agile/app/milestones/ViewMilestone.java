@@ -124,7 +124,7 @@ public class ViewMilestone
         }
         add( filter );
 
-        add( new IssueListPanel( "issuelist", getIssuesProvider(), this, true, true ) );
+        add( new IssueListPanel( "issuelist", getIssuesProvider(), this, true, true, milestone ) );
 
         boolean timeEnabled = Boolean.parseBoolean( milestone.getProject().getConfigurationValue(
                 StoredProject.CONFIGURATION_TIMETRACKING_ENABLED ) ) && milestone.hasValidTimePeriod();

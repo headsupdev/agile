@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -18,22 +18,34 @@
 
 package org.headsupdev.agile.web.components.issues;
 
-import org.headsupdev.agile.storage.StoredProject;
-import org.headsupdev.agile.web.components.StripedDataView;
-import org.headsupdev.agile.web.wicket.StyledPagingNavigator;
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.extensions.markup.html.repeater.data.sort.OrderByBorder;
 import org.apache.wicket.extensions.markup.html.repeater.util.SortableDataProvider;
 import org.apache.wicket.markup.html.CSSPackageResource;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.DropDownChoice;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
-import org.apache.wicket.extensions.markup.html.repeater.data.sort.OrderByBorder;
-import org.headsupdev.agile.storage.issues.Issue;
-import org.headsupdev.agile.web.HeadsUpPage;
+import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
+import org.headsupdev.agile.api.User;
+import org.headsupdev.agile.storage.StoredProject;
+import org.headsupdev.agile.storage.dao.IssuesDAO;
+import org.headsupdev.agile.storage.issues.Duration;
+import org.headsupdev.agile.storage.issues.Issue;
+import org.headsupdev.agile.storage.issues.Milestone;
+import org.headsupdev.agile.web.HeadsUpPage;
+import org.headsupdev.agile.web.components.DurationEditPanel;
+import org.headsupdev.agile.web.components.IssueTypeDropDownChoice;
+import org.headsupdev.agile.web.components.StripedDataView;
+import org.headsupdev.agile.web.components.UserDropDownChoice;
+import org.headsupdev.agile.web.components.milestones.MilestoneDropDownChoice;
+import org.headsupdev.agile.web.wicket.StyledPagingNavigator;
 
 import java.util.Iterator;
 
@@ -44,21 +56,38 @@ import java.util.Iterator;
  * @version $Id$
  * @since 1.0
  */
-public class IssueListPanel extends Panel
+public class IssueListPanel
+        extends Panel
 {
     private static final int ITEMS_PER_PAGE = 25;
+    private final boolean hideMilestone;
+    private final boolean hideProject;
     private StyledPagingNavigator pagingHeader, pagingFooter;
 
+    private Issue quickIssue;
+    private HeadsUpPage page;
+    private Milestone milestone;
+
     public IssueListPanel( String id, final SortableDataProvider<Issue> issues, final HeadsUpPage page, final boolean hideProject,
-                           final boolean hideMilestone )
+                           final boolean hideMilestone, final Milestone milestone )
     {
         super( id );
         add( CSSPackageResource.getHeaderContribution( getClass(), "issue.css" ) );
 
+        this.page = page;
+        this.milestone = milestone;
+        this.hideMilestone = hideMilestone;
+        this.hideProject = hideProject;
+
+        quickIssue = createIssue();
+
         final boolean timeEnabled = Boolean.parseBoolean( page.getProject().getConfigurationValue(
                 StoredProject.CONFIGURATION_TIMETRACKING_ENABLED ) );
 
-        add( new WebMarkupContainer( "hours-header" ).setVisible( timeEnabled ) );
+        Form<Issue> inlineForm = getInlineForm();
+        add( inlineForm );
+
+        inlineForm.add( new WebMarkupContainer( "hours-header" ).setVisible( timeEnabled ) );
         final DataView dataView = new StripedDataView<Issue>( "issues", issues, ITEMS_PER_PAGE )
         {
             protected void populateItem( final Item<Issue> item )
@@ -69,8 +98,8 @@ public class IssueListPanel extends Panel
                 item.add( new IssuePanelRow( "issue", issue, page, hideProject, hideMilestone, false ) );
             }
         };
-        add( dataView );
-        
+        inlineForm.add( dataView );
+
         AttributeModifier colspanModifier = new AttributeModifier( "colspan", true, new Model<Integer>()
         {
             @Override
@@ -83,7 +112,7 @@ public class IssueListPanel extends Panel
                 }
                 if ( hideProject )
                 {
-                    cols --;
+                    cols--;
                 }
 
                 return cols;
@@ -92,22 +121,22 @@ public class IssueListPanel extends Panel
 
         pagingFooter = new StyledPagingNavigator( "footerPaging", dataView );
         pagingFooter.setOutputMarkupPlaceholderTag( true );
-        add( pagingFooter.add( colspanModifier ).setVisible( issues.size() > ITEMS_PER_PAGE ) );
+        inlineForm.add( pagingFooter.add( colspanModifier ).setVisible( issues.size() > ITEMS_PER_PAGE ) );
         pagingHeader = new StyledPagingNavigator( "headerPaging", dataView );
         pagingHeader.setOutputMarkupPlaceholderTag( true );
-        add( pagingHeader.add( colspanModifier ).setVisible( issues.size() > ITEMS_PER_PAGE ) );
+        inlineForm.add( pagingHeader.add( colspanModifier ).setVisible( issues.size() > ITEMS_PER_PAGE ) );
 
-        add( new OrderByBorder( "orderById", "id.id", issues ) );
-        add( new OrderByBorder( "orderBySummary", "summary", issues ) );
-        add( new OrderByBorder( "orderByStatus", "status", issues ) );
-        add( new OrderByBorder( "orderByPriority", "priority", issues ) );
-        add( new OrderByBorder( "orderByOrder", "rank", issues ) );
-        add( new OrderByBorder( "orderByAssigned", "assignee", issues ) );
-        add( new OrderByBorder( "orderByMilestone", "milestone.name", issues ).setVisible( !hideMilestone ) );
-        add( new OrderByBorder( "orderByProject", "id.project.id", issues ).setVisible( !hideProject ) );
+        inlineForm.add( new OrderByBorder( "orderById", "id.id", issues ) );
+        inlineForm.add( new OrderByBorder( "orderBySummary", "summary", issues ) );
+        inlineForm.add( new OrderByBorder( "orderByStatus", "status", issues ) );
+        inlineForm.add( new OrderByBorder( "orderByPriority", "priority", issues ) );
+        inlineForm.add( new OrderByBorder( "orderByOrder", "rank", issues ) );
+        inlineForm.add( new OrderByBorder( "orderByAssigned", "assignee", issues ) );
+        inlineForm.add( new OrderByBorder( "orderByMilestone", "milestone.name", issues ).setVisible( !hideMilestone ) );
+        inlineForm.add( new OrderByBorder( "orderByProject", "id.project.id", issues ).setVisible( !hideProject ) );
 
         final WebMarkupContainer totalRow = new WebMarkupContainer( "totals" );
-        add( totalRow.setVisible( issues.size() > ITEMS_PER_PAGE || timeEnabled ) );
+        inlineForm.add( totalRow.setVisible( issues.size() > ITEMS_PER_PAGE || timeEnabled ) );
 
         final WebMarkupContainer allCell = new WebMarkupContainer( "allCell" );
         totalRow.add( allCell.add( new AttributeModifier( "colspan", true, new Model<Integer>()
@@ -122,7 +151,7 @@ public class IssueListPanel extends Panel
                 }
                 if ( hideProject )
                 {
-                    cols --;
+                    cols--;
                 }
 
                 return cols;
@@ -154,6 +183,89 @@ public class IssueListPanel extends Panel
 //                setIssues( issues.iterator( dataView.getCurrentPage() * dataView.getItemsPerPage(), dataView.getItemsPerPage() ) );
                 return super.getObject();
             }
-        }).setVisible( timeEnabled ) );
+        } ).setVisible( timeEnabled ) );
+
+    }
+
+    private Form<Issue> getInlineForm()
+    {
+        TextField<String> summary = new TextField<String>( "summary" );
+        Label status = new Label( "status", IssueUtils.getStatusName( Issue.STATUS_NEW ) );
+        IssueTypeDropDownChoice type = new IssueTypeDropDownChoice( "type", IssueUtils.getTypes() );
+        TextField<Integer> order = new TextField<Integer>( "rank", new Model<Integer>()
+        {
+            @Override
+            public void setObject( Integer object )
+            {
+                quickIssue.setOrder( object );
+            }
+
+            @Override
+            public Integer getObject()
+            {
+                if ( quickIssue.getOrder() == null || quickIssue.getOrder().equals( Issue.ORDER_NO_ORDER ) )
+                {
+                    return null;
+                }
+                return quickIssue.getOrder();
+            }
+        } );
+        order.setType( Integer.class );
+
+        DropDownChoice<User> assignee = new UserDropDownChoice( "assignee" );
+        Label project = new Label( "project", page.getProject().toString() );
+        MilestoneDropDownChoice milestoneDropDown = new MilestoneDropDownChoice( "milestone", page.getProject() );
+        DurationEditPanel timeEstimate = new DurationEditPanel( "timeEstimate", new Model<Duration>()
+        {
+            @Override
+            public Duration getObject()
+            {
+                return quickIssue.getTimeEstimate();
+            }
+        } );
+
+        CompoundPropertyModel<Issue> formPropertyModel = new CompoundPropertyModel<Issue>( quickIssue )
+        {
+            @Override
+            public Issue getObject()
+            {
+                return quickIssue;
+            }
+        };
+
+        Form<Issue> inlineForm = new Form<Issue>( "IssueInlineForm", formPropertyModel )
+        {
+            @Override
+            protected void onSubmit()
+            {
+                super.onSubmit();
+                quickIssue.setReporter( page.getSession().getUser() );
+                quickIssue.getWatchers().add( page.getSession().getUser() );
+                quickIssue.setTimeRequired( quickIssue.getTimeEstimate() );
+                IssuesDAO dao = new IssuesDAO();
+                dao.save( quickIssue );
+                quickIssue = createIssue();
+            }
+        };
+
+        inlineForm.add( summary.setRequired( true ) );
+        inlineForm.add( status );
+        inlineForm.add( type.setRequired( true ) );
+        inlineForm.add( order );
+        inlineForm.add( assignee );
+        inlineForm.add( project.setVisible( !hideProject ) );
+        inlineForm.add( milestoneDropDown.setVisible( !hideMilestone ) );
+        inlineForm.add( milestoneDropDown.setNullValid( true ) );
+        inlineForm.add( timeEstimate );
+
+        return inlineForm;
+    }
+
+    private Issue createIssue()
+    {
+        Issue issue = new Issue( page.getProject() );
+        issue.setTimeEstimate( new Duration( 0, Duration.UNIT_HOURS ) );
+        issue.setMilestone( milestone );
+        return issue;
     }
 }

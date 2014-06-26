@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -18,36 +18,27 @@
 
 package org.headsupdev.agile.app.issues;
 
+import org.apache.wicket.PageParameters;
+import org.apache.wicket.markup.html.CSSPackageResource;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.*;
+import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.Model;
 import org.headsupdev.agile.api.User;
 import org.headsupdev.agile.storage.Attachment;
 import org.headsupdev.agile.storage.HibernateStorage;
 import org.headsupdev.agile.storage.StoredProject;
 import org.headsupdev.agile.storage.issues.Duration;
-import org.headsupdev.agile.storage.resource.DurationWorked;
 import org.headsupdev.agile.storage.issues.Issue;
 import org.headsupdev.agile.storage.issues.Milestone;
+import org.headsupdev.agile.storage.resource.DurationWorked;
 import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.HeadsUpSession;
-import org.headsupdev.agile.web.components.AttachmentPanel;
-import org.headsupdev.agile.web.components.DurationEditPanel;
-import org.headsupdev.agile.web.components.FormattedDateModel;
-import org.headsupdev.agile.web.components.UserDropDownChoice;
+import org.headsupdev.agile.web.components.*;
 import org.headsupdev.agile.web.components.issues.IssueListPanel;
 import org.headsupdev.agile.web.components.issues.IssueUtils;
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.markup.html.CSSPackageResource;
-import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.Button;
-import org.apache.wicket.markup.html.form.CheckBox;
-import org.apache.wicket.markup.html.form.DropDownChoice;
-import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.IChoiceRenderer;
-import org.apache.wicket.markup.html.form.TextArea;
-import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.Model;
 import org.headsupdev.agile.web.components.milestones.MilestoneDropDownChoice;
 
 import java.util.Date;
@@ -105,24 +96,7 @@ class IssueForm
         setModel( new CompoundPropertyModel<Issue>( issue ) );
 
         add( new Label( "project", issue.getProject().getAlias() ) );
-        add( new DropDownChoice<Integer>( "type", IssueUtils.getTypes() )
-        {
-            public boolean isNullValid()
-            {
-                return false;
-            }
-        }.setChoiceRenderer( new IChoiceRenderer<Integer>()
-        {
-            public Object getDisplayValue( Integer i )
-            {
-                return IssueUtils.getTypeName( i );
-            }
-
-            public String getIdValue( Integer o, int i )
-            {
-                return o.toString();
-            }
-        } ) );
+        add( new IssueTypeDropDownChoice( "type", IssueUtils.getTypes() ) );
         add( new DropDownChoice<Integer>( "priority", IssueUtils.getPriorities() )
         {
             public boolean isNullValid()
