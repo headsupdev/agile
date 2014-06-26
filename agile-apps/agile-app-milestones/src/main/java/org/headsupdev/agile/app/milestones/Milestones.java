@@ -20,25 +20,25 @@ package org.headsupdev.agile.app.milestones;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.PageParameters;
+import org.apache.wicket.markup.html.CSSPackageResource;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.Item;
+import org.headsupdev.agile.api.Permission;
 import org.headsupdev.agile.app.milestones.entityproviders.GroupedMilestoneProvider;
 import org.headsupdev.agile.app.milestones.entityproviders.MilestoneGroupProvider;
+import org.headsupdev.agile.app.milestones.permission.MilestoneListPermission;
+import org.headsupdev.agile.security.permission.ProjectListPermission;
+import org.headsupdev.agile.storage.StoredProject;
+import org.headsupdev.agile.storage.issues.Milestone;
 import org.headsupdev.agile.storage.issues.MilestoneGroup;
+import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.components.PercentagePanel;
 import org.headsupdev.agile.web.components.StripedDataView;
 import org.headsupdev.agile.web.components.milestones.MilestoneListPanel;
 import org.headsupdev.agile.web.wicket.SortableEntityProvider;
-import org.apache.wicket.markup.html.CSSPackageResource;
-import org.headsupdev.agile.security.permission.ProjectListPermission;
-import org.headsupdev.agile.web.HeadsUpPage;
-import org.headsupdev.agile.api.Permission;
-import org.headsupdev.agile.storage.StoredProject;
-import org.headsupdev.agile.storage.issues.Milestone;
-import org.headsupdev.agile.app.milestones.permission.MilestoneListPermission;
 
 import java.util.List;
 
@@ -50,7 +50,7 @@ import java.util.List;
  * @since 1.0
  */
 public class Milestones
-    extends HeadsUpPage
+        extends HeadsUpPage
 {
     private SortableEntityProvider<Milestone> ungroupedProvider;
     private boolean hasGroups = false;
@@ -58,7 +58,8 @@ public class Milestones
 
     private Component ungrouped, ungroupedMilestones;
 
-    public Permission getRequiredPermission() {
+    public Permission getRequiredPermission()
+    {
         return new MilestoneListPermission();
     }
 
@@ -101,7 +102,7 @@ public class Milestones
                 item.add( panel );
 
                 SortableEntityProvider<Milestone> provider = new GroupedMilestoneProvider( group, filter );
-                item.add( new MilestoneListPanel( "milestones", provider, Milestones.this, hideProject ) );
+                item.add( new MilestoneListPanel( "milestones", provider, Milestones.this, hideProject, group ) );
             }
         } );
 
@@ -117,7 +118,7 @@ public class Milestones
 
         add( ungrouped = new WebMarkupContainer( "ungrouped" ) );
         ungrouped.setOutputMarkupPlaceholderTag( true );
-        add( ungroupedMilestones = new MilestoneListPanel( "milestones", ungroupedProvider, this, hideProject ) );
+        add( ungroupedMilestones = new MilestoneListPanel( "milestones", ungroupedProvider, this, hideProject, null) );
         ungroupedMilestones.setOutputMarkupPlaceholderTag( true );
     }
 

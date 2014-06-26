@@ -62,7 +62,7 @@ public class Milestone
 
     @Temporal(TemporalType.TIMESTAMP)
     @Publish
-    Date created, updated, start, due, completed;
+    Date created = new Date(), updated, start, due, completed;
 
     @OneToMany(mappedBy = "milestone")
     @Publish

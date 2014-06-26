@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -25,19 +25,29 @@ import org.apache.wicket.extensions.markup.html.repeater.util.SortableDataProvid
 import org.apache.wicket.markup.html.CSSPackageResource;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
+import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
+import org.headsupdev.agile.api.Project;
+import org.headsupdev.agile.storage.dao.MilestonesDAO;
+import org.headsupdev.agile.storage.hibernate.NameProjectId;
 import org.headsupdev.agile.storage.issues.Milestone;
+import org.headsupdev.agile.storage.issues.MilestoneGroup;
 import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.HeadsUpSession;
+import org.headsupdev.agile.web.components.DateTimeWithTimeZoneField;
 import org.headsupdev.agile.web.components.FormattedDateModel;
 import org.headsupdev.agile.web.components.PercentagePanel;
 import org.headsupdev.agile.web.components.StripedDataView;
 import org.headsupdev.agile.web.wicket.StyledPagingNavigator;
+
+import java.util.Date;
 
 /**
  * A panel that displays a formatted, coloured list of the milestones passed in
@@ -51,14 +61,23 @@ public class MilestoneListPanel
 {
     private static final int ITEMS_PER_PAGE = 25;
     private StyledPagingNavigator pagingHeader, pagingFooter;
+    private Milestone quickMilestone;
+    private HeadsUpPage page;
+    private MilestoneGroup group;
 
     public MilestoneListPanel( String id, final SortableDataProvider<Milestone> provider, final HeadsUpPage page,
-                               final boolean hideProject )
+                               final boolean hideProject, final MilestoneGroup group )
     {
         super( id );
         add( CSSPackageResource.getHeaderContribution( getClass(), "milestone.css" ) );
+        this.page = page;
+        this.group = group;
+
+        Form<Milestone> inlineForm = getInlineForm();
+        add( inlineForm );
+
         final DataView dataView;
-        add( dataView = new StripedDataView<Milestone>( "milestones", provider, ITEMS_PER_PAGE )
+        inlineForm.add( dataView = new StripedDataView<Milestone>( "milestones", provider, ITEMS_PER_PAGE )
         {
             protected void populateItem( Item<Milestone> listItem )
             {
@@ -105,26 +124,26 @@ public class MilestoneListPanel
                 int cols = 6;
                 if ( hideProject )
                 {
-                    cols --;
+                    cols--;
                 }
 
                 return cols;
             }
         } );
 
-        add( new OrderByBorder( "orderByName", "name.name", provider ) );
-        add( new OrderByBorder( "orderByDue", "due", provider ) );
-        add( new OrderByBorder( "orderByProject", "name.project.id", provider ).setVisible( !hideProject ) );
+        inlineForm.add( new OrderByBorder( "orderByName", "name.name", provider ) );
+        inlineForm.add( new OrderByBorder( "orderByDue", "due", provider ) );
+        inlineForm.add( new OrderByBorder( "orderByProject", "name.project.id", provider ).setVisible( !hideProject ) );
 
         pagingFooter = new StyledPagingNavigator( "footerPaging", dataView );
         pagingFooter.setOutputMarkupPlaceholderTag( true );
-        add( pagingFooter.add( colspanModifier ) );
+        inlineForm.add( pagingFooter.add( colspanModifier ) );
         pagingHeader = new StyledPagingNavigator( "headerPaging", dataView );
         pagingHeader.setOutputMarkupPlaceholderTag( true );
-        add( pagingHeader.add( colspanModifier ) );
+        inlineForm.add( pagingHeader.add( colspanModifier ) );
 
         final WebMarkupContainer allCell = new WebMarkupContainer( "allCell" );
-        add( allCell.add( colspanModifier ).setVisible( provider.size() > ITEMS_PER_PAGE ) );
+        inlineForm.add( allCell.add( colspanModifier ).setVisible( provider.size() > ITEMS_PER_PAGE ) );
         allCell.add( new Link( "allLink" )
         {
             @Override
@@ -138,5 +157,60 @@ public class MilestoneListPanel
                 pagingHeader.setVisible( false );
             }
         } );
+    }
+
+    private Form<Milestone> getInlineForm()
+    {
+        TextField<NameProjectId> name = new TextField<NameProjectId>( "name" );
+        quickMilestone = createMilestone( group );
+        Panel progress = new PercentagePanel( "completeness", 0 );
+        Label issues = new Label( "issues", "0" );
+        Label open = new Label( "open", "0" );
+        Label projects = new Label( "projects", page.getProject().toString() );
+        DateTimeWithTimeZoneField due = new DateTimeWithTimeZoneField( "due", new Model<Date>()
+        {
+            @Override
+            public void setObject( Date object )
+            {
+                quickMilestone.setDueDate( object );
+            }
+
+            @Override
+            public Date getObject()
+            {
+                return quickMilestone.getDueDate();
+            }
+        } );
+
+        CompoundPropertyModel<Milestone> formPropertyModel = new CompoundPropertyModel<Milestone>( quickMilestone );
+
+        Form<Milestone> inlineForm = new Form<Milestone>( "milestoneInlineForm", formPropertyModel )
+        {
+            @Override
+            protected void onSubmit()
+            {
+                MilestonesDAO dao = new MilestonesDAO();
+                quickMilestone.setUpdated( new Date() );
+                dao.save( quickMilestone );
+                quickMilestone = createMilestone( group );
+            }
+        };
+
+        inlineForm.add( name );
+        inlineForm.add( progress );
+        inlineForm.add( issues );
+        inlineForm.add( open );
+        inlineForm.add( projects );
+        inlineForm.add( due );
+
+        return inlineForm;
+    }
+
+    private Milestone createMilestone( MilestoneGroup group )
+    {
+        Project project = page.getProject();
+        Milestone milestone = new Milestone( "", project );
+        milestone.setGroup( group );
+        return milestone;
     }
 }

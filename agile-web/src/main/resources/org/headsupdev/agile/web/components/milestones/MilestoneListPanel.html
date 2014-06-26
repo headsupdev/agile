@@ -19,40 +19,73 @@
 <html>
 <body>
 <wicket:panel>
-  <table class="milestones listing">
-    <thead>
-    <tr>
-      <td colspan="6" class="paging top" wicket:id="headerPaging"></td>
-    </tr>
-    </thead>
-    <tr>
-      <th class="name" wicket:id="orderByName">Name</th>
-      <th class="percent">Progress</th>
-      <th class="issues">Issues</th>
-      <th class="open">Open</th>
-      <th class="project" wicket:id="orderByProject">Project</th>
-      <th class="due" wicket:id="orderByDue">Due</th>
-    </tr>
-    <tr wicket:id="milestones">
-      <td wicket:id="id-cell" class="name"><a wicket:id="id-link"><span wicket:id="id-label">id</span></a></td>
-      <td wicket:id="bar" class="bar">bar</td>
-      <td wicket:id="issues" class="issues">0</td>
-      <td wicket:id="open" class="open">0</td>
-      <td wicket:id="project" class="project">project</td>
-      <td wicket:id="due" class="due">due</td>
-    </tr>
-    <tfoor>
+  <form wicket:id="milestoneInlineForm">
+    <table class="milestones listing">
+      <thead>
       <tr>
-        <td colspan="6" class="paging bottom" wicket:id="footerPaging"></td>
+        <td colspan="6" class="paging top" wicket:id="headerPaging"></td>
+      </tr>
+      </thead>
+      <tr>
+        <th style="width:30pt">&nbsp;</th>
+        <th class="name" wicket:id="orderByName">Name</th>
+        <th class="percent">Progress</th>
+        <th class="issues">Issues</th>
+        <th class="open">Open</th>
+        <th class="project" wicket:id="orderByProject">Project</th>
+        <th class="due" wicket:id="orderByDue">Due</th>
       </tr>
 
-      <wicket:enclosure child="allCell">
+      <tr>
+        <td>
+          <input type="submit" value="Add"/>
+        </td>
+        <td>
+          <input wicket:id="name" type="text" style="width:100%"/>
+        </td>
+        <td>
+          <div wicket:id="completeness">
+          </div>
+        </td>
+        <td>
+          <label wicket:id="issues">
+          </label>
+        </td>
+        <td>
+          <label wicket:id="open">
+          </label>
+        </td>
+        <td>
+          <label wicket:id="projects">
+          </label>
+        </td>
+        <td>
+          <div wicket:id="due">
+          </div>
+        </td>
+      </tr>
+      <tr wicket:id="milestones">
+        <td style="width:30pt">&nbsp;</td>
+        <td wicket:id="id-cell" class="name"><a wicket:id="id-link"><span wicket:id="id-label">id</span></a></td>
+        <td wicket:id="bar" class="bar">bar</td>
+        <td wicket:id="issues" class="issues">0</td>
+        <td wicket:id="open" class="open">0</td>
+        <td wicket:id="project" class="project">project</td>
+        <td wicket:id="due" class="due">due</td>
+      </tr>
+      <tfoor>
         <tr>
-          <td colspan="6" wicket:id="allCell" class="allcell"><a wicket:id="allLink">Show all...</a></td>
+          <td colspan="7" class="paging bottom" wicket:id="footerPaging"></td>
         </tr>
-      </wicket:enclosure>
-    </tfoor>
-  </table>
+
+        <wicket:enclosure child="allCell">
+          <tr>
+            <td colspan="7" wicket:id="allCell" class="allcell"><a wicket:id="allLink">Show all...</a></td>
+          </tr>
+        </wicket:enclosure>
+      </tfoor>
+    </table>
+  </form>
 </wicket:panel>
 </body>
 </html>
