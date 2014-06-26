@@ -189,9 +189,31 @@ public class IssueListPanel
 
     private Form<Issue> getInlineForm()
     {
-        TextField<String> summary = new TextField<String>( "summary" );
-        Label status = new Label( "status", IssueUtils.getStatusName( Issue.STATUS_NEW ) );
-        IssueTypeDropDownChoice type = new IssueTypeDropDownChoice( "type", IssueUtils.getTypes() );
+        CompoundPropertyModel<Issue> formPropertyModel = new CompoundPropertyModel<Issue>( quickIssue )
+        {
+            @Override
+            public Issue getObject()
+            {
+                return quickIssue;
+            }
+        };
+        Form<Issue> inlineForm = new Form<Issue>( "IssueInlineForm", formPropertyModel )
+        {
+            @Override
+            protected void onSubmit()
+            {
+                super.onSubmit();
+                quickIssue.setReporter( page.getSession().getUser() );
+                quickIssue.getWatchers().add( page.getSession().getUser() );
+                quickIssue.setTimeRequired( quickIssue.getTimeEstimate() );
+                IssuesDAO dao = new IssuesDAO();
+                dao.save( quickIssue );
+                quickIssue = createIssue();
+            }
+        };
+        inlineForm.add( new TextField<String>( "summary" ).setRequired( true ) );
+        inlineForm.add( new Label( "status", IssueUtils.getStatusName( Issue.STATUS_NEW ) ) );
+        inlineForm.add( new IssueTypeDropDownChoice( "type", IssueUtils.getTypes() ).setRequired( true ) );
         TextField<Integer> order = new TextField<Integer>( "rank", new Model<Integer>()
         {
             @Override
@@ -211,10 +233,12 @@ public class IssueListPanel
             }
         } );
         order.setType( Integer.class );
-
-        DropDownChoice<User> assignee = new UserDropDownChoice( "assignee" );
-        Label project = new Label( "project", page.getProject().toString() );
+        inlineForm.add( order );
+        inlineForm.add( new UserDropDownChoice( "assignee" ) );
+        inlineForm.add( new Label( "project", page.getProject().toString() ).setVisible( !hideProject ) );
         MilestoneDropDownChoice milestoneDropDown = new MilestoneDropDownChoice( "milestone", page.getProject() );
+        inlineForm.add( milestoneDropDown.setVisible( !hideMilestone ) );
+        inlineForm.add( milestoneDropDown.setNullValid( true ) );
         DurationEditPanel timeEstimate = new DurationEditPanel( "timeEstimate", new Model<Duration>()
         {
             @Override
@@ -223,39 +247,6 @@ public class IssueListPanel
                 return quickIssue.getTimeEstimate();
             }
         } );
-
-        CompoundPropertyModel<Issue> formPropertyModel = new CompoundPropertyModel<Issue>( quickIssue )
-        {
-            @Override
-            public Issue getObject()
-            {
-                return quickIssue;
-            }
-        };
-
-        Form<Issue> inlineForm = new Form<Issue>( "IssueInlineForm", formPropertyModel )
-        {
-            @Override
-            protected void onSubmit()
-            {
-                super.onSubmit();
-                quickIssue.setReporter( page.getSession().getUser() );
-                quickIssue.getWatchers().add( page.getSession().getUser() );
-                quickIssue.setTimeRequired( quickIssue.getTimeEstimate() );
-                IssuesDAO dao = new IssuesDAO();
-                dao.save( quickIssue );
-                quickIssue = createIssue();
-            }
-        };
-
-        inlineForm.add( summary.setRequired( true ) );
-        inlineForm.add( status );
-        inlineForm.add( type.setRequired( true ) );
-        inlineForm.add( order );
-        inlineForm.add( assignee );
-        inlineForm.add( project.setVisible( !hideProject ) );
-        inlineForm.add( milestoneDropDown.setVisible( !hideMilestone ) );
-        inlineForm.add( milestoneDropDown.setNullValid( true ) );
         inlineForm.add( timeEstimate );
 
         return inlineForm;
