@@ -20,6 +20,7 @@ package org.headsupdev.agile.web.components.milestones;
 
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.PageParameters;
+import org.apache.wicket.ResourceReference;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.OrderByBorder;
 import org.apache.wicket.extensions.markup.html.repeater.util.SortableDataProvider;
 import org.apache.wicket.markup.html.CSSPackageResource;
@@ -27,6 +28,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -130,7 +132,7 @@ public class MilestoneListPanel
                 return cols;
             }
         } );
-
+        inlineForm.add( new Image( "addIcon", new ResourceReference( HeadsUpPage.class, "images/add.png" ) ) );
         inlineForm.add( new OrderByBorder( "orderByName", "name.name", provider ) );
         inlineForm.add( new OrderByBorder( "orderByDue", "due", provider ) );
         inlineForm.add( new OrderByBorder( "orderByProject", "name.project.id", provider ).setVisible( !hideProject ) );

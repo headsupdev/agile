@@ -19,21 +19,22 @@
 package org.headsupdev.agile.web.components.issues;
 
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.Component;
+import org.apache.wicket.ResourceReference;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.OrderByBorder;
 import org.apache.wicket.extensions.markup.html.repeater.util.SortableDataProvider;
 import org.apache.wicket.markup.html.CSSPackageResource;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
-import org.headsupdev.agile.api.User;
 import org.headsupdev.agile.storage.StoredProject;
 import org.headsupdev.agile.storage.dao.IssuesDAO;
 import org.headsupdev.agile.storage.issues.Duration;
@@ -46,6 +47,8 @@ import org.headsupdev.agile.web.components.StripedDataView;
 import org.headsupdev.agile.web.components.UserDropDownChoice;
 import org.headsupdev.agile.web.components.milestones.MilestoneDropDownChoice;
 import org.headsupdev.agile.web.wicket.StyledPagingNavigator;
+import org.wicketstuff.animator.Animator;
+import org.wicketstuff.animator.MarkupIdModel;
 
 import java.util.Iterator;
 
@@ -62,11 +65,13 @@ public class IssueListPanel
     private static final int ITEMS_PER_PAGE = 25;
     private final boolean hideMilestone;
     private final boolean hideProject;
+    private Image addIcon;
     private StyledPagingNavigator pagingHeader, pagingFooter;
 
     private Issue quickIssue;
     private HeadsUpPage page;
     private Milestone milestone;
+    private final WebMarkupContainer rowAdd;
 
     public IssueListPanel( String id, final SortableDataProvider<Issue> issues, final HeadsUpPage page, final boolean hideProject,
                            final boolean hideMilestone, final Milestone milestone )
@@ -83,6 +88,10 @@ public class IssueListPanel
 
         final boolean timeEnabled = Boolean.parseBoolean( page.getProject().getConfigurationValue(
                 StoredProject.CONFIGURATION_TIMETRACKING_ENABLED ) );
+
+
+        rowAdd = new WebMarkupContainer( "rowAdd" );
+        rowAdd.setMarkupId( "rowAdd" );
 
         Form<Issue> inlineForm = getInlineForm();
         add( inlineForm );
@@ -105,7 +114,7 @@ public class IssueListPanel
             @Override
             public Integer getObject()
             {
-                int cols = 9;
+                int cols = 10;
                 if ( hideMilestone )
                 {
                     cols--;
@@ -127,6 +136,9 @@ public class IssueListPanel
         inlineForm.add( pagingHeader.add( colspanModifier ).setVisible( issues.size() > ITEMS_PER_PAGE ) );
 
         inlineForm.add( new OrderByBorder( "orderById", "id.id", issues ) );
+
+        inlineForm.add( addIcon );
+
         inlineForm.add( new OrderByBorder( "orderBySummary", "summary", issues ) );
         inlineForm.add( new OrderByBorder( "orderByStatus", "status", issues ) );
         inlineForm.add( new OrderByBorder( "orderByPriority", "priority", issues ) );
@@ -144,7 +156,7 @@ public class IssueListPanel
             @Override
             public Integer getObject()
             {
-                int cols = 7;
+                int cols = 8;
                 if ( hideMilestone )
                 {
                     cols--;
@@ -211,10 +223,14 @@ public class IssueListPanel
                 quickIssue = createIssue();
             }
         };
-        inlineForm.add( new TextField<String>( "summary" ).setRequired( true ) );
-        inlineForm.add( new Label( "status", IssueUtils.getStatusName( Issue.STATUS_NEW ) ) );
-        inlineForm.add( new IssueTypeDropDownChoice( "type", IssueUtils.getTypes() ).setRequired( true ) );
-        TextField<Integer> order = new TextField<Integer>( "rank", new Model<Integer>()
+
+        Component[] rowAddComponents = new Component[9];
+        rowAddComponents[0] = new WebMarkupContainer( "submit" ).setMarkupId( "submit" );
+
+        rowAddComponents[1] = new TextField<String>( "summary" ).setRequired( true ).setMarkupId( "summary" );
+        rowAddComponents[2] = new Label( "status", IssueUtils.getStatusName( Issue.STATUS_NEW ) ).setMarkupId( "status" );
+        rowAddComponents[3] = new IssueTypeDropDownChoice( "type", IssueUtils.getTypes() ).setRequired( true ).setMarkupId( "type" );
+        rowAddComponents[4] = new TextField<Integer>( "rank", new Model<Integer>()
         {
             @Override
             public void setObject( Integer object )
@@ -231,25 +247,38 @@ public class IssueListPanel
                 }
                 return quickIssue.getOrder();
             }
-        } );
-        order.setType( Integer.class );
-        inlineForm.add( order );
-        inlineForm.add( new UserDropDownChoice( "assignee" ) );
-        inlineForm.add( new Label( "project", page.getProject().toString() ).setVisible( !hideProject ) );
-        MilestoneDropDownChoice milestoneDropDown = new MilestoneDropDownChoice( "milestone", page.getProject() );
-        inlineForm.add( milestoneDropDown.setVisible( !hideMilestone ) );
-        inlineForm.add( milestoneDropDown.setNullValid( true ) );
-        DurationEditPanel timeEstimate = new DurationEditPanel( "timeEstimate", new Model<Duration>()
+        } ).setType( Integer.class ).setMarkupId( "rank" );
+        rowAddComponents[5] = new UserDropDownChoice( "assignee" ).setMarkupId( "assignee" );
+        rowAddComponents[6] = new Label( "project", page.getProject().toString() ).setVisible( !hideProject ).setMarkupId( "pro" );
+        rowAddComponents[7] = new MilestoneDropDownChoice( "milestone", page.getProject() ).setNullValid( true ).setVisible( !hideMilestone ).setMarkupId( "milestone" );
+        rowAddComponents[8] = new DurationEditPanel( "timeEstimate", new Model<Duration>()
         {
             @Override
             public Duration getObject()
             {
                 return quickIssue.getTimeEstimate();
             }
-        } );
-        inlineForm.add( timeEstimate );
-
+        } ).setMarkupId( "timeEstimate" );
+        addAnimatorToForm( rowAddComponents );
+        inlineForm.add( rowAdd );
         return inlineForm;
+    }
+
+    private void addAnimatorToForm( Component[] rowAddComponents )
+    {
+        addIcon = new Image( "addIcon", new ResourceReference( HeadsUpPage.class, "images/add.png" ) );
+        Animator animator = new Animator();
+        animator.addCssStyleSubject( new MarkupIdModel( rowAdd.setMarkupId( "rowAdd" ) ), "rowhidden", "rowshown" );
+        for ( Component rowAddComponent : rowAddComponents )
+        {
+            rowAdd.add( rowAddComponent );
+            if ( rowAddComponent.isVisible() )
+            {
+                animator.addCssStyleSubject( new MarkupIdModel( rowAddComponent ), "hidden", "shown" );
+            }
+        }
+
+        animator.attachTo( addIcon, "onclick", Animator.Action.toggle() );
     }
 
     private Issue createIssue()
