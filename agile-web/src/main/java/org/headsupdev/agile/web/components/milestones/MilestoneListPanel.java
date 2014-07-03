@@ -171,6 +171,12 @@ public class MilestoneListPanel
             protected void onSubmit()
             {
                 MilestonesDAO dao = new MilestonesDAO();
+                boolean alreadyExists = dao.find( quickMilestone.getName(), quickMilestone.getProject() ) != null;
+                if ( alreadyExists )
+                {
+                    warn( "Cannot create milestone. A milestone with that name already exists." );
+                    return;
+                }
                 quickMilestone.setUpdated( new Date() );
                 dao.save( quickMilestone );
                 quickMilestone = createMilestone( group );
