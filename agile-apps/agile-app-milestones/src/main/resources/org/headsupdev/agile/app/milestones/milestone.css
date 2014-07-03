@@ -1,4 +1,21 @@
-/* Milestone list */
+/*
+ * HeadsUp Agile
+ * Copyright 2010-2014 Heads Up Development Ltd.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 table.milestones, table.info, table.details, table.comments, table.remaining {
     width: 100%;
 }
@@ -97,6 +114,36 @@ table.remaining td.number {
     text-align: center;
 }
 
-.inlinevelocity td.dashheader, .inlinevelocity td.velnumber, .inlinevelocity td.dashfooter {
+.inlinevelocity td.dashheader, .inlinevelocity td.velnumber, .inlinevelocity td.dashfooter{
     border-left: none;
+}
+
+.listing .rowAdd.rowhidden{
+    height: 0pt;
+}
+
+.listing .rowAdd.rowshown{
+    height:auto;
+}
+
+.listing .rowAdd input.hidden, .listing .rowAdd div.hidden, .listing .rowAdd label.hidden{
+    display:none;
+}
+
+.listing .rowAdd input.shown, .listing .rowAdd div.shown, .listing .rowAdd label.shown{
+    display:block !important;
+    overflow:hidden;
+}
+
+.addIconMilestone.iconPlus{
+    background-image: url( /resources/org.headsupdev.agile.web.HeadsUpPage/images/add.png )!important;
+}
+
+.addIconMilestone.iconMinus{
+    background-image: url( /resources/org.headsupdev.agile.web.HeadsUpPage/images/delete.png )!important;
+}
+
+.addIconMilestone{
+    height:16px;
+    width:16px;
 }
