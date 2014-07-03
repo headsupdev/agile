@@ -52,7 +52,7 @@ table.issues td.hours {
 }
 
 .listing .rowhidden{
-	 height: 0pt;
+    height: 0pt;
 }
 
 .listing .rowshown{
@@ -74,5 +74,21 @@ table.issues td.hours {
 }
 
 #pro, #submit, #summary, #status, #type, #rank, #assignee, #milestone, #timeEstimate{
-	 display:none;
+    display:none;
+}
+
+.listing #addIcon.iconPlus{
+    background-image: url( /resources/org.headsupdev.agile.web.HeadsUpPage/images/add.png )!important;
+    height:130%;
+}
+
+.listing #addIcon.iconMinus{
+    background-image: url( /resources/org.headsupdev.agile.web.HeadsUpPage/images/delete.png )!important;
+    height:100%;
+}
+
+.listing #addIcon{
+    background-image: url( /resources/org.headsupdev.agile.web.HeadsUpPage/images/add.png );
+    height:16px;
+    width:16px;
 }
