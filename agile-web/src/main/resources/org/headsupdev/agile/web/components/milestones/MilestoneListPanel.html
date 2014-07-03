@@ -28,7 +28,7 @@
       </thead>
       <tr>
         <th>
-          <img wicket:id="addIcon"/>
+          <img class="addIconMilestone" wicket:id="addIconMilestone"/>
         </th>
         <th class="name" wicket:id="orderByName">Name</th>
         <th class="percent">Progress</th>
@@ -38,12 +38,12 @@
         <th class="due" wicket:id="orderByDue">Due</th>
       </tr>
 
-      <tr>
+      <tr wicket:id="rowAddMilestone" class="rowAdd">
         <td>
-          <input type="submit" value="Add"/>
+          <input wicket:id="submit" type="submit" value="Add"/>
         </td>
         <td>
-          <input wicket:id="name" type="text" style="width:100%"/>
+          <input wicket:id="name" type="text" style="width:150pt"/>
         </td>
         <td>
           <div wicket:id="completeness">

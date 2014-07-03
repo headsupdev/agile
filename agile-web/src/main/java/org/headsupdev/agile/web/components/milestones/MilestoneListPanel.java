@@ -19,8 +19,8 @@
 package org.headsupdev.agile.web.components.milestones;
 
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.Component;
 import org.apache.wicket.PageParameters;
-import org.apache.wicket.ResourceReference;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.OrderByBorder;
 import org.apache.wicket.extensions.markup.html.repeater.util.SortableDataProvider;
 import org.apache.wicket.markup.html.CSSPackageResource;
@@ -28,7 +28,6 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -48,6 +47,8 @@ import org.headsupdev.agile.web.components.FormattedDateModel;
 import org.headsupdev.agile.web.components.PercentagePanel;
 import org.headsupdev.agile.web.components.StripedDataView;
 import org.headsupdev.agile.web.wicket.StyledPagingNavigator;
+import org.wicketstuff.animator.Animator;
+import org.wicketstuff.animator.MarkupIdModel;
 
 import java.util.Date;
 
@@ -62,18 +63,25 @@ public class MilestoneListPanel
         extends Panel
 {
     private static final int ITEMS_PER_PAGE = 25;
+    private final WebMarkupContainer rowAdd;
     private StyledPagingNavigator pagingHeader, pagingFooter;
     private Milestone quickMilestone;
     private HeadsUpPage page;
     private MilestoneGroup group;
+    private WebMarkupContainer addIcon;
 
     public MilestoneListPanel( String id, final SortableDataProvider<Milestone> provider, final HeadsUpPage page,
                                final boolean hideProject, final MilestoneGroup group )
     {
         super( id );
+
         add( CSSPackageResource.getHeaderContribution( getClass(), "milestone.css" ) );
         this.page = page;
         this.group = group;
+
+
+        rowAdd = new WebMarkupContainer( "rowAddMilestone" );
+        rowAdd.setMarkupId( "rowAddMilestone" + group );
 
         Form<Milestone> inlineForm = getInlineForm();
         add( inlineForm );
@@ -132,7 +140,7 @@ public class MilestoneListPanel
                 return cols;
             }
         } );
-        inlineForm.add( new Image( "addIcon", new ResourceReference( HeadsUpPage.class, "images/add.png" ) ) );
+        inlineForm.add( addIcon );
         inlineForm.add( new OrderByBorder( "orderByName", "name.name", provider ) );
         inlineForm.add( new OrderByBorder( "orderByDue", "due", provider ) );
         inlineForm.add( new OrderByBorder( "orderByProject", "name.project.id", provider ).setVisible( !hideProject ) );
@@ -176,11 +184,14 @@ public class MilestoneListPanel
                 quickMilestone = createMilestone( group );
             }
         };
-        inlineForm.add( new TextField<NameProjectId>( "name" ) );
-        inlineForm.add( new PercentagePanel( "completeness", 0 ) );
-        inlineForm.add( new Label( "issues", "0" ) );
-        inlineForm.add( new Label( "open", "0" ) );
-        inlineForm.add( new Label( "projects", page.getProject().toString() ) );
+
+        Component[] rowAddComponents = new Component[7];
+        rowAddComponents[0] = new WebMarkupContainer( "submit" );
+        rowAddComponents[1] = new TextField<NameProjectId>( "name" );
+        rowAddComponents[2] = new PercentagePanel( "completeness", 0 );
+        rowAddComponents[3] = new Label( "issues", "0" );
+        rowAddComponents[4] = new Label( "open", "0" );
+        rowAddComponents[5] = new Label( "projects", page.getProject().toString() );
         DateTimeWithTimeZoneField due = new DateTimeWithTimeZoneField( "due", new Model<Date>()
         {
             @Override
@@ -195,9 +206,28 @@ public class MilestoneListPanel
                 return quickMilestone.getDueDate();
             }
         } );
-        inlineForm.add( due );
+        rowAddComponents[6] = due;
 
+        addAnimatorToForm( rowAddComponents );
+        inlineForm.add( rowAdd );
         return inlineForm;
+    }
+
+    private void addAnimatorToForm( Component[] rowAddComponents )
+    {
+        addIcon = new WebMarkupContainer( "addIconMilestone" );
+        Animator animator = new Animator();
+        animator.addCssStyleSubject( new MarkupIdModel( rowAdd.setOutputMarkupId( true ) ), "rowhidden", "rowshown" );
+        animator.addCssStyleSubject( new MarkupIdModel( addIcon.setOutputMarkupId( true ) ), "iconPlus", "iconMinus" );
+        for ( Component rowAddComponent : rowAddComponents )
+        {
+            rowAdd.add( rowAddComponent );
+            if ( rowAddComponent.isVisible() )
+            {
+                animator.addCssStyleSubject( new MarkupIdModel( rowAddComponent.setOutputMarkupId( true ) ), "hidden", "shown" );
+            }
+        }
+        animator.attachTo( addIcon, "onclick", Animator.Action.toggle() );
     }
 
     private Milestone createMilestone( MilestoneGroup group )

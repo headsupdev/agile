@@ -144,6 +144,7 @@ table.remaining td.number {
 }
 
 .addIconMilestone{
+    background-image: url( /resources/org.headsupdev.agile.web.HeadsUpPage/images/add.png )!important;
     height:16px;
     width:16px;
 }
