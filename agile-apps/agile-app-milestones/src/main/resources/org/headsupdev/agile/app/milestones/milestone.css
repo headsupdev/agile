@@ -118,28 +118,40 @@ table.remaining td.number {
     border-left: none;
 }
 
-.listing .rowAdd.rowhidden{
-    height: 0pt;
-}
-
-.listing .rowAdd.rowshown{
-    height:auto;
-}
-
-.listing .rowAdd input.hidden, .listing .rowAdd div.hidden, .listing .rowAdd label.hidden{
-    display:none;
-}
-
-.listing .rowAdd input.shown, .listing .rowAdd div.shown, .listing .rowAdd label.shown{
-    display:block !important;
+.listing .rowhidden, .listing .rowAdd {
+    height: 0;
     overflow:hidden;
 }
 
-.addIconMilestone.iconPlus{
+.listing .rowshown{
+    height:auto;
+}
+
+.listing .rowAdd td, .listing .rowhdden td {
+    padding: 0 10px;
+}
+
+.listing .rowshown td {
+    padding: 5px 10px;
+}
+
+.listing .rowAdd input.hidden, .listing .rowAdd div.hidden, .listing .rowAdd span.hidden {
+    height: 0;
+    display: none;
+    overflow:hidden;
+}
+
+.listing .rowAdd input.shown, .listing .rowAdd div.shown, .listing .rowAdd span.shown {
+    height: auto;
+    display: block;
+    overflow: visible;
+}
+
+.iconPlus{
     background-image: url( /resources/org.headsupdev.agile.web.HeadsUpPage/images/add.png )!important;
 }
 
-.addIconMilestone.iconMinus{
+.iconMinus{
     background-image: url( /resources/org.headsupdev.agile.web.HeadsUpPage/images/delete.png )!important;
 }
 

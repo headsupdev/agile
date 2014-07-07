@@ -40,29 +40,29 @@
 
       <tr wicket:id="rowAddMilestone" class="rowAdd">
         <td>
-          <input wicket:id="submit" type="submit" value="Add"/>
+          <input wicket:id="submit" type="submit" value="Add" class="hidden"/>
         </td>
         <td>
-          <input wicket:id="name" type="text" style="width:150pt"/>
+          <input wicket:id="name" type="text" style="width:150pt"  class="hidden"/>
         </td>
         <td>
-          <div wicket:id="completeness">
+          <div wicket:id="completeness" class="hidden">
           </div>
         </td>
         <td>
-          <label wicket:id="issues">
-          </label>
+          <div wicket:id="issues" class="hidden">
+          </div>
         </td>
         <td>
-          <label wicket:id="open">
-          </label>
+          <div wicket:id="open" class="hidden">
+          </div>
         </td>
         <td>
-          <label wicket:id="projects">
-          </label>
+          <div wicket:id="project" class="hidden">
+          </div>
         </td>
         <td>
-          <div wicket:id="due">
+          <div wicket:id="due" class="hidden">
           </div>
         </td>
       </tr>
@@ -75,7 +75,7 @@
         <td wicket:id="project" class="project">project</td>
         <td wicket:id="due" class="due">due</td>
       </tr>
-      <tfoor>
+      <tfoot>
         <tr>
           <td colspan="7" class="paging bottom" wicket:id="footerPaging"></td>
         </tr>
@@ -85,7 +85,7 @@
             <td colspan="7" wicket:id="allCell" class="allcell"><a wicket:id="allLink">Show all...</a></td>
           </tr>
         </wicket:enclosure>
-      </tfoor>
+      </tfoot>
     </table>
   </form>
 </wicket:panel>

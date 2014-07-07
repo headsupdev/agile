@@ -131,7 +131,7 @@ public class MilestoneListPanel
             @Override
             public Integer getObject()
             {
-                int cols = 6;
+                int cols = 7;
                 if ( hideProject )
                 {
                     cols--;
@@ -191,7 +191,7 @@ public class MilestoneListPanel
         rowAddComponents[2] = new PercentagePanel( "completeness", 0 );
         rowAddComponents[3] = new Label( "issues", "0" );
         rowAddComponents[4] = new Label( "open", "0" );
-        rowAddComponents[5] = new Label( "projects", page.getProject().toString() );
+        rowAddComponents[5] = new Label( "project", page.getProject().toString() );
         DateTimeWithTimeZoneField due = new DateTimeWithTimeZoneField( "due", new Model<Date>()
         {
             @Override
@@ -208,15 +208,15 @@ public class MilestoneListPanel
         } );
         rowAddComponents[6] = due;
 
-        addAnimatorToForm( rowAddComponents );
+        addAnimatorToForm( rowAddComponents, group );
         inlineForm.add( rowAdd );
         return inlineForm;
     }
 
-    private void addAnimatorToForm( Component[] rowAddComponents )
+    private void addAnimatorToForm( Component[] rowAddComponents, MilestoneGroup group )
     {
         addIcon = new WebMarkupContainer( "addIconMilestone" );
-        Animator animator = new Animator();
+        Animator animator = new Animator( "MilestoneGroup" + group + "Animator" );
         animator.addCssStyleSubject( new MarkupIdModel( rowAdd.setOutputMarkupId( true ) ), "rowhidden", "rowshown" );
         animator.addCssStyleSubject( new MarkupIdModel( addIcon.setOutputMarkupId( true ) ), "iconPlus", "iconMinus" );
         for ( Component rowAddComponent : rowAddComponents )
