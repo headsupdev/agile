@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -120,7 +120,7 @@ public class DocsApplication
     @Override
     public Class<? extends Page>[] getPages()
     {
-        return new Class[]{ CreateAttachment.class, CreateComment.class, Create.class, Edit.class, Index.class,
+        return new Class[]{ CreateAttachment.class, CreateComment.class, EditComment.class, Create.class, Edit.class, Index.class,
                 MavenSite.class, View.class, APIDocs.class, AnalyzeResults.class };
     }
 

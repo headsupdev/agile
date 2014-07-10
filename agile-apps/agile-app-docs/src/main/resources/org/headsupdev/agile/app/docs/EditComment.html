@@ -1,6 +1,6 @@
 <!--
   ~ HeadsUp Agile
-  ~ Copyright 2009-2012 Heads Up Development Ltd.
+  ~ Copyright 2014 Heads Up Development Ltd.
   ~
   ~ This program is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU Affero General Public License as
@@ -17,27 +17,22 @@
   -->
 
 <html>
-  <body>
-    <wicket:panel>
+<body>
+<wicket:extend>
+  <form wicket:id="comment">
+    <wicket:child />
+    <table class="details">
       <tr>
-        <td class="comment-icon"><img wicket:id="icon"/></td>
-        <td class="comment-title" wicket:id="comment-title">
-          Comment added by <span wicket:id="username">username</span>
-          on <span wicket:id="created">created</span>
-        </td>
-        <td class="comment-title" wicket:id="worked-title">
-          <span wicket:id="worked">0h</span> work logged by <span wicket:id="username">username</span>
-          on <span wicket:id="created">created</span>
-        </td>
+        <th class="comment" colspan="2">Comment</th>
       </tr>
-      <wicket:enclosure>
       <tr>
-        <td colspan="2" wicket:id="comment">comment</td>
+        <td class="comment" colspan="2"><textarea rows="8" cols="25" wicket:id="comment"> </textarea></td>
       </tr>
-      </wicket:enclosure>
       <tr>
-        <td colspan="2">&nbsp;</td>
+        <td colspan="2"><input type="submit" wicket:id="submit" value="Create Comment" /></td>
       </tr>
-    </wicket:panel>
-  </body>
+    </table>
+  </form>
+</wicket:extend>
+</body>
 </html>

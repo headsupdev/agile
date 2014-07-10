@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -19,11 +19,12 @@
 package org.headsupdev.agile.app.docs.event;
 
 import org.headsupdev.agile.api.User;
+import org.headsupdev.agile.app.docs.CommentPanel;
 import org.headsupdev.agile.app.docs.DocsApplication;
 import org.headsupdev.agile.storage.Comment;
 import org.headsupdev.agile.storage.docs.Document;
 import org.headsupdev.agile.web.RenderUtil;
-import org.headsupdev.agile.web.components.CommentPanel;
+//import org.headsupdev.agile.web.components.CommentPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 
 import javax.persistence.Entity;
