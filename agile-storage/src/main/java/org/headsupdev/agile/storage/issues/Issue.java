@@ -418,6 +418,11 @@ public class Issue
         return reverseRelationships;
     }
 
+    public void addComment(Comment comment)
+    {
+        comments.add( comment );
+    }
+
     public Set<Comment> getComments()
     {
         return comments;

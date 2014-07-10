@@ -33,10 +33,6 @@ table.info td.type img, table.info td.priority img {
     padding-right: 5px;
 }
 
-.comment-icon {
-    width: 16px;
-}
-
 .relationships .relatedstatus {
     background-color: transparent;
 }
