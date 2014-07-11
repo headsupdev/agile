@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -43,19 +43,21 @@ public class CreateAttachment
     protected void layoutChild( Form form )
     {
         form.setMultiPart(true);
-        form.add( attachmentPanel = new AttachmentPanel( "attachmentPanel", this ) );
-        attachmentPanel.setRequired( true );
+        attachmentPanel = new AttachmentPanel( "attachmentPanel", this );
+        form.add( attachmentPanel );
         form.setMaxSize( Bytes.megabytes( 100 ) );
 
-        setSubmitLabel( "Create Attachment" );
+        setSubmitLabel( "Add Attachments" );
     }
 
     @Override
     protected void submitChild( Comment comment )
     {
-        getIssue().getAttachments().add( attachmentPanel.getAttachment() );
-
-        attachmentPanel.getAttachment().setComment( comment );
+        for ( Attachment attachment: attachmentPanel.getAttachments() )
+        {
+            attachment.setComment( comment );
+            getIssue().addAttachment( attachment );
+        }
     }
 
     protected Event getUpdateEvent( Comment comment )

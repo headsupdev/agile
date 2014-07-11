@@ -119,7 +119,7 @@ public class ViewIssue
 
         add( new IssuePanel( "issue", issue ) );
 
-        List<Attachment> attachmentList = new LinkedList<Attachment>();
+        final List<Attachment> attachmentList = new LinkedList<Attachment>();
         attachmentList.addAll( issue.getAttachments() );
         Collections.sort( attachmentList, new Comparator<Attachment>()
         {
@@ -132,7 +132,7 @@ public class ViewIssue
         {
             protected void populateItem( ListItem<Attachment> listItem )
             {
-                Attachment attachment = listItem.getModelObject();
+                final Attachment attachment = listItem.getModelObject();
                 listItem.add( new Label( "username", attachment.getUser().getFullnameOrUsername() ) );
                 listItem.add( new Label( "created", new FormattedDateModel( attachment.getCreated(),
                         ( (HeadsUpSession) getSession() ).getTimeZone() ) ) );
@@ -146,7 +146,32 @@ public class ViewIssue
                 Link download = new DownloadLink( "attachment-link", file );
                 download.add( new Label( "attachment-label", attachment.getFilename() ) );
                 listItem.add( download );
+                listItem.add( new Link( "attachment-delete" )
+                {
+                    @Override
+                    public void onClick()
+                    {
+                        Iterator<Attachment> iterator = attachmentList.iterator();
+                        while(iterator.hasNext())
+                        {
+                            if (iterator.next().getId() == attachment.getId())
+                            {
+                                iterator.remove();
+                            }
+                        }
+                        iterator = issue.getAttachments().iterator();
+                        while(iterator.hasNext())
+                        {
+                            if ( iterator.next().getId() == attachment.getId() )
+                            {
+                                iterator.remove();
+                            }
 
+                        }
+                        // ((HibernateStorage) getStorage() ).delete( attachment );
+                        issue = (Issue) ( (HibernateStorage) getStorage() ).getHibernateSession().merge( issue );
+                    }
+                } );
                 Comment comment = attachment.getComment();
                 if ( comment != null )
                 {

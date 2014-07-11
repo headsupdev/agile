@@ -171,6 +171,11 @@ public class Issue
         relationships.add( relationship );
     }
 
+    public void addAttachment( Attachment attachment )
+    {
+        attachments.add( attachment );
+    }
+
     public long getId()
     {
         return id.getId();

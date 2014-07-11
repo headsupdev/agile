@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -18,6 +18,13 @@
 
 package org.headsupdev.agile.web.components;
 
+import org.apache.wicket.markup.html.form.upload.FileUpload;
+import org.apache.wicket.markup.html.form.upload.FileUploadField;
+import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.Model;
 import org.headsupdev.agile.api.Manager;
 import org.headsupdev.agile.storage.Attachment;
 import org.headsupdev.agile.storage.HibernateStorage;
@@ -27,9 +34,8 @@ import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 
-import java.io.File;
-import java.io.Serializable;
-import java.util.Date;
+import java.io.*;
+import java.util.*;
 
 /**
  * This handles the UI interaction of uploading a file to HeadsUp.
@@ -50,18 +56,73 @@ public class AttachmentPanel
 
     private FileUploadField upload;
     private String filename;
-    private Attachment attachment;
+    private Set<Attachment> attachments = new HashSet<Attachment>();
+    private HeadsUpPage page;
+
 
     public AttachmentPanel( String id, final HeadsUpPage page )
     {
         super( id );
+        this.page = page;
+        final ArrayList<FileUploadField> fileUploadPanels = new ArrayList<FileUploadField>();
+        fileUploadPanels.add( createFileUploadField() );
 
-        upload = new FileUploadField( "attachment", new Model<FileUpload>()
+//        add( upload );
+        final ListView<FileUploadField> fileUploads = new ListView<FileUploadField>( "fileUploads", fileUploadPanels )
         {
             @Override
-            public void setObject( FileUpload object )
+            protected void populateItem( ListItem listItem )
             {
-                super.setObject( object );
+                listItem.add( fileUploadPanels.get( listItem.getIndex() ) );
+            }
+        };
+        add( fileUploads );
+
+        add( new Link<Void>( "addIconAttachment" )
+        {
+            @Override
+            public void onClick()
+            {
+                fileUploadPanels.add( createFileUploadField() );
+            }
+        } );
+
+    }
+
+    public Set<Attachment> getAttachments()
+    {
+        return attachments;
+    }
+
+    public Attachment getAttachment()
+    {
+        return null;
+    }
+
+    public String getFilename()
+    {
+//        return filename;
+        return null;
+    }
+
+    public boolean isRequired()
+    {
+        return upload.isRequired();
+    }
+
+    public void setRequired( boolean required )
+    {
+        upload.setRequired( required );
+    }
+
+    private FileUploadField createFileUploadField()
+    {
+        return new FileUploadField( "attachment", new Model<FileUpload>()
+        {
+            @Override
+            public void setObject( FileUpload fileUpload )
+            {
+                super.setObject( fileUpload );
 
                 HibernateStorage storage = (HibernateStorage) page.getStorage();
 
@@ -69,8 +130,7 @@ public class AttachmentPanel
                 attachment.setCreated( new Date() );
                 attachment.setUser( page.getSession().getUser() );
 
-                FileUpload file = upload.getFileUpload();
-                filename = file.getClientFileName();
+                String filename = fileUpload.getClientFileName();
                 attachment.setFilename( filename );
                 storage.save( attachment );
 
@@ -78,7 +138,8 @@ public class AttachmentPanel
                 destination.getParentFile().mkdirs();
                 try
                 {
-                    file.writeTo( destination );
+                    fileUpload.writeTo( destination );
+                    attachments.add( attachment );
                 }
                 catch ( Exception e )
                 {
