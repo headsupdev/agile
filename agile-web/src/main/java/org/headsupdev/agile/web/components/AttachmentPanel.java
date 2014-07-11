@@ -54,8 +54,7 @@ public class AttachmentPanel
         implements Serializable
 {
 
-    private FileUploadField upload;
-    private String filename;
+
     private Set<Attachment> attachments = new HashSet<Attachment>();
     private HeadsUpPage page;
 
@@ -105,15 +104,15 @@ public class AttachmentPanel
         return null;
     }
 
-    public boolean isRequired()
-    {
-        return upload.isRequired();
-    }
-
-    public void setRequired( boolean required )
-    {
-        upload.setRequired( required );
-    }
+//    public boolean isRequired()
+//    {
+//        return upload.isRequired();
+//    }
+//
+//    public void setRequired( boolean required )
+//    {
+//        upload.setRequired( required );
+//    }
 
     private FileUploadField createFileUploadField()
     {

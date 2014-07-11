@@ -142,6 +142,11 @@ public class Document
         return comments;
     }
 
+    public void addAttachment( Attachment attachment )
+    {
+        attachments.add( attachment );
+    }
+
     public Set<Attachment> getAttachments()
     {
         return attachments;

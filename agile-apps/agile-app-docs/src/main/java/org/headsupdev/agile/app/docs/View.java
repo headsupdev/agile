@@ -36,6 +36,7 @@ import org.headsupdev.agile.storage.Attachment;
 import org.headsupdev.agile.storage.Comment;
 import org.headsupdev.agile.storage.HibernateStorage;
 import org.headsupdev.agile.storage.docs.Document;
+import org.headsupdev.agile.storage.issues.Issue;
 import org.headsupdev.agile.web.BookmarkableMenuLink;
 import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.HeadsUpSession;
@@ -45,10 +46,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import java.io.File;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Documents home page
@@ -133,7 +131,7 @@ public class View
         add( new WebMarkupContainer( "notfound" ).setVisible( false ) );
         add( new Label( "content", getContent( doc ) ).setEscapeModelStrings( false ) );
 
-        List<Attachment> attachmentList = new LinkedList<Attachment>();
+        final List<Attachment> attachmentList = new LinkedList<Attachment>();
         attachmentList.addAll( doc.getAttachments() );
         Collections.sort( attachmentList, new Comparator<Attachment>()
         {
@@ -146,7 +144,7 @@ public class View
         {
             protected void populateItem( ListItem<Attachment> listItem )
             {
-                Attachment attachment = listItem.getModelObject();
+                final Attachment attachment = listItem.getModelObject();
                 listItem.add( new Label( "username", attachment.getUser().getFullnameOrUsername() ) );
                 listItem.add( new Label( "created", new FormattedDateModel( attachment.getCreated(),
                         ( (HeadsUpSession) getSession() ).getTimeZone() ) ) );
@@ -158,6 +156,33 @@ public class View
                 Link download = new DownloadLink( "attachment-link", file );
                 download.add( new Label( "attachment-label", attachment.getFilename() ) );
                 listItem.add( download );
+
+                listItem.add( new Link( "attachment-delete" )
+                {
+                    @Override
+                    public void onClick()
+                    {
+                        Iterator<Attachment> iterator = attachmentList.iterator();
+                        while(iterator.hasNext())
+                        {
+                            if (iterator.next().getId() == attachment.getId())
+                            {
+                                iterator.remove();
+                            }
+                        }
+                        iterator = doc.getAttachments().iterator();
+                        while(iterator.hasNext())
+                        {
+                            if ( iterator.next().getId() == attachment.getId() )
+                            {
+                                iterator.remove();
+                            }
+
+                        }
+                        // ((HibernateStorage) getStorage() ).delete( attachment );
+                        doc = (Document) ( (HibernateStorage) getStorage() ).getHibernateSession().merge( doc );
+                    }
+                } );
 
                 Comment comment = attachment.getComment();
                 if ( comment != null )

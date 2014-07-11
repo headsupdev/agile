@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -19,6 +19,7 @@
 package org.headsupdev.agile.app.docs;
 
 import org.headsupdev.agile.app.docs.event.UpdateDocumentEvent;
+import org.headsupdev.agile.storage.Attachment;
 import org.headsupdev.agile.storage.Comment;
 import org.headsupdev.agile.web.MountPoint;
 import org.headsupdev.agile.web.components.AttachmentPanel;
@@ -45,7 +46,7 @@ public class CreateAttachment
 
         form.setMultiPart(true);
         form.add( attachmentPanel = new AttachmentPanel( "attachmentPanel", this ) );
-        attachmentPanel.setRequired( true );
+//        attachmentPanel.setRequired( true );
         form.setMaxSize( Bytes.megabytes( 100 ) );
     }
 
@@ -60,8 +61,14 @@ public class CreateAttachment
     {
         super.submitChild( comment );
 
-        attachmentPanel.getAttachment().setComment( comment );
-        getDocument().getAttachments().add( attachmentPanel.getAttachment() );
+        for ( Attachment attachment: attachmentPanel.getAttachments() )
+        {
+            attachment.setComment( comment );
+            getDocument().addAttachment( attachment );
+        }
+
+//        attachmentPanel.getAttachment().setComment( comment );
+//        getDocument().getAttachments().add( attachmentPanel.getAttachment() );
     }
 
     @Override
