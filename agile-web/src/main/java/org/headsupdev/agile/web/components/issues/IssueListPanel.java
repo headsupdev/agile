@@ -27,6 +27,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.Item;
@@ -63,13 +64,13 @@ public class IssueListPanel
     private static final int ITEMS_PER_PAGE = 25;
     private final boolean hideMilestone;
     private final boolean hideProject;
-    private WebMarkupContainer addIcon;
     private StyledPagingNavigator pagingHeader, pagingFooter;
 
     private Issue quickIssue;
     private HeadsUpPage page;
     private Milestone milestone;
     private final WebMarkupContainer rowAdd;
+    private WebMarkupContainer addIcon;
 
     public IssueListPanel( String id, final SortableDataProvider<Issue> issues, final HeadsUpPage page, final boolean hideProject,
                            final boolean hideMilestone, final Milestone milestone )
@@ -262,7 +263,7 @@ public class IssueListPanel
         addIcon = new WebMarkupContainer( "addIcon" );
         Animator animator = new Animator();
         animator.addCssStyleSubject( new MarkupIdModel( rowAdd.setMarkupId( "rowAdd" ) ), "rowhidden", "rowshown" );
-        animator.addCssStyleSubject( new MarkupIdModel( addIcon.setMarkupId( "addIcon" ) ), "iconPlus", "iconMinus" );
+        animator.addCssStyleSubject( new MarkupIdModel( addIcon.setMarkupId( "addIcon" ) ), "addIcon", "minusIcon" );
         for ( Component rowAddComponent : rowAddComponents )
         {
             rowAdd.add( rowAddComponent );
