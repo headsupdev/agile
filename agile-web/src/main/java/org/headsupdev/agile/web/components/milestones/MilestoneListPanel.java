@@ -181,6 +181,8 @@ public class MilestoneListPanel
                 MilestonesDAO dao = new MilestonesDAO();
                 quickMilestone.setUpdated( new Date() );
                 dao.save( quickMilestone );
+                //TODO: problem with dependency below
+//                page.getHeadsUpApplication().addEvent( new CreateMilestoneEvent( quickMilestone, quickMilestone.getProject() ) );
                 quickMilestone = createMilestone( group );
             }
         };

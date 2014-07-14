@@ -218,6 +218,8 @@ public class IssueListPanel
                 quickIssue.setTimeRequired( quickIssue.getTimeEstimate() );
                 IssuesDAO dao = new IssuesDAO();
                 dao.save( quickIssue );
+                //TODO: problem with dependency below
+//                page.getHeadsUpApplication().addEvent( new CreateIssueEvent( quickIssue, quickIssue.getProject() ) );
                 quickIssue = createIssue();
             }
         };
