@@ -168,7 +168,8 @@ public class ViewIssue
                             }
 
                         }
-                        // ((HibernateStorage) getStorage() ).delete( attachment );
+                        //line below causes hibernate exception
+//                        ((HibernateStorage) getStorage() ).delete( attachment );
                         issue = (Issue) ( (HibernateStorage) getStorage() ).getHibernateSession().merge( issue );
                     }
                 } );

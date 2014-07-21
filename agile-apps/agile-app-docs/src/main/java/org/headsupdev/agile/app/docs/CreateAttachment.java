@@ -42,12 +42,11 @@ public class CreateAttachment
 
     protected void layoutChild( Form form )
     {
-        setSubmitLabel( "Create Attachment" );
-
         form.setMultiPart(true);
         form.add( attachmentPanel = new AttachmentPanel( "attachmentPanel", this ) );
 //        attachmentPanel.setRequired( true );
         form.setMaxSize( Bytes.megabytes( 100 ) );
+        setSubmitLabel( "Add Attachments" );
     }
 
     protected UpdateDocumentEvent getUpdateEvent( Comment comment )
