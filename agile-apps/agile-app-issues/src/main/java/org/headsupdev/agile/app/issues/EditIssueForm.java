@@ -220,10 +220,12 @@ class IssueForm
     {
         if ( attachmentPanel != null )
         {
-            Attachment attachment = attachmentPanel.getAttachment();
-            if ( attachment != null )
+            for ( Attachment attachment: attachmentPanel.getAttachments() )
             {
-                issue.getAttachments().add( attachment );
+                if ( attachment != null )
+                {
+                    issue.getAttachments().add( attachment );
+                }
             }
         }
 

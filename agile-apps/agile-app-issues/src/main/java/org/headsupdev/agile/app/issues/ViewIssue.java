@@ -187,7 +187,7 @@ public class ViewIssue
             }
         } );
 
-        List commentList = new LinkedList();
+        final List commentList = new LinkedList();
         commentList.addAll( issue.getComments() );
         if ( issue.getTimeWorked() != null &&
                 Boolean.parseBoolean( issue.getProject().getConfigurationValue( StoredProject.CONFIGURATION_TIMETRACKING_ENABLED ) ) )

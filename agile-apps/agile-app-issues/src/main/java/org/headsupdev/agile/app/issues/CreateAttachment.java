@@ -20,6 +20,7 @@ package org.headsupdev.agile.app.issues;
 
 import org.headsupdev.agile.api.Event;
 import org.headsupdev.agile.app.issues.event.UpdateIssueEvent;
+import org.headsupdev.agile.storage.Attachment;
 import org.headsupdev.agile.storage.Comment;
 import org.headsupdev.agile.web.MountPoint;
 import org.headsupdev.agile.web.components.AttachmentPanel;
@@ -62,8 +63,23 @@ public class CreateAttachment
 
     protected Event getUpdateEvent( Comment comment )
     {
+        StringBuilder stringBuilder = new StringBuilder();
+        int attachmentNo = 0;
+        for (Attachment attachment : attachmentPanel.getAttachments())
+        {
+            attachmentNo++;
+            if (attachmentNo == attachmentPanel.size())
+            {
+                stringBuilder.append( "\"" + attachment.getFilename() + "\"" );
+            }
+            else
+            {
+                stringBuilder.append( "\"" + attachment.getFilename() + "\", " );
+            }
+        }
+        String attachmentFilenames = stringBuilder.toString();
         return new UpdateIssueEvent( getIssue(), getIssue().getProject(), getSession().getUser(), comment,
-                "Attached file \"" + attachmentPanel.getFilename() + "\" to" );
+                "Attached file " + attachmentFilenames + " to" );
     }
 
     @Override

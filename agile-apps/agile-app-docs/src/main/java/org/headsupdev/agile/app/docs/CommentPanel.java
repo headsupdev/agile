@@ -18,6 +18,7 @@
 
 package org.headsupdev.agile.app.docs;
 
+import org.apache.wicket.markup.html.link.Link;
 import org.headsupdev.agile.api.Project;
 import org.headsupdev.agile.storage.Comment;
 import org.headsupdev.agile.storage.resource.DurationWorked;

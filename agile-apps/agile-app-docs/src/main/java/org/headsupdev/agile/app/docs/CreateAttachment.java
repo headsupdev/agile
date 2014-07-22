@@ -51,8 +51,23 @@ public class CreateAttachment
 
     protected UpdateDocumentEvent getUpdateEvent( Comment comment )
     {
+        StringBuilder stringBuilder = new StringBuilder();
+        int attachmentNo = 0;
+        for (Attachment attachment : attachmentPanel.getAttachments())
+        {
+            attachmentNo++;
+            if (attachmentNo == attachmentPanel.size())
+            {
+                stringBuilder.append( "\"" + attachment.getFilename() + "\"" );
+            }
+            else
+            {
+                stringBuilder.append( "\"" + attachment.getFilename() + "\", " );
+            }
+        }
+        String attachmentFilenames = stringBuilder.toString();
         return new UpdateDocumentEvent( getDocument(), getSession().getUser(), comment,
-                "attached file \"" + attachmentPanel.getFilename() + "\" to" );
+                "attached files " + attachmentFilenames + " to" );
     }
 
     @Override
@@ -66,8 +81,6 @@ public class CreateAttachment
             getDocument().addAttachment( attachment );
         }
 
-//        attachmentPanel.getAttachment().setComment( comment );
-//        getDocument().getAttachments().add( attachmentPanel.getAttachment() );
     }
 
     @Override

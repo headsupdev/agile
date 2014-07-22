@@ -93,27 +93,6 @@ public class AttachmentPanel
         return attachments;
     }
 
-    public Attachment getAttachment()
-    {
-        return null;
-    }
-
-    public String getFilename()
-    {
-//        return filename;
-        return null;
-    }
-
-//    public boolean isRequired()
-//    {
-//        return upload.isRequired();
-//    }
-//
-//    public void setRequired( boolean required )
-//    {
-//        upload.setRequired( required );
-//    }
-
     private FileUploadField createFileUploadField()
     {
         return new FileUploadField( "attachment", new Model<FileUpload>()
@@ -125,7 +104,7 @@ public class AttachmentPanel
 
                 HibernateStorage storage = (HibernateStorage) page.getStorage();
 
-                attachment = new Attachment();
+                Attachment attachment = new Attachment();
                 attachment.setCreated( new Date() );
                 attachment.setUser( page.getSession().getUser() );
 
@@ -147,26 +126,7 @@ public class AttachmentPanel
                 }
             }
         } );
-        add( upload );
+
     }
 
-    public Attachment getAttachment()
-    {
-        return attachment;
-    }
-
-    public String getFilename()
-    {
-        return filename;
-    }
-
-    public boolean isRequired()
-    {
-        return upload.isRequired();
-    }
-
-    public void setRequired( boolean required )
-    {
-        upload.setRequired( required );
-    }
 }
