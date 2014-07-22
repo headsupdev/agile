@@ -69,6 +69,28 @@
     </dependency>
 
     <dependency>
+      <groupId>com.github</groupId>
+      <artifactId>jHipchat</artifactId>
+      <version>LATEST</version>
+    </dependency>
+
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>2.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.jackson</groupId>
+      <artifactId>jackson-core-asl</artifactId>
+      <version>1.9.5</version>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.jackson</groupId>
+      <artifactId>jackson-mapper-asl</artifactId>
+      <version>1.9.5</version>
+    </dependency>
+
+    <dependency>
       <groupId>org.apache.felix</groupId>
       <artifactId>org.osgi.core</artifactId>
       <optional>true</optional>
@@ -93,10 +115,11 @@
             <Bundle-Activator>${bundle.namespace}.CoreActivator</Bundle-Activator>
             <Import-Package><![CDATA[
                 org.headsupdev.agile.api.*,org.headsupdev.agile.storage.*,
-                org.headsupdev.agile.core.*,org.headsupdev.irc,org.headsupdev.support.java,
+                org.headsupdev.agile.core.*,org.headsupdev.irc, org.headsupdev.support.java,
                 org.hibernate.*,javax.persistence.*,
                 !com.sun.*,javax.net.*,javax.xml.*,!javax.*,!oracle.xml.*,!org.jaxen.*,!org.w3c.*,
-                org.osgi.framework,org.osgi.util.tracker,org.xml.sax.*,!org.apache.xerces.*,org.apache.log4j
+                org.osgi.framework,org.osgi.util.tracker,org.xml.sax.*,!org.apache.xerces.*,org.apache.log4j,
+                org.joda.time.*
             ]]></Import-Package>
             <Private-Package>org.jdom.*</Private-Package>
             <Export-Package>${bundle.namespace}.*</Export-Package>

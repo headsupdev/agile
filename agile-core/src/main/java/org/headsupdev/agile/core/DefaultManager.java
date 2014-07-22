@@ -19,6 +19,7 @@
 package org.headsupdev.agile.core;
 
 import org.headsupdev.agile.api.service.ScmService;
+import org.headsupdev.agile.core.notifiers.HipchatNotifier;
 import org.headsupdev.agile.core.notifiers.irc.ProjectCommand;
 import org.headsupdev.agile.storage.*;
 import org.headsupdev.support.java.StringUtil;
@@ -97,6 +98,7 @@ public class DefaultManager
         notifiers.put( "irc", IRCNotifier.class );
         notifiers.put( "email", EmailNotifier.class );
         notifiers.put( "twitter", TwitterNotifier.class );
+        notifiers.put( "hipchat", HipchatNotifier.class);
 
         return notifiers;
     }
