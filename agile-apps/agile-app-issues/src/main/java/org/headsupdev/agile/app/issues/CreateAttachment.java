@@ -18,15 +18,14 @@
 
 package org.headsupdev.agile.app.issues;
 
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.util.lang.Bytes;
 import org.headsupdev.agile.api.Event;
 import org.headsupdev.agile.app.issues.event.UpdateIssueEvent;
 import org.headsupdev.agile.storage.Attachment;
 import org.headsupdev.agile.storage.Comment;
 import org.headsupdev.agile.web.MountPoint;
 import org.headsupdev.agile.web.components.AttachmentPanel;
-
-import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.util.lang.Bytes;
 
 /**
  * Add an attachment to an issue
@@ -43,7 +42,7 @@ public class CreateAttachment
 
     protected void layoutChild( Form form )
     {
-        form.setMultiPart(true);
+        form.setMultiPart( true );
         attachmentPanel = new AttachmentPanel( "attachmentPanel", this );
         form.add( attachmentPanel );
         form.setMaxSize( Bytes.megabytes( 100 ) );
@@ -54,7 +53,7 @@ public class CreateAttachment
     @Override
     protected void submitChild( Comment comment )
     {
-        for ( Attachment attachment: attachmentPanel.getAttachments() )
+        for ( Attachment attachment : attachmentPanel.getAttachments() )
         {
             attachment.setComment( comment );
             getIssue().addAttachment( attachment );
@@ -65,10 +64,16 @@ public class CreateAttachment
     {
         StringBuilder stringBuilder = new StringBuilder();
         int attachmentNo = 0;
-        for (Attachment attachment : attachmentPanel.getAttachments())
+
+        for ( Attachment attachment : attachmentPanel.getAttachments() )
         {
+            if ( attachmentPanel.getAttachments().size() == 1 )
+            {
+                return new UpdateIssueEvent( getIssue(), getIssue().getProject(), getSession().getUser(), comment,
+                        "attached file " + attachment.getFilename() + " to" );
+            }
             attachmentNo++;
-            if (attachmentNo == attachmentPanel.size())
+            if ( attachmentNo == attachmentPanel.size() )
             {
                 stringBuilder.append( "\"" + attachment.getFilename() + "\"" );
             }
@@ -79,7 +84,7 @@ public class CreateAttachment
         }
         String attachmentFilenames = stringBuilder.toString();
         return new UpdateIssueEvent( getIssue(), getIssue().getProject(), getSession().getUser(), comment,
-                "Attached file " + attachmentFilenames + " to" );
+                "attached files " + attachmentFilenames + " to" );
     }
 
     @Override

@@ -18,14 +18,13 @@
 
 package org.headsupdev.agile.app.docs;
 
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.util.lang.Bytes;
 import org.headsupdev.agile.app.docs.event.UpdateDocumentEvent;
 import org.headsupdev.agile.storage.Attachment;
 import org.headsupdev.agile.storage.Comment;
 import org.headsupdev.agile.web.MountPoint;
 import org.headsupdev.agile.web.components.AttachmentPanel;
-
-import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.util.lang.Bytes;
 
 /**
  * Add an attachment to a doc
@@ -42,7 +41,7 @@ public class CreateAttachment
 
     protected void layoutChild( Form form )
     {
-        form.setMultiPart(true);
+        form.setMultiPart( true );
         form.add( attachmentPanel = new AttachmentPanel( "attachmentPanel", this ) );
 //        attachmentPanel.setRequired( true );
         form.setMaxSize( Bytes.megabytes( 100 ) );
@@ -53,10 +52,15 @@ public class CreateAttachment
     {
         StringBuilder stringBuilder = new StringBuilder();
         int attachmentNo = 0;
-        for (Attachment attachment : attachmentPanel.getAttachments())
+        for ( Attachment attachment : attachmentPanel.getAttachments() )
         {
+            if ( attachmentPanel.getAttachments().size() == 1 )
+            {
+                return new UpdateDocumentEvent( getDocument(), getSession().getUser(), comment,
+                        "attached file " + attachment.getFilename() + " to" );
+            }
             attachmentNo++;
-            if (attachmentNo == attachmentPanel.size())
+            if ( attachmentNo == attachmentPanel.size() )
             {
                 stringBuilder.append( "\"" + attachment.getFilename() + "\"" );
             }
@@ -75,7 +79,7 @@ public class CreateAttachment
     {
         super.submitChild( comment );
 
-        for ( Attachment attachment: attachmentPanel.getAttachments() )
+        for ( Attachment attachment : attachmentPanel.getAttachments() )
         {
             attachment.setComment( comment );
             getDocument().addAttachment( attachment );
