@@ -19,7 +19,7 @@
 package org.headsupdev.agile.core;
 
 import org.headsupdev.agile.api.service.ScmService;
-import org.headsupdev.agile.core.notifiers.HipchatNotifier;
+import org.headsupdev.agile.core.notifiers.hipchat.HipchatNotifier;
 import org.headsupdev.agile.core.notifiers.irc.ProjectCommand;
 import org.headsupdev.agile.storage.*;
 import org.headsupdev.support.java.StringUtil;
