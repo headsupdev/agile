@@ -43,7 +43,6 @@ public class CreateAttachment
     {
         form.setMultiPart( true );
         form.add( attachmentPanel = new AttachmentPanel( "attachmentPanel", this ) );
-//        attachmentPanel.setRequired( true );
         form.setMaxSize( Bytes.megabytes( 100 ) );
         setSubmitLabel( "Add Attachments" );
     }

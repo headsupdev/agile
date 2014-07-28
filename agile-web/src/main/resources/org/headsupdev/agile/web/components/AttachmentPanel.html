@@ -19,14 +19,10 @@
 <html>
 <body>
 <wicket:panel>
-  <th class="attachment" width="50%">Attachment</th>
+  <th class="attachment" width="50%">Attachments</th>
   <td class="attachment" width="50%">
-      <span wicket:id="fileUploads">
-        <input type="file" wicket:id="attachment"/>
-      </span>
-    <a class = "addIcon" wicket:id="addIconAttachment">
-      <img src="/resources/org.headsupdev.agile.web.HeadsUpPage/images/add.png"/>
-    </a>
+    <wicket:panel wicket:id="addAttachmentLink">
+    </wicket:panel>
   </td>
 </wicket:panel>
 </body>
