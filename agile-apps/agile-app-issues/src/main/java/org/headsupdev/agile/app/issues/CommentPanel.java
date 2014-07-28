@@ -55,8 +55,9 @@ public class CommentPanel
     private IModel model;
     private List commentList;
     private Project project;
-    public Link remove;
+
     private Storage storage;
+    private DurationWorked duration;
 
     public CommentPanel( String id, Comment comment, Project project )
     {
@@ -96,7 +97,6 @@ public class CommentPanel
             final Comment comment = (Comment) o;
             add( new Image( "icon", new ResourceReference( HeadsUpPage.class, "images/comment.png" ) ) );
 
-
             Link edit = new Link( "editComment" )
             {
                 @Override
@@ -108,13 +108,13 @@ public class CommentPanel
             };
             add( edit );
 
-            remove = new Link( "removeComment" )
+            Link remove = new Link( "removeComment" )
             {
                 @Override
                 public void onClick()
                 {
-                    commentList.remove( model.getObject() );
-
+                    commentList.remove( comment );
+                    issue = (Issue) ( (HibernateStorage) storage ).getHibernateSession().merge( issue );
                     Iterator<Comment> iterator = issue.getComments().iterator();
                     while ( iterator.hasNext() )
                     {
@@ -124,7 +124,6 @@ public class CommentPanel
                             iterator.remove();
                         }
                     }
-                    issue = (Issue) ( (HibernateStorage) storage ).getHibernateSession().merge( issue );
                 }
             };
             add( remove );
@@ -140,22 +139,40 @@ public class CommentPanel
         }
         else if ( o instanceof DurationWorked )
         {
+            duration = (DurationWorked) o;
             add( new Image( "icon", new ResourceReference( HeadsUpPage.class, "images/worked.png" ) ) );
-            remove = new Link( "removeComment" )
+
+            Link edit = new Link( "editComment" )
             {
                 @Override
                 public void onClick()
                 {
-                    Iterator<Comment> iterator = commentList.iterator();
+                    getPage().getPageParameters().put( "durationId", duration.getId() );
+                    setResponsePage( EditProgressIssue.class, getPage().getPageParameters() );
+                }
+            };
+            add( edit );
+
+            Link remove = new Link( "removeComment" )
+            {
+                @Override
+                public void onClick()
+                {
+
+                    commentList.remove( duration );
+                    duration = (DurationWorked) ( (HibernateStorage) storage ).getHibernateSession().merge( duration );
+                    issue = (Issue) ( (HibernateStorage) storage ).getHibernateSession().merge( issue );
+                    Iterator<DurationWorked> iterator = issue.getTimeWorked().iterator();
 
                     while ( iterator.hasNext() )
                     {
-                        Comment comment = iterator.next();
-                        if ( comment.equals( model.getObject() ) )
+                        DurationWorked current = iterator.next();
+                        if ( current.getId() == duration.getId() )
                         {
                             iterator.remove();
                         }
                     }
+                    duration.setIssue( null );
                 }
             };
             add( remove );

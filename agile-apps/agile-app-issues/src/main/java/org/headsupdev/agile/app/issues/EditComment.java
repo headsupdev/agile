@@ -23,6 +23,7 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.util.string.StringValueConversionException;
 import org.headsupdev.agile.api.Event;
 import org.headsupdev.agile.api.Permission;
 import org.headsupdev.agile.app.issues.event.UpdateIssueEvent;
@@ -36,7 +37,6 @@ import org.headsupdev.agile.web.MountPoint;
 
 import java.util.Date;
 import java.util.Iterator;
-import java.util.Set;
 
 /**
  * Created by Gordon Edwards on 08/07/2014.
@@ -52,6 +52,7 @@ public class EditComment
 
     private Issue issue;
     private long commentId;
+    protected Comment create = new Comment();
 
     public Permission getRequiredPermission()
     {
@@ -68,14 +69,20 @@ public class EditComment
         try
         {
             issueId = getPageParameters().getInt( "id" );
-            commentId = getPageParameters().getInt( "commentId" );
         }
         catch ( NumberFormatException e )
         {
             notFoundError();
             return;
         }
-
+        try
+        {
+            commentId = getPageParameters().getInt( "commentId" );
+        }
+        catch ( StringValueConversionException e )
+        {
+            
+        }
         Issue issue = IssuesApplication.getIssue( issueId, getProject() );
 
         if ( issue == null )
@@ -96,12 +103,29 @@ public class EditComment
         return "Edit Comment";
     }
 
+    public Issue getIssue()
+    {
+        return issue;
+    }
+
+
     protected void layoutChild( Form form )
     {
     }
 
     protected void submitChild( Comment comment )
     {
+    }
+
+    protected boolean willChildConsumeComment()
+    {
+        return false;
+    }
+
+
+    public void setSubmitLabel( String submitLabel )
+    {
+        this.submitLabel = submitLabel;
     }
 
     protected Event getUpdateEvent( Comment comment )
@@ -113,7 +137,7 @@ public class EditComment
             extends Form<Comment>
     {
         private TextArea input;
-        private Comment create = new Comment();
+//        private Comment create = new Comment();
 
         public CommentForm( String id )
         {
@@ -123,10 +147,9 @@ public class EditComment
                 if ( comment.getId() == commentId )
                 {
                     create.setComment( comment.getComment() );
-
+                    break;
                 }
             }
-
 
             setModel( new CompoundPropertyModel<Comment>( create ) );
             input = new TextArea( "comment" );
@@ -152,8 +175,6 @@ public class EditComment
             {
                 create.setUser( EditComment.this.getSession().getUser() );
 
-//                if ( !willChildConsumeComment() )
-//                {
                 Iterator<Comment> iterator = issue.getComments().iterator();
                 while ( iterator.hasNext() )
                 {
@@ -168,7 +189,10 @@ public class EditComment
                 create.setCreated( created );
                 create.setComment( input.getInput() );
                 ( (HibernateStorage) getStorage() ).save( create );
-                issue.addComment( create );
+                if ( !willChildConsumeComment() )
+                {
+                    issue.addComment( create );
+                }
             }
 
             submitChild( create );
