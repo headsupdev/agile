@@ -43,61 +43,14 @@ public class AttachmentPanel
         extends Panel
         implements Serializable, AttachmentCommunication
 {
-
-
     private Set<Attachment> attachments = new HashSet<Attachment>();
     private HeadsUpPage page;
-    private Component addAttachmentLink;
 
     public AttachmentPanel( String id, final HeadsUpPage page )
     {
         super( id );
         this.page = page;
         add( new AttachmentUploadPanel( "addAttachmentLink", page, this ) );
-//        final ArrayList<FileUploadField> fileUploadPanels = new ArrayList<FileUploadField>();
-//        fileUploadPanels.add( createFileUploadField() );
-//        add( fileUploadPanels.get( 0 ) );
-//        final WebMarkupContainer addIconAttachment = new WebMarkupContainer( "addIconAttachment" );
-//        addIconAttachment.setOutputMarkupId( true );
-//        addAttachmentLink = new AjaxLink( "addAttachmentLink" )
-//        {
-//            @Override
-//            public void onClick( AjaxRequestTarget target )
-//            {
-//                addAttachmentLink.replaceWith(  );
-//                FileUploadField fileUpload = createFileUploadField();
-//                fileUploadPanels.add( fileUpload );
-//                WebMarkupContainer replacement = new WebMarkupContainer( "addAttachmentLink" );
-//                replacement.add( fileUpload );
-//
-//                target.addComponent( replacement );
-//
-//            }
-//        };
-//        addAttachmentLink.setOutputMarkupId( true );
-//        addIconAttachment.add( addAttachmentLink );
-//        add( addIconAttachment );
-//        add();
-//        add( upload );
-//        final ListView<FileUploadField> fileUploads = new ListView<FileUploadField>( "fileUploads", fileUploadPanels )
-//        {
-//            @Override
-//            protected void populateItem( ListItem listItem )
-//            {
-//                listItem.add( fileUploadPanels.get( listItem.getIndex() ) );
-//            }
-//        };
-//        add( fileUploads );
-//
-//        add( new Link<Void>( "addIconAttachment" )
-//        {
-//            @Override
-//            public void onClick()
-//            {
-//                fileUploadPanels.add( createFileUploadField() );
-//            }
-//        } );
-
     }
 
     public Set<Attachment> getAttachments()
@@ -110,41 +63,4 @@ public class AttachmentPanel
     {
         attachments.add( attachment );
     }
-
-//    private FileUploadField createFileUploadField()
-//    {
-//        return new FileUploadField( "attachment", new Model<FileUpload>()
-//        {
-//            @Override
-//            public void setObject( FileUpload fileUpload )
-//            {
-//                super.setObject( fileUpload );
-//
-//                HibernateStorage storage = (HibernateStorage) page.getStorage();
-//
-//                Attachment attachment = new Attachment();
-//                attachment.setCreated( new Date() );
-//                attachment.setUser( page.getSession().getUser() );
-//
-//                String filename = fileUpload.getClientFileName();
-//                attachment.setFilename( filename );
-//                storage.save( attachment );
-//
-//                File destination = attachment.getFile( storage );
-//                destination.getParentFile().mkdirs();
-//                try
-//                {
-//                    fileUpload.writeTo( destination );
-//                    attachments.add( attachment );
-//                }
-//                catch ( Exception e )
-//                {
-//                    Manager.getLogger( "CreateAttachment" ).error( "Failed to upload attachment", e );
-//                    storage.delete( attachment );
-//                }
-//            }
-//        } );
-//
-//    }
-
 }
