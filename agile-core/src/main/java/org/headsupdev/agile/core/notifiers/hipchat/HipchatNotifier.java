@@ -18,24 +18,25 @@
 
 package org.headsupdev.agile.core.notifiers.hipchat;
 
-import com.github.hipchat.api.HipChat;
 import com.github.hipchat.api.Room;
-import com.github.hipchat.api.User;
 import com.github.hipchat.api.UserId;
 import com.github.hipchat.api.messages.Message.Color;
 import org.headsupdev.agile.api.Event;
 import org.headsupdev.agile.api.Manager;
 import org.headsupdev.agile.api.Notifier;
 import org.headsupdev.agile.api.PropertyTree;
+import org.headsupdev.agile.api.logging.Logger;
 import org.headsupdev.agile.storage.StoredProject;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 
 /**
  * Created by Gordon Edwards on 14/07/2014.
+ *
+ * A system notifier that reports activity to a Hipchat room
+ * @since 2.1
  */
 public class HipchatNotifier
         implements Notifier
@@ -44,7 +45,6 @@ public class HipchatNotifier
     private CustomHipchat hipChat;
     private Room room;
     private UserId notifierUser;
-    private Color WHITE;
 
     @Override
     public String getId()
@@ -73,7 +73,7 @@ public class HipchatNotifier
         if ( room != null && hipChat.isValidUser( getEmail() ) )
         {
             Color color = getEventNotifyColor( event );
-            CustomHipchatRoom.sendMessage( message, hipChat, room.getId(), notifierUser, color != null, color );
+            org.headsupdev.agile.core.notifiers.hipchat.CustomHipchat.sendMessage( message, hipChat, room.getId(), notifierUser, color != null, color );
         }
     }
 
@@ -124,7 +124,11 @@ public class HipchatNotifier
                 }
                 catch ( IOException e )
                 {
-                    e.printStackTrace();
+                    Logger log = Manager.getLogger( getClass().getName() );
+                    if ( log != null )
+                    {
+                        log.error( "Failed to create room " + roomName, e );
+                    }
                 }
             }
         }
@@ -167,7 +171,7 @@ public class HipchatNotifier
         {
             return Color.GREEN;
         }
-        else if (eventTitle.contains( "FileChangeSetEvent" ))
+        else if ( eventTitle.contains( "FileChangeSetEvent" ) )
         {
             return Color.YELLOW;
         }
@@ -176,54 +180,6 @@ public class HipchatNotifier
 
     private String linkify( String url )
     {
-        return "<a href=\"" + url + "\">"+ url + "</a> ";
-    }
-
-
-    private class CustomHipchat
-            extends HipChat
-            implements Serializable
-    {
-        public CustomHipchat( String authToken )
-        {
-            super( authToken );
-        }
-
-        public boolean isValidUser( String email )
-        {
-            for ( User user : listUsers() )
-            {
-                if ( user.getEmail().contains( email ) )
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        public String idOfAdmin()
-        {
-            for ( User user : listUsers() )
-            {
-                if ( user.isGroupAdmin() )
-                {
-                    return user.getId();
-                }
-            }
-            return null;
-        }
-
-        public Room getRoomByName( String name )
-        {
-
-            for ( Room room : listRooms() )
-            {
-                if ( room.getName().equals( name ) )
-                {
-                    return room;
-                }
-            }
-            return null;
-        }
+        return "<a href=\"" + url + "\">" + url + "</a> ";
     }
 }
