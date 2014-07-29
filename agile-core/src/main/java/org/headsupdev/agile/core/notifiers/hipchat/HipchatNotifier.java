@@ -43,7 +43,7 @@ public class HipchatNotifier
 {
     private PropertyTree config = new PropertyTree();
     private CustomHipchat hipChat;
-    private Room room;
+    private String roomId;
     private UserId notifierUser;
 
     @Override
@@ -70,10 +70,10 @@ public class HipchatNotifier
                 linkify( Manager.getStorageInstance().getGlobalConfiguration().getFullUrl( "/activity/event/id/" +
                         event.getId() ) );
 
-        if ( room != null && hipChat.isValidUser( getEmail() ) )
+        if ( roomId != null && hipChat.isValidUser( getEmail() ) )
         {
             Color color = getEventNotifyColor( event );
-            org.headsupdev.agile.core.notifiers.hipchat.CustomHipchat.sendMessage( message, hipChat, room.getId(), notifierUser, color != null, color );
+            hipChat.sendMessageToRoom( roomId, message, notifierUser, color != null, color );
         }
     }
 
@@ -114,21 +114,14 @@ public class HipchatNotifier
             String roomName = getRoomName();
             if ( hipChat.getRoomByName( roomName ) != null )
             {
-                room = hipChat.getRoomByName( roomName );
+                roomId = hipChat.getRoomByName( roomName ).getId();
             }
             else
             {
-                try
+                Logger log = Manager.getLogger( getClass().getName() );
+                if ( log != null )
                 {
-                    room = hipChat.createRoom( "HeadsUpNotifications", notifierUser.getId(), false, "", false );
-                }
-                catch ( IOException e )
-                {
-                    Logger log = Manager.getLogger( getClass().getName() );
-                    if ( log != null )
-                    {
-                        log.error( "Failed to create room " + roomName, e );
-                    }
+                    log.error( "Cannot join room. Please make sure the following room exists: " + roomName );
                 }
             }
         }

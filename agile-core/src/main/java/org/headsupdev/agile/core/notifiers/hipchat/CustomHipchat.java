@@ -69,9 +69,9 @@ public class CustomHipchat
     }
 
 
-    public static boolean sendMessage( String message, HipChat origin, String id, UserId from, boolean notify, Message.Color color )
+    public boolean sendMessageToRoom( String roomId, String message, UserId from, boolean notify, Message.Color color )
     {
-        String query = String.format( HipChatConstants.ROOMS_MESSAGE_QUERY_FORMAT, HipChatConstants.JSON_FORMAT, origin.getAuthToken() );
+        String query = String.format( HipChatConstants.ROOMS_MESSAGE_QUERY_FORMAT, HipChatConstants.JSON_FORMAT, getAuthToken() );
 
         StringBuilder params = new StringBuilder();
 
@@ -82,7 +82,7 @@ public class CustomHipchat
         else
         {
             params.append( "room_id=" );
-            params.append( id );
+            params.append( roomId );
             params.append( "&from=" );
             try
             {
