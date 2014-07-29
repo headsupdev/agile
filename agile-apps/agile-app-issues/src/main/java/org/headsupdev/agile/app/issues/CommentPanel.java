@@ -26,8 +26,11 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.headsupdev.agile.api.Manager;
 import org.headsupdev.agile.api.Project;
 import org.headsupdev.agile.api.Storage;
+import org.headsupdev.agile.api.User;
+import org.headsupdev.agile.app.issues.permission.IssueEditPermission;
 import org.headsupdev.agile.storage.Comment;
 import org.headsupdev.agile.storage.HibernateStorage;
 import org.headsupdev.agile.storage.issues.Issue;
@@ -88,6 +91,8 @@ public class CommentPanel
 
     private void layout()
     {
+        User currentUser = ( (HeadsUpSession) getSession() ).getUser();
+        boolean userHasPermission = Manager.getSecurityInstance().userHasPermission( currentUser, new IssueEditPermission(), project );
         Object o = getDefaultModel().getObject();
 
         WebMarkupContainer commentTitle = new WebMarkupContainer( "comment-title" );
@@ -106,7 +111,7 @@ public class CommentPanel
                     setResponsePage( EditComment.class, getPage().getPageParameters() );
                 }
             };
-            add( edit );
+            add( edit.setVisible( userHasPermission ) );
 
             Link remove = new Link( "removeComment" )
             {
@@ -126,7 +131,7 @@ public class CommentPanel
                     }
                 }
             };
-            add( remove );
+            add( remove.setVisible( userHasPermission ) );
 
             commentTitle.add( new Label( "username", comment.getUser().getFullnameOrUsername() ) );
             commentTitle.add( new Label( "created", new FormattedDateModel( comment.getCreated(),
@@ -151,7 +156,7 @@ public class CommentPanel
                     setResponsePage( EditProgressIssue.class, getPage().getPageParameters() );
                 }
             };
-            add( edit );
+            add( edit.setVisible( userHasPermission ) );
 
             Link remove = new Link( "removeComment" )
             {
@@ -175,7 +180,7 @@ public class CommentPanel
                     duration.setIssue( null );
                 }
             };
-            add( remove );
+            add( remove.setVisible( userHasPermission ) );
             DurationWorked worked = (DurationWorked) o;
             if ( worked.getWorked() == null || worked.getWorked().getHours() == 0 )
             {

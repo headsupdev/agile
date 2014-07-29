@@ -31,7 +31,9 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.headsupdev.agile.api.Manager;
 import org.headsupdev.agile.api.MenuLink;
 import org.headsupdev.agile.api.Permission;
+import org.headsupdev.agile.api.User;
 import org.headsupdev.agile.api.mime.Mime;
+import org.headsupdev.agile.app.issues.permission.IssueEditPermission;
 import org.headsupdev.agile.app.issues.permission.IssueViewPermission;
 import org.headsupdev.agile.storage.Attachment;
 import org.headsupdev.agile.storage.Comment;
@@ -146,21 +148,22 @@ public class ViewIssue
                 Link download = new DownloadLink( "attachment-link", file );
                 download.add( new Label( "attachment-label", attachment.getFilename() ) );
                 listItem.add( download );
+                User currentUser = ( (HeadsUpSession) getSession() ).getUser();
                 listItem.add( new Link( "attachment-delete" )
                 {
                     @Override
                     public void onClick()
                     {
                         Iterator<Attachment> iterator = attachmentList.iterator();
-                        while(iterator.hasNext())
+                        while ( iterator.hasNext() )
                         {
-                            if (iterator.next().getId() == attachment.getId())
+                            if ( iterator.next().getId() == attachment.getId() )
                             {
                                 iterator.remove();
                             }
                         }
                         iterator = issue.getAttachments().iterator();
-                        while(iterator.hasNext())
+                        while ( iterator.hasNext() )
                         {
                             if ( iterator.next().getId() == attachment.getId() )
                             {
@@ -172,7 +175,7 @@ public class ViewIssue
 //                        ((HibernateStorage) getStorage() ).delete( attachment );
                         issue = (Issue) ( (HibernateStorage) getStorage() ).getHibernateSession().merge( issue );
                     }
-                } );
+                }.setVisible( Manager.getSecurityInstance().userHasPermission( currentUser, new IssueEditPermission(), getProject() ) ) );
                 Comment comment = attachment.getComment();
                 if ( comment != null )
                 {

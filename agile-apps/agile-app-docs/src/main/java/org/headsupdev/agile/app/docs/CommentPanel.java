@@ -19,7 +19,8 @@
 package org.headsupdev.agile.app.docs;
 
 import org.apache.wicket.markup.html.link.Link;
-import org.headsupdev.agile.api.Project;
+import org.headsupdev.agile.api.*;
+import org.headsupdev.agile.app.docs.permission.DocEditPermission;
 import org.headsupdev.agile.storage.Comment;
 import org.headsupdev.agile.storage.resource.DurationWorked;
 import org.headsupdev.agile.web.HeadsUpPage;
@@ -32,7 +33,6 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.headsupdev.agile.api.Project;
-import org.headsupdev.agile.api.Storage;
 import org.headsupdev.agile.storage.Comment;
 import org.headsupdev.agile.storage.HibernateStorage;
 import org.headsupdev.agile.storage.docs.Document;
@@ -90,10 +90,12 @@ public class CommentPanel extends Panel
     
     private void layout()
     {
+        User currentUser = ( (HeadsUpSession) getSession() ).getUser();
+        boolean userHasPermission = Manager.getSecurityInstance().userHasPermission( currentUser, new DocEditPermission(), project );
+
         Object o = getDefaultModel().getObject();
 
         WebMarkupContainer commentTitle = new WebMarkupContainer( "comment-title" );
-        WebMarkupContainer workedTitle = new WebMarkupContainer( "worked-title" );
         if ( o instanceof Comment )
         {
             final Comment comment = (Comment) o;
@@ -109,7 +111,7 @@ public class CommentPanel extends Panel
                     setResponsePage( EditComment.class, getPage().getPageParameters() );
                 }
             };
-            add( edit );
+            add( edit.setVisible( userHasPermission ) );
 
             remove = new Link( "removeComment" )
             {
@@ -130,74 +132,19 @@ public class CommentPanel extends Panel
                     doc = (Document) ( (HibernateStorage) storage ).getHibernateSession().merge( doc );
                 }
             };
-            add( remove );
+            add( remove.setVisible( userHasPermission ) );
 
             commentTitle.add( new Label( "username", comment.getUser().getFullnameOrUsername() ) );
             commentTitle.add( new Label( "created", new FormattedDateModel( comment.getCreated(),
                     ( (HeadsUpSession) getSession() ).getTimeZone() ) ) );
             add( new Label( "comment", new MarkedUpTextModel( comment.getComment(), project ) )
                     .setEscapeModelStrings( false ) );
-
-            workedTitle.setVisible( false );
-        }
-        else if ( o instanceof DurationWorked )
-        {
-            add( new Image( "icon", new ResourceReference( HeadsUpPage.class, "images/worked.png" ) ) );
-            remove = new Link( "removeComment" )
-            {
-                @Override
-                public void onClick()
-                {
-                    Iterator<Comment> iterator = commentList.iterator();
-
-                    while ( iterator.hasNext() )
-                    {
-                        Comment comment = iterator.next();
-                        if ( comment.equals( model.getObject() ) )
-                        {
-                            iterator.remove();
-                        }
-                    }
-                }
-            };
-            add( remove );
-            DurationWorked worked = (DurationWorked) o;
-            if ( worked.getWorked() == null || worked.getWorked().getHours() == 0 )
-            {
-                setVisible( false );
-                return;
-            }
-            String time = "";
-            if ( worked.getWorked() != null )
-            {
-                time = worked.getWorked().toString();
-            }
-            workedTitle.add( new Label( "worked", time ) );
-            workedTitle.add( new Label( "username", worked.getUser().getFullnameOrUsername() ) );
-            workedTitle.add( new Label( "created", new FormattedDateModel( worked.getDay(),
-                    ( (HeadsUpSession) getSession() ).getTimeZone() ) ) );
-
-            commentTitle.setVisible( false );
-
-            Comment comment = worked.getComment();
-            if ( comment != null )
-            {
-                Label commentLabel = new Label( "comment", new MarkedUpTextModel( comment.getComment(), project ) );
-                commentLabel.setEscapeModelStrings( false );
-                add( commentLabel );
-            }
-            else
-            {
-                add( new WebMarkupContainer( "comment" ).setVisible( false ) );
-            }
         }
         else
         {
             commentTitle.setVisible( false );
-            workedTitle.setVisible( false );
             add( new WebMarkupContainer( "comment" ).setVisible( false ) );
         }
         add( commentTitle );
-        add( workedTitle );
     }
 }
