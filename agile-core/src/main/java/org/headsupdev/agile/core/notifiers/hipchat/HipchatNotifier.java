@@ -72,8 +72,8 @@ public class HipchatNotifier
 
         if ( room != null && hipChat.isValidUser( getEmail() ) )
         {
-            CustomHipchatRoom.sendMessage( message, hipChat, room.getId(), notifierUser, true, getEventNotifyColor( event ) );
-
+            Color color = getEventNotifyColor( event );
+            CustomHipchatRoom.sendMessage( message, hipChat, room.getId(), notifierUser, color != null, color );
         }
     }
 
