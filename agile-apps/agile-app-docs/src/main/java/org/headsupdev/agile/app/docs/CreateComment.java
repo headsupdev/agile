@@ -33,6 +33,7 @@ import org.headsupdev.agile.storage.Comment;
 import org.headsupdev.agile.storage.docs.Document;
 import org.headsupdev.agile.app.docs.permission.DocEditPermission;
 import org.headsupdev.agile.app.docs.event.UpdateDocumentEvent;
+import org.headsupdev.agile.web.components.AttachmentPanel;
 
 import java.util.Date;
 
@@ -49,6 +50,7 @@ public class CreateComment
 {
     private Document doc;
     private String submitLabel = "Create Comment";
+    protected AttachmentPanel attachmentPanel;
 
     public Permission getRequiredPermission() {
         return new DocEditPermission();
@@ -155,7 +157,14 @@ public class CreateComment
             }
 
             submitChild( create );
-
+            if (attachmentPanel != null)
+            {
+                if ( attachmentPanel.getAttachments().isEmpty() )
+                {
+                    error( "No attachments added!" );
+                    return;
+                }
+            }
             // this line is needed by things that extend our form...
             doc.setUpdated( now );
 

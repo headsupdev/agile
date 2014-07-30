@@ -34,6 +34,7 @@ import org.headsupdev.agile.storage.HibernateStorage;
 import org.headsupdev.agile.storage.Comment;
 import org.headsupdev.agile.storage.issues.Issue;
 import org.headsupdev.agile.api.Event;
+import org.headsupdev.agile.web.components.AttachmentPanel;
 
 import java.util.Date;
 
@@ -50,6 +51,7 @@ public class CreateComment
 {
     private Issue issue;
     private String submitLabel = "Create Comment";
+    protected AttachmentPanel attachmentPanel = null;
 
     public Permission getRequiredPermission()
     {
@@ -164,7 +166,14 @@ public class CreateComment
             }
 
             submitChild( create );
-
+            if (attachmentPanel != null)
+            {
+                if ( attachmentPanel.getAttachments().isEmpty() )
+                {
+                    error( "No attachments added!" );
+                    return;
+                }
+            }
             if ( issue.getStatus() < Issue.STATUS_FEEDBACK ) {
                 issue.setStatus( Issue.STATUS_FEEDBACK );
             }

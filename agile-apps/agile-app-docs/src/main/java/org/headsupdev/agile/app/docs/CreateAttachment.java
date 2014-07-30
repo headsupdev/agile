@@ -37,8 +37,6 @@ import org.headsupdev.agile.web.components.AttachmentPanel;
 public class CreateAttachment
         extends CreateComment
 {
-    private AttachmentPanel attachmentPanel;
-
     protected void layoutChild( Form form )
     {
         form.setMultiPart( true );
@@ -77,7 +75,10 @@ public class CreateAttachment
     protected void submitChild( Comment comment )
     {
         super.submitChild( comment );
-
+        if ( attachmentPanel.getAttachments().isEmpty() )
+        {
+            return;
+        }
         for ( Attachment attachment : attachmentPanel.getAttachments() )
         {
             attachment.setComment( comment );
@@ -85,6 +86,8 @@ public class CreateAttachment
         }
 
     }
+
+
 
     @Override
     protected boolean willChildConsumeComment()
