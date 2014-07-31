@@ -18,21 +18,11 @@
 
 package org.headsupdev.agile.web.components.issues;
 
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
-import org.apache.wicket.model.PropertyModel;
-import org.headsupdev.agile.api.Manager;
-import org.headsupdev.agile.api.Page;
-import org.headsupdev.agile.api.Permission;
-import org.headsupdev.agile.api.User;
-import org.headsupdev.agile.storage.HibernateStorage;
-import org.headsupdev.agile.storage.StoredProject;
-import org.headsupdev.agile.storage.issues.Issue;
-import org.headsupdev.agile.storage.issues.Milestone;
-import org.headsupdev.agile.web.HeadsUpPage;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.ResourceReference;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.CSSPackageResource;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -41,11 +31,17 @@ import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
-import org.headsupdev.agile.web.HeadsUpSession;
+import org.apache.wicket.model.PropertyModel;
+import org.headsupdev.agile.api.Manager;
+import org.headsupdev.agile.api.Page;
+import org.headsupdev.agile.api.User;
+import org.headsupdev.agile.storage.HibernateStorage;
+import org.headsupdev.agile.storage.StoredProject;
+import org.headsupdev.agile.storage.issues.Issue;
+import org.headsupdev.agile.storage.issues.Milestone;
+import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.components.UserDropDownChoice;
 import org.headsupdev.agile.web.components.milestones.MilestoneDropDownChoice;
-
-import java.util.List;
 
 /**
  * A single row from an issue list table
@@ -56,16 +52,18 @@ import java.util.List;
  * @since 1.0
  */
 public class IssuePanelRow
-    extends Panel
+        extends Panel
 {
     private Issue issue;
+
     public IssuePanelRow( String id, Issue issue, final HeadsUpPage page, final boolean hideProject,
                           final boolean hideMilestone, boolean hideAssignee )
     {
         super( id );
-        issue = (Issue) ((HibernateStorage) Manager.getStorageInstance() ).getHibernateSession().load( Issue.class,
-            issue.getInternalId() );
+        issue = (Issue) ( (HibernateStorage) Manager.getStorageInstance() ).getHibernateSession().load( Issue.class,
+                issue.getInternalId() );
         this.issue = issue;
+        User currentUser = page.getSession().getUser();
         add( CSSPackageResource.getHeaderContribution( getClass(), "issue.css" ) );
 
         final boolean timeEnabled = Boolean.parseBoolean( page.getProject().getConfigurationValue(
@@ -79,7 +77,7 @@ public class IssuePanelRow
 
         Class<? extends Page> viewClass = page.getPageClass( "issues/view" );
 
-        add( new Label("checkbox","") );
+        add( new Label( "checkbox", "" ) );
         if ( viewClass != null )
         {
             Link idLink = new BookmarkablePageLink( "id-link", viewClass, params );
@@ -92,7 +90,7 @@ public class IssuePanelRow
             cell.add( new WebMarkupContainer( "id-link" ).setVisible( false ) );
             cell.add( new Label( "id-label", String.valueOf( issue.getId() ) ) );
         }
-        add(cell);
+        add( cell );
 
         cell = new WebMarkupContainer( "summary-cell" );
 
@@ -117,22 +115,26 @@ public class IssuePanelRow
         add( new Label( "status", IssueUtils.getStatusDescription( issue ) ) );
 
         WebMarkupContainer type = new WebMarkupContainer( "type" );
-        add(type);
+        add( type );
         final String issueType = IssueUtils.getTypeName( issue.getType() );
         String typeIcon = "type/" + issueType + ".png";
         type.add( new Image( "type-icon", new ResourceReference( IssueListPanel.class, typeIcon ) ).add(
-            new AttributeModifier( "alt", true, new Model<String>() {
-                @Override
-                public String getObject() {
-                    return issueType;
-                }
-            } ) ).add(
-            new AttributeModifier( "title", true, new Model<String>() {
-                @Override
-                public String getObject() {
-                    return issueType;
-                }
-            } ) )
+                        new AttributeModifier( "alt", true, new Model<String>()
+                        {
+                            @Override
+                            public String getObject()
+                            {
+                                return issueType;
+                            }
+                        } ) ).add(
+                        new AttributeModifier( "title", true, new Model<String>()
+                        {
+                            @Override
+                            public String getObject()
+                            {
+                                return issueType;
+                            }
+                        } ) )
         );
 
         String image = null;
@@ -211,7 +213,8 @@ public class IssuePanelRow
             }
             else
             {
-                final UserDropDownChoice assignChoice = new UserDropDownChoice( "assign-choice" ) {
+                final UserDropDownChoice assignChoice = new UserDropDownChoice( "assign-choice" )
+                {
                     @Override
                     protected boolean wantOnSelectionChangedNotifications()
                     {
@@ -244,7 +247,7 @@ public class IssuePanelRow
                         ajaxRequestTarget.addComponent( assignChoice );
                     }
                 };
-                cell.add( assignLink.setOutputMarkupId( true ).setVisible( canEditIssue() ) );
+                cell.add( assignLink.setOutputMarkupId( true ).setVisible( Permissions.canEditIssue( currentUser, page.getProject() ) ) );
                 cell.add( assignChoice.setOutputMarkupId( true ).setOutputMarkupPlaceholderTag( true ).setVisible( false ) );
                 cell.add( new WebMarkupContainer( "assigned-label" ).setVisible( false ) );
                 cell.add( new WebMarkupContainer( "assigned-link" ).setVisible( false ) );
@@ -295,7 +298,8 @@ public class IssuePanelRow
                     ajaxRequestTarget.addComponent( milestoneChoice );
                 }
             };
-            cell.add( setMilestoneLink.setOutputMarkupId( true ).setVisible( canEditIssue() ) );
+
+            cell.add( setMilestoneLink.setOutputMarkupId( true ).setVisible( Permissions.canEditIssue( currentUser, page.getProject() ) ) );
             cell.add( milestoneChoice.setOutputMarkupId( true ).setOutputMarkupPlaceholderTag( true ).setVisible( false ) );
         }
         else
@@ -321,34 +325,10 @@ public class IssuePanelRow
             cell.add( new WebMarkupContainer( "setmilestone-link" ).setVisible( false ) );
             cell.add( new WebMarkupContainer( "setmilestone-choice" ).setVisible( false ) );
         }
-        add(cell.setVisible(!hideMilestone));
+        add( cell.setVisible( !hideMilestone ) );
 
         cell = new WebMarkupContainer( "hours-cell" );
         cell.add( new Label( "hours", new IssueHoursRemainingModel( issue ) ) );
         add( cell.setVisible( timeEnabled ) );
-    }
-
-    private static Permission editIssuePerm = new Permission()
-    {
-        public String getId()
-        {
-            return "ISSUE-EDIT";
-        }
-
-        public String getDescription()
-        {
-            return null;
-        }
-
-        public List<String> getDefaultRoles()
-        {
-            return null;
-        }
-    };
-
-    protected boolean canEditIssue()
-    {
-        return Manager.getSecurityInstance().userHasPermission( ( (HeadsUpSession) getSession() ).getUser(),
-                editIssuePerm, issue.getProject() );
     }
 }

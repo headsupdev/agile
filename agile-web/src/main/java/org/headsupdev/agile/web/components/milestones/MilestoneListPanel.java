@@ -36,6 +36,7 @@ import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
 import org.headsupdev.agile.api.Project;
+import org.headsupdev.agile.api.User;
 import org.headsupdev.agile.storage.dao.MilestonesDAO;
 import org.headsupdev.agile.storage.hibernate.NameProjectId;
 import org.headsupdev.agile.storage.issues.Milestone;
@@ -182,7 +183,8 @@ public class MilestoneListPanel
                 quickMilestone.setUpdated( new Date() );
                 dao.save( quickMilestone );
                 //TODO: problem with dependency below
-//                page.getHeadsUpApplication().addEvent( new CreateMilestoneEvent( quickMilestone, quickMilestone.getProject() ) );
+                User currentUser = ( (HeadsUpSession) getSession() ).getUser();
+//                page.getHeadsUpApplication().addEvent( new CreateMilestoneEvent( quickMilestone, quickMilestone.getProject(), currentUser ) );
                 quickMilestone = createMilestone( group );
             }
         };
@@ -217,7 +219,9 @@ public class MilestoneListPanel
 
     private void addAnimatorToForm( Component[] rowAddComponents, MilestoneGroup group )
     {
+        User currentUser = ( (HeadsUpSession) getSession() ).getUser();
         addIcon = new WebMarkupContainer( "addIconMilestone" );
+        addIcon.setVisible( Permissions.canEditDoc( currentUser, page.getProject() ) );
         Animator animator = new Animator( "MilestoneGroup" + group + "Animator" );
         animator.addCssStyleSubject( new MarkupIdModel( rowAdd.setOutputMarkupId( true ) ), "rowhidden", "rowshown" );
         animator.addCssStyleSubject( new MarkupIdModel( addIcon.setOutputMarkupId( true ) ), "iconPlus", "iconMinus" );
