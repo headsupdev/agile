@@ -74,8 +74,12 @@ public class AttachmentUploadPanel
             @Override
             public void setObject( FileUpload fileUpload )
             {
-                super.setObject( fileUpload );
 
+                super.setObject( fileUpload );
+                if (fileUpload == null)
+                {
+                    return;
+                }
                 HibernateStorage storage = (HibernateStorage) page.getStorage();
 
                 Attachment attachment = new Attachment();
