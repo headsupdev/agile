@@ -28,6 +28,6 @@ import org.headsupdev.agile.storage.Attachment;
  */
 public interface AttachmentCommunication
 {
-    public void registerAttachment(Attachment attachment);
+    public void registerAttachment( Attachment attachment );
 
 }

@@ -76,7 +76,7 @@ public class AttachmentUploadPanel
             {
 
                 super.setObject( fileUpload );
-                if (fileUpload == null)
+                if ( fileUpload == null )
                 {
                     return;
                 }

@@ -82,6 +82,10 @@ pre {
     position: relative;
 }
 
+.comment-icon {
+    width: 16px;
+}
+
 #doc-content, .mceContentBody {
     background-color: white;
 }

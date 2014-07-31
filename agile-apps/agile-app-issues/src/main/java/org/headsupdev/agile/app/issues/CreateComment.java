@@ -161,7 +161,7 @@ public class CreateComment
 
                 if ( !willChildConsumeComment() )
                 {
-                    issue.getComments().add( create );
+                    issue.addComment( create );
                 }
             }
 

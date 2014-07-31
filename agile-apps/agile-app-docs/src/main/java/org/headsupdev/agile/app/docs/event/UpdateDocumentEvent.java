@@ -24,7 +24,6 @@ import org.headsupdev.agile.app.docs.DocsApplication;
 import org.headsupdev.agile.storage.Comment;
 import org.headsupdev.agile.storage.docs.Document;
 import org.headsupdev.agile.web.RenderUtil;
-//import org.headsupdev.agile.web.components.CommentPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 
 import javax.persistence.Entity;

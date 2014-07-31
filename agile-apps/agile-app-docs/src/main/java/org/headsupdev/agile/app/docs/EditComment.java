@@ -23,6 +23,7 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.util.string.StringValueConversionException;
 import org.headsupdev.agile.api.Event;
 import org.headsupdev.agile.api.Permission;
 import org.headsupdev.agile.app.docs.event.UpdateDocumentEvent;
@@ -80,6 +81,11 @@ public class EditComment
             notFoundError();
             return;
         }
+        catch ( StringValueConversionException e )
+        {
+            notFoundError();
+            return;
+        }
 
         Document doc = DocsApplication.getDocument( page, getProject() );
         if ( doc == null )
@@ -115,6 +121,11 @@ public class EditComment
         return new UpdateDocumentEvent( doc, getSession().getUser(), comment, "commented on" );
     }
 
+    protected boolean willChildConsumeComment()
+    {
+        return false;
+    }
+
     class CommentForm
             extends Form<Comment>
     {
@@ -129,7 +140,7 @@ public class EditComment
                 if ( comment.getId() == commentId )
                 {
                     create.setComment( comment.getComment() );
-
+                    break;
                 }
             }
 
@@ -157,8 +168,6 @@ public class EditComment
             {
                 create.setUser( EditComment.this.getSession().getUser() );
 
-//                if ( !willChildConsumeComment() )
-//                {
                 Iterator<Comment> iterator = doc.getComments().iterator();
                 while ( iterator.hasNext() )
                 {
@@ -173,7 +182,10 @@ public class EditComment
                 create.setCreated( created );
                 create.setComment( input.getInput() );
                 ( (HibernateStorage) getStorage() ).save( create );
-                doc.addComment( create );
+                if ( !willChildConsumeComment() )
+                {
+                    doc.addComment( create );
+                }
             }
 
             submitChild( create );

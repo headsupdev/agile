@@ -39,6 +39,8 @@ import java.util.Iterator;
 
 /**
  * Created by Gordon Edwards on 24/07/2014.
+ *
+ * Allows editing of the progress of an issue
  */
 @MountPoint("editProgress")
 public class EditProgressIssue
@@ -53,19 +55,9 @@ public class EditProgressIssue
         boolean timeRequired = Boolean.parseBoolean( getProject().getConfigurationValue( StoredProject.CONFIGURATION_TIMETRACKING_REQUIRED ) );
         boolean timeBurndown = Boolean.parseBoolean( getProject().getConfigurationValue( StoredProject.CONFIGURATION_TIMETRACKING_BURNDOWN ) );
 
-        long durationId;
-        try
-        {
-            durationId = getPageParameters().getInt( "durationId" );
-        }
-        catch ( NumberFormatException e )
-        {
-            notFoundError();
-            return;
-        }
         for ( DurationWorked dur : getIssue().getTimeWorked() )
         {
-            if ( dur.getId() == durationId )
+            if ( dur.getId() == itemId )
             {
                 duration = dur;
                 break;
@@ -158,5 +150,11 @@ public class EditProgressIssue
     protected boolean willChildConsumeComment()
     {
         return duration.getWorked().getTimeAsMinutes() > 0;
+    }
+
+    @Override
+    protected String getIdName()
+    {
+        return "durationId";
     }
 }

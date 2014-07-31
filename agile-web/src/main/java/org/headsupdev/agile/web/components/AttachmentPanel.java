@@ -18,7 +18,6 @@
 
 package org.headsupdev.agile.web.components;
 
-import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.headsupdev.agile.storage.Attachment;
 import org.headsupdev.agile.web.HeadsUpPage;

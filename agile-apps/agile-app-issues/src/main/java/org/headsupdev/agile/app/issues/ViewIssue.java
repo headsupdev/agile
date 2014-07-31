@@ -174,6 +174,8 @@ public class ViewIssue
                         //line below causes hibernate exception
 //                        ((HibernateStorage) getStorage() ).delete( attachment );
                         issue = (Issue) ( (HibernateStorage) getStorage() ).getHibernateSession().merge( issue );
+
+                        attachment.getFile( getStorage() ).delete();
                     }
                 }.setVisible( Manager.getSecurityInstance().userHasPermission( currentUser, new IssueEditPermission(), getProject() ) ) );
                 Comment comment = attachment.getComment();

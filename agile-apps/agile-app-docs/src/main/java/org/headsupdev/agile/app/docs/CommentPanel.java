@@ -111,14 +111,14 @@ public class CommentPanel extends Panel
                     setResponsePage( EditComment.class, getPage().getPageParameters() );
                 }
             };
-            add( edit.setVisible( userHasPermission ) );
+            commentTitle.add( edit.setVisible( userHasPermission ) );
 
             remove = new Link( "removeComment" )
             {
                 @Override
                 public void onClick()
                 {
-                    commentList.remove( model.getObject() );
+                    commentList.remove( comment );
 
                     Iterator<Comment> iterator = doc.getComments().iterator();
                     while ( iterator.hasNext() )
@@ -132,7 +132,7 @@ public class CommentPanel extends Panel
                     doc = (Document) ( (HibernateStorage) storage ).getHibernateSession().merge( doc );
                 }
             };
-            add( remove.setVisible( userHasPermission ) );
+            commentTitle.add( remove.setVisible( userHasPermission ) );
 
             commentTitle.add( new Label( "username", comment.getUser().getFullnameOrUsername() ) );
             commentTitle.add( new Label( "created", new FormattedDateModel( comment.getCreated(),

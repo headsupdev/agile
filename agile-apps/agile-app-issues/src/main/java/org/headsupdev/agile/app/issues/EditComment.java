@@ -51,7 +51,7 @@ public class EditComment
     private String submitLabel = "Edit Comment";
 
     private Issue issue;
-    private long commentId;
+    protected long itemId;
     protected Comment create = new Comment();
 
     public Permission getRequiredPermission()
@@ -69,19 +69,19 @@ public class EditComment
         try
         {
             issueId = getPageParameters().getInt( "id" );
+            itemId = getPageParameters().getInt( getIdName() );
         }
         catch ( NumberFormatException e )
         {
             notFoundError();
             return;
         }
-        try
-        {
-            commentId = getPageParameters().getInt( "commentId" );
-        }
+
+
         catch ( StringValueConversionException e )
         {
-            
+            notFoundError();
+            return;
         }
         Issue issue = IssuesApplication.getIssue( issueId, getProject() );
 
@@ -137,14 +137,13 @@ public class EditComment
             extends Form<Comment>
     {
         private TextArea input;
-//        private Comment create = new Comment();
 
         public CommentForm( String id )
         {
             super( id );
             for ( Comment comment : issue.getComments() )
             {
-                if ( comment.getId() == commentId )
+                if ( comment.getId() == itemId )
                 {
                     create.setComment( comment.getComment() );
                     break;
@@ -179,7 +178,7 @@ public class EditComment
                 while ( iterator.hasNext() )
                 {
                     Comment comment = iterator.next();
-                    if ( comment.getId() == commentId )
+                    if ( comment.getId() == itemId )
                     {
                         created = comment.getCreated();
                         iterator.remove();
@@ -207,5 +206,10 @@ public class EditComment
 
             setResponsePage( getPageClass( "issues/view" ), getPageParameters() );
         }
+    }
+
+    protected String getIdName()
+    {
+        return "commentId";
     }
 }

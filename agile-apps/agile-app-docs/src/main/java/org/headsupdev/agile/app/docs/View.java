@@ -181,6 +181,7 @@ public class View
                         }
                         // ((HibernateStorage) getStorage() ).delete( attachment );
                         doc = (Document) ( (HibernateStorage) getStorage() ).getHibernateSession().merge( doc );
+                        attachment.getFile( getStorage() ).delete();
                     }
                 } );
 

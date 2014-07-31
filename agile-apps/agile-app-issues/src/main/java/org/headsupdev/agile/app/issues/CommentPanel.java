@@ -111,7 +111,7 @@ public class CommentPanel
                     setResponsePage( EditComment.class, getPage().getPageParameters() );
                 }
             };
-            add( edit.setVisible( userHasPermission ) );
+            commentTitle.add( edit.setVisible( userHasPermission ) );
 
             Link remove = new Link( "removeComment" )
             {
@@ -131,7 +131,7 @@ public class CommentPanel
                     }
                 }
             };
-            add( remove.setVisible( userHasPermission ) );
+            commentTitle.add( remove.setVisible( userHasPermission ) );
 
             commentTitle.add( new Label( "username", comment.getUser().getFullnameOrUsername() ) );
             commentTitle.add( new Label( "created", new FormattedDateModel( comment.getCreated(),
@@ -156,7 +156,7 @@ public class CommentPanel
                     setResponsePage( EditProgressIssue.class, getPage().getPageParameters() );
                 }
             };
-            add( edit.setVisible( userHasPermission ) );
+            workedTitle.add( edit.setVisible( userHasPermission ) );
 
             Link remove = new Link( "removeComment" )
             {
@@ -180,7 +180,7 @@ public class CommentPanel
                     duration.setIssue( null );
                 }
             };
-            add( remove.setVisible( userHasPermission ) );
+            workedTitle.add( remove.setVisible( userHasPermission ) );
             DurationWorked worked = (DurationWorked) o;
             if ( worked.getWorked() == null || worked.getWorked().getHours() == 0 )
             {
