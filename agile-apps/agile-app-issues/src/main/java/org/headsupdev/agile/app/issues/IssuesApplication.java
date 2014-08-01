@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2013 Heads Up Development Ltd.
+ * Copyright 2009-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -119,8 +119,8 @@ public class IssuesApplication
     @Override
     public Class<? extends Page>[] getPages() {
         return new Class[]{ AssignIssue.class, CloseIssue.class, CreateAttachment.class, CreateComment.class,
-            CreateIssue.class, CreateRelationship.class, EditIssue.class, Issues.class, ReopenIssue.class,
-            ResolveIssue.class, ProgressIssue.class, ViewIssue.class };
+            CreateIssue.class, CreateRelationship.class, EditIssue.class, EditComment.class, Issues.class, ReopenIssue.class,
+            ResolveIssue.class, ProgressIssue.class, EditProgressIssue.class, ViewIssue.class };
     }
 
     @Override

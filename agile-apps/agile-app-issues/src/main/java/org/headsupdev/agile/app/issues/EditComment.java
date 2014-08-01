@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -15,58 +15,61 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.headsupdev.agile.app.issues;
 
 import org.apache.wicket.markup.html.CSSPackageResource;
+import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
-import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
-import org.headsupdev.agile.app.issues.permission.IssueEditPermission;
-import org.headsupdev.agile.app.issues.event.UpdateIssueEvent;
-import org.headsupdev.agile.web.HeadsUpPage;
-import org.headsupdev.agile.web.BookmarkableMenuLink;
-import org.headsupdev.agile.web.MountPoint;
-import org.headsupdev.agile.api.Permission;
-import org.headsupdev.agile.storage.HibernateStorage;
-import org.headsupdev.agile.storage.Comment;
-import org.headsupdev.agile.storage.issues.Issue;
+import org.apache.wicket.util.string.StringValueConversionException;
 import org.headsupdev.agile.api.Event;
-import org.headsupdev.agile.web.components.AttachmentPanel;
+import org.headsupdev.agile.api.Permission;
+import org.headsupdev.agile.app.issues.event.UpdateIssueEvent;
+import org.headsupdev.agile.app.issues.permission.IssueEditPermission;
+import org.headsupdev.agile.storage.Comment;
+import org.headsupdev.agile.storage.HibernateStorage;
+import org.headsupdev.agile.storage.issues.Issue;
+import org.headsupdev.agile.web.BookmarkableMenuLink;
+import org.headsupdev.agile.web.HeadsUpPage;
+import org.headsupdev.agile.web.MountPoint;
 
 import java.util.Date;
+import java.util.Iterator;
 
 /**
- * Add a comment for an issue
- *
- * @author Andrew Williams
- * @version $Id$
- * @since 1.0
+ * Created by Gordon Edwards on 08/07/2014.
  */
-@MountPoint( "comment" )
-public class CreateComment
-    extends HeadsUpPage
+
+
+@MountPoint("editComment")
+public class EditComment
+        extends HeadsUpPage
+
 {
+    private String submitLabel = "Edit Comment";
+
     private Issue issue;
-    private String submitLabel = "Create Comment";
-    protected AttachmentPanel attachmentPanel = null;
+    protected long itemId;
+    protected Comment create = new Comment();
 
     public Permission getRequiredPermission()
     {
         return new IssueEditPermission();
     }
 
+    @Override
     public void layout()
     {
         super.layout();
         add( CSSPackageResource.getHeaderContribution( getClass(), "issue.css" ) );
 
-        long id;
+        long issueId;
         try
         {
-            id = getPageParameters().getLong( "id" );
+            issueId = getPageParameters().getInt( "id" );
+            itemId = getPageParameters().getInt( getIdName() );
         }
         catch ( NumberFormatException e )
         {
@@ -74,34 +77,37 @@ public class CreateComment
             return;
         }
 
-        Issue issue = IssuesApplication.getIssue( id, getProject() );
+
+        catch ( StringValueConversionException e )
+        {
+            notFoundError();
+            return;
+        }
+        Issue issue = IssuesApplication.getIssue( issueId, getProject() );
+
         if ( issue == null )
         {
             notFoundError();
             return;
         }
 
-        addLink( new BookmarkableMenuLink( getPageClass( "issues/view" ), getPageParameters(), "view" ) );
         this.issue = issue;
-
         add( new CommentForm( "comment" ) );
+        addLink( new BookmarkableMenuLink( getPageClass( "issues/view" ), getPageParameters(), "view" ) );
+
     }
 
     @Override
     public String getTitle()
     {
-        if ( submitLabel.toLowerCase().contains( "issue" ) )
-        {
-            return submitLabel + " " + issue.getId();
-        }
-
-        return submitLabel + " for issue " + issue.getId();
+        return "Edit Comment";
     }
 
     public Issue getIssue()
     {
         return issue;
     }
+
 
     protected void layoutChild( Form form )
     {
@@ -116,6 +122,7 @@ public class CreateComment
         return false;
     }
 
+
     public void setSubmitLabel( String submitLabel )
     {
         this.submitLabel = submitLabel;
@@ -127,16 +134,25 @@ public class CreateComment
     }
 
     class CommentForm
-        extends Form<Comment>
+            extends Form<Comment>
     {
-        private Comment create = new Comment();
+        private TextArea input;
+
         public CommentForm( String id )
         {
             super( id );
+            for ( Comment comment : issue.getComments() )
+            {
+                if ( comment.getId() == itemId )
+                {
+                    create.setComment( comment.getComment() );
+                    break;
+                }
+            }
 
             setModel( new CompoundPropertyModel<Comment>( create ) );
-            add( new TextArea( "comment" ) );
-
+            input = new TextArea( "comment" );
+            add( input );
             layoutChild( this );
 
             add( new Button( "submit", new Model<String>()
@@ -153,12 +169,25 @@ public class CreateComment
             issue = (Issue) ( (HibernateStorage) getStorage() ).getHibernateSession().merge( issue );
 
             Date now = new Date();
+            Date created = new Date();
             if ( create.getComment() != null )
             {
-                create.setUser( CreateComment.this.getSession().getUser() );
-                create.setCreated( now );
-                ( (HibernateStorage) getStorage() ).save( create );
+                create.setUser( EditComment.this.getSession().getUser() );
 
+                Iterator<Comment> iterator = issue.getComments().iterator();
+                while ( iterator.hasNext() )
+                {
+                    Comment comment = iterator.next();
+                    if ( comment.getId() == itemId )
+                    {
+                        created = comment.getCreated();
+                        iterator.remove();
+                        break;
+                    }
+                }
+                create.setCreated( created );
+                create.setComment( input.getInput() );
+                ( (HibernateStorage) getStorage() ).save( create );
                 if ( !willChildConsumeComment() )
                 {
                     issue.addComment( create );
@@ -166,15 +195,9 @@ public class CreateComment
             }
 
             submitChild( create );
-            if (attachmentPanel != null)
+
+            if ( issue.getStatus() < Issue.STATUS_FEEDBACK )
             {
-                if ( attachmentPanel.getAttachments().isEmpty() )
-                {
-                    error( "No attachments added!" );
-                    return;
-                }
-            }
-            if ( issue.getStatus() < Issue.STATUS_FEEDBACK ) {
                 issue.setStatus( Issue.STATUS_FEEDBACK );
             }
             // this line is needed by things that extend our form...
@@ -183,5 +206,10 @@ public class CreateComment
 
             setResponsePage( getPageClass( "issues/view" ), getPageParameters() );
         }
+    }
+
+    protected String getIdName()
+    {
+        return "commentId";
     }
 }

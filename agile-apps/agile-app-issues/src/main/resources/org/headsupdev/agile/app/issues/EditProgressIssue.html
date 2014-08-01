@@ -1,6 +1,6 @@
 <!--
   ~ HeadsUp Agile
-  ~ Copyright 2009-2012 Heads Up Development Ltd.
+  ~ Copyright 2014 Heads Up Development Ltd.
   ~
   ~ This program is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU Affero General Public License as
@@ -17,16 +17,27 @@
   -->
 
 <html>
-<body>
-<wicket:extend>
-    <table class="details">
+  <body>
+    <wicket:extend>
+      <table class="details">
         <tr>
-            <th class="resolution vertical" width="25%">Attachments</th>
-            <td class="resolution" width="75%">
-                <wicket:panel wicket:id="attachmentPanel"/>
-            </td>
+          <th class="estimate vertical">time worked</th>
+          <td class="estimate">
+            <wicket:panel wicket:id="timeWorked" />
+          </td>
+          <wicket:container wicket:id="update">
+          <th class="estimate vertical">updated required</th>
+          <td class="estimate">
+            <wicket:panel wicket:id="timeRequired" />
+          </td>
+          </wicket:container>
         </tr>
-    </table>
-</wicket:extend>
-</body>
+        <tr>
+          <th class="day vertical">date</th>
+          <td wicket:id="day" class="day">day</td>
+          <td colspan="2">&nbsp;</td>
+        </tr>
+      </table>
+    </wicket:extend>
+  </body>
 </html>

@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -18,14 +18,14 @@
 
 package org.headsupdev.agile.app.issues;
 
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.util.lang.Bytes;
 import org.headsupdev.agile.api.Event;
 import org.headsupdev.agile.app.issues.event.UpdateIssueEvent;
+import org.headsupdev.agile.storage.Attachment;
 import org.headsupdev.agile.storage.Comment;
 import org.headsupdev.agile.web.MountPoint;
 import org.headsupdev.agile.web.components.AttachmentPanel;
-
-import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.util.lang.Bytes;
 
 /**
  * Add an attachment to an issue
@@ -38,30 +38,55 @@ import org.apache.wicket.util.lang.Bytes;
 public class CreateAttachment
         extends CreateComment
 {
-    private AttachmentPanel attachmentPanel;
-
     protected void layoutChild( Form form )
     {
-        form.setMultiPart(true);
-        form.add( attachmentPanel = new AttachmentPanel( "attachmentPanel", this ) );
-        attachmentPanel.setRequired( true );
+        form.setMultiPart( true );
+        attachmentPanel = new AttachmentPanel( "attachmentPanel", this );
+        form.add( attachmentPanel );
         form.setMaxSize( Bytes.megabytes( 100 ) );
 
-        setSubmitLabel( "Create Attachment" );
+        setSubmitLabel( "Add Attachments" );
     }
 
     @Override
     protected void submitChild( Comment comment )
     {
-        getIssue().getAttachments().add( attachmentPanel.getAttachment() );
-
-        attachmentPanel.getAttachment().setComment( comment );
+        if ( attachmentPanel.getAttachments().isEmpty() )
+        {
+            return;
+        }
+        for ( Attachment attachment : attachmentPanel.getAttachments() )
+        {
+            attachment.setComment( comment );
+            getIssue().addAttachment( attachment );
+        }
     }
 
     protected Event getUpdateEvent( Comment comment )
     {
+        StringBuilder stringBuilder = new StringBuilder();
+        int attachmentNo = 0;
+
+        for ( Attachment attachment : attachmentPanel.getAttachments() )
+        {
+            if ( attachmentPanel.getAttachments().size() == 1 )
+            {
+                return new UpdateIssueEvent( getIssue(), getIssue().getProject(), getSession().getUser(), comment,
+                        "attached file " + attachment.getFilename() + " to" );
+            }
+            attachmentNo++;
+            if ( attachmentNo == attachmentPanel.size() )
+            {
+                stringBuilder.append( "\"" + attachment.getFilename() + "\"" );
+            }
+            else
+            {
+                stringBuilder.append( "\"" + attachment.getFilename() + "\", " );
+            }
+        }
+        String attachmentFilenames = stringBuilder.toString();
         return new UpdateIssueEvent( getIssue(), getIssue().getProject(), getSession().getUser(), comment,
-                "Attached file \"" + attachmentPanel.getFilename() + "\" to" );
+                "attached files " + attachmentFilenames + " to" );
     }
 
     @Override

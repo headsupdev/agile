@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -18,23 +18,22 @@
 
 package org.headsupdev.agile.app.issues.event;
 
-import org.headsupdev.agile.web.components.CommentPanel;
-import org.headsupdev.agile.app.issues.ViewIssue;
-import org.headsupdev.agile.web.RenderUtil;
-import org.headsupdev.agile.web.components.issues.IssueListPanel;
-import org.headsupdev.agile.web.AbstractEvent;
-import org.headsupdev.agile.storage.issues.Issue;
-import org.headsupdev.agile.storage.Comment;
-import org.headsupdev.agile.app.issues.IssuesApplication;
+import org.apache.wicket.markup.html.panel.Panel;
 import org.headsupdev.agile.api.Project;
 import org.headsupdev.agile.api.User;
-import org.apache.wicket.markup.html.panel.Panel;
+import org.headsupdev.agile.app.issues.CommentPanel;
+import org.headsupdev.agile.app.issues.IssuesApplication;
+import org.headsupdev.agile.app.issues.ViewIssue;
+import org.headsupdev.agile.storage.Comment;
+import org.headsupdev.agile.storage.issues.Issue;
+import org.headsupdev.agile.web.AbstractEvent;
+import org.headsupdev.agile.web.RenderUtil;
+import org.headsupdev.agile.web.components.issues.IssueListPanel;
 
-import javax.persistence.Entity;
 import javax.persistence.DiscriminatorValue;
-
-import java.util.List;
+import javax.persistence.Entity;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Event added when an issue is updated
@@ -44,9 +43,9 @@ import java.util.LinkedList;
  * @since 1.0
  */
 @Entity
-@DiscriminatorValue( "updateissue" )
+@DiscriminatorValue("updateissue")
 public class UpdateIssueEvent
-    extends AbstractEvent
+        extends AbstractEvent
 {
     UpdateIssueEvent()
     {
@@ -66,7 +65,7 @@ public class UpdateIssueEvent
     public UpdateIssueEvent( Issue issue, Project project, User user, Comment comment, String type )
     {
         super( user.getFullnameOrUsername() + " " + type + " issue:" + issue.getId() + " \"" + issue.getSummary() + "\"",
-               comment.getComment(), issue.getUpdated() );
+                comment.getComment(), issue.getUpdated() );
 
         setApplicationId( IssuesApplication.ID );
         setProject( project );
@@ -75,7 +74,8 @@ public class UpdateIssueEvent
         setSubObjectId( String.valueOf( comment.getId() ) );
     }
 
-    public String getBody() {
+    public String getBody()
+    {
         long id;
         try
         {
@@ -117,7 +117,7 @@ public class UpdateIssueEvent
 
         return ret;
     }
-    
+
     private String renderComment( final Comment comment )
     {
         if ( comment == null )

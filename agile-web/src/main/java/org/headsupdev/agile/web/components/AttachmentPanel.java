@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -18,18 +18,13 @@
 
 package org.headsupdev.agile.web.components;
 
-import org.headsupdev.agile.api.Manager;
-import org.headsupdev.agile.storage.Attachment;
-import org.headsupdev.agile.storage.HibernateStorage;
-import org.headsupdev.agile.web.HeadsUpPage;
-import org.apache.wicket.markup.html.form.upload.FileUpload;
-import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.Model;
+import org.headsupdev.agile.storage.Attachment;
+import org.headsupdev.agile.web.HeadsUpPage;
 
-import java.io.File;
 import java.io.Serializable;
-import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * This handles the UI interaction of uploading a file to HeadsUp.
@@ -45,68 +40,26 @@ import java.util.Date;
  */
 public class AttachmentPanel
         extends Panel
-        implements Serializable
+        implements Serializable, AttachmentCommunication
 {
-
-    private FileUploadField upload;
-    private String filename;
-    private Attachment attachment;
+    private Set<Attachment> attachments = new HashSet<Attachment>();
+    private HeadsUpPage page;
 
     public AttachmentPanel( String id, final HeadsUpPage page )
     {
         super( id );
-
-        upload = new FileUploadField( "attachment", new Model<FileUpload>()
-        {
-            @Override
-            public void setObject( FileUpload object )
-            {
-                super.setObject( object );
-
-                HibernateStorage storage = (HibernateStorage) page.getStorage();
-
-                attachment = new Attachment();
-                attachment.setCreated( new Date() );
-                attachment.setUser( page.getSession().getUser() );
-
-                FileUpload file = upload.getFileUpload();
-                filename = file.getClientFileName();
-                attachment.setFilename( filename );
-                storage.save( attachment );
-
-                File destination = attachment.getFile( storage );
-                destination.getParentFile().mkdirs();
-                try
-                {
-                    file.writeTo( destination );
-                }
-                catch ( Exception e )
-                {
-                    Manager.getLogger( "CreateAttachment" ).error( "Failed to upload attachment", e );
-                    storage.delete( attachment );
-                }
-            }
-        } );
-        add( upload );
+        this.page = page;
+        add( new AttachmentUploadPanel( "addAttachmentLink", page, this ) );
     }
 
-    public Attachment getAttachment()
+    public Set<Attachment> getAttachments()
     {
-        return attachment;
+        return attachments;
     }
 
-    public String getFilename()
+    @Override
+    public void registerAttachment( Attachment attachment )
     {
-        return filename;
-    }
-
-    public boolean isRequired()
-    {
-        return upload.isRequired();
-    }
-
-    public void setRequired( boolean required )
-    {
-        upload.setRequired( required );
+        attachments.add( attachment );
     }
 }

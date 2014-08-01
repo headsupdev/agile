@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2013 Heads Up Development Ltd.
+ * Copyright 2009-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -19,37 +19,34 @@
 package org.headsupdev.agile.app.docs;
 
 import org.apache.wicket.PageParameters;
+import org.apache.wicket.ResourceReference;
+import org.apache.wicket.markup.html.CSSPackageResource;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.image.Image;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.markup.html.link.DownloadLink;
+import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
 import org.headsupdev.agile.api.*;
 import org.headsupdev.agile.api.mime.Mime;
-import org.headsupdev.agile.storage.HibernateStorage;
-import org.headsupdev.agile.web.HeadsUpPage;
-import org.headsupdev.agile.web.BookmarkableMenuLink;
-import org.headsupdev.agile.web.HeadsUpSession;
-import org.headsupdev.agile.web.components.CommentPanel;
-import org.headsupdev.agile.web.components.FormattedDateModel;
 import org.headsupdev.agile.app.docs.permission.DocViewPermission;
-import org.headsupdev.agile.storage.docs.Document;
 import org.headsupdev.agile.storage.Attachment;
 import org.headsupdev.agile.storage.Comment;
-import org.apache.wicket.markup.html.CSSPackageResource;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.image.Image;
-import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.markup.html.link.DownloadLink;
-import org.apache.wicket.ResourceReference;
+import org.headsupdev.agile.storage.HibernateStorage;
+import org.headsupdev.agile.storage.docs.Document;
+import org.headsupdev.agile.storage.issues.Issue;
+import org.headsupdev.agile.web.BookmarkableMenuLink;
+import org.headsupdev.agile.web.HeadsUpPage;
+import org.headsupdev.agile.web.HeadsUpSession;
+import org.headsupdev.agile.web.components.FormattedDateModel;
 import org.headsupdev.agile.web.components.MarkedUpTextModel;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
-import java.util.List;
-import java.util.LinkedList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.io.File;
+import java.util.*;
 
 /**
  * Documents home page
@@ -59,17 +56,19 @@ import java.io.File;
  * @since 1.0
  */
 public class View
-    extends HeadsUpPage
+        extends HeadsUpPage
 {
     private String title;
     private boolean watching = false;
     private Document doc;
 
-    public Permission getRequiredPermission() {
+    public Permission getRequiredPermission()
+    {
         return new DocViewPermission();
     }
 
-    public void layout() {
+    public void layout()
+    {
         super.layout();
         add( CSSPackageResource.getHeaderContribution( getClass(), "doc.css" ) );
 
@@ -132,9 +131,10 @@ public class View
         add( new WebMarkupContainer( "notfound" ).setVisible( false ) );
         add( new Label( "content", getContent( doc ) ).setEscapeModelStrings( false ) );
 
-        List<Attachment> attachmentList = new LinkedList<Attachment>();
+        final List<Attachment> attachmentList = new LinkedList<Attachment>();
         attachmentList.addAll( doc.getAttachments() );
-        Collections.sort( attachmentList, new Comparator<Attachment>() {
+        Collections.sort( attachmentList, new Comparator<Attachment>()
+        {
             public int compare( Attachment attachment1, Attachment attachment2 )
             {
                 return attachment1.getCreated().compareTo( attachment2.getCreated() );
@@ -144,7 +144,7 @@ public class View
         {
             protected void populateItem( ListItem<Attachment> listItem )
             {
-                Attachment attachment = listItem.getModelObject();
+                final Attachment attachment = listItem.getModelObject();
                 listItem.add( new Label( "username", attachment.getUser().getFullnameOrUsername() ) );
                 listItem.add( new Label( "created", new FormattedDateModel( attachment.getCreated(),
                         ( (HeadsUpSession) getSession() ).getTimeZone() ) ) );
@@ -157,8 +157,36 @@ public class View
                 download.add( new Label( "attachment-label", attachment.getFilename() ) );
                 listItem.add( download );
 
+                listItem.add( new Link( "attachment-delete" )
+                {
+                    @Override
+                    public void onClick()
+                    {
+                        Iterator<Attachment> iterator = attachmentList.iterator();
+                        while(iterator.hasNext())
+                        {
+                            if (iterator.next().getId() == attachment.getId())
+                            {
+                                iterator.remove();
+                            }
+                        }
+                        iterator = doc.getAttachments().iterator();
+                        while(iterator.hasNext())
+                        {
+                            if ( iterator.next().getId() == attachment.getId() )
+                            {
+                                iterator.remove();
+                            }
+
+                        }
+                        // ((HibernateStorage) getStorage() ).delete( attachment );
+                        doc = (Document) ( (HibernateStorage) getStorage() ).getHibernateSession().merge( doc );
+                        attachment.getFile( getStorage() ).delete();
+                    }
+                } );
+
                 Comment comment = attachment.getComment();
-                if ( comment != null     )
+                if ( comment != null )
                 {
                     Label commentLabel = new Label( "comment", new MarkedUpTextModel( comment.getComment(), getProject() ) );
                     commentLabel.setEscapeModelStrings( false );
@@ -171,7 +199,7 @@ public class View
             }
         } );
 
-        List<Comment> commentList = new LinkedList<Comment>();
+        final List<Comment> commentList = new LinkedList<Comment>();
         commentList.addAll( doc.getComments() );
         Collections.sort( commentList, new Comparator<Comment>()
         {
@@ -184,9 +212,9 @@ public class View
         {
             protected void populateItem( ListItem<Comment> listItem )
             {
-                listItem.add( new CommentPanel( "comment", listItem.getModel(), getProject() ) );
+                listItem.add( new CommentPanel( "comment", listItem.getModel(), getProject(), commentList, doc, getStorage() ) );
             }
-        });
+        } );
     }
 
     public static void layoutMenuItems( HeadsUpPage page )

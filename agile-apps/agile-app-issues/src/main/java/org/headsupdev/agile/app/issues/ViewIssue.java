@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2013 Heads Up Development Ltd.
+ * Copyright 2009-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -18,39 +18,39 @@
 
 package org.headsupdev.agile.app.issues;
 
-import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.headsupdev.agile.api.Manager;
-import org.headsupdev.agile.storage.HibernateStorage;
-import org.headsupdev.agile.storage.StoredProject;
-import org.headsupdev.agile.storage.resource.DurationWorked;
-import org.headsupdev.agile.web.*;
-import org.headsupdev.agile.web.components.CommentPanel;
-import org.headsupdev.agile.web.components.EmbeddedFilePanel;
+import org.apache.wicket.PageParameters;
+import org.apache.wicket.ResourceReference;
 import org.apache.wicket.markup.html.CSSPackageResource;
-import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.image.Image;
-import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.link.DownloadLink;
-import org.apache.wicket.ResourceReference;
-import org.apache.wicket.PageParameters;
-import org.headsupdev.agile.web.components.MarkedUpTextModel;
-import org.headsupdev.agile.web.components.issues.IssueListPanel;
-import org.headsupdev.agile.web.components.FormattedDateModel;
-import org.headsupdev.agile.api.mime.Mime;
-import org.headsupdev.agile.api.Permission;
+import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
+import org.headsupdev.agile.api.Manager;
 import org.headsupdev.agile.api.MenuLink;
+import org.headsupdev.agile.api.Permission;
+import org.headsupdev.agile.api.User;
+import org.headsupdev.agile.api.mime.Mime;
+import org.headsupdev.agile.app.issues.permission.IssueEditPermission;
 import org.headsupdev.agile.app.issues.permission.IssueViewPermission;
-import org.headsupdev.agile.storage.issues.Issue;
 import org.headsupdev.agile.storage.Attachment;
 import org.headsupdev.agile.storage.Comment;
+import org.headsupdev.agile.storage.HibernateStorage;
+import org.headsupdev.agile.storage.StoredProject;
+import org.headsupdev.agile.storage.issues.Issue;
+import org.headsupdev.agile.storage.resource.DurationWorked;
+import org.headsupdev.agile.web.*;
+import org.headsupdev.agile.web.components.EmbeddedFilePanel;
+import org.headsupdev.agile.web.components.FormattedDateModel;
+import org.headsupdev.agile.web.components.MarkedUpTextModel;
+import org.headsupdev.agile.web.components.issues.IssueListPanel;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
-import java.util.*;
 import java.io.File;
-import java.util.List;
+import java.util.*;
 
 /**
  * Issue view page
@@ -59,15 +59,16 @@ import java.util.List;
  * @version $Id$
  * @since 1.0
  */
-@MountPoint( "view" )
+@MountPoint("view")
 public class ViewIssue
-    extends HeadsUpPage
+        extends HeadsUpPage
 {
     private long issueId;
     private Issue issue;
     private boolean watching;
 
-    public Permission getRequiredPermission() {
+    public Permission getRequiredPermission()
+    {
         return new IssueViewPermission();
     }
 
@@ -114,15 +115,16 @@ public class ViewIssue
                 {
                     toggleWatching();
                 }
-            });
+            } );
         }
         addLinks( links );
 
         add( new IssuePanel( "issue", issue ) );
 
-        List<Attachment> attachmentList = new LinkedList<Attachment>();
+        final List<Attachment> attachmentList = new LinkedList<Attachment>();
         attachmentList.addAll( issue.getAttachments() );
-        Collections.sort( attachmentList, new Comparator<Attachment>() {
+        Collections.sort( attachmentList, new Comparator<Attachment>()
+        {
             public int compare( Attachment attachment1, Attachment attachment2 )
             {
                 return attachment1.getCreated().compareTo( attachment2.getCreated() );
@@ -132,7 +134,7 @@ public class ViewIssue
         {
             protected void populateItem( ListItem<Attachment> listItem )
             {
-                Attachment attachment = listItem.getModelObject();
+                final Attachment attachment = listItem.getModelObject();
                 listItem.add( new Label( "username", attachment.getUser().getFullnameOrUsername() ) );
                 listItem.add( new Label( "created", new FormattedDateModel( attachment.getCreated(),
                         ( (HeadsUpSession) getSession() ).getTimeZone() ) ) );
@@ -146,9 +148,38 @@ public class ViewIssue
                 Link download = new DownloadLink( "attachment-link", file );
                 download.add( new Label( "attachment-label", attachment.getFilename() ) );
                 listItem.add( download );
+                User currentUser = ( (HeadsUpSession) getSession() ).getUser();
+                listItem.add( new Link( "attachment-delete" )
+                {
+                    @Override
+                    public void onClick()
+                    {
+                        Iterator<Attachment> iterator = attachmentList.iterator();
+                        while ( iterator.hasNext() )
+                        {
+                            if ( iterator.next().getId() == attachment.getId() )
+                            {
+                                iterator.remove();
+                            }
+                        }
+                        iterator = issue.getAttachments().iterator();
+                        while ( iterator.hasNext() )
+                        {
+                            if ( iterator.next().getId() == attachment.getId() )
+                            {
+                                iterator.remove();
+                            }
 
+                        }
+                        //line below causes hibernate exception
+//                        ((HibernateStorage) getStorage() ).delete( attachment );
+                        issue = (Issue) ( (HibernateStorage) getStorage() ).getHibernateSession().merge( issue );
+
+                        attachment.getFile( getStorage() ).delete();
+                    }
+                }.setVisible( Manager.getSecurityInstance().userHasPermission( currentUser, new IssueEditPermission(), getProject() ) ) );
                 Comment comment = attachment.getComment();
-                if ( comment != null     )
+                if ( comment != null )
                 {
                     Label commentLabel = new Label( "comment", new MarkedUpTextModel( comment.getComment(), getProject() ) );
                     commentLabel.setEscapeModelStrings( false );
@@ -161,15 +192,16 @@ public class ViewIssue
             }
         } );
 
-        List commentList = new LinkedList();
+        final List commentList = new LinkedList();
         commentList.addAll( issue.getComments() );
-        if (issue.getTimeWorked() != null &&
+        if ( issue.getTimeWorked() != null &&
                 Boolean.parseBoolean( issue.getProject().getConfigurationValue( StoredProject.CONFIGURATION_TIMETRACKING_ENABLED ) ) )
         {
             commentList.addAll( issue.getTimeWorked() );
         }
 
-        Collections.sort( commentList, new Comparator() {
+        Collections.sort( commentList, new Comparator()
+        {
             public int compare( Object o1, Object o2 )
             {
                 Date date1 = null, date2 = null;
@@ -210,14 +242,15 @@ public class ViewIssue
                     }
                 }
 
-                return date1.compareTo(date2);
+                return date1.compareTo( date2 );
             }
         } );
         add( new ListView( "comments", commentList )
         {
             protected void populateItem( ListItem listItem )
             {
-                listItem.add( new CommentPanel( "comment", listItem.getModel(), getProject() ) );
+                CommentPanel panel = new CommentPanel( "comment", listItem.getModel(), getProject(), commentList, issue, getStorage() );
+                listItem.add( panel );
             }
         } );
     }
@@ -278,7 +311,7 @@ public class ViewIssue
             issue.getWatchers().add( getSession().getUser() );
         }
 
-        Session session = ((HibernateStorage) Manager.getStorageInstance()).getHibernateSession();
+        Session session = ( (HibernateStorage) Manager.getStorageInstance() ).getHibernateSession();
         Transaction tx = session.beginTransaction();
         session.update( issue );
         tx.commit();

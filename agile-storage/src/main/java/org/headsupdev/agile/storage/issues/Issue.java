@@ -171,6 +171,11 @@ public class Issue
         relationships.add( relationship );
     }
 
+    public void addAttachment( Attachment attachment )
+    {
+        attachments.add( attachment );
+    }
+
     public long getId()
     {
         return id.getId();
@@ -416,6 +421,11 @@ public class Issue
     public Set<IssueRelationship> getReverseRelationships()
     {
         return reverseRelationships;
+    }
+
+    public void addComment(Comment comment)
+    {
+        comments.add( comment );
     }
 
     public Set<Comment> getComments()
