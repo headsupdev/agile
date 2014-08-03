@@ -1,6 +1,11 @@
 2.0.1
 
 * For Xcode builds append appropriate -destination parameter when testing on simulator
+* Fix Xcodebuild for latest CocoaPods
+* Fix icon paths for the build status API
+* Ensure milestones and groups have a valid associated time period before being graphed.
+* Fix an issue where the dueDate calculations of a milestoneGroup could crash the edit milestone page.
+
 
 2.0
 
