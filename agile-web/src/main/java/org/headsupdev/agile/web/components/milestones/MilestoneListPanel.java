@@ -161,24 +161,12 @@ public class MilestoneListPanel
 
     private Form<Milestone> getInlineForm()
     {
+        TextField<NameProjectId> name = new TextField<NameProjectId>( "name" );
         quickMilestone = createMilestone( group );
-        CompoundPropertyModel<Milestone> formPropertyModel = new CompoundPropertyModel<Milestone>( quickMilestone );
-        Form<Milestone> inlineForm = new Form<Milestone>( "milestoneInlineForm", formPropertyModel )
-        {
-            @Override
-            protected void onSubmit()
-            {
-                MilestonesDAO dao = new MilestonesDAO();
-                quickMilestone.setUpdated( new Date() );
-                dao.save( quickMilestone );
-                quickMilestone = createMilestone( group );
-            }
-        };
-        inlineForm.add( new TextField<NameProjectId>( "name" ) );
-        inlineForm.add( new PercentagePanel( "completeness", 0 ) );
-        inlineForm.add( new Label( "issues", "0" ) );
-        inlineForm.add( new Label( "open", "0" ) );
-        inlineForm.add( new Label( "projects", page.getProject().toString() ) );
+        Panel progress = new PercentagePanel( "completeness", 0 );
+        Label issues = new Label( "issues", "0" );
+        Label open = new Label( "open", "0" );
+        Label projects = new Label( "projects", page.getProject().toString() );
         DateTimeWithTimeZoneField due = new DateTimeWithTimeZoneField( "due", new Model<Date>()
         {
             @Override
@@ -193,6 +181,26 @@ public class MilestoneListPanel
                 return quickMilestone.getDueDate();
             }
         } );
+
+        CompoundPropertyModel<Milestone> formPropertyModel = new CompoundPropertyModel<Milestone>( quickMilestone );
+
+        Form<Milestone> inlineForm = new Form<Milestone>( "milestoneInlineForm", formPropertyModel )
+        {
+            @Override
+            protected void onSubmit()
+            {
+                MilestonesDAO dao = new MilestonesDAO();
+                quickMilestone.setUpdated( new Date() );
+                dao.save( quickMilestone );
+                quickMilestone = createMilestone( group );
+            }
+        };
+
+        inlineForm.add( name );
+        inlineForm.add( progress );
+        inlineForm.add( issues );
+        inlineForm.add( open );
+        inlineForm.add( projects );
         inlineForm.add( due );
 
         return inlineForm;
