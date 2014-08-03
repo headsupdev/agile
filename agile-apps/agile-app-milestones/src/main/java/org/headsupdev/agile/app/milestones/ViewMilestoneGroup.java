@@ -151,7 +151,7 @@ public class ViewMilestoneGroup
             provider = new MilestoneProvider( getProject(), filter );
         }
 
-        add( new MilestoneListPanel( "milestonelist", provider, this, hideProject, group ) );
+        add( new MilestoneListPanel( "milestonelist", provider, this, hideProject ) );
 
         boolean timeEnabled = Boolean.parseBoolean( group.getProject().getConfigurationValue(
                 StoredProject.CONFIGURATION_TIMETRACKING_ENABLED ) ) && group.hasValidTimePeriod();
