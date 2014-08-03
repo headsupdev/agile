@@ -1,10 +1,13 @@
-2.0.1
+2.1
 
 * Add multiple attachments in one submission - issue:85
 * Allow editing of comments and time worked - issue:87
 * Allow deleting of comments, attachments and time worked - issue:86
 * Add a HipChat notifier - issue:88
 * Add quick add issue and milestone rows to the tables - issue:76 and issue:81
+
+
+2.0.1
 
 * For Xcode builds append appropriate -destination parameter when testing on simulator
 * Fix Xcodebuild for latest CocoaPods
