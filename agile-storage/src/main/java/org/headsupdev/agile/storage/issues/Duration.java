@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2014 Heads Up Development Ltd.
+ * Copyright 2009-2012 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -60,7 +60,7 @@ public class Duration
 
         if ( durations.length == 1 )
         {
-            return durations[0];
+            return durations[ 0 ];
         }
 
         int minutes = 0;
@@ -96,50 +96,6 @@ public class Duration
     public Duration( double hours )
     {
         setFieldsBasedOnHours( hours );
-    }
-
-    public static Duration fromString( String input )
-            throws IllegalArgumentException
-    {
-        input = input.replaceAll( "\\s", "" );
-        boolean validString = isValidDurationFromString( input );
-
-        if ( !validString )
-        {
-            throw new IllegalArgumentException( "Invalid duration" );
-        }
-
-        int weeksIndex = input.indexOf( "w" );
-        int daysIndex = input.indexOf( "d" );
-        int hoursIndex = input.indexOf( "h" );
-        int minsIndex = input.indexOf( "m" );
-        int[] indexes = {weeksIndex, daysIndex, hoursIndex, minsIndex};
-        int[] units = new int[4];
-        int prevIndex = -1;
-
-        for ( int i = 0; i < indexes.length; i++ )
-        {
-            if ( indexes[i] > -1 )
-            {
-                units[i] = Integer.parseInt( input.substring( prevIndex + 1, indexes[i] ) );
-                prevIndex = indexes[i];
-            }
-        }
-
-        int weeks = units[0];
-        int days = units[1];
-        double hours = units[2];
-        int mins = units[3];
-        hours = ( weeks * DAY_UNITS_IN_WEEK * HOUR_UNITS_IN_DAY ) + ( days * HOUR_UNITS_IN_DAY ) +
-                hours + ( ( (double) mins ) / MINUTE_UNITS_IN_HOUR );
-
-        return new Duration( hours );
-    }
-
-    public static boolean isValidDurationFromString( String input )
-    {
-        boolean validString = input.matches( "^(\\d+w)?(\\d+d)?(\\d+h)?(\\d+m)?$" );
-        return validString && !input.isEmpty();
     }
 
     private void setFieldsBasedOnHours( double hours )

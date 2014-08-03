@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2014 Heads Up Development Ltd.
+ * Copyright 2009-2012 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -99,97 +99,5 @@ public class DurationTest
 
         hours = new Duration( -0.75 );
         TestCase.assertEquals( "Should not have a 0h prefix to a fraction", "-¾h", hours.toHoursWithFractionString() );
-    }
-
-    public void testIsValidDurationFromStringWithSpaces()
-    {
-        String input = "   3d  53h    9m  ";
-        input = input.replaceAll( "\\s", "" );
-        TestCase.assertTrue( Duration.isValidDurationFromString( input ) );
-    }
-
-    public void testIsValidDurationFromStringEmptyString()
-    {
-        String input = "";
-        input = input.replaceAll( "\\s", "" );
-        TestCase.assertFalse( Duration.isValidDurationFromString( input ) );
-    }
-
-    public void testIsValidDurationFromStringInvalidCharacters()
-    {
-        String input = "   3d  53k  9m  ";
-        input = input.replaceAll( "\\s", "" );
-        TestCase.assertFalse( Duration.isValidDurationFromString( input ) );
-    }
-
-    public void testIsValidDurationFromStringDoubleHours()
-    {
-        String input = "3d53h9h9m";
-        input = input.replaceAll( "\\s", "" );
-        TestCase.assertFalse( Duration.isValidDurationFromString( input ) );
-    }
-
-    public void testDurationFromStringWithSpaces()
-    {
-        String input = "2d  67h 180m";
-        Duration testDuration = null;
-        try
-        {
-            testDuration = Duration.fromString( input );
-        }
-        catch ( IllegalArgumentException e )
-        {
-            fail();
-        }
-        Duration actualDuration = new Duration( 86 );
-        TestCase.assertTrue( testDuration.equals( actualDuration ) );
-    }
-
-    public void testDurationFromString()
-    {
-        String input = "10w4h9m";
-        Duration testDuration = null;
-        try
-        {
-            testDuration = Duration.fromString( input );
-        }
-        catch ( IllegalArgumentException e )
-        {
-            fail();
-        }
-        Duration actualDuration = new Duration( 404.15 );
-        TestCase.assertTrue( testDuration.equals( actualDuration ) );
-    }
-
-    public void testDurationFromStringInvalidCharacters()
-    {
-        String input = "2d  67k 180m";
-        try
-        {
-            Duration testDuration = Duration.fromString( input );
-            fail();
-        }
-        catch ( IllegalArgumentException e )
-        {
-        }
-    }
-
-    public void testDurationFromStringInvalidDoubleHours()
-    {
-        String input = "3d53h9h9m";
-        try
-        {
-            Duration testDuration = Duration.fromString( input );
-            fail();
-        }
-        catch ( IllegalArgumentException e )
-        {
-        }
-    }
-
-    public void testDurationToString()
-    {
-        Duration duration = new Duration( 24.0166666667 );
-        TestCase.assertTrue( duration.toString().equals( "3d 1m" ) );
     }
 }

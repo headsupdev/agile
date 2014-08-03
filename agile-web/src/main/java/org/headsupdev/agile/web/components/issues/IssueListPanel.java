@@ -20,6 +20,7 @@ package org.headsupdev.agile.web.components.issues;
 
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
+import org.apache.wicket.ResourceReference;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.OrderByBorder;
 import org.apache.wicket.extensions.markup.html.repeater.util.SortableDataProvider;
 import org.apache.wicket.markup.html.CSSPackageResource;
@@ -27,6 +28,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.Item;
@@ -38,8 +40,8 @@ import org.headsupdev.agile.storage.dao.IssuesDAO;
 import org.headsupdev.agile.storage.issues.Duration;
 import org.headsupdev.agile.storage.issues.Issue;
 import org.headsupdev.agile.storage.issues.Milestone;
-import org.headsupdev.agile.web.DurationTextField;
 import org.headsupdev.agile.web.HeadsUpPage;
+import org.headsupdev.agile.web.components.DurationEditPanel;
 import org.headsupdev.agile.web.components.IssueTypeDropDownChoice;
 import org.headsupdev.agile.web.components.StripedDataView;
 import org.headsupdev.agile.web.components.UserDropDownChoice;
@@ -63,7 +65,7 @@ public class IssueListPanel
     private static final int ITEMS_PER_PAGE = 25;
     private final boolean hideMilestone;
     private final boolean hideProject;
-    private WebMarkupContainer addIcon;
+    private Image addIcon;
     private StyledPagingNavigator pagingHeader, pagingFooter;
 
     private Issue quickIssue;
@@ -224,6 +226,7 @@ public class IssueListPanel
 
         Component[] rowAddComponents = new Component[9];
         rowAddComponents[0] = new WebMarkupContainer( "submit" ).setMarkupId( "submit" );
+
         rowAddComponents[1] = new TextField<String>( "summary" ).setRequired( true ).setMarkupId( "summary" );
         rowAddComponents[2] = new Label( "status", IssueUtils.getStatusName( Issue.STATUS_NEW ) ).setMarkupId( "status" );
         rowAddComponents[3] = new IssueTypeDropDownChoice( "type", IssueUtils.getTypes() ).setRequired( true ).setMarkupId( "type" );
@@ -248,8 +251,14 @@ public class IssueListPanel
         rowAddComponents[5] = new UserDropDownChoice( "assignee" ).setMarkupId( "assignee" );
         rowAddComponents[6] = new Label( "project", page.getProject().toString() ).setVisible( !hideProject ).setMarkupId( "pro" );
         rowAddComponents[7] = new MilestoneDropDownChoice( "milestone", page.getProject() ).setNullValid( true ).setVisible( !hideMilestone ).setMarkupId( "milestone" );
-        rowAddComponents[8] = new DurationTextField( "timeEstimate" ).setMarkupId( "timeEstimate" );
-
+        rowAddComponents[8] = new DurationEditPanel( "timeEstimate", new Model<Duration>()
+        {
+            @Override
+            public Duration getObject()
+            {
+                return quickIssue.getTimeEstimate();
+            }
+        } ).setMarkupId( "timeEstimate" );
         addAnimatorToForm( rowAddComponents );
         inlineForm.add( rowAdd );
         return inlineForm;
@@ -257,10 +266,9 @@ public class IssueListPanel
 
     private void addAnimatorToForm( Component[] rowAddComponents )
     {
-        addIcon = new WebMarkupContainer( "addIcon" );
+        addIcon = new Image( "addIcon", new ResourceReference( HeadsUpPage.class, "images/add.png" ) );
         Animator animator = new Animator();
         animator.addCssStyleSubject( new MarkupIdModel( rowAdd.setMarkupId( "rowAdd" ) ), "rowhidden", "rowshown" );
-        animator.addCssStyleSubject( new MarkupIdModel( addIcon.setMarkupId( "addIcon" ) ), "iconPlus", "iconMinus" );
         for ( Component rowAddComponent : rowAddComponents )
         {
             rowAdd.add( rowAddComponent );
@@ -269,6 +277,7 @@ public class IssueListPanel
                 animator.addCssStyleSubject( new MarkupIdModel( rowAddComponent ), "hidden", "shown" );
             }
         }
+
         animator.attachTo( addIcon, "onclick", Animator.Action.toggle() );
     }
 
