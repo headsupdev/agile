@@ -46,6 +46,8 @@ table.issues tr.total td.allcell {
 }
 
 table td {
+    padding: 0px 10px;
+
     border-top: 8px solid white;
     border-left: 1px solid white;
 }
@@ -66,16 +68,16 @@ table.issues td.hours {
     width: 25%;
 }
 
-.listing .rowhidden, .listing .rowAdd {
-    height: 0;
+.listing .rowhidden{
+    height: 0pt;
 }
 
-.listing .rowshown {
+.listing .rowshown{
     height:auto;
 }
 
-.listing .rowAdd td {
-    padding: 0 10px;
+.listing .rowAdd.rowAdd{
+    height: 0pt;
 }
 
 #pro.hidden, #submit.hidden, #summary.hidden, #status.hidden, #type.hidden, #rank.hidden, #assignee.hidden, #milestone.hidden, #timeEstimate.hidden{
