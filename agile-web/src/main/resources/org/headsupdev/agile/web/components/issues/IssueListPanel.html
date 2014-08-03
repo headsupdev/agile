@@ -19,81 +19,39 @@
 <html>
   <body>
     <wicket:panel>
-      <form wicket:id="IssueInlineForm">
-        <table class="issues listing">
-          <thead>
-          <tr>
-            <td colspan="8" class="paging" wicket:id="headerPaging"></td>
-          </tr>
-          </thead>
-          <tr>
-            <th class="id" wicket:id="orderById">#</th>
-            <th class="summary" wicket:id="orderBySummary">Summary</th>
-            <th class="status" wicket:id="orderByStatus">Status</th>
-            <th class="type" wicket:id="orderByPriority">Type</th>
-            <th class="order" wicket:id="orderByOrder">Order</th>
-            <th class="assigned" wicket:id="orderByAssigned">Assigned</th>
-            <th class="project" wicket:id="orderByProject">Project</th>
-            <th class="milestone" wicket:id="orderByMilestone">Milestone</th>
-            <th class="hours" wicket:id="hours-header">Remaining</th>
-          </tr>
-          <tr>
-            <td>
-              <input type="submit" value="Add"/>
-            </td>
-            <td>
-              <input wicket:id="summary" type="text" style="width:100%"/>
-            </td>
-            <td>
-              <label wicket:id="status">
-              </label>
-            </td>
-            <td>
-              <select wicket:id="type">
-              </select>
-            </td>
-            <td>
-              <input wicket:id="rank" type="text" style="width:15pt"/>
-            </td>
-            <td>
-              <select wicket:id="assignee">
-              </select>
-            </td>
-            <wicket:enclosure>
-              <td>
-                <label wicket:id="project">
-                </label>
-              </td>
-            </wicket:enclosure>
-            <wicket:enclosure>
-              <td>
-                <select wicket:id="milestone">
-                </select>
-              </td>
-            </wicket:enclosure>
-            <td>
-              <div wicket:id="timeEstimate">
-              </div>
-            </td>
-          </tr>
+      <table class="issues listing">
+        <thead>
+        <tr>
+          <td colspan="8" class="paging" wicket:id="headerPaging"></td>
+        </tr>
+        </thead>
+        <tr>
+          <th class="id" wicket:id="orderById">#</th>
+          <th class="summary" wicket:id="orderBySummary">Summary</th>
+          <th class="status" wicket:id="orderByStatus">Status</th>
+          <th class="type" wicket:id="orderByPriority">Type</th>
+          <th class="order" wicket:id="orderByOrder">Order</th>
+          <th class="assigned" wicket:id="orderByAssigned">Assigned</th>
+          <th class="project" wicket:id="orderByProject">Project</th>
+          <th class="milestone" wicket:id="orderByMilestone">Milestone</th>
+          <th class="hours" wicket:id="hours-header">Remaining</th>
+        </tr>
+        <wicket:container wicket:id="issues">
+          <wicket:container wicket:id="issue"></wicket:container>
+        </wicket:container>
 
-          <wicket:container wicket:id="issues">
-            <wicket:container wicket:id="issue"></wicket:container>
-          </wicket:container>
+        <tfoot>
+        <tr>
+          <td colspan="8" class="paging" wicket:id="footerPaging"></td>
+        </tr>
 
-          <tfoot>
-          <tr>
-            <td colspan="8" class="paging" wicket:id="footerPaging"></td>
-          </tr>
-
-          <tr wicket:id="totals" class="total">
-            <td colspan="6" wicket:id="allCell" class="allcell"><a wicket:id="allLink">Show all...</a></td>
-            <td wicket:id="requiredlabel">total</td>
-            <td wicket:id="hours" class="hours">0h</td>
-          </tr>
-          </tfoot>
-        </table>
-       </form>
+        <tr wicket:id="totals" class="total">
+          <td colspan="6" wicket:id="allCell" class="allcell"><a wicket:id="allLink">Show all...</a></td>
+          <td wicket:id="requiredlabel">total</td>
+          <td wicket:id="hours" class="hours">0h</td>
+        </tr>
+        </tfoot>
+      </table>
     </wicket:panel>
   </body>
 </html>

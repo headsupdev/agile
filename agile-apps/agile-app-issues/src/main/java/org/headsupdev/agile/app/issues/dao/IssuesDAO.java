@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2013-2014 Heads Up Development Ltd.
+ * Copyright 2013 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -16,8 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.headsupdev.agile.storage.dao;
+package org.headsupdev.agile.app.issues.dao;
 
+import org.headsupdev.agile.storage.dao.HibernateDAO;
 import org.headsupdev.agile.storage.issues.Issue;
 
 /**

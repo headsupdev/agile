@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2014 Heads Up Development Ltd.
+ * Copyright 2009-2012 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -103,10 +103,10 @@ public class Issue
 
     @Temporal(TemporalType.TIMESTAMP)
     @Publish
-    private Date created = new Date(), updated;
+    private Date created, updated;
 
     @Publish
-    private int type, priority = PRIORITY_MAJOR, status = STATUS_NEW, resolution;
+    private int type, priority = PRIORITY_MAJOR, status, resolution;
     @Publish
     private String version, environment;
 

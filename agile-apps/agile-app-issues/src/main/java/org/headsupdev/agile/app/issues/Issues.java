@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2014 Heads Up Development Ltd.
+ * Copyright 2009-2012 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -67,8 +67,7 @@ public class Issues
         {
             provider = IssuesApplication.getIssueProviderForProject( getProject(), filter );
         }
-
-        add( new IssueListPanel( "issues", provider, this, !getProject().equals( StoredProject.getDefault() ), false, null ) );
+        add( new IssueListPanel( "issues", provider, this, !getProject().equals( StoredProject.getDefault() ), false ) );
     }
 
     @Override
