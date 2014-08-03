@@ -1,6 +1,17 @@
 2.0.1
 
+* Add multiple attachments in one submission - issue:85
+* Allow editing of comments and time worked - issue:87
+* Allow deleting of comments, attachments and time worked - issue:86
+* Add a HipChat notifier - issue:88
+* Add quick add issue and milestone rows to the tables - issue:76 and issue:81
+
 * For Xcode builds append appropriate -destination parameter when testing on simulator
+* Fix Xcodebuild for latest CocoaPods
+* Fix icon paths for the build status API
+* Ensure milestones and groups have a valid associated time period before being graphed.
+* Fix an issue where the dueDate calculations of a milestoneGroup could crash the edit milestone page.
+
 
 2.0
 
