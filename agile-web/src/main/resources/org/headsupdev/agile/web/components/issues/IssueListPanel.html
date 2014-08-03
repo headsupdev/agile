@@ -27,12 +27,7 @@
           </tr>
           </thead>
           <tr>
-            <th>
-              <img wicket:id="addIcon"/>
-            </th>
-            <th>
-              <div class="id" wicket:id="orderById" style="width:5pt">#</div>
-            </th>
+            <th class="id" wicket:id="orderById">#</th>
             <th class="summary" wicket:id="orderBySummary">Summary</th>
             <th class="status" wicket:id="orderByStatus">Status</th>
             <th class="type" wicket:id="orderByPriority">Type</th>
@@ -42,45 +37,42 @@
             <th class="milestone" wicket:id="orderByMilestone">Milestone</th>
             <th class="hours" wicket:id="hours-header">Remaining</th>
           </tr>
-          <tr wicket:id="rowAdd" id="rowAdd">
+          <tr>
             <td>
-              <label></label>
+              <input type="submit" value="Add"/>
             </td>
             <td>
-              <input wicket:id="submit" type="submit" value="Add" id="submit"/>
+              <input wicket:id="summary" type="text" style="width:100%"/>
             </td>
             <td>
-              <input wicket:id="summary" id="summary" type="text" style="width:150pt"/>
-            </td>
-            <td>
-              <label wicket:id="status" id="status">
+              <label wicket:id="status">
               </label>
             </td>
             <td>
-              <select wicket:id="type" id="type">
+              <select wicket:id="type">
               </select>
             </td>
             <td>
-              <input wicket:id="rank" id="rank" type="text" style="width:15pt"/>
+              <input wicket:id="rank" type="text" style="width:15pt"/>
             </td>
             <td>
-              <select wicket:id="assignee" id="assignee">
+              <select wicket:id="assignee">
               </select>
             </td>
             <wicket:enclosure>
               <td>
-                <span wicket:id="project" id="pro">
-                </span>
+                <label wicket:id="project">
+                </label>
               </td>
             </wicket:enclosure>
             <wicket:enclosure>
               <td>
-                <select wicket:id="milestone" id="milestone">
+                <select wicket:id="milestone">
                 </select>
               </td>
             </wicket:enclosure>
             <td>
-              <div wicket:id="timeEstimate" id="timeEstimate">
+              <div wicket:id="timeEstimate">
               </div>
             </td>
           </tr>

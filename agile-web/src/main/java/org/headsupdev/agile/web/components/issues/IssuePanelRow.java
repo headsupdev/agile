@@ -78,8 +78,6 @@ public class IssuePanelRow
         WebMarkupContainer cell = new WebMarkupContainer( "id-cell" );
 
         Class<? extends Page> viewClass = page.getPageClass( "issues/view" );
-
-        add( new Label("checkbox","") );
         if ( viewClass != null )
         {
             Link idLink = new BookmarkablePageLink( "id-link", viewClass, params );

@@ -1,5 +1,3 @@
-/* @override http://localhost:8069/resources/org.headsupdev.agile.web.components.issues.IssueListPanel/issue.css */
-
 table.issues {
     width: 100%;
 }
@@ -28,13 +26,6 @@ table.issues tr.total td.allcell {
     text-align: left;
 }
 
-table td {
-    padding: 0px 10px;
-
-    border-top: 8px solid white;
-    border-left: 1px solid white;
-}
-
 .relatedstatus.status50, .relatedstatus.status60 {
     text-decoration: line-through;
 }
@@ -49,30 +40,4 @@ table.issues td.hours {
 
 .attachment-username, .attachment-created {
     width: 25%;
-}
-
-.listing .rowhidden{
-	 height: 0pt;
-}
-
-.listing .rowshown{
-    height:auto;
-}
-
-.listing .rowAdd.rowAdd{
-    height: 0pt;
-}
-
-#pro.hidden, #submit.hidden, #summary.hidden, #status.hidden, #type.hidden, #rank.hidden, #assignee.hidden, #milestone.hidden, #timeEstimate.hidden{
-    display:none !important;
-    overflow:hidden;
-}
-
-#pro.shown, #submit.shown, #summary.shown, #status.shown, #type.shown, #rank.shown, #assignee.shown, #milestone.shown, #timeEstimate.shown{
-    display:block !important;
-    overflow:hidden;
-}
-
-#pro, #submit, #summary, #status, #type, #rank, #assignee, #milestone, #timeEstimate{
-	 display:none;
 }
