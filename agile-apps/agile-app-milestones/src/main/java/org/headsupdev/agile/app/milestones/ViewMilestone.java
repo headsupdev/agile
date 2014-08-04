@@ -18,29 +18,34 @@
 
 package org.headsupdev.agile.app.milestones;
 
-import org.headsupdev.agile.storage.dao.MilestonesDAO;
-import org.headsupdev.agile.storage.HibernateStorage;
-import org.headsupdev.agile.storage.StoredProject;
-import org.headsupdev.agile.web.wicket.SortableEntityProvider;
-import org.apache.wicket.markup.html.CSSPackageResource;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.link.ResourceLink;
-import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.ResourceReference;
+import org.apache.wicket.markup.html.CSSPackageResource;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.image.Image;
+import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.html.link.ResourceLink;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.util.value.ValueMap;
+import org.headsupdev.agile.api.Manager;
+import org.headsupdev.agile.api.MenuLink;
+import org.headsupdev.agile.api.Permission;
+import org.headsupdev.agile.api.User;
+import org.headsupdev.agile.app.milestones.permission.MilestoneEditPermission;
+import org.headsupdev.agile.app.milestones.permission.MilestoneViewPermission;
+import org.headsupdev.agile.storage.Comment;
+import org.headsupdev.agile.storage.HibernateStorage;
+import org.headsupdev.agile.storage.StoredProject;
+import org.headsupdev.agile.storage.dao.MilestonesDAO;
+import org.headsupdev.agile.storage.issues.Issue;
+import org.headsupdev.agile.storage.issues.Milestone;
 import org.headsupdev.agile.web.*;
 import org.headsupdev.agile.web.components.FormattedDateModel;
 import org.headsupdev.agile.web.components.MarkedUpTextModel;
-import org.headsupdev.agile.web.components.issues.IssueListPanel;
 import org.headsupdev.agile.web.components.issues.IssueFilterPanel;
-import org.headsupdev.agile.api.*;
-import org.headsupdev.agile.storage.issues.Milestone;
-import org.headsupdev.agile.storage.issues.Issue;
-import org.headsupdev.agile.storage.Comment;
-import org.headsupdev.agile.app.milestones.permission.MilestoneViewPermission;
-import org.apache.wicket.util.value.ValueMap;
+import org.headsupdev.agile.web.components.issues.IssueListPanel;
+import org.headsupdev.agile.web.wicket.SortableEntityProvider;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
@@ -79,7 +84,7 @@ public class ViewMilestone
 
         String name = getPageParameters().getString( "id" );
 
-        milestone = dao.find(name, getProject());
+        milestone = dao.find( name, getProject() );
         if ( milestone == null )
         {
             notFoundError();
@@ -89,7 +94,10 @@ public class ViewMilestone
         addLinks( getLinks( milestone ) );
         addDetails();
 
-        List<Comment> commentList = new LinkedList<Comment>();
+        User currentUser = getSession().getUser();
+        final boolean userHasPermission = Manager.getSecurityInstance().userHasPermission( currentUser, new MilestoneEditPermission(), getProject() );
+
+        final List<Comment> commentList = new LinkedList<Comment>();
         commentList.addAll( milestone.getComments() );
         Collections.sort( commentList, new Comparator<Comment>()
         {
@@ -102,11 +110,42 @@ public class ViewMilestone
         {
             protected void populateItem( ListItem<Comment> listItem )
             {
-                Comment comment = listItem.getModelObject();
+                final Comment comment = listItem.getModelObject();
                 listItem.add( new Image( "icon", new ResourceReference( HeadsUpPage.class, "images/comment.png" ) ) );
                 listItem.add( new Label( "username", comment.getUser().getFullnameOrUsername() ) );
                 listItem.add( new Label( "created", new FormattedDateModel( comment.getCreated(),
                         ( (HeadsUpSession) getSession() ).getTimeZone() ) ) );
+
+                Link edit = new Link( "editComment" )
+                {
+                    @Override
+                    public void onClick()
+                    {
+                        getPage().getPageParameters().put( "commentId", comment.getId() );
+                        setResponsePage( EditComment.class, getPage().getPageParameters() );
+                    }
+                };
+                listItem.add( edit.setVisible( userHasPermission ) );
+
+                Link remove = new Link( "removeComment" )
+                {
+                    @Override
+                    public void onClick()
+                    {
+                        commentList.remove( comment );
+                        milestone = (Milestone) ( (HibernateStorage) getStorage() ).getHibernateSession().merge( milestone );
+                        Iterator<Comment> iterator = milestone.getComments().iterator();
+                        while ( iterator.hasNext() )
+                        {
+                            Comment current = iterator.next();
+                            if ( comment.getId() == current.getId() )
+                            {
+                                iterator.remove();
+                            }
+                        }
+                    }
+                };
+                listItem.add( remove.setVisible( userHasPermission ) );
 
                 listItem.add( new Label( "comment", new MarkedUpTextModel( comment.getComment(), getProject() ) )
                         .setEscapeModelStrings( false ) );
@@ -116,11 +155,11 @@ public class ViewMilestone
         filter = new IssueFilterPanel( "filter", getSession().getUser() );
         if ( milestone.isCompleted() )
         {
-            filter.setStatuses( new boolean[]{ false, false, false, false, false, true, true } );
+            filter.setStatuses( new boolean[]{false, false, false, false, false, true, true} );
         }
         else
         {
-            filter.setStatuses( new boolean[]{ true, true, true, true, true, false, false } );
+            filter.setStatuses( new boolean[]{true, true, true, true, true, false, false} );
         }
         add( filter );
 

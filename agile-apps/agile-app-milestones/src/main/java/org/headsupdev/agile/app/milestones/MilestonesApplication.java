@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2013 Heads Up Development Ltd.
+ * Copyright 2009-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -109,7 +109,7 @@ public class MilestonesApplication
 
     @Override
     public Class<? extends Page>[] getPages() {
-        return new Class[]{ CompleteMilestone.class, CreateComment.class, CreateMilestone.class, EditMilestone.class,
+        return new Class[]{ CompleteMilestone.class, CreateComment.class, EditComment.class, CreateMilestone.class, EditMilestone.class,
                 Milestones.class, ViewMilestone.class, CreateMilestoneGroup.class, EditMilestoneGroup.class,
                 ViewMilestoneGroup.class, ReopenMilestone.class };
     }

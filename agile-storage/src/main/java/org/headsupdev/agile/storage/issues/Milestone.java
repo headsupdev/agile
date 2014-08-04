@@ -231,6 +231,11 @@ public class Milestone
         this.group = group;
     }
 
+    public void addComment( Comment comment )
+    {
+        comments.add( comment );
+    }
+
     public Set<Comment> getComments()
     {
         return comments;
