@@ -28,10 +28,15 @@
           </thead>
           <tr>
             <th>
-              <div id="quickAdd" wicket:id="quickAdd">
-                <div id = "addIcon" wicket:id="addIcon">
+              <a id="quickAdd" wicket:id="quickAdd">
+                <div id="icon" wicket:id="icon">
+                  <script type="text/javascript">
+                    function moveIconBackground( value ) {
+                      Wicket.$('icon').style.backgroundPosition = '0px ' + ( 0 + ( value * 16 ) ) + 'px';
+                    }
+                  </script>
                 </div>
-              </div>
+              </a>
             </th>
             <th>
               <div class="id" wicket:id="orderById" style="width:5pt">#</div>

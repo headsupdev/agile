@@ -49,6 +49,7 @@ import org.headsupdev.agile.web.components.PercentagePanel;
 import org.headsupdev.agile.web.components.StripedDataView;
 import org.headsupdev.agile.web.wicket.StyledPagingNavigator;
 import org.wicketstuff.animator.Animator;
+import org.wicketstuff.animator.IAnimatorSubject;
 import org.wicketstuff.animator.MarkupIdModel;
 
 import java.util.Date;
@@ -69,7 +70,8 @@ public class MilestoneListPanel
     private Milestone quickMilestone;
     private HeadsUpPage page;
     private MilestoneGroup group;
-    private WebMarkupContainer addIcon;
+    private WebMarkupContainer quickAdd;
+    private WebMarkupContainer icon;
 
     public MilestoneListPanel( String id, final SortableDataProvider<Milestone> provider, final HeadsUpPage page,
                                final boolean hideProject, final MilestoneGroup group )
@@ -141,7 +143,7 @@ public class MilestoneListPanel
                 return cols;
             }
         } );
-        inlineForm.add( addIcon );
+        inlineForm.add( quickAdd );
         inlineForm.add( new OrderByBorder( "orderByName", "name.name", provider ) );
         inlineForm.add( new OrderByBorder( "orderByDue", "due", provider ) );
         inlineForm.add( new OrderByBorder( "orderByProject", "name.project.id", provider ).setVisible( !hideProject ) );
@@ -217,14 +219,25 @@ public class MilestoneListPanel
         return inlineForm;
     }
 
-    private void addAnimatorToForm( Component[] rowAddComponents, MilestoneGroup group )
+    private void addAnimatorToForm( Component[] rowAddComponents, final MilestoneGroup group )
     {
         User currentUser = ( (HeadsUpSession) getSession() ).getUser();
-        addIcon = new WebMarkupContainer( "addIconMilestone" );
-        addIcon.setVisible( Permissions.canEditDoc( currentUser, page.getProject() ) );
-        Animator animator = new Animator( "MilestoneGroup" + group + "Animator" );
+        quickAdd = new WebMarkupContainer( "quickAdd" );
+        quickAdd.setVisible( Permissions.canEditDoc( currentUser, page.getProject() ) );
+
+        icon = new WebMarkupContainer( "icon" );
+        icon.setMarkupId( "icon" + group ).setOutputMarkupId( true );
+        Label iconToggleScript = new Label( "iconToggleScript", "function moveIconBackground" + group + "( value ) {" +
+                "Wicket.$('icon" + group + "').style.backgroundPosition = '0px ' + ( 0 + ( value * 16 ) ) + 'px';}"
+        );
+
+        iconToggleScript.setEscapeModelStrings( false );
+        icon.add( iconToggleScript );
+
+        Animator animator = new Animator( "" + group + "Animator" );
+
         animator.addCssStyleSubject( new MarkupIdModel( rowAdd.setOutputMarkupId( true ) ), "rowhidden", "rowshown" );
-        animator.addCssStyleSubject( new MarkupIdModel( addIcon.setOutputMarkupId( true ) ), "iconPlus", "iconMinus" );
+
         for ( Component rowAddComponent : rowAddComponents )
         {
             rowAdd.add( rowAddComponent );
@@ -233,7 +246,18 @@ public class MilestoneListPanel
                 animator.addCssStyleSubject( new MarkupIdModel( rowAddComponent.setOutputMarkupId( true ) ), "hidden", "shown" );
             }
         }
-        animator.attachTo( addIcon, "onclick", Animator.Action.toggle() );
+
+        animator.addSubject( new IAnimatorSubject()
+        {
+            public String getJavaScript()
+            {
+                return "moveIconBackground" + group;
+            }
+
+        } );
+
+        animator.attachTo( quickAdd, "onclick", Animator.Action.toggle() );
+        quickAdd.add( icon );
     }
 
     private Milestone createMilestone( MilestoneGroup group )

@@ -94,20 +94,9 @@ table.issues td.hours {
     display:none;
 }
 
-div#addIcon{
-    background-image: url( /resources/org.headsupdev.agile.web.HeadsUpPage/images/add.png );
-    height:16px;
-    width:16px;
-}
-
-div#addIcon.plusIcon{
-    background-image: url( /resources/org.headsupdev.agile.web.HeadsUpPage/images/add.png ) !important;
-    height:16px;
-    width:16px;
-}
-
-div#addIcon.minusIcon{
-    background-image: url( /resources/org.headsupdev.agile.web.HeadsUpPage/images/delete.png ) !important;
+#icon{
+    background-image: url( /resources/org.headsupdev.agile.web.HeadsUpPage/images/add-delete.png );
+    cursor:pointer;
     height:16px;
     width:16px;
 }

@@ -1,6 +1,6 @@
 <!--
   ~ HeadsUp Agile
-  ~ Copyright 2009-2012 Heads Up Development Ltd.
+  ~ Copyright 2009-2014 Heads Up Development Ltd.
   ~
   ~ This program is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU Affero General Public License as
@@ -28,7 +28,12 @@
       </thead>
       <tr>
         <th>
-          <img class="addIconMilestone" wicket:id="addIconMilestone"/>
+          <a id="quickAdd" wicket:id="quickAdd">
+            <div class="quickAddIconMilestone" id = "ic" wicket:id="icon">
+              <script type="text/javascript" wicket:id="iconToggleScript">
+              </script>
+            </div>
+          </a>
         </th>
         <th class="name" wicket:id="orderByName">Name</th>
         <th class="percent">Progress</th>

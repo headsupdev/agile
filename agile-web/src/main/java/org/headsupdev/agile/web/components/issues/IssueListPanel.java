@@ -48,6 +48,7 @@ import org.headsupdev.agile.web.components.UserDropDownChoice;
 import org.headsupdev.agile.web.components.milestones.MilestoneDropDownChoice;
 import org.headsupdev.agile.web.wicket.StyledPagingNavigator;
 import org.wicketstuff.animator.Animator;
+import org.wicketstuff.animator.IAnimatorSubject;
 import org.wicketstuff.animator.MarkupIdModel;
 
 import java.util.Iterator;
@@ -75,6 +76,7 @@ public class IssueListPanel
     private Milestone milestone;
     private final WebMarkupContainer rowAdd;
     private WebMarkupContainer quickAdd;
+    private Component icon;
 
     public IssueListPanel( String id, final SortableDataProvider<Issue> issues, final HeadsUpPage page, final boolean hideProject,
                            final boolean hideMilestone, final Milestone milestone )
@@ -283,11 +285,12 @@ public class IssueListPanel
         User currentUser = ( (HeadsUpSession) getSession() ).getUser();
         quickAdd = new WebMarkupContainer( "quickAdd" );
         quickAdd.setVisible( Permissions.canEditIssue( currentUser, page.getProject() ) );
+
+        icon = new WebMarkupContainer( "icon" );
+
         Animator animator = new Animator();
         animator.addCssStyleSubject( new MarkupIdModel( rowAdd.setMarkupId( "rowAdd" ) ), "rowhidden", "rowshown" );
-        WebMarkupContainer addIcon = new WebMarkupContainer( "addIcon" );
-        animator.addCssStyleSubject( new MarkupIdModel( addIcon.setMarkupId( "addIcon" ) ), "plusIcon", "minusIcon" );
-        quickAdd.add( addIcon );
+
 
         for ( Component rowAddComponent : rowAddComponents )
         {
@@ -297,7 +300,16 @@ public class IssueListPanel
                 animator.addCssStyleSubject( new MarkupIdModel( rowAddComponent ), "hidden", "shown" );
             }
         }
+        animator.addSubject( new IAnimatorSubject()
+        {
+            public String getJavaScript()
+            {
+                return "moveIconBackground";
+            }
+        } );
         animator.attachTo( quickAdd, "onclick", Animator.Action.toggle() );
+        quickAdd.add( icon );
+
     }
 
     private Issue createIssue()

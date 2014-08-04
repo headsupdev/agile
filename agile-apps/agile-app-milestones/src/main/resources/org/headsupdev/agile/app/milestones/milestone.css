@@ -147,16 +147,9 @@ table.remaining td.number {
     overflow: visible;
 }
 
-.iconPlus{
-    background-image: url( /resources/org.headsupdev.agile.web.HeadsUpPage/images/add.png )!important;
-}
-
-.iconMinus{
-    background-image: url( /resources/org.headsupdev.agile.web.HeadsUpPage/images/delete.png )!important;
-}
-
-.addIconMilestone{
-    background-image: url( /resources/org.headsupdev.agile.web.HeadsUpPage/images/add.png )!important;
+.quickAddIconMilestone{
+    background-image: url( /resources/org.headsupdev.agile.web.HeadsUpPage/images/add-delete.png );
+    cursor:pointer;
     height:16px;
     width:16px;
 }
