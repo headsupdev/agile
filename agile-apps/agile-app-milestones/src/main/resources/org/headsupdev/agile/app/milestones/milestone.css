@@ -117,39 +117,3 @@ table.remaining td.number {
 .inlinevelocity td.dashheader, .inlinevelocity td.velnumber, .inlinevelocity td.dashfooter{
     border-left: none;
 }
-
-.listing .rowhidden, .listing .rowAdd {
-    height: 0 !important;
-    overflow:hidden;
-}
-
-.listing .rowshown{
-    height:auto;
-}
-
-.listing .rowAdd td, .listing .rowhidden td {
-    padding: 0 10px;
-}
-
-.listing .rowshown td {
-    padding: 5px 10px;
-}
-
-.listing .rowAdd input.hidden, .listing .rowAdd div.hidden, .listing .rowAdd span.hidden {
-    height: 0;
-    display: none;
-    overflow:hidden;
-}
-
-.listing .rowAdd input.shown, .listing .rowAdd div.shown, .listing .rowAdd span.shown {
-    height: auto;
-    display: block;
-    overflow: visible;
-}
-
-.quickAddIconMilestone{
-    background-image: url( /resources/org.headsupdev.agile.web.HeadsUpPage/images/add-delete.png );
-    cursor:pointer;
-    height:16px;
-    width:16px;
-}
