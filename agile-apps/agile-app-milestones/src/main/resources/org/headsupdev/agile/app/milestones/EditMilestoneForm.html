@@ -1,6 +1,6 @@
 <!--
   ~ HeadsUp Agile
-  ~ Copyright 2009-2012 Heads Up Development Ltd.
+  ~ Copyright 2009-2014 Heads Up Development Ltd.
   ~
   ~ This program is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU Affero General Public License as
@@ -28,12 +28,14 @@
             <td wicket:id="project" class="project" style="width:30%">project</td>
           </tr>
           <tr>
-            <!--<th class="created">created</th>-->
-            <!--<td wicket:id="created" class="created">created</td>-->
             <th class="start">start</th>
             <td class="start"><div wicket:id="startDate">start</div></td>
             <th class="due">due</th>
             <td class="due"><div wicket:id="dueDate">due</div></td>
+          </tr>
+          <tr>
+            <th class="milestoneGroup">milestone group</th>
+            <td class="milestoneGroup"><select wicket:id="group">milestone group</select></td>
           </tr>
         </table>
 

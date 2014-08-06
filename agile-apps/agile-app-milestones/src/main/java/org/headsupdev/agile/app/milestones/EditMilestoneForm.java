@@ -21,6 +21,7 @@ package org.headsupdev.agile.app.milestones;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
@@ -29,8 +30,10 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.PropertyModel;
 import org.headsupdev.agile.api.Manager;
 import org.headsupdev.agile.storage.HibernateStorage;
+import org.headsupdev.agile.storage.dao.MilestoneGroupsDAO;
 import org.headsupdev.agile.storage.dao.MilestonesDAO;
 import org.headsupdev.agile.storage.issues.Milestone;
+import org.headsupdev.agile.storage.issues.MilestoneGroup;
 import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.components.DateTimeWithTimeZoneField;
 import org.headsupdev.agile.web.components.IdPatternValidator;
@@ -47,6 +50,7 @@ import java.util.Date;
 public class EditMilestoneForm
         extends Panel
 {
+    private final HeadsUpPage owner;
     Milestone milestone;
     boolean creating;
 
@@ -55,6 +59,7 @@ public class EditMilestoneForm
         super( id );
         this.milestone = mile;
         this.creating = creating;
+        this.owner = owner;
 
         Form<Milestone> form = new Form<Milestone>( "edit" )
         {
@@ -125,6 +130,8 @@ public class EditMilestoneForm
                 super.setObject( object );
             }
         } ) );
+        MilestoneGroupsDAO dao = new MilestoneGroupsDAO();
+        form.add( new DropDownChoice<MilestoneGroup>( "group", dao.findAll( owner.getProject() ) ) );
 
         form.add( new TextArea( "description" ) );
     }
