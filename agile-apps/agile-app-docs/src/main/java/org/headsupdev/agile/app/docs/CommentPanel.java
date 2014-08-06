@@ -18,21 +18,19 @@
 
 package org.headsupdev.agile.app.docs;
 
-import org.apache.wicket.markup.html.link.Link;
-import org.headsupdev.agile.api.*;
-import org.headsupdev.agile.app.docs.permission.DocEditPermission;
-import org.headsupdev.agile.storage.Comment;
-import org.headsupdev.agile.storage.resource.DurationWorked;
-import org.headsupdev.agile.web.HeadsUpPage;
-import org.headsupdev.agile.web.HeadsUpSession;
 import org.apache.wicket.ResourceReference;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.image.Image;
+import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.headsupdev.agile.api.Manager;
 import org.headsupdev.agile.api.Project;
+import org.headsupdev.agile.api.Storage;
+import org.headsupdev.agile.api.User;
+import org.headsupdev.agile.app.docs.permission.DocEditPermission;
 import org.headsupdev.agile.storage.Comment;
 import org.headsupdev.agile.storage.HibernateStorage;
 import org.headsupdev.agile.storage.docs.Document;
@@ -42,6 +40,7 @@ import org.headsupdev.agile.web.HeadsUpSession;
 import org.headsupdev.agile.web.components.FormattedDateModel;
 import org.headsupdev.agile.web.components.MarkedUpTextModel;
 
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -53,7 +52,8 @@ import java.util.List;
  * @author Gordon Edwards
  * @since 1.0
  */
-public class CommentPanel extends Panel
+public class CommentPanel
+        extends Panel
 {
     private Document doc;
     private IModel model;
@@ -61,12 +61,13 @@ public class CommentPanel extends Panel
     private Project project;
     public Link remove;
     private Storage storage;
+    private Comment comment;
 
     public CommentPanel( String id, Comment comment, Project project )
     {
         super( id, new Model( comment ) );
         this.project = project;
-        
+
         layout();
     }
 
@@ -74,7 +75,7 @@ public class CommentPanel extends Panel
     {
         super( id, new Model( worked ) );
         this.project = project;
-        
+
         layout();
     }
 
@@ -87,7 +88,7 @@ public class CommentPanel extends Panel
         this.storage = storage;
         layout();
     }
-    
+
     private void layout()
     {
         User currentUser = ( (HeadsUpSession) getSession() ).getUser();
@@ -98,7 +99,7 @@ public class CommentPanel extends Panel
         WebMarkupContainer commentTitle = new WebMarkupContainer( "comment-title" );
         if ( o instanceof Comment )
         {
-            final Comment comment = (Comment) o;
+            comment = (Comment) o;
             add( new Image( "icon", new ResourceReference( HeadsUpPage.class, "images/comment.png" ) ) );
 
 
@@ -118,6 +119,10 @@ public class CommentPanel extends Panel
                 @Override
                 public void onClick()
                 {
+                    comment = (Comment) ( (HibernateStorage) storage ).merge( comment );
+                    doc = (Document) ( (HibernateStorage) storage ).merge( doc );
+
+
                     commentList.remove( comment );
 
                     Iterator<Comment> iterator = doc.getComments().iterator();
@@ -129,7 +134,8 @@ public class CommentPanel extends Panel
                             iterator.remove();
                         }
                     }
-                    doc = (Document) ( (HibernateStorage) storage ).getHibernateSession().merge( doc );
+                    ( (HibernateStorage) storage ).delete( comment );
+                    doc.setUpdated( new Date() );
                 }
             };
             commentTitle.add( remove.setVisible( userHasPermission ) );

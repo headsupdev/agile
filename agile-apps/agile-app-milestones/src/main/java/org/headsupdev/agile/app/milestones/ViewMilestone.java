@@ -108,9 +108,12 @@ public class ViewMilestone
         } );
         add( new ListView<Comment>( "comments", commentList )
         {
+
+            private Comment comment;
+
             protected void populateItem( ListItem<Comment> listItem )
             {
-                final Comment comment = listItem.getModelObject();
+                comment = listItem.getModelObject();
                 listItem.add( new Image( "icon", new ResourceReference( HeadsUpPage.class, "images/comment.png" ) ) );
                 listItem.add( new Label( "username", comment.getUser().getFullnameOrUsername() ) );
                 listItem.add( new Label( "created", new FormattedDateModel( comment.getCreated(),
@@ -132,8 +135,10 @@ public class ViewMilestone
                     @Override
                     public void onClick()
                     {
-                        commentList.remove( comment );
+                        comment = (Comment) ( (HibernateStorage) getStorage() ).getHibernateSession().merge( comment );
                         milestone = (Milestone) ( (HibernateStorage) getStorage() ).getHibernateSession().merge( milestone );
+                        commentList.remove( comment );
+
                         Iterator<Comment> iterator = milestone.getComments().iterator();
                         while ( iterator.hasNext() )
                         {
@@ -143,6 +148,8 @@ public class ViewMilestone
                                 iterator.remove();
                             }
                         }
+                        ( (HibernateStorage) getStorage() ).delete( comment );
+                        milestone.setUpdated( new Date() );
                     }
                 };
                 listItem.add( remove.setVisible( userHasPermission ) );

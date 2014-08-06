@@ -39,6 +39,7 @@ import org.headsupdev.agile.storage.Attachment;
 import org.headsupdev.agile.storage.Comment;
 import org.headsupdev.agile.storage.HibernateStorage;
 import org.headsupdev.agile.storage.StoredProject;
+import org.headsupdev.agile.storage.docs.Document;
 import org.headsupdev.agile.storage.issues.Issue;
 import org.headsupdev.agile.storage.resource.DurationWorked;
 import org.headsupdev.agile.web.*;
@@ -132,9 +133,13 @@ public class ViewIssue
         } );
         add( new ListView<Attachment>( "attachments", attachmentList )
         {
+
+            private Attachment attachment;
+
             protected void populateItem( ListItem<Attachment> listItem )
             {
-                final Attachment attachment = listItem.getModelObject();
+                attachment = listItem.getModelObject();
+
                 listItem.add( new Label( "username", attachment.getUser().getFullnameOrUsername() ) );
                 listItem.add( new Label( "created", new FormattedDateModel( attachment.getCreated(),
                         ( (HeadsUpSession) getSession() ).getTimeZone() ) ) );
@@ -154,6 +159,7 @@ public class ViewIssue
                     @Override
                     public void onClick()
                     {
+                        attachment = (Attachment) ( (HibernateStorage) getStorage() ).getHibernateSession().merge( attachment );
                         Iterator<Attachment> iterator = attachmentList.iterator();
                         while ( iterator.hasNext() )
                         {
@@ -172,10 +178,12 @@ public class ViewIssue
 
                         }
                         //line below causes hibernate exception
-//                        ((HibernateStorage) getStorage() ).delete( attachment );
+
                         issue = (Issue) ( (HibernateStorage) getStorage() ).getHibernateSession().merge( issue );
 
+                        ((HibernateStorage) getStorage() ).delete( attachment );
                         attachment.getFile( getStorage() ).delete();
+
                     }
                 }.setVisible( Manager.getSecurityInstance().userHasPermission( currentUser, new IssueEditPermission(), getProject() ) ) );
                 Comment comment = attachment.getComment();

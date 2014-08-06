@@ -40,6 +40,7 @@ import org.headsupdev.agile.web.HeadsUpSession;
 import org.headsupdev.agile.web.components.FormattedDateModel;
 import org.headsupdev.agile.web.components.MarkedUpTextModel;
 
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -61,6 +62,7 @@ public class CommentPanel
 
     private Storage storage;
     private DurationWorked duration;
+    private Comment comment;
 
     public CommentPanel( String id, Comment comment, Project project )
     {
@@ -99,7 +101,7 @@ public class CommentPanel
         WebMarkupContainer workedTitle = new WebMarkupContainer( "worked-title" );
         if ( o instanceof Comment )
         {
-            final Comment comment = (Comment) o;
+            comment = (Comment) o;
             add( new Image( "icon", new ResourceReference( HeadsUpPage.class, "images/comment.png" ) ) );
 
             Link edit = new Link( "editComment" )
@@ -118,8 +120,11 @@ public class CommentPanel
                 @Override
                 public void onClick()
                 {
+                    comment = (Comment) ( (HibernateStorage) storage ).merge( comment );
+                    issue = (Issue) ( (HibernateStorage) storage ).merge( issue );
+
                     commentList.remove( comment );
-                    issue = (Issue) ( (HibernateStorage) storage ).getHibernateSession().merge( issue );
+
                     Iterator<Comment> iterator = issue.getComments().iterator();
                     while ( iterator.hasNext() )
                     {
@@ -127,8 +132,13 @@ public class CommentPanel
                         if ( comment.getId() == current.getId() )
                         {
                             iterator.remove();
+                            break;
                         }
                     }
+
+                    ( (HibernateStorage) storage ).delete( comment );
+
+                    issue.setUpdated( new Date() );
                 }
             };
             commentTitle.add( remove.setVisible( userHasPermission ) );
@@ -140,7 +150,6 @@ public class CommentPanel
                     .setEscapeModelStrings( false ) );
 
             workedTitle.setVisible( false );
-
         }
         else if ( o instanceof DurationWorked )
         {
@@ -163,12 +172,12 @@ public class CommentPanel
                 @Override
                 public void onClick()
                 {
+                    duration = (DurationWorked) ( (HibernateStorage) storage ).merge( duration );
+                    issue = (Issue) ( (HibernateStorage) storage ).merge( issue );
 
                     commentList.remove( duration );
-                    duration = (DurationWorked) ( (HibernateStorage) storage ).getHibernateSession().merge( duration );
-                    issue = (Issue) ( (HibernateStorage) storage ).getHibernateSession().merge( issue );
-                    Iterator<DurationWorked> iterator = issue.getTimeWorked().iterator();
 
+                    Iterator<DurationWorked> iterator = issue.getTimeWorked().iterator();
                     while ( iterator.hasNext() )
                     {
                         DurationWorked current = iterator.next();
@@ -177,6 +186,8 @@ public class CommentPanel
                             iterator.remove();
                         }
                     }
+                    ( (HibernateStorage) storage ).delete( comment );
+                    issue.setUpdated( new Date() );
                     duration.setIssue( null );
                 }
             };

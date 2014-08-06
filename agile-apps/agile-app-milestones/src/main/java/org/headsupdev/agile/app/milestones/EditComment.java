@@ -38,12 +38,6 @@ import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.MountPoint;
 
 import java.util.Date;
-import java.util.Iterator;
-
-
-
-import java.util.Date;
-import java.util.Iterator;
 
 /**
  * Created by Gordon Edwards on 04/08/2014.
@@ -153,7 +147,7 @@ public class EditComment
             {
                 if ( comment.getId() == itemId )
                 {
-                    create.setComment( comment.getComment() );
+                    create = comment;
                     break;
                 }
             }
@@ -175,31 +169,14 @@ public class EditComment
         public void onSubmit()
         {
             milestone = (Milestone) ( (HibernateStorage) getStorage() ).getHibernateSession().merge( milestone );
+            create = (Comment) ( (HibernateStorage) getStorage() ).getHibernateSession().merge( create );
 
             Date now = new Date();
-            Date created = new Date();
+
             if ( create.getComment() != null )
             {
                 create.setUser( EditComment.this.getSession().getUser() );
-
-                Iterator<Comment> iterator = milestone.getComments().iterator();
-                while ( iterator.hasNext() )
-                {
-                    Comment comment = iterator.next();
-                    if ( comment.getId() == itemId )
-                    {
-                        created = comment.getCreated();
-                        iterator.remove();
-                        break;
-                    }
-                }
-                create.setCreated( created );
                 create.setComment( input.getInput() );
-                ( (HibernateStorage) getStorage() ).save( create );
-                if ( !willChildConsumeComment() )
-                {
-                    milestone.addComment( create );
-                }
             }
 
             submitChild( create );

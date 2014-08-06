@@ -36,7 +36,6 @@ import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.MountPoint;
 
 import java.util.Date;
-import java.util.Iterator;
 
 
 /**
@@ -130,7 +129,7 @@ public class EditComment
             extends Form<Comment>
     {
         private TextArea input;
-        private Comment create = new Comment();
+        private Comment editedComment = new Comment();
 
         public CommentForm( String id )
         {
@@ -139,12 +138,12 @@ public class EditComment
             {
                 if ( comment.getId() == commentId )
                 {
-                    create.setComment( comment.getComment() );
+                    editedComment = comment;
                     break;
                 }
             }
 
-            setModel( new CompoundPropertyModel<Comment>( create ) );
+            setModel( new CompoundPropertyModel<Comment>( editedComment ) );
             input = new TextArea( "comment" );
             add( input );
             layoutChild( this );
@@ -161,38 +160,19 @@ public class EditComment
         public void onSubmit()
         {
             doc = (Document) ( (HibernateStorage) getStorage() ).getHibernateSession().merge( doc );
-
+            editedComment = (Comment) ( (HibernateStorage) getStorage() ).getHibernateSession().merge( editedComment );
             Date now = new Date();
-            Date created = new Date();
-            if ( create.getComment() != null )
+            if ( editedComment.getComment() != null )
             {
-                create.setUser( EditComment.this.getSession().getUser() );
-
-                Iterator<Comment> iterator = doc.getComments().iterator();
-                while ( iterator.hasNext() )
-                {
-                    Comment comment = iterator.next();
-                    if ( comment.getId() == commentId )
-                    {
-                        created = comment.getCreated();
-                        iterator.remove();
-                        break;
-                    }
-                }
-                create.setCreated( created );
-                create.setComment( input.getInput() );
-                ( (HibernateStorage) getStorage() ).save( create );
-                if ( !willChildConsumeComment() )
-                {
-                    doc.addComment( create );
-                }
+                editedComment.setUser( EditComment.this.getSession().getUser() );
+                editedComment.setComment( input.getInput() );
             }
 
-            submitChild( create );
+            submitChild( editedComment );
 
             // this line is needed by things that extend our form...
             doc.setUpdated( now );
-            getHeadsUpApplication().addEvent( getUpdateEvent( create ) );
+            getHeadsUpApplication().addEvent( getUpdateEvent( editedComment ) );
 
             setResponsePage( getPageClass( "docs/" ), getPageParameters() );
         }
