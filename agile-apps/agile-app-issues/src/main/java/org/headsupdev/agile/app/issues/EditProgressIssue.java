@@ -48,7 +48,6 @@ public class EditProgressIssue
 {
     private DurationWorked duration;
 
-
     @Override
     protected void layoutChild( Form form )
     {
@@ -77,7 +76,10 @@ public class EditProgressIssue
         form.add( update );
 
         form.add( new DateTimeWithSecondField( "day", new PropertyModel<Date>( duration, "day" ) ) );
-        create.setComment( duration.getComment().getComment() );
+        if ( duration.getComment() != null )
+        {
+            create.setComment( duration.getComment().getComment() );
+        }
         setSubmitLabel( "Progress Issue" );
     }
 
