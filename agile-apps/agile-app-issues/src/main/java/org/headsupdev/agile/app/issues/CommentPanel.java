@@ -18,10 +18,12 @@
 
 package org.headsupdev.agile.app.issues;
 
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.ResourceReference;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.image.Image;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
@@ -41,7 +43,6 @@ import org.headsupdev.agile.web.components.FormattedDateModel;
 import org.headsupdev.agile.web.components.MarkedUpTextModel;
 
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -55,8 +56,8 @@ import java.util.List;
 public class CommentPanel
         extends Panel
 {
+    private HeadsUpPage page;
     private Issue issue;
-    private IModel model;
     private List commentList;
     private Project project;
 
@@ -80,14 +81,14 @@ public class CommentPanel
         layout();
     }
 
-    public CommentPanel( String id, IModel model, Project project, List commentList, Issue issue, Storage storage )
+    public CommentPanel( String id, IModel model, Project project, List commentList, Issue issue, HeadsUpPage page )
     {
         super( id, model );
-        this.model = model;
         this.project = project;
         this.commentList = commentList;
         this.issue = issue;
-        this.storage = storage;
+        this.page = page;
+        this.storage = page.getStorage();
         layout();
     }
 
@@ -104,51 +105,31 @@ public class CommentPanel
             comment = (Comment) o;
             add( new Image( "icon", new ResourceReference( HeadsUpPage.class, "images/comment.png" ) ) );
 
-            Link edit = new Link( "editComment" )
-            {
-                @Override
-                public void onClick()
-                {
-                    getPage().getPageParameters().put( "commentId", comment.getId() );
-                    setResponsePage( EditComment.class, getPage().getPageParameters() );
-                }
-            };
+            PageParameters params = page.getProjectPageParameters();
+            params.put( "id", issue.getId() );
+            params.put( "commentId", comment.getId() );
+            Link edit = new BookmarkablePageLink( "editComment", EditComment.class, params );
+
             commentTitle.add( edit.setVisible( userHasPermission ) );
-
-            Link remove = new Link( "removeComment" )
-            {
-                @Override
-                public void onClick()
-                {
-                    comment = (Comment) ( (HibernateStorage) storage ).merge( comment );
-                    issue = (Issue) ( (HibernateStorage) storage ).merge( issue );
-
-                    commentList.remove( comment );
-
-                    Iterator<Comment> iterator = issue.getComments().iterator();
-                    while ( iterator.hasNext() )
-                    {
-                        Comment current = iterator.next();
-                        if ( comment.getId() == current.getId() )
-                        {
-                            iterator.remove();
-                            break;
-                        }
-                    }
-
-                    ( (HibernateStorage) storage ).delete( comment );
-
-                    issue.setUpdated( new Date() );
-                }
-            };
-            commentTitle.add( remove.setVisible( userHasPermission ) );
-
             commentTitle.add( new Label( "username", comment.getUser().getFullnameOrUsername() ) );
             commentTitle.add( new Label( "created", new FormattedDateModel( comment.getCreated(),
                     ( (HeadsUpSession) getSession() ).getTimeZone() ) ) );
             add( new Label( "comment", new MarkedUpTextModel( comment.getComment(), project ) )
                     .setEscapeModelStrings( false ) );
-
+            Link remove = new Link( "removeComment" )
+            {
+                @Override
+                public void onClick()
+                {
+                    Comment comm = (Comment) ( (HibernateStorage) storage ).merge( comment );
+                    issue.getComments().remove( comm );
+                    Issue iss = (Issue) ( (HibernateStorage) storage ).merge( issue );
+                    commentList.remove( comm );
+                    iss.setUpdated( new Date() );
+                    ( (HibernateStorage) storage ).delete( comm );
+                }
+            };
+            commentTitle.add( remove.setVisible( userHasPermission ) );
             workedTitle.setVisible( false );
         }
         else if ( o instanceof DurationWorked )
@@ -156,15 +137,10 @@ public class CommentPanel
             duration = (DurationWorked) o;
             add( new Image( "icon", new ResourceReference( HeadsUpPage.class, "images/worked.png" ) ) );
 
-            Link edit = new Link( "editComment" )
-            {
-                @Override
-                public void onClick()
-                {
-                    getPage().getPageParameters().put( "durationId", duration.getId() );
-                    setResponsePage( EditProgressIssue.class, getPage().getPageParameters() );
-                }
-            };
+            PageParameters params = page.getProjectPageParameters();
+            params.put( "id", issue.getId() );
+            params.put( "durationId", duration.getId() );
+            Link edit = new BookmarkablePageLink( "editComment", EditProgressIssue.class, params );
             workedTitle.add( edit.setVisible( userHasPermission ) );
 
             Link remove = new Link( "removeComment" )
@@ -172,23 +148,12 @@ public class CommentPanel
                 @Override
                 public void onClick()
                 {
-                    duration = (DurationWorked) ( (HibernateStorage) storage ).merge( duration );
-                    issue = (Issue) ( (HibernateStorage) storage ).merge( issue );
-
-                    commentList.remove( duration );
-
-                    Iterator<DurationWorked> iterator = issue.getTimeWorked().iterator();
-                    while ( iterator.hasNext() )
-                    {
-                        DurationWorked current = iterator.next();
-                        if ( current.getId() == duration.getId() )
-                        {
-                            iterator.remove();
-                        }
-                    }
-                    ( (HibernateStorage) storage ).delete( comment );
+                    DurationWorked dur = (DurationWorked) ( (HibernateStorage) storage ).merge( duration );
+                    issue.getTimeWorked().remove( dur );
                     issue.setUpdated( new Date() );
-                    duration.setIssue( null );
+                    commentList.remove( dur );
+                    dur.setIssue( null );
+                    ( (HibernateStorage) storage ).delete( dur );
                 }
             };
             workedTitle.add( remove.setVisible( userHasPermission ) );

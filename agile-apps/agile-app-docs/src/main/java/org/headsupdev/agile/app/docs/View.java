@@ -142,9 +142,12 @@ public class View
         } );
         details.add( new ListView<Attachment>( "attachments", attachmentList )
         {
+
+            private Attachment attachment;
+
             protected void populateItem( ListItem<Attachment> listItem )
             {
-                final Attachment attachment = listItem.getModelObject();
+                attachment = listItem.getModelObject();
                 listItem.add( new Label( "username", attachment.getUser().getFullnameOrUsername() ) );
                 listItem.add( new Label( "created", new FormattedDateModel( attachment.getCreated(),
                         ( (HeadsUpSession) getSession() ).getTimeZone() ) ) );
@@ -162,25 +165,11 @@ public class View
                     @Override
                     public void onClick()
                     {
-                        Iterator<Attachment> iterator = attachmentList.iterator();
-                        while(iterator.hasNext())
-                        {
-                            if (iterator.next().getId() == attachment.getId())
-                            {
-                                iterator.remove();
-                            }
-                        }
-                        iterator = doc.getAttachments().iterator();
-                        while(iterator.hasNext())
-                        {
-                            if ( iterator.next().getId() == attachment.getId() )
-                            {
-                                iterator.remove();
-                            }
-
-                        }
-                        // ((HibernateStorage) getStorage() ).delete( attachment );
+                        attachment = (Attachment) ( (HibernateStorage) getStorage() ).getHibernateSession().merge( attachment );
                         doc = (Document) ( (HibernateStorage) getStorage() ).getHibernateSession().merge( doc );
+                        attachmentList.remove( attachment );
+                        doc.getAttachments().remove( attachment );
+                        ((HibernateStorage) getStorage() ).delete( attachment );
                         attachment.getFile( getStorage() ).delete();
                     }
                 } );
@@ -212,7 +201,7 @@ public class View
         {
             protected void populateItem( ListItem<Comment> listItem )
             {
-                listItem.add( new CommentPanel( "comment", listItem.getModel(), getProject(), commentList, doc, getStorage() ) );
+                listItem.add( new CommentPanel( "comment", listItem.getModel(), getProject(), commentList, doc, (HeadsUpPage) getPage() ) );
             }
         } );
     }

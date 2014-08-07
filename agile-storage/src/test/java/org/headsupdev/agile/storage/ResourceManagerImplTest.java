@@ -60,7 +60,13 @@ public class ResourceManagerImplTest
         issue.setIncludeInInitialEstimates( false );        // set include in OriginalEstimates to false
 
         // set some worked time against issue creation -2 days
-        DurationWorked durationWorked = new DurationWorked();
+        DurationWorked durationWorked = new DurationWorked(){
+            @Override
+            public long getId()
+            {
+                return 1;
+            }
+        };
         durationWorked.setWorked( new Duration( 1 ) );
         durationWorked.setUpdatedRequired( new Duration( 3 ) );
         calendar.setTime( issue.getCreated() );
@@ -71,7 +77,13 @@ public class ResourceManagerImplTest
         issue.getTimeWorked().add( durationWorked );
 
         // set some worked time against issue creation  +2 days
-        durationWorked = new DurationWorked();
+        durationWorked = new DurationWorked(){
+            @Override
+            public long getId()
+            {
+                return 2;
+            }
+        };
         durationWorked.setWorked( new Duration( 2 ) );
         durationWorked.setUpdatedRequired( new Duration( 2 ) );
         calendar.setTime( issue.getCreated() );
@@ -139,7 +151,13 @@ public class ResourceManagerImplTest
         issue.setIncludeInInitialEstimates( true );         // set include in OriginalEstimates to true
 
         // set some worked time against issue creation -2 days
-        DurationWorked durationWorked = new DurationWorked();
+        DurationWorked durationWorked = new DurationWorked(){
+            @Override
+            public long getId()
+            {
+                return 1;
+            }
+        };
         durationWorked.setWorked( new Duration( 1 ) );
         durationWorked.setUpdatedRequired( new Duration( 3 ) );
         calendar.setTime( issue.getCreated() );
@@ -150,7 +168,13 @@ public class ResourceManagerImplTest
         issue.getTimeWorked().add( durationWorked );
 
         // set some worked time against issue creation +2 days
-        durationWorked = new DurationWorked();
+        durationWorked = new DurationWorked(){
+            @Override
+            public long getId()
+            {
+                return 2;
+            }
+        };
         durationWorked.setWorked( new Duration( 2 ) );
         durationWorked.setUpdatedRequired( new Duration( 2 ) );
         calendar.setTime( issue.getCreated() );

@@ -51,6 +51,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -160,27 +161,9 @@ public class ViewIssue
                     public void onClick()
                     {
                         attachment = (Attachment) ( (HibernateStorage) getStorage() ).getHibernateSession().merge( attachment );
-                        Iterator<Attachment> iterator = attachmentList.iterator();
-                        while ( iterator.hasNext() )
-                        {
-                            if ( iterator.next().getId() == attachment.getId() )
-                            {
-                                iterator.remove();
-                            }
-                        }
-                        iterator = issue.getAttachments().iterator();
-                        while ( iterator.hasNext() )
-                        {
-                            if ( iterator.next().getId() == attachment.getId() )
-                            {
-                                iterator.remove();
-                            }
-
-                        }
-                        //line below causes hibernate exception
-
                         issue = (Issue) ( (HibernateStorage) getStorage() ).getHibernateSession().merge( issue );
-
+                        attachmentList.remove( attachment );
+                        issue.getAttachments().remove( attachment );
                         ((HibernateStorage) getStorage() ).delete( attachment );
                         attachment.getFile( getStorage() ).delete();
 
@@ -257,7 +240,7 @@ public class ViewIssue
         {
             protected void populateItem( ListItem listItem )
             {
-                CommentPanel panel = new CommentPanel( "comment", listItem.getModel(), getProject(), commentList, issue, getStorage() );
+                CommentPanel panel = new CommentPanel( "comment", listItem.getModel(), getProject(), commentList, issue, (HeadsUpPage) getPage() );
                 listItem.add( panel );
             }
         } );
