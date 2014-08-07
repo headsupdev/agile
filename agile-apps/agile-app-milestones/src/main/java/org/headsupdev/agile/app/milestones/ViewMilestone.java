@@ -23,6 +23,7 @@ import org.apache.wicket.ResourceReference;
 import org.apache.wicket.markup.html.CSSPackageResource;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.image.Image;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.link.ResourceLink;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -119,15 +120,11 @@ public class ViewMilestone
                 listItem.add( new Label( "created", new FormattedDateModel( comment.getCreated(),
                         ( (HeadsUpSession) getSession() ).getTimeZone() ) ) );
 
-                Link edit = new Link( "editComment" )
-                {
-                    @Override
-                    public void onClick()
-                    {
-                        getPage().getPageParameters().put( "commentId", comment.getId() );
-                        setResponsePage( EditComment.class, getPage().getPageParameters() );
-                    }
-                };
+                PageParameters params = page.getProjectPageParameters();
+                params.put( "id", milestone.getName() );
+                params.put( "commentId", comment.getId() );
+                Link edit = new BookmarkablePageLink( "editComment", EditComment.class, params );
+
                 listItem.add( edit.setVisible( userHasPermission ) );
 
                 Link remove = new Link( "removeComment" )
@@ -135,21 +132,12 @@ public class ViewMilestone
                     @Override
                     public void onClick()
                     {
-                        comment = (Comment) ( (HibernateStorage) getStorage() ).getHibernateSession().merge( comment );
-                        milestone = (Milestone) ( (HibernateStorage) getStorage() ).getHibernateSession().merge( milestone );
-                        commentList.remove( comment );
-
-                        Iterator<Comment> iterator = milestone.getComments().iterator();
-                        while ( iterator.hasNext() )
-                        {
-                            Comment current = iterator.next();
-                            if ( comment.getId() == current.getId() )
-                            {
-                                iterator.remove();
-                            }
-                        }
-                        ( (HibernateStorage) getStorage() ).delete( comment );
-                        milestone.setUpdated( new Date() );
+                        Comment comm = (Comment) ( (HibernateStorage) getStorage() ).merge( comment );
+                        milestone.getComments().remove( comm );
+                        Milestone mile = (Milestone) ( (HibernateStorage) getStorage() ).merge( milestone );
+                        commentList.remove( comm );
+                        mile.setUpdated( new Date() );
+                        ( (HibernateStorage) getStorage() ).delete( comm );
                     }
                 };
                 listItem.add( remove.setVisible( userHasPermission ) );

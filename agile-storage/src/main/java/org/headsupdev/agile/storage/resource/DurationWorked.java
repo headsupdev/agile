@@ -178,4 +178,20 @@ public class DurationWorked
     {
         return "worked " + worked + " on " + day;
     }
+
+    public boolean equals( Object o )
+    {
+        return o instanceof DurationWorked && equals( (DurationWorked) o );
+    }
+
+    public boolean equals( DurationWorked d )
+    {
+        return d.getId() == id;
+    }
+
+    public int hashCode()
+    {
+        return ( (Long) id ).hashCode();
+    }
+
 }

@@ -18,10 +18,12 @@
 
 package org.headsupdev.agile.app.docs;
 
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.ResourceReference;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.image.Image;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
@@ -41,7 +43,6 @@ import org.headsupdev.agile.web.components.FormattedDateModel;
 import org.headsupdev.agile.web.components.MarkedUpTextModel;
 
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -55,6 +56,7 @@ import java.util.List;
 public class CommentPanel
         extends Panel
 {
+    private HeadsUpPage page;
     private Document doc;
     private IModel model;
     private List commentList;
@@ -79,13 +81,14 @@ public class CommentPanel
         layout();
     }
 
-    public CommentPanel( String id, IModel model, Project project, List commentList, Document doc, Storage storage )
+    public CommentPanel( String id, IModel model, Project project, List commentList, Document doc, HeadsUpPage page )
     {
         super( id, model );
         this.project = project;
         this.commentList = commentList;
         this.doc = doc;
-        this.storage = storage;
+        this.page = page;
+        this.storage = page.getStorage();
         layout();
     }
 
@@ -102,16 +105,11 @@ public class CommentPanel
             comment = (Comment) o;
             add( new Image( "icon", new ResourceReference( HeadsUpPage.class, "images/comment.png" ) ) );
 
+            PageParameters params = page.getProjectPageParameters();
+            params.put( "page", doc.getName() );
+            params.put( "commentId", comment.getId() );
+            Link edit = new BookmarkablePageLink( "editComment", EditComment.class, params );
 
-            Link edit = new Link( "editComment" )
-            {
-                @Override
-                public void onClick()
-                {
-                    getPage().getPageParameters().put( "commentId", comment.getId() );
-                    setResponsePage( EditComment.class, getPage().getPageParameters() );
-                }
-            };
             commentTitle.add( edit.setVisible( userHasPermission ) );
 
             remove = new Link( "removeComment" )
@@ -119,23 +117,12 @@ public class CommentPanel
                 @Override
                 public void onClick()
                 {
-                    comment = (Comment) ( (HibernateStorage) storage ).merge( comment );
-                    doc = (Document) ( (HibernateStorage) storage ).merge( doc );
-
-
-                    commentList.remove( comment );
-
-                    Iterator<Comment> iterator = doc.getComments().iterator();
-                    while ( iterator.hasNext() )
-                    {
-                        Comment current = iterator.next();
-                        if ( comment.getId() == current.getId() )
-                        {
-                            iterator.remove();
-                        }
-                    }
-                    ( (HibernateStorage) storage ).delete( comment );
-                    doc.setUpdated( new Date() );
+                    Comment comm = (Comment) ( (HibernateStorage) storage ).merge( comment );
+                    doc.getComments().remove( comm );
+                    Document d = (Document) ( (HibernateStorage) storage ).merge( doc );
+                    commentList.remove( comm );
+                    d.setUpdated( new Date() );
+                    ( (HibernateStorage) storage ).delete( comm );
                 }
             };
             commentTitle.add( remove.setVisible( userHasPermission ) );
