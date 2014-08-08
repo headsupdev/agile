@@ -34,6 +34,7 @@ import org.headsupdev.agile.storage.issues.Milestone;
 import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.components.DateTimeWithTimeZoneField;
 import org.headsupdev.agile.web.components.IdPatternValidator;
+import org.headsupdev.agile.web.components.OnePressButton;
 
 import java.util.Date;
 
@@ -85,7 +86,7 @@ public class EditMilestoneForm
             }
 
         };
-
+        form.add( new OnePressButton( "submitMilestone" ) );
         layout( form );
         add( form );
     }

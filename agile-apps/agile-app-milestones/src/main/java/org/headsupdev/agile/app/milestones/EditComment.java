@@ -36,6 +36,7 @@ import org.headsupdev.agile.storage.issues.Milestone;
 import org.headsupdev.agile.web.BookmarkableMenuLink;
 import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.MountPoint;
+import org.headsupdev.agile.web.components.OnePressButton;
 
 import java.util.Date;
 
@@ -157,7 +158,7 @@ public class EditComment
             add( input );
             layoutChild( this );
 
-            add( new Button( "submit", new Model<String>()
+            add( new OnePressButton( "submit", new Model<String>()
             {
                 public String getObject()
                 {

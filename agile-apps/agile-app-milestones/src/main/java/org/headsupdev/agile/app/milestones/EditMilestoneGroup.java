@@ -27,6 +27,7 @@ import org.headsupdev.agile.storage.issues.MilestoneGroup;
 import org.headsupdev.agile.web.BookmarkableMenuLink;
 import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.MountPoint;
+import org.headsupdev.agile.web.components.OnePressButton;
 
 /**
  * Milestone group edit page
@@ -74,7 +75,7 @@ public class EditMilestoneGroup
                 getHeadsUpApplication().addEvent( new UpdateMilestoneGroupEvent( finalGroup, finalGroup.getProject(),
                                                                         EditMilestoneGroup.this.getSession().getUser() ) );
             }
-        } );
+        }.add( new OnePressButton( "submitGroup" ) ) );
     }
 
     @Override
