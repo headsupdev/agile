@@ -40,7 +40,7 @@ public class MilestonePanel
         this.milestone = milestone;
 
         layout( milestone.getName(), milestone.getDescription(), milestone.getProject(), milestone.getCreated(), milestone.getUpdated(),
-                milestone.getStartDate(), milestone.getDueDate(), milestone.getCompletedDate() );
+                milestone.getStartDate(), milestone.getDueDate(), milestone.getCompletedDate(), milestone.getGroup() );
     }
 
     public Milestone getMilestone()

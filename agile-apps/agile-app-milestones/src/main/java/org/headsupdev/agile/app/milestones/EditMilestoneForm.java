@@ -131,7 +131,7 @@ public class EditMilestoneForm
             }
         } ) );
         MilestoneGroupsDAO dao = new MilestoneGroupsDAO();
-        form.add( new DropDownChoice<MilestoneGroup>( "group", dao.findAll( owner.getProject() ) ) );
+        form.add( new DropDownChoice<MilestoneGroup>( "group", dao.findAll( owner.getProject() ) ).setNullValid( true ) );
 
         form.add( new TextArea( "description" ) );
     }

@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -23,6 +23,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.headsupdev.agile.api.Manager;
 import org.headsupdev.agile.api.Project;
 import org.headsupdev.agile.storage.HibernateStorage;
+import org.headsupdev.agile.storage.issues.MilestoneGroup;
 import org.headsupdev.agile.storage.resource.DurationWorked;
 import org.headsupdev.agile.storage.issues.Issue;
 import org.headsupdev.agile.storage.resource.Velocity;
@@ -52,7 +53,7 @@ abstract class IssueSetPanel
     }
 
     public void layout( String name, String description, Project project, Date created, Date updated,
-                          Date start, Date due, Date completed )
+                          Date start, Date due, Date completed, MilestoneGroup group )
     {
         add( new Label( "type", getType() ) );
         add( new Label( "id", name ) );
@@ -66,7 +67,7 @@ abstract class IssueSetPanel
         int open = getOpenIssues().size();
         int reopened = getReOpenedIssues().size();
         int percent = (int) ( getCompleteness() * 100 );
-        add( new Label( "issues", reopened == 0 ? String.valueOf( total )  : String.format( "%d (%d reopened)", total, reopened ) ) );
+        add( new Label( "issues", reopened == 0 ? String.valueOf( total ) : String.format( "%d (%d reopened)", total, reopened ) ) );
         add( new Label( "open", String.valueOf( open ) ) );
 
         String percentStr = "";
@@ -79,6 +80,19 @@ abstract class IssueSetPanel
         add( new Label( "due", new FormattedDateModel( due,
                 ( (HeadsUpSession) getSession() ).getTimeZone() ) ).add( new MilestoneStatusModifier( "due", due, completed ) ) );
         add( new Label( "completed", new FormattedDateModel( completed, ( (HeadsUpSession) getSession() ).getTimeZone() ) ) );
+
+        Label groupHeader = new Label("groupHeader", "group");
+        if ( group != null )
+        {
+            groupHeader.setVisible( true );
+            add( new Label( "group", group.getName() ) );
+        }
+        else
+        {
+            groupHeader.setVisible( false );
+            add( new Label( "group" ).setVisible( false ) );
+        }
+        add( groupHeader );
 
         add( new PercentagePanel( "bar", percent ) );
 
