@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -36,6 +36,7 @@ import org.headsupdev.agile.api.PropertyTree;
 import org.headsupdev.agile.api.Project;
 import org.headsupdev.agile.storage.StoredProject;
 import org.headsupdev.agile.web.MountPoint;
+import org.headsupdev.agile.web.components.OnePressButton;
 
 /**
  * Admin of the notifiers used for HeadsUp events
@@ -117,7 +118,7 @@ public class NotifiersConfiguration
                     }
                 }
             } );
-
+            add( new OnePressButton( "submitEdit" ) );
             add( new Button( "remove" )
             {
                 public void onSubmit()
