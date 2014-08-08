@@ -19,6 +19,8 @@
 package org.headsupdev.agile.web.components.filters;
 
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.CheckBox;
@@ -43,11 +45,11 @@ import java.util.*;
  * @since 2.0
  */
 public abstract class ApplicationFilterPanel
-    extends Panel
+        extends Panel
 {
     private String filterId;
     private List<String> allApps;
-    final Map<String,Boolean> appsVisible = new HashMap<String,Boolean>();
+    final Map<String, Boolean> appsVisible = new HashMap<String, Boolean>();
 
     public ApplicationFilterPanel( String id, String filterId )
     {
@@ -93,7 +95,8 @@ public abstract class ApplicationFilterPanel
         final Form filterForm = new Form( "filterform" )
         {
             @Override
-            protected void onSubmit() {
+            protected void onSubmit()
+            {
                 super.onSubmit();
 
                 saveFilters();

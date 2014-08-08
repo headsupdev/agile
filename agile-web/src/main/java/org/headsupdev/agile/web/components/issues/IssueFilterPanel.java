@@ -18,24 +18,26 @@
 
 package org.headsupdev.agile.web.components.issues;
 
-import org.headsupdev.agile.api.User;
-import org.headsupdev.agile.web.HeadsUpSession;
-import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.markup.html.form.*;
-import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.model.Model;
+import org.apache.wicket.markup.html.form.*;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.Model;
+import org.headsupdev.agile.api.User;
+import org.headsupdev.agile.web.HeadsUpSession;
 import org.headsupdev.agile.web.components.FilterBorder;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * A filter panel for managing the filtering of issues.
@@ -44,7 +46,8 @@ import java.util.LinkedList;
  * @version $Id$
  * @since 1.0
  */
-public class IssueFilterPanel extends Panel
+public class IssueFilterPanel
+        extends Panel
 {
     // TODO read these from a current set of values in the session/user pref map...
     private boolean showStatusNew = true;
@@ -59,7 +62,8 @@ public class IssueFilterPanel extends Panel
 
     private User user;
 
-    public IssueFilterPanel( String id, final User user ) {
+    public IssueFilterPanel( String id, final User user )
+    {
         super( id );
 
         this.user = user;
@@ -131,7 +135,8 @@ public class IssueFilterPanel extends Panel
                 listItem.add( cell );
 
                 String label = "all";
-                switch ( value ) {
+                switch ( value )
+                {
                     case 1:
                         label = "assigned to me";
                         break;
@@ -215,23 +220,37 @@ public class IssueFilterPanel extends Panel
     {
         List<Integer> ret = new LinkedList<Integer>();
         if ( showStatusNew )
+        {
             ret.add( 210 );
+        }
         if ( showStatusFeedback )
+        {
             ret.add( 220 );
+        }
         if ( showStatusAssigned )
+        {
             ret.add( 230 );
+        }
         if ( showStatusReopened )
+        {
             ret.add( 240 );
+        }
         if ( showStatusInProgress )
+        {
             ret.add( 245 );
+        }
         if ( showStatusResolved )
+        {
             ret.add( 250 );
+        }
         if ( showStatusClosed )
+        {
             ret.add( 260 );
+        }
 
         return ret;
     }
-    
+
     public Criterion getStatusCriterion()
     {
         if ( getStatuses().size() > 0 )
@@ -244,12 +263,15 @@ public class IssueFilterPanel extends Panel
         }
     }
 
-    public int getAssignments() {
+    public int getAssignments()
+    {
         return assigns;
     }
 
-    public Criterion getAssignmentCriterion() {
-        switch ( getAssignments() ) {
+    public Criterion getAssignmentCriterion()
+    {
+        switch ( getAssignments() )
+        {
             case 1:
                 return Restrictions.eq( "assignee.username",
                         ( (HeadsUpSession) org.apache.wicket.Session.get() ).getUser().getUsername() );
