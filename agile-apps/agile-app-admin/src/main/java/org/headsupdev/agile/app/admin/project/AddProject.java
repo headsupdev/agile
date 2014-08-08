@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2013 Heads Up Development Ltd.
+ * Copyright 2009-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -18,37 +18,39 @@
 
 package org.headsupdev.agile.app.admin.project;
 
-import org.apache.maven.scm.AbstractScmVersion;
 import org.apache.maven.scm.ScmBranch;
-import org.apache.maven.scm.ScmVersion;
-import org.apache.wicket.markup.html.CSSPackageResource;
-import org.headsupdev.support.java.StringUtil;
-import org.headsupdev.agile.security.permission.AdminPermission;
-import org.headsupdev.agile.api.Permission;
-import org.headsupdev.agile.api.Project;
-import org.headsupdev.agile.api.Manager;
-import org.headsupdev.agile.scm.HeadsUpScmManager;
-import org.headsupdev.agile.storage.*;
-import org.headsupdev.agile.app.admin.AdminApplication;
-import org.headsupdev.agile.web.HeadsUpPage;
-import org.headsupdev.agile.web.MountPoint;
-
 import org.apache.maven.scm.ScmFileSet;
+import org.apache.maven.scm.ScmVersion;
 import org.apache.maven.scm.command.checkout.CheckOutScmResult;
 import org.apache.maven.scm.repository.ScmRepository;
+import org.apache.wicket.PageParameters;
+import org.apache.wicket.markup.html.CSSPackageResource;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.*;
 import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.model.Model;
+import org.headsupdev.agile.api.Manager;
+import org.headsupdev.agile.api.Permission;
+import org.headsupdev.agile.api.Project;
+import org.headsupdev.agile.app.admin.AdminApplication;
+import org.headsupdev.agile.scm.HeadsUpScmManager;
+import org.headsupdev.agile.security.permission.AdminPermission;
+import org.headsupdev.agile.storage.*;
+import org.headsupdev.agile.web.HeadsUpPage;
+import org.headsupdev.agile.web.MountPoint;
+import org.headsupdev.agile.web.components.OnePressButton;
 import org.headsupdev.support.java.FileUtil;
+import org.headsupdev.support.java.StringUtil;
 import org.wicketstuff.animator.Animator;
 import org.wicketstuff.animator.MarkupIdModel;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Project importer
@@ -57,9 +59,9 @@ import java.util.*;
  * @version $Id$
  * @since 1.0
  */
-@MountPoint( "add-project" )
+@MountPoint("add-project")
 public class AddProject
-    extends HeadsUpPage
+        extends HeadsUpPage
 {
     static private HeadsUpScmManager scmManager = HeadsUpScmManager.getInstance();
 
@@ -84,8 +86,10 @@ public class AddProject
         add( detail = new WebMarkupContainer( "detail" ) );
         detail.setVisible( false ).setOutputMarkupPlaceholderTag( true );
 
-        confirmForm = new Form( "projects" ) {
-            protected void onSubmit() {
+        confirmForm = new Form( "projects" )
+        {
+            protected void onSubmit()
+            {
                 if ( projectTree.size() == 0 )
                 {
                     return;
@@ -110,15 +114,19 @@ public class AddProject
         };
         confirmForm.add( new ProjectImportListView( "projects", projectTree ) );
         confirmForm.add( typeLabel = new Label( "type", "" ) );
-        confirmForm.add( new Button( "cancel" ) {
-            public void onSubmit() {
+        confirmForm.add( new Button( "cancel" )
+        {
+            public void onSubmit()
+            {
                 cancelImport( working );
             }
         }.setDefaultFormProcessing( false ) );
+        confirmForm.add( new OnePressButton( "submitConfirm" ) );
         add( confirmForm.setVisible( false ) );
     }
 
-    class ImportForm extends Form
+    class ImportForm
+            extends Form
     {
         final List<String> providers = HeadsUpScmManager.getInstance().getScmIds();
 
@@ -138,7 +146,7 @@ public class AddProject
             add( new TextField( "username" ).setRequired( false ) );
             add( new PasswordTextField( "password" ).setRequired( false ) );
             add( new TextField( "scmBranch" ).setRequired( false ) );
-
+            add( new OnePressButton( "submitProject" ) );
             WebMarkupContainer advanced = new WebMarkupContainer( "advanced" );
             advanced.setMarkupId( "advanced" );
             WebMarkupContainer button = new WebMarkupContainer( "advbutton" );
@@ -251,9 +259,12 @@ public class AddProject
         {
             StoredProject root;
 
-            try {
+            try
+            {
                 root = importer.importProjects( checkoutDir, null, scmUrl, username, password );
-            } catch ( IllegalStateException e ) {
+            }
+            catch ( IllegalStateException e )
+            {
                 cancelImport( checkoutDir );
                 return;
             }
@@ -268,6 +279,7 @@ public class AddProject
             setProject( root );
             checkoutDir.renameTo( getStorage().getWorkingDirectory( root ) );
         }
+
         public String getProvider()
         {
             return provider;
@@ -288,19 +300,23 @@ public class AddProject
             this.scm = scm;
         }
 
-        public String getUsername() {
+        public String getUsername()
+        {
             return username;
         }
 
-        public void setUsername(String username) {
+        public void setUsername( String username )
+        {
             this.username = username;
         }
 
-        public String getPassword() {
+        public String getPassword()
+        {
             return password;
         }
 
-        public void setPassword(String password) {
+        public void setPassword( String password )
+        {
             this.password = password;
         }
     }
@@ -331,7 +347,8 @@ public class AddProject
             for ( Project child : root.getChildProjects() )
             {
                 Project duplicate = testForDuplicates( child, passed );
-                if ( duplicate != null ) {
+                if ( duplicate != null )
+                {
                     return duplicate;
                 }
 
@@ -424,7 +441,8 @@ public class AddProject
 
     }
 
-    public String getCheckoutError() {
+    public String getCheckoutError()
+    {
         return scmError;
     }
 }
