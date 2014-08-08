@@ -102,21 +102,25 @@ public abstract class ApplicationFilterPanel
         filter.add( filterForm.setOutputMarkupId( true ) );
         Button cancelButton = new Button( "cancelbutton" );
         filterForm.add( cancelButton );
-        cancelButton.add( new AttributeModifier( "onclick", true, new Model<String>() {
-            public String getObject() {
+        cancelButton.add( new AttributeModifier( "onclick", true, new Model<String>()
+        {
+            public String getObject()
+            {
                 return "filterbuttonAnimator.reverse();";
             }
         } ) );
 
         Button applyButton = new Button( "applybutton" );
         filterForm.add( applyButton );
-        applyButton.add( new AttributeModifier( "onclick", true, new Model<String>() {
-            public String getObject() {
+        applyButton.add( new AttributeModifier( "onclick", true, new Model<String>()
+        {
+            public String getObject()
+            {
                 return "filterbuttonAnimator.reverse();";
             }
         } ) );
 
-        filterForm.add( new ListView<String>( "applist", allApps )
+        final ListView<String> appListView = new ListView<String>( "applist", allApps )
         {
             protected void populateItem( final ListItem<String> listItem )
             {
@@ -137,7 +141,8 @@ public abstract class ApplicationFilterPanel
                     }
                 } ) );
             }
-        } );
+        };
+        filterForm.add( appListView.setOutputMarkupId( true ) );
     }
 
     public abstract void onFilterUpdated();

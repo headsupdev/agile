@@ -21,7 +21,7 @@
 <wicket:panel>
 
   <div wicket:id="filter">
-    <form wicket:id="filterform">
+    <form wicket:id="filterform" name="appFilterForm">
       <table class="listing">
         <tr><th colspan="2">Application Filter</th></tr>
         <tr><td colspan="2">
@@ -29,12 +29,28 @@
              <span class="filter-item"><input type="checkbox" wicket:id="app-check" />
              <span wicket:id="app-label">type</span></span>
           </div>
+          <input type="button" value="All" onclick="checkAll(true);"/>
+          <input type="button" value="None" onclick="checkAll(false);"/>
         </td></tr>
         <tr><td class="buttons" colspan="2">
           <input type="submit" value="Apply" wicket:id="applybutton" />
           <input type="reset" value="Cancel" wicket:id="cancelbutton" />
         </td></tr>
       </table>
+      <script type="text/javascript">
+          function checkAll(toggle)
+          {
+            var checkboxes = new Array();
+            checkboxes = document.forms['appFilterForm'].getElementsByTagName('input');
+            for (var i = 0; i < checkboxes.length; i++)
+            {
+              if (checkboxes[i].type === 'checkbox')
+              {
+                checkboxes[i].checked = toggle;
+              }
+            }
+          }
+        </script>
     </form>
   </div>
 

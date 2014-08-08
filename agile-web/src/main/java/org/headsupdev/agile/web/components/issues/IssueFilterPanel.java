@@ -67,7 +67,7 @@ public class IssueFilterPanel extends Panel
         FilterBorder filter = new FilterBorder( "filter" );
         add( filter );
 
-        Form<IssueFilterPanel> filterForm = new Form<IssueFilterPanel>( "filterform" )
+        final Form<IssueFilterPanel> filterForm = new Form<IssueFilterPanel>( "filterform" )
         {
             @Override
             protected void onSubmit()
@@ -77,42 +77,52 @@ public class IssueFilterPanel extends Panel
                 saveFilters();
             }
         };
-        filter.add( filterForm );
+        filter.add( filterForm.setMarkupId( "filterForm" ).setOutputMarkupId( true ) );
         Button cancelButton = new Button( "cancelbutton" );
         filterForm.add( cancelButton );
-        cancelButton.add( new AttributeModifier( "onclick", true, new Model<String>() {
-            public String getObject() {
+        cancelButton.add( new AttributeModifier( "onclick", true, new Model<String>()
+        {
+            public String getObject()
+            {
                 return "filterbuttonAnimator.reverse();";
             }
         } ) );
 
         Button applyButton = new Button( "applybutton" );
         filterForm.add( applyButton );
-        applyButton.add( new AttributeModifier( "onclick", true, new Model<String>() {
-            public String getObject() {
+        applyButton.add( new AttributeModifier( "onclick", true, new Model<String>()
+        {
+            public String getObject()
+            {
                 return "filterbuttonAnimator.reverse();";
             }
         } ) );
 
         filterForm.setModel( new CompoundPropertyModel<IssueFilterPanel>( this ) );
-        filterForm.add( new CheckBox( "showStatusNew" ) );
-        filterForm.add( new CheckBox( "showStatusFeedback" ) );
-        filterForm.add( new CheckBox( "showStatusAssigned" ) );
-        filterForm.add( new CheckBox( "showStatusReopened" ) );
-        filterForm.add( new CheckBox( "showStatusInProgress" ) );
-        filterForm.add( new CheckBox( "showStatusResolved" ) );
-        filterForm.add( new CheckBox( "showStatusClosed" ) );
+        final CheckBox[] checkboxes = new CheckBox[]{new CheckBox( "showStatusNew" ), new CheckBox( "showStatusFeedback" ),
+                new CheckBox( "showStatusAssigned" ), new CheckBox( "showStatusReopened" ), new CheckBox( "showStatusInProgress" ),
+                new CheckBox( "showStatusResolved" ), new CheckBox( "showStatusClosed" )};
+
+        for ( CheckBox checkbox : checkboxes )
+        {
+            filterForm.add( checkbox );
+        }
 
         RadioGroup assignments = new RadioGroup( "assigns" );
         filterForm.add( assignments );
 
-        ListView assignment = new ListView<Integer>( "assignment", Arrays.asList( 1, 2, 3, 0 ) ) {
-            protected void populateItem( final ListItem<Integer> listItem ) {
+        ListView assignment = new ListView<Integer>( "assignment", Arrays.asList( 1, 2, 3, 0 ) )
+        {
+            protected void populateItem( final ListItem<Integer> listItem )
+            {
                 final int value = listItem.getModelObject();
                 WebMarkupContainer cell = new WebMarkupContainer( "cell" );
-                cell.add( new AttributeModifier( "colspan", new Model<String>() {
-                    public String getObject() {
-                        if ( listItem.getIndex() == 3 ) {
+                cell.add( new AttributeModifier( "colspan", new Model<String>()
+                {
+                    public String getObject()
+                    {
+                        if ( listItem.getIndex() == 3 )
+                        {
                             return "1";
                         }
                         return "2";

@@ -16,21 +16,26 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<html>
+<html xmlns="http://www.w3.org/1999/html">
   <body>
     <wicket:panel>
       <div wicket:id="filter">
-        <form wicket:id="filterform">
+        <form wicket:id="filterform" name = "filterform">
           <table class="vertical">
             <tr>
               <th>Status</th>
-              <td><input type="checkbox" wicket:id="showStatusNew" />new</td>
-              <td><input type="checkbox" wicket:id="showStatusFeedback" />feedback</td>
-              <td><input type="checkbox" wicket:id="showStatusAssigned" />assigned</td>
-              <td><input type="checkbox" wicket:id="showStatusReopened" />reopened</td>
-              <td><input type="checkbox" wicket:id="showStatusInProgress" />in progress</td>
-              <td><input type="checkbox" wicket:id="showStatusResolved" />resolved</td>
-              <td><input type="checkbox" wicket:id="showStatusClosed" />closed</td>
+              <td><input type="checkbox" wicket:id="showStatusNew"/>new</td>
+              <td><input type="checkbox" wicket:id="showStatusFeedback"/>feedback</td>
+              <td><input type="checkbox" wicket:id="showStatusAssigned"/>assigned</td>
+              <td><input type="checkbox" wicket:id="showStatusReopened"/>reopened</td>
+              <td><input type="checkbox" wicket:id="showStatusInProgress"/>in progress</td>
+              <td><input type="checkbox" wicket:id="showStatusResolved"/>resolved</td>
+              <td><input type="checkbox" wicket:id="showStatusClosed"/>closed</td>
+              <td>
+                <input type="button" value="All" onclick="checkAll(true);"/>
+                <input type="button" value="None" onclick="checkAll(false);"/>
+
+              </td>
             </tr>
             <tr wicket:id="assigns">
               <th>Assignment</th>
@@ -41,12 +46,26 @@
                 </td>
               </wicket:container>
             </tr>
-            <tr><td colspan="8" class="buttons">
+            <tr><td colspan="9" class="buttons">
               <input type="submit" value="Apply" wicket:id="applybutton" />
               <input type="reset" value="Cancel" wicket:id="cancelbutton" />
             </td></tr>
           </table>
         </form>
+        <script type="text/javascript">
+          function checkAll(toggle)
+          {
+            var checkboxes = new Array();
+            checkboxes = document.forms['filterform'].getElementsByTagName('input');
+            for (var i = 0; i < checkboxes.length; i++)
+            {
+              if (checkboxes[i].type === 'checkbox')
+              {
+                checkboxes[i].checked = toggle;
+              }
+            }
+          }
+        </script>
       </div>
     </wicket:panel>
   </body>
