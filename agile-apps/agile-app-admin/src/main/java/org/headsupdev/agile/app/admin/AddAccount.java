@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -34,6 +34,7 @@ import org.headsupdev.agile.api.Permission;
 import org.headsupdev.agile.api.User;
 import org.headsupdev.agile.storage.StoredUser;
 import org.headsupdev.agile.storage.MemberRole;
+import org.headsupdev.agile.web.components.OnePressButton;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -97,6 +98,7 @@ public class AddAccount
             add( pass2.setRequired( true ) );
 
             add( new EqualPasswordInputValidator( pass, pass2 ) );
+            add( new OnePressButton( "submitUser" ) );
         }
 
         public void onSubmit()

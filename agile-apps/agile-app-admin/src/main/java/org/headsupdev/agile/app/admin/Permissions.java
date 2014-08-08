@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -33,9 +33,8 @@ import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.util.string.Strings;
+import org.headsupdev.agile.web.components.OnePressButton;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.headsupdev.agile.web.components.StripedListView;
@@ -124,6 +123,7 @@ public class Permissions
             Link add = new BookmarkablePageLink( "addrole", AddRole.class );
             add.add( new Image( "add-icon", new ResourceReference( HeadsUpPage.class, "images/add.png" ) ) );
             add( add );
+            add ( new OnePressButton( "userRolesSubmit" ) );
 
             add( new StripedListView<User>( "userlist", users )
             {
@@ -266,6 +266,7 @@ public class Permissions
                     listItem.add( group );
                 }
             } );
+            add (new OnePressButton( "rolePermissionsSubmit" ) );
         }
 
         protected void onSubmit()
