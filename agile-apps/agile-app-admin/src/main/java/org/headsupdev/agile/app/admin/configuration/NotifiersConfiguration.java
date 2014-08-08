@@ -146,12 +146,16 @@ public class NotifiersConfiguration
             super( id );
 
             create = new DropDownChoice( "id", new PropertyModel( this, "adding" ) );
-            add( create );
+            add( create.setNullValid( false ) );
+            add( new OnePressButton( "submitNotifier" ) );
         }
 
         public void onSubmit()
         {
-            ( (DefaultManager) Manager.getInstance() ).addNotifier( adding, getProject() );
+            if ( adding != null )
+            {
+                ( (DefaultManager) Manager.getInstance() ).addNotifier( adding, getProject() );
+            }
             adding = null;
         }
 
