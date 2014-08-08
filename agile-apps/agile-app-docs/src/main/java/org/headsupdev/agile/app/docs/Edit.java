@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2013 Heads Up Development Ltd.
+ * Copyright 2009-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -39,6 +39,7 @@ import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.HeadsUpSession;
 import org.headsupdev.agile.web.MountPoint;
 import org.headsupdev.agile.web.components.IdPatternValidator;
+import org.headsupdev.agile.web.components.OnePressButton;
 import org.headsupdev.agile.web.components.history.HistoryPanel;
 import org.headsupdev.support.java.StringUtil;
 import wicket.contrib.tinymce.TinyMceBehavior;
@@ -158,6 +159,7 @@ public class Edit
                 }
             };
             add( contentArea.setOutputMarkupId( true ) );
+            add( new OnePressButton( "submitDoc" ) );
 
             TinyMCESettings settings = new TinyMCESettings( TinyMCESettings.Theme.advanced );
             settings.setToolbarAlign( TinyMCESettings.Align.left );
