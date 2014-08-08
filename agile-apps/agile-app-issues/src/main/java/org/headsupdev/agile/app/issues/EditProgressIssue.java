@@ -91,26 +91,14 @@ public class EditProgressIssue
 
     protected void submitChild( Comment comment )
     {
+        duration = (DurationWorked) ( (HibernateStorage) getStorage() ).merge( duration );
+
         duration.setUser( getSession().getUser() );
         duration.setIssue( getIssue() );
         if ( willChildConsumeComment() )
         {
             duration.setComment( comment );
         }
-
-        Iterator<DurationWorked> iterator = getIssue().getTimeWorked().iterator();
-        while ( iterator.hasNext() )
-        {
-            DurationWorked delete = iterator.next();
-            if ( delete.getId() == duration.getId() )
-            {
-                ( (HibernateStorage) getStorage() ).delete( delete );
-                iterator.remove();
-            }
-        }
-
-        ( (HibernateStorage) getStorage() ).save( duration );
-        getIssue().getTimeWorked().add( duration );
 
         boolean timeBurndown = Boolean.parseBoolean( getProject().getConfigurationValue( StoredProject.CONFIGURATION_TIMETRACKING_BURNDOWN ) );
         if ( timeBurndown )
