@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -19,9 +19,9 @@
 package org.headsupdev.agile.app.issues;
 
 import org.apache.wicket.markup.html.CSSPackageResource;
+import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
-import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
 import org.headsupdev.agile.app.issues.permission.IssueEditPermission;
@@ -35,6 +35,7 @@ import org.headsupdev.agile.storage.Comment;
 import org.headsupdev.agile.storage.issues.Issue;
 import org.headsupdev.agile.api.Event;
 import org.headsupdev.agile.web.components.AttachmentPanel;
+import org.headsupdev.agile.web.components.OnePressButton;
 
 import java.util.Date;
 
@@ -139,7 +140,7 @@ public class CreateComment
 
             layoutChild( this );
 
-            add( new Button( "submit", new Model<String>()
+            add( new OnePressButton( "submit", new Model<String>()
             {
                 public String getObject()
                 {

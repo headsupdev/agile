@@ -18,7 +18,6 @@
 package org.headsupdev.agile.app.issues;
 
 import org.apache.wicket.markup.html.CSSPackageResource;
-import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.model.CompoundPropertyModel;
@@ -34,9 +33,9 @@ import org.headsupdev.agile.storage.issues.Issue;
 import org.headsupdev.agile.web.BookmarkableMenuLink;
 import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.MountPoint;
+import org.headsupdev.agile.web.components.OnePressButton;
 
 import java.util.Date;
-import java.util.Iterator;
 
 /**
  * Created by Gordon Edwards on 08/07/2014.
@@ -155,7 +154,7 @@ public class EditComment
             add( input );
             layoutChild( this );
 
-            add( new Button( "submit", new Model<String>()
+            add( new OnePressButton( "submit", new Model<String>()
             {
                 public String getObject()
                 {

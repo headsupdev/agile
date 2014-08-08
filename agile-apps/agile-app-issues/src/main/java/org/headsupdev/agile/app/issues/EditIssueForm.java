@@ -214,6 +214,7 @@ class IssueForm
         {
             add( new WebMarkupContainer( "attachment" ).setVisible( false ) );
         }
+        add( new OnePressButton( "issueSubmit" ) );
     }
 
     public void onSubmit()

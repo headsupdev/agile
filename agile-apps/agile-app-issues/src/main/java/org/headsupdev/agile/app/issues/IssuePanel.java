@@ -35,6 +35,7 @@ import org.headsupdev.agile.web.RenderUtil;
 import org.headsupdev.agile.web.components.AccountFallbackLink;
 import org.headsupdev.agile.web.components.FormattedDateModel;
 import org.headsupdev.agile.web.components.MarkedUpTextModel;
+import org.headsupdev.agile.web.components.OnePressButton;
 import org.headsupdev.agile.web.components.issues.IssueHoursEstimateModel;
 import org.headsupdev.agile.web.components.issues.IssueHoursRequiredModel;
 import org.headsupdev.agile.web.components.issues.IssueListPanel;
@@ -106,7 +107,7 @@ public class IssuePanel
             milestoneLink.add( new Label( "milestone", milestone.toString() ) );
             add( milestoneLink );
 
-            Button addIssue = new Button( "milestone-add-issue" )
+            OnePressButton addIssue = new OnePressButton( "milestone-add-issue" )
             {
                 @Override
                 public void onSubmit()
@@ -388,7 +389,7 @@ public class IssuePanel
     {
         final Form form = new Form( "drop-issue-form" );
 
-        Button button = new Button( "drop-issue" )
+        OnePressButton button = new OnePressButton( "drop-issue" )
         {
             @Override
             public void onSubmit()
@@ -419,7 +420,7 @@ public class IssuePanel
     {
         final Form form = new Form( "begin-issue-form" );
 
-        Button button = new Button( "begin-issue" )
+        OnePressButton button = new OnePressButton( "begin-issue" )
         {
             @Override
             public void onSubmit()
