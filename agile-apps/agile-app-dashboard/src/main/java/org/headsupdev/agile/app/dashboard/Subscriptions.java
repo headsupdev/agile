@@ -41,6 +41,7 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.string.Strings;
+import org.headsupdev.agile.web.components.OnePressButton;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -115,6 +116,7 @@ public class Subscriptions
             projects.add( StoredProject.getDefault() );
 
             add( new SubscriptionListView( "subscription", projects ) );
+            add( new OnePressButton( "submitSubscriptions" ) );
         }
 
         @Override
