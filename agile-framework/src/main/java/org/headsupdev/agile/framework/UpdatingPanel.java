@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2013 Heads Up Development Ltd.
+ * Copyright 2009-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -18,6 +18,7 @@
 
 package org.headsupdev.agile.framework;
 
+import org.headsupdev.agile.web.components.OnePressAjaxButton;
 import org.headsupdev.support.java.FileUtil;
 import org.headsupdev.support.java.IOUtil;
 import org.headsupdev.support.java.compression.GZipFile;
@@ -100,7 +101,7 @@ public class UpdatingPanel extends Panel
         };
 
         final Form updateForm = new Form( "updatenow" );
-        updateForm.add( new AjaxButton( "submit", updateForm )
+        updateForm.add( new OnePressAjaxButton( "submit", updateForm )
         {
             public void onSubmit( AjaxRequestTarget target, Form form )
             {
