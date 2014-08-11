@@ -26,9 +26,9 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.headsupdev.agile.api.Permission;
 import org.headsupdev.agile.api.Project;
-import org.headsupdev.agile.storage.dao.IssuesDAO;
 import org.headsupdev.agile.app.issues.permission.IssueEditPermission;
 import org.headsupdev.agile.storage.HibernateStorage;
+import org.headsupdev.agile.storage.dao.IssuesDAO;
 import org.headsupdev.agile.storage.issues.Issue;
 import org.headsupdev.agile.storage.issues.IssueRelationship;
 import org.headsupdev.agile.web.BookmarkableMenuLink;
@@ -90,12 +90,6 @@ public class CreateRelationship
         add( new RelationshipForm( "relationship" ) );
     }
 
-    @Override
-    public String getTitle()
-    {
-        return "Create relationship for issue " + issue.getId();
-    }
-
     class RelationshipForm
             extends Form
     {
@@ -107,7 +101,7 @@ public class CreateRelationship
         {
             super( id );
             setModel( new CompoundPropertyModel( this ) );
-
+            add( new Subheader( "subHeader", "Create Relationship for Issue:", issue ) );
             add( new ProjectTreeDropDownChoice( "relatedProject" )
             {
                 @Override

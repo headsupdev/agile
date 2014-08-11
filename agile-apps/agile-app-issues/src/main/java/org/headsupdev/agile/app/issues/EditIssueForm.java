@@ -93,6 +93,7 @@ class IssueForm
             this.oldTimeRequired = new Duration( issue.getTimeRequired() );
         }
 
+        add( new Subheader( "subHeader", "Edit Issue:", issue ) );
         setModel( new CompoundPropertyModel<Issue>( issue ) );
 
         add( new Label( "project", issue.getProject().getAlias() ) );
@@ -220,7 +221,7 @@ class IssueForm
     {
         if ( attachmentPanel != null )
         {
-            for ( Attachment attachment: attachmentPanel.getAttachments() )
+            for ( Attachment attachment : attachmentPanel.getAttachments() )
             {
                 if ( attachment != null )
                 {

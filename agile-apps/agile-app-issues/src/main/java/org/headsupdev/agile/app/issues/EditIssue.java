@@ -26,6 +26,7 @@ import org.headsupdev.agile.app.issues.permission.IssueEditPermission;
 import org.headsupdev.agile.api.Permission;
 import org.headsupdev.agile.storage.issues.Issue;
 import org.apache.wicket.markup.html.CSSPackageResource;
+import org.headsupdev.agile.web.components.issues.IssueListPanel;
 
 /**
  * Issue edit page
@@ -39,6 +40,7 @@ public class EditIssue
     extends HeadsUpPage
 {
     private long issueId;
+    private Issue issue;
 
     public Permission getRequiredPermission()
     {
@@ -49,6 +51,7 @@ public class EditIssue
     {
         super.layout();
         add( CSSPackageResource.getHeaderContribution( getClass(), "issue.css" ) );
+        add( CSSPackageResource.getHeaderContribution( IssueListPanel.class, "issue.css" ) );
 
         try
         {
@@ -60,7 +63,7 @@ public class EditIssue
             return;
         }
 
-        Issue issue = IssuesApplication.getIssue( issueId, getProject() );
+        issue = IssuesApplication.getIssue( issueId, getProject() );
         if ( issue == null )
         {
             notFoundError();
@@ -79,9 +82,9 @@ public class EditIssue
         });
     }
 
-    @Override
-    public String getTitle()
-    {
-        return "Edit Issue " + issueId;
-    }
+//    @Override
+//    public String getTitle()
+//    {
+//        return "Edit Issue:" + issueId + " " + issue.getSummary();
+//    }
 }

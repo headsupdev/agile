@@ -87,15 +87,14 @@ public class CreateComment
         add( new CommentForm( "comment" ) );
     }
 
-    @Override
-    public String getTitle()
+    public String getPreamble()
     {
         if ( submitLabel.toLowerCase().contains( "issue" ) )
         {
-            return submitLabel + " " + issue.getId();
+            return submitLabel + ":";
         }
 
-        return submitLabel + " for issue " + issue.getId();
+        return submitLabel + " for Issue:";
     }
 
     public Issue getIssue()
@@ -138,6 +137,8 @@ public class CreateComment
             add( new TextArea( "comment" ) );
 
             layoutChild( this );
+
+            add( new Subheader( "subHeader", getPreamble(), issue) );
 
             add( new Button( "submit", new Model<String>()
             {
