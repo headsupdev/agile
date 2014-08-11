@@ -19,21 +19,21 @@
 package org.headsupdev.agile.app.issues;
 
 import org.apache.wicket.markup.html.CSSPackageResource;
+import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
-import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
-import org.headsupdev.agile.app.issues.permission.IssueEditPermission;
-import org.headsupdev.agile.app.issues.event.UpdateIssueEvent;
-import org.headsupdev.agile.web.HeadsUpPage;
-import org.headsupdev.agile.web.BookmarkableMenuLink;
-import org.headsupdev.agile.web.MountPoint;
-import org.headsupdev.agile.api.Permission;
-import org.headsupdev.agile.storage.HibernateStorage;
-import org.headsupdev.agile.storage.Comment;
-import org.headsupdev.agile.storage.issues.Issue;
 import org.headsupdev.agile.api.Event;
+import org.headsupdev.agile.api.Permission;
+import org.headsupdev.agile.app.issues.event.UpdateIssueEvent;
+import org.headsupdev.agile.app.issues.permission.IssueEditPermission;
+import org.headsupdev.agile.storage.Comment;
+import org.headsupdev.agile.storage.HibernateStorage;
+import org.headsupdev.agile.storage.issues.Issue;
+import org.headsupdev.agile.web.BookmarkableMenuLink;
+import org.headsupdev.agile.web.HeadsUpPage;
+import org.headsupdev.agile.web.MountPoint;
 import org.headsupdev.agile.web.components.AttachmentPanel;
 
 import java.util.Date;
@@ -45,9 +45,9 @@ import java.util.Date;
  * @version $Id$
  * @since 1.0
  */
-@MountPoint( "comment" )
+@MountPoint("comment")
 public class CreateComment
-    extends HeadsUpPage
+        extends HeadsUpPage
 {
     private Issue issue;
     private String submitLabel = "Create Comment";
@@ -91,10 +91,10 @@ public class CreateComment
     {
         if ( submitLabel.toLowerCase().contains( "issue" ) )
         {
-            return submitLabel + ":";
+            return submitLabel.replace( "Issue", "" );
         }
 
-        return submitLabel + " for Issue:";
+        return submitLabel + " for ";
     }
 
     public Issue getIssue()
@@ -126,9 +126,10 @@ public class CreateComment
     }
 
     class CommentForm
-        extends Form<Comment>
+            extends Form<Comment>
     {
         private Comment create = new Comment();
+
         public CommentForm( String id )
         {
             super( id );
@@ -138,7 +139,7 @@ public class CreateComment
 
             layoutChild( this );
 
-            add( new Subheader( "subHeader", getPreamble(), issue) );
+            add( new Subheader( "subHeader", getPreamble(), issue ) );
 
             add( new Button( "submit", new Model<String>()
             {
@@ -167,7 +168,7 @@ public class CreateComment
             }
 
             submitChild( create );
-            if (attachmentPanel != null)
+            if ( attachmentPanel != null )
             {
                 if ( attachmentPanel.getAttachments().isEmpty() )
                 {
@@ -175,7 +176,8 @@ public class CreateComment
                     return;
                 }
             }
-            if ( issue.getStatus() < Issue.STATUS_FEEDBACK ) {
+            if ( issue.getStatus() < Issue.STATUS_FEEDBACK )
+            {
                 issue.setStatus( Issue.STATUS_FEEDBACK );
             }
             // this line is needed by things that extend our form...

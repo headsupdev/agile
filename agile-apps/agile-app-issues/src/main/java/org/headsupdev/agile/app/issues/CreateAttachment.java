@@ -90,6 +90,12 @@ public class CreateAttachment
     }
 
     @Override
+    public String getPreamble()
+    {
+        return "Add Attachments to ";
+    }
+
+    @Override
     protected boolean willChildConsumeComment()
     {
         return true;

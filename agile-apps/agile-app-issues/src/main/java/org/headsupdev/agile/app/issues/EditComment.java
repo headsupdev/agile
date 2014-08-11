@@ -99,7 +99,7 @@ public class EditComment
     @Override
     public String getTitle()
     {
-        return "Edit Comment for Issue:"+issue.getId() + " " + issue.getSummary();
+        return "Edit Comment for Issue:" + issue.getId() + " " + issue.getSummary();
     }
 
     public Issue getIssue()
