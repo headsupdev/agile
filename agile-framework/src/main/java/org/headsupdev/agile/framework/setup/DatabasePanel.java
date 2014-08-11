@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -18,25 +18,25 @@
 
 package org.headsupdev.agile.framework.setup;
 
-import org.headsupdev.support.java.IOUtil;
-import org.headsupdev.agile.core.PrivateConfiguration;
-import org.headsupdev.agile.api.Manager;
-import org.headsupdev.agile.storage.DatabaseRegistry;
-import org.headsupdev.agile.api.logging.Logger;
-import org.headsupdev.agile.web.components.configuration.SQLURLField;
-import org.headsupdev.agile.web.components.BooleanImage;
-import org.headsupdev.agile.runtime.HeadsUpRuntime;
-
-import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.headsupdev.agile.api.Manager;
+import org.headsupdev.agile.api.logging.Logger;
+import org.headsupdev.agile.core.PrivateConfiguration;
+import org.headsupdev.agile.runtime.HeadsUpRuntime;
+import org.headsupdev.agile.storage.DatabaseRegistry;
+import org.headsupdev.agile.web.components.BooleanImage;
+import org.headsupdev.agile.web.components.OnePressButton;
+import org.headsupdev.agile.web.components.configuration.SQLURLField;
+import org.headsupdev.support.java.IOUtil;
 
-import java.util.Properties;
 import java.io.*;
+import java.util.Properties;
 
 /**
  * A panel for the setup to connect to the required database.
@@ -47,7 +47,7 @@ import java.io.*;
  * @since 1.0
  */
 public class DatabasePanel
-    extends Panel
+        extends Panel
 {
     private Class setupPage;
     private WebMarkupContainer restartMessage;
@@ -67,7 +67,7 @@ public class DatabasePanel
     }
 
     class DatabaseForm
-        extends Form
+            extends Form
     {
         private String url;
         private String username;
@@ -107,6 +107,7 @@ public class DatabasePanel
                     testSQL( target );
                 }
             } ) );
+            add( new OnePressButton( "submitDatabase" ) );
         }
 
         void testSQL( AjaxRequestTarget target )
@@ -117,7 +118,8 @@ public class DatabasePanel
             target.addComponent( testImage );
         }
 
-        protected void onSubmit() {
+        protected void onSubmit()
+        {
             String type = DatabaseRegistry.getTypeForUrl( url );
             String dialect = DatabaseRegistry.getDialect( type );
             String driver = DatabaseRegistry.getDriver( type );
@@ -161,11 +163,16 @@ public class DatabasePanel
                 restartMessage.setVisible( true );
 
                 // here we will start config from scratch with a new DB...
-                new Thread() {
-                    public void run() {
-                        try {
+                new Thread()
+                {
+                    public void run()
+                    {
+                        try
+                        {
                             sleep( 1000 );
-                        } catch (InterruptedException e) {
+                        }
+                        catch ( InterruptedException e )
+                        {
                             // just restart anyway
                         }
 
