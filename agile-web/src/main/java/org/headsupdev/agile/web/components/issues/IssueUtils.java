@@ -247,9 +247,15 @@ public class IssueUtils
             {
                 return "Myself";
             }
+            else if (watchers == 2)
+            {
+                return "Myself and 1 other account";
+            }
             return "Myself and " + ( watchers - 1 ) + " other accounts";
         }
-
+        if ( watchers == 1) {
+            return "1 account";
+        }
         return watchers + " accounts";
     }
 }
