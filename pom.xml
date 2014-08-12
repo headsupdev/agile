@@ -270,6 +270,13 @@
         <artifactId>jHipchat</artifactId>
         <version>LATEST</version>
       </dependency>
+
+      <dependency>
+        <groupId>com.timgroup</groupId>
+        <artifactId>jgravatar</artifactId>
+        <version>1.0</version>
+      </dependency>
+
     </dependencies>
   </dependencyManagement>
 
@@ -370,6 +377,10 @@
     <repository>
       <id>etherfirma</id>
       <url>http://maven.etherfirma.com:8081/nexus/content/repositories/public</url>
+    </repository>
+    <repository>
+      <id>releases-oss.sonatype.org</id>
+      <url>https://oss.sonatype.org/content/repositories/releases/</url>
     </repository>
     <repository>
       <id>ops4j-release</id>

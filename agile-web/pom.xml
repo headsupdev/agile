@@ -92,6 +92,16 @@
       <groupId>ms.ajwillia</groupId>
       <artifactId>wicket-rest-api</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.timgroup</groupId>
+      <artifactId>jgravatar</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>11.0</version>
+      <scope>compile</scope>
+    </dependency>
 
     <dependency>
       <groupId>javax.servlet</groupId>
@@ -139,9 +149,9 @@
               org.apache.wicket.datetime.*;version="1.4.18",
               org.apache.wicket.extensions.*;version="1.4.18",
               org.joda.time.*;version="1.6.0",
-              javax.servlet.*
+              javax.servlet.*,com.timgroup.jgravatar.*
             ]]></Export-Package>
-            <Private-Package>org.headsupdev.agile,org.json.simple.*,org.apache.log4j.*,com.google.zxing.*,com.ibm.icu.*,${bundle.namespace}.*</Private-Package>
+            <Private-Package>org.headsupdev.agile,org.json.simple.*,org.apache.log4j.*,com.google.zxing.*,com.ibm.icu.*,com.google.common.*,${bundle.namespace}.*</Private-Package>
             <Import-Package><![CDATA[
               org.headsupdev.agile.api.*,
               org.headsupdev.agile.security.*,
@@ -162,6 +172,7 @@
               javax.naming.*,
               javax.imageio,
               !javax.imageio.stream,
+              javax.annotation, !sun.misc,
 
               org.xml.sax.*,org.w3c.*,!javax.xml.*,
               org.osgi.framework,
@@ -177,7 +188,7 @@
              | each module can override these defaults in their osgi.bnd file
             -->
             <Embed-Transitive>true</Embed-Transitive>
-            <Embed-Dependency>*;artifactId=javautil-compression|tar|jhighlight</Embed-Dependency>
+            <Embed-Dependency>*;artifactId=javautil-compression|tar|jhighlight|jgravatar</Embed-Dependency>
             <Bundle-ClassPath>.,{maven-dependencies}</Bundle-ClassPath>
           </instructions>
         </configuration>
