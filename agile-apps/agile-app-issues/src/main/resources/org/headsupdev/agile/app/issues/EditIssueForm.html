@@ -51,8 +51,10 @@
           <tr>
             <th class="watchers">Watched By</th>
             <td class="watchers">
-              <span wicket:id="myself"></span>
-              <input type="checkbox" wicket:id="toggleWatchers"/>
+              <wicket:enclosure>
+                <input type="checkbox" wicket:id="toggleWatchers"/>
+                watch this issue
+              </wicket:enclosure>
               <div wicket:id="watchers"></div>
             </td>
             <th class="order">Order</th>
