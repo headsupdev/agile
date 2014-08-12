@@ -78,6 +78,8 @@ class IssueForm
     private EditIssueForm parent;
     private boolean creating;
     private AttachmentPanel attachmentPanel;
+    private CheckBox toggleWatchers;
+
 
     public IssueForm( String id, final Issue issue, boolean creating, final HeadsUpPage owner, EditIssueForm parent )
     {
@@ -133,14 +135,37 @@ class IssueForm
         final DropDownChoice<User> assignees = new UserDropDownChoice( "assignee", issue.getAssignee() );
         assignees.setNullValid( true );
         add( assignees );
+
+        toggleWatchers = new CheckBox( "toggleWatchers", new Model<Boolean>()
+        {
+            private boolean toggle;
+            @Override
+            public void setObject( Boolean object )
+            {
+                toggle = object;
+            }
+
+            @Override
+            public Boolean getObject()
+            {
+                return toggle;
+            }
+        } );
+        toggleWatchers.setModelObject( true );
+        toggleWatchers.setVisible( creating );
+        add( toggleWatchers );
+
+
         Button assignToMe = new Button( "assignToMe" )
         {
             @Override
             public void onSubmit()
             {
                 issue.setAssignee( ( (HeadsUpSession) getSession() ).getUser() );
-                issue.getWatchers().add( ( (HeadsUpSession) getSession() ).getUser() );
-
+                if ( toggleWatchers.getModelObject() )
+                {
+                    issue.getWatchers().add( ( (HeadsUpSession) getSession() ).getUser() );
+                }
                 assignees.setChoices( new LinkedList<User>( owner.getSecurityManager().getRealUsers() ) );
                 assignees.setModelObject( ( (HeadsUpSession) getSession() ).getUser() );
                 assignees.modelChanged();
@@ -165,6 +190,8 @@ class IssueForm
                     ( (HeadsUpSession) getSession() ).getTimeZone() ) ) );
         }
         add( new TextField( "order" ).setRequired( false ) );
+        add( new Label( "myself", "Myself" ).setVisible( creating ) );
+
         add( new Label( "watchers", new Model<String>()
         {
             @Override
@@ -172,7 +199,7 @@ class IssueForm
             {
                 return IssueUtils.getWatchersDescription( issue, ( (HeadsUpSession) getSession() ).getUser() );
             }
-        } ) );
+        } ).setVisible( !creating ) );
 
         add( new TextField( "summary" ).setRequired( true ) );
         add( new TextField( "environment" ) );
@@ -220,7 +247,7 @@ class IssueForm
     {
         if ( attachmentPanel != null )
         {
-            for ( Attachment attachment: attachmentPanel.getAttachments() )
+            for ( Attachment attachment : attachmentPanel.getAttachments() )
             {
                 if ( attachment != null )
                 {
@@ -250,6 +277,15 @@ class IssueForm
         {
             issue.setTimeRequired( issue.getTimeEstimate() );
         }
+
+        if ( creating )
+        {
+            if ( toggleWatchers.getModelObject() )
+            {
+                issue.getWatchers().add( ( (HeadsUpSession) getSession() ).getUser() );
+            }
+        }
+
         issue.setUpdated( new Date() );
         if ( issue.getMilestone() != null )
         {
@@ -272,6 +308,7 @@ class IssueForm
                 issue.getWatchers().add( issue.getAssignee() );
             }
         }
+
         parent.onSubmit( issue );
 
         PageParameters params = new PageParameters();
