@@ -143,16 +143,15 @@ class IssueForm
             @Override
             public void setObject( Boolean object )
             {
-                currentUser.setPreference( "issue.automaticallyShow", object );
+                currentUser.setPreference( "issue.automaticallyWatch", object );
             }
 
             @Override
             public Boolean getObject()
             {
-                return currentUser.getPreference( "issue.automaticallyShow", true );
+                return currentUser.getPreference( "issue.automaticallyWatch", true );
             }
         } );
-//        toggleWatchers.setModelObject( true );
         toggleWatchers.setVisible( creating );
         add( toggleWatchers );
 
