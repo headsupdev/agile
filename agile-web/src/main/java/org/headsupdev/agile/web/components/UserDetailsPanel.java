@@ -18,11 +18,22 @@
 
 package org.headsupdev.agile.web.components;
 
-import org.headsupdev.agile.web.HeadsUpSession;
-import org.apache.wicket.markup.html.panel.Panel;
+import com.timgroup.jgravatar.Gravatar;
+import com.timgroup.jgravatar.GravatarDefaultImage;
+import com.timgroup.jgravatar.GravatarDownloadException;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.headsupdev.agile.api.User;
+import org.apache.wicket.markup.html.image.Image;
+import org.apache.wicket.markup.html.link.ExternalLink;
+import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.resource.ByteArrayResource;
+import org.headsupdev.agile.api.Manager;
 import org.headsupdev.agile.api.Project;
+import org.headsupdev.agile.api.User;
+import org.headsupdev.agile.api.logging.Logger;
+import org.headsupdev.agile.web.HeadsUpPage;
+import org.headsupdev.agile.web.HeadsUpSession;
 
 /**
  * TODO document me
@@ -31,12 +42,24 @@ import org.headsupdev.agile.api.Project;
  * @since 1.0
  */
 public class UserDetailsPanel
-    extends Panel
+        extends Panel
 {
-    public UserDetailsPanel( String id, User user, Project project, boolean showFullDetails )
+    private final int ICON_EDGE_LENGTH = 100;
+    public UserDetailsPanel( String id, final User user, Project project, boolean showFullDetails, HeadsUpPage page )
     {
         super( id );
-
+        final GravatarLinkPanel gravatarLinkPanel = new GravatarLinkPanel( "gravatar", user, ICON_EDGE_LENGTH, page ){
+            @Override
+            public Object getLink()
+            {
+                if ( hasGravatar() )
+                {
+                    return new ExternalLink( "link", new Gravatar().getUrl( user.getEmail() ) );
+                }
+                return new WebMarkupContainer( "link" );
+            }
+        };
+        add( gravatarLinkPanel );
         add( new Label( "username", user.getUsername() ) );
         add( new Label( "firstname", user.getFirstname() ) );
         add( new Label( "lastname", user.getLastname() ) );
@@ -47,4 +70,5 @@ public class UserDetailsPanel
         add( new Label( "description", new MarkedUpTextModel( user.getDescription(), project ) )
                 .setEscapeModelStrings( false ) );
     }
+
 }

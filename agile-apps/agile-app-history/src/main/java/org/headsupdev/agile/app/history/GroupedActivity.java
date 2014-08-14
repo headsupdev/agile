@@ -35,7 +35,7 @@ import org.headsupdev.agile.web.components.history.HistoryPanel;
 
 import java.util.*;
 
-@MountPoint( "grouped" )
+@MountPoint("grouped")
 public class GroupedActivity
         extends HeadsUpPage
 {
@@ -47,7 +47,8 @@ public class GroupedActivity
 
     private ApplicationFilterPanel filter;
 
-    public Permission getRequiredPermission() {
+    public Permission getRequiredPermission()
+    {
         return new HistoryViewPermission();
     }
 
@@ -71,7 +72,7 @@ public class GroupedActivity
             {
                 resetFilter();
             }
-        });
+        } );
         resetFilter();
 
         try
@@ -91,15 +92,20 @@ public class GroupedActivity
                 listItem.add( new Label( "app-label", appId ) );
 
                 final List<String> appTypes = types.get( appId );
-                listItem.add(new HistoryPanel( "history", new AbstractReadOnlyModel<List<? extends Event>>() {
-                    public List<? extends Event> getObject() {
-                        if (allProject) {
-                            return ((HistoryApplication) getHeadsUpApplication()).getEvents( before, appTypes, ROWS_IN_GROUP );
-                        } else {
-                            return ((HistoryApplication) getHeadsUpApplication()).getEventsForProject( project, before, appTypes, ROWS_IN_GROUP );
+                listItem.add( new HistoryPanel( "history", new AbstractReadOnlyModel<List<? extends Event>>()
+                {
+                    public List<? extends Event> getObject()
+                    {
+                        if ( allProject )
+                        {
+                            return ( (HistoryApplication) getHeadsUpApplication() ).getEvents( before, appTypes, ROWS_IN_GROUP );
+                        }
+                        else
+                        {
+                            return ( (HistoryApplication) getHeadsUpApplication() ).getEventsForProject( project, before, appTypes, ROWS_IN_GROUP );
                         }
                     }
-                }, allProject ) );
+                }, allProject, GroupedActivity.this ) );
             }
         } );
 

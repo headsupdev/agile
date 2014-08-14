@@ -140,7 +140,7 @@ public class Account
         params.add( "silent", "true" );
         add( new Image( "account", new ResourceReference( "member.png" ), params ) );
 
-        add( new UserDetailsPanel( "details", user, getProject(), shouldShowFullDetails() ) );
+        add( new UserDetailsPanel( "details", user, getProject(), shouldShowFullDetails(), this) );
 
         if ( showTools )
         {
@@ -208,7 +208,7 @@ public class Account
         }.setVisible( showTools && timeEnabled ) );
 
         add( new Label( "history-name", user.getFullnameOrUsername() ) );
-        add( new HistoryPanel( "events", getEventsForUser( user ), true ) );
+        add( new HistoryPanel( "events", getEventsForUser( user ), true, Account.this ) );
     }
 
     @Override
