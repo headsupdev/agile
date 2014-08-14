@@ -80,6 +80,6 @@ public class EditMilestoneGroup
     @Override
     public String getTitle()
     {
-        return "Edit Milestone " + name;
+        return "Edit Milestone Group " + name;
     }
 }
