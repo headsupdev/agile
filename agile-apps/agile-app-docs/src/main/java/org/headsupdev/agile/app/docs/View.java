@@ -201,7 +201,7 @@ public class View
         {
             protected void populateItem( ListItem<Comment> listItem )
             {
-                listItem.add( new CommentPanel( "comment", listItem.getModel(), getProject(), commentList, doc, (HeadsUpPage) getPage() ) );
+                listItem.add( new CommentPanel( "comment", listItem.getModel(), getProject(), commentList, doc, View.this ) );
             }
         } );
     }
