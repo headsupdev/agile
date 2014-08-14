@@ -63,7 +63,13 @@
         </tr>
         <tr>
           <th class="watchers">Watched By</th>
-          <td class="watchers" wicket:id="watchers"></td>
+          <!--<td class="watchers" wicket:id="watchers"></td>-->
+          <td class="watchers">
+            <wicket:container wicket:id="watchers">
+              <div style="display:inline" wicket:id="gravatar">
+              </div>
+            </wicket:container>
+          </td>
           <wicket:enclosure child="order">
           <th class="order">Order</th>
           <td class="order" wicket:id="order"></td>

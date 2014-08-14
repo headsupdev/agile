@@ -18,6 +18,18 @@
 
 package org.headsupdev.agile.app.issues;
 
+import org.apache.wicket.PageParameters;
+import org.apache.wicket.ResourceReference;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.Button;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.image.Image;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.markup.html.panel.Panel;
 import org.headsupdev.agile.api.Manager;
 import org.headsupdev.agile.api.Project;
 import org.headsupdev.agile.api.User;
@@ -34,34 +46,13 @@ import org.headsupdev.agile.web.HeadsUpSession;
 import org.headsupdev.agile.web.RenderUtil;
 import org.headsupdev.agile.web.components.AccountFallbackLink;
 import org.headsupdev.agile.web.components.FormattedDateModel;
+import org.headsupdev.agile.web.components.GravatarLinkPanel;
 import org.headsupdev.agile.web.components.MarkedUpTextModel;
-import org.headsupdev.agile.web.components.issues.IssueHoursEstimateModel;
-import org.headsupdev.agile.web.components.issues.IssueHoursRequiredModel;
-import org.headsupdev.agile.web.components.issues.IssueListPanel;
-import org.headsupdev.agile.web.components.issues.IssueStatusModifier;
-import org.headsupdev.agile.web.components.issues.IssueUtils;
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.ResourceReference;
-import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.Button;
-import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.image.Image;
-import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.Model;
+import org.headsupdev.agile.web.components.issues.*;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * A panel which shows the details of an issue with icons and links to milestones etc
@@ -72,7 +63,10 @@ import java.util.List;
 public class IssuePanel
         extends Panel
 {
-    public IssuePanel( String id, final Issue issue )
+    private final int ICON_EDGE_LENGTH = 30;
+    private final ListView<User> watchers;
+
+    public IssuePanel( String id, final Issue issue, final HeadsUpPage page )
     {
         super( id );
 
@@ -151,14 +145,25 @@ public class IssuePanel
         }
         add( new Label( "order", issue.getOrder() == null ? "" : String.valueOf( issue.getOrder() ) ).
                 setVisible( issue.getOrder() != null ) );
-        add( new Label( "watchers", new Model<String>()
+        watchers = new ListView<User>( "watchers", new ArrayList<User>( issue.getWatchers() ) )
         {
+
             @Override
-            public String getObject()
+            protected void populateItem( ListItem<User> listItem )
             {
-                return IssueUtils.getWatchersDescription( issue, getSessionUser() );
+                listItem.add( new GravatarLinkPanel( "gravatar", listItem.getModelObject(), ICON_EDGE_LENGTH, page ) );
             }
-        } ) );
+        };
+        add( watchers );
+
+//        add( new Label( "watchers", new Model<String>()
+//        {
+//            @Override
+//            public String getObject()
+//            {
+//                return IssueUtils.getWatchersDescription( issue, getSessionUser() );
+//            }
+//        } ) );
 
         // TODO move the relationship comparators out of here, they are basically the same but opposite end of relationship compared
         List<IssueRelationship> relationships = new LinkedList<IssueRelationship>();
@@ -291,9 +296,9 @@ public class IssuePanel
         } );
 
         add( new Label( "status", IssueUtils.getStatusDescription( issue ) ) );
-        if ( canSessionUserBeginIssue(issue) )
+        if ( canSessionUserBeginIssue( issue ) )
         {
-            addBeginIssueButton(issue);
+            addBeginIssueButton( issue );
         }
         else
         {
@@ -381,7 +386,7 @@ public class IssuePanel
 
     private User getSessionUser()
     {
-        return ((HeadsUpSession) getSession()).getUser();
+        return ( (HeadsUpSession) getSession() ).getUser();
     }
 
     private void addDropIssueButton( final Issue issue )
@@ -427,7 +432,7 @@ public class IssuePanel
                 super.onSubmit();
 
                 issue.setAssignee( getSessionUser() );
-                issue.getWatchers().add(getSessionUser());
+                issue.getWatchers().add( getSessionUser() );
                 issue.setStatus( Issue.STATUS_INPROGRESS );
                 issue.setUpdated( new Date() );
 
@@ -453,4 +458,9 @@ public class IssuePanel
 
         return ret;
     }
+    public ListView<User> getWatchers()
+    {
+        return watchers;
+    }
+
 }

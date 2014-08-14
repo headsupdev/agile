@@ -20,6 +20,8 @@ package org.headsupdev.agile.app.issues;
 
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.ResourceReference;
+import org.apache.wicket.ajax.AjaxEventBehavior;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.CSSPackageResource;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -39,7 +41,6 @@ import org.headsupdev.agile.storage.Attachment;
 import org.headsupdev.agile.storage.Comment;
 import org.headsupdev.agile.storage.HibernateStorage;
 import org.headsupdev.agile.storage.StoredProject;
-import org.headsupdev.agile.storage.docs.Document;
 import org.headsupdev.agile.storage.issues.Issue;
 import org.headsupdev.agile.storage.resource.DurationWorked;
 import org.headsupdev.agile.web.*;
@@ -51,7 +52,6 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import java.io.File;
-import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -68,6 +68,7 @@ public class ViewIssue
     private long issueId;
     private Issue issue;
     private boolean watching;
+    private IssuePanel issuePanel;
 
     public Permission getRequiredPermission()
     {
@@ -120,8 +121,8 @@ public class ViewIssue
             } );
         }
         addLinks( links );
-
-        add( new IssuePanel( "issue", issue ) );
+        issuePanel = new IssuePanel( "issue", issue, ViewIssue.this );
+        add( issuePanel );
 
         final List<Attachment> attachmentList = new LinkedList<Attachment>();
         attachmentList.addAll( issue.getAttachments() );
@@ -164,7 +165,7 @@ public class ViewIssue
                         issue = (Issue) ( (HibernateStorage) getStorage() ).getHibernateSession().merge( issue );
                         attachmentList.remove( attachment );
                         issue.getAttachments().remove( attachment );
-                        ((HibernateStorage) getStorage() ).delete( attachment );
+                        ( (HibernateStorage) getStorage() ).delete( attachment );
                         attachment.getFile( getStorage() ).delete();
 
                     }
@@ -240,7 +241,7 @@ public class ViewIssue
         {
             protected void populateItem( ListItem listItem )
             {
-                CommentPanel panel = new CommentPanel( "comment", listItem.getModel(), getProject(), commentList, issue, (HeadsUpPage) getPage() );
+                CommentPanel panel = new CommentPanel( "comment", listItem.getModel(), getProject(), commentList, issue, ViewIssue.this );
                 listItem.add( panel );
             }
         } );
@@ -306,7 +307,14 @@ public class ViewIssue
         Transaction tx = session.beginTransaction();
         session.update( issue );
         tx.commit();
-
+        add( new AjaxEventBehavior("onclick")
+        {
+            @Override
+            protected void onEvent( AjaxRequestTarget ajaxRequestTarget )
+            {
+                ajaxRequestTarget.addComponent( issuePanel.getWatchers() );
+            }
+        } );
         watching = !watching;
     }
 }

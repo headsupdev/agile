@@ -40,6 +40,7 @@ import org.headsupdev.agile.storage.resource.DurationWorked;
 import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.HeadsUpSession;
 import org.headsupdev.agile.web.components.FormattedDateModel;
+import org.headsupdev.agile.web.components.GravatarLinkPanel;
 import org.headsupdev.agile.web.components.MarkedUpTextModel;
 
 import java.util.Date;
@@ -64,6 +65,7 @@ public class CommentPanel
     private Storage storage;
     private DurationWorked duration;
     private Comment comment;
+    private final int ICON_EDGE_LENGTH = 30;
 
     public CommentPanel( String id, Comment comment, Project project )
     {
@@ -105,12 +107,13 @@ public class CommentPanel
             comment = (Comment) o;
             add( new Image( "icon", new ResourceReference( HeadsUpPage.class, "images/comment.png" ) ) );
 
-            PageParameters params = page.getProjectPageParameters();
+            PageParameters params = CommentPanel.this.page.getProjectPageParameters();
             params.put( "id", issue.getId() );
             params.put( "commentId", comment.getId() );
             Link edit = new BookmarkablePageLink( "editComment", EditComment.class, params );
 
             commentTitle.add( edit.setVisible( userHasPermission ) );
+            commentTitle.add( new GravatarLinkPanel( "gravatar", comment.getUser(), ICON_EDGE_LENGTH, page) );
             commentTitle.add( new Label( "username", comment.getUser().getFullnameOrUsername() ) );
             commentTitle.add( new Label( "created", new FormattedDateModel( comment.getCreated(),
                     ( (HeadsUpSession) getSession() ).getTimeZone() ) ) );
@@ -142,7 +145,7 @@ public class CommentPanel
             params.put( "durationId", duration.getId() );
             Link edit = new BookmarkablePageLink( "editComment", EditProgressIssue.class, params );
             workedTitle.add( edit.setVisible( userHasPermission ) );
-
+            workedTitle.add( new GravatarLinkPanel( "gravatar", duration.getUser(), ICON_EDGE_LENGTH, page) );
             Link remove = new Link( "removeComment" )
             {
                 @Override
