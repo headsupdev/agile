@@ -21,6 +21,7 @@ package org.headsupdev.agile.app.issues.event;
 import org.headsupdev.agile.api.Project;
 import org.headsupdev.agile.api.User;
 import org.headsupdev.agile.web.AbstractEvent;
+import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.RenderUtil;
 import org.headsupdev.agile.web.components.issues.IssueListPanel;
 import org.headsupdev.agile.storage.issues.Issue;
@@ -115,7 +116,7 @@ public class CreateIssueEvent
         {
             public Panel getPanel()
             {
-                return new IssuePanel( RenderUtil.PANEL_ID, issue );
+                return new IssuePanel( RenderUtil.PANEL_ID, issue, (HeadsUpPage) getPanel().getPage());
             }
         }.getRenderedContent();
     }

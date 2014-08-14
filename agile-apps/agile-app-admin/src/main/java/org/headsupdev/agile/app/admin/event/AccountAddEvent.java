@@ -19,6 +19,7 @@
 package org.headsupdev.agile.app.admin.event;
 
 import org.headsupdev.agile.app.admin.AdminApplication;
+import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.components.UserDetailsPanel;
 import org.headsupdev.agile.web.RenderUtil;
 import org.headsupdev.agile.web.AbstractEvent;
@@ -63,7 +64,7 @@ public class AccountAddEvent
         {
             public Panel getPanel()
             {
-                return new UserDetailsPanel( RenderUtil.PANEL_ID, user, project, false );
+                return new UserDetailsPanel( RenderUtil.PANEL_ID, user, project, false, ( HeadsUpPage) getPanel().getPage() );
             }
         }.getRenderedContent();
     }
