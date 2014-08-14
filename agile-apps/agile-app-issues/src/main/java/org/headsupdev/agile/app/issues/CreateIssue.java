@@ -60,7 +60,6 @@ public class CreateIssue
 
         Issue create = new Issue( getProject() );
         create.setReporter( getSession().getUser() );
-        create.getWatchers().add( getSession().getUser() );
         create.setStatus( Issue.STATUS_NEW );
 
         String mName = getPageParameters().getString( "milestone" );

@@ -50,7 +50,13 @@
           </tr>
           <tr>
             <th class="watchers">Watched By</th>
-            <td class="watchers" wicket:id="watchers"></td>
+            <td class="watchers">
+              <wicket:enclosure>
+                <input type="checkbox" wicket:id="toggleWatchers"/>
+                watch this issue
+              </wicket:enclosure>
+              <div wicket:id="watchers"></div>
+            </td>
             <th class="order">Order</th>
             <td class="order"><input type="text" wicket:id="order" /></td>
           </tr>

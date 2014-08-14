@@ -78,8 +78,10 @@ class IssueForm
     private EditIssueForm parent;
     private boolean creating;
     private AttachmentPanel attachmentPanel;
+    private CheckBox toggleWatchers;
+    private User currentUser;
 
-    public IssueForm( String id, final Issue issue, boolean creating, final HeadsUpPage owner, EditIssueForm parent )
+    public IssueForm( String id, final Issue issue, final boolean creating, final HeadsUpPage owner, EditIssueForm parent )
     {
         super( id );
         this.issue = issue;
@@ -88,11 +90,12 @@ class IssueForm
         this.creating = creating;
 
         this.oldAssignee = issue.getAssignee();
+        currentUser = ( (HeadsUpSession) getSession() ).getUser();
         if ( issue.getTimeRequired() != null )
         {
             this.oldTimeRequired = new Duration( issue.getTimeRequired() );
         }
-
+        
         setModel( new CompoundPropertyModel<Issue>( issue ) );
 
         add( new Label( "project", issue.getProject().getAlias() ) );
@@ -133,23 +136,42 @@ class IssueForm
         final DropDownChoice<User> assignees = new UserDropDownChoice( "assignee", issue.getAssignee() );
         assignees.setNullValid( true );
         add( assignees );
+
+        toggleWatchers = new CheckBox( "toggleWatchers", new Model<Boolean>()
+        {
+
+            @Override
+            public void setObject( Boolean object )
+            {
+                currentUser.setPreference( "issue.automaticallyWatch", object );
+            }
+
+            @Override
+            public Boolean getObject()
+            {
+                return currentUser.getPreference( "issue.automaticallyWatch", true );
+            }
+        } );
+        toggleWatchers.setVisible( creating );
+        add( toggleWatchers );
+
+
         Button assignToMe = new Button( "assignToMe" )
         {
             @Override
             public void onSubmit()
             {
-                issue.setAssignee( ( (HeadsUpSession) getSession() ).getUser() );
-                issue.getWatchers().add( ( (HeadsUpSession) getSession() ).getUser() );
-
+                issue.setAssignee( currentUser );
+                issue.getWatchers().add( currentUser );
                 assignees.setChoices( new LinkedList<User>( owner.getSecurityManager().getRealUsers() ) );
-                assignees.setModelObject( ( (HeadsUpSession) getSession() ).getUser() );
+                assignees.setModelObject( currentUser );
                 assignees.modelChanged();
 
                 super.onSubmit();
             }
         };
         assignToMe.setVisible( issue.getStatus() < Issue.STATUS_RESOLVED &&
-                !( (HeadsUpSession) getSession() ).getUser().equals( issue.getAssignee() ) );
+                !( currentUser.equals( issue.getAssignee() ) ) );
         add( assignToMe.setDefaultFormProcessing( false ) );
 
         if ( creating )
@@ -165,14 +187,15 @@ class IssueForm
                     ( (HeadsUpSession) getSession() ).getTimeZone() ) ) );
         }
         add( new TextField( "order" ).setRequired( false ) );
+
         add( new Label( "watchers", new Model<String>()
         {
             @Override
             public String getObject()
             {
-                return IssueUtils.getWatchersDescription( issue, ( (HeadsUpSession) getSession() ).getUser() );
+                return IssueUtils.getWatchersDescription( issue, currentUser );
             }
-        } ) );
+        } ).setVisible( !creating ) );
 
         add( new TextField( "summary" ).setRequired( true ) );
         add( new TextField( "environment" ) );
@@ -220,7 +243,7 @@ class IssueForm
     {
         if ( attachmentPanel != null )
         {
-            for ( Attachment attachment: attachmentPanel.getAttachments() )
+            for ( Attachment attachment : attachmentPanel.getAttachments() )
             {
                 if ( attachment != null )
                 {
@@ -240,7 +263,7 @@ class IssueForm
                 simulate.setUpdatedRequired( issue.getTimeRequired() );
                 simulate.setDay( new Date() );
                 simulate.setIssue( issue );
-                simulate.setUser( ( (HeadsUpSession) getSession() ).getUser() );
+                simulate.setUser( currentUser );
 
                 ( (HibernateStorage) owner.getStorage() ).save( simulate );
                 issue.getTimeWorked().add( simulate );
@@ -250,6 +273,15 @@ class IssueForm
         {
             issue.setTimeRequired( issue.getTimeEstimate() );
         }
+
+        if ( creating )
+        {
+            if ( toggleWatchers.getModelObject() )
+            {
+                issue.getWatchers().add( currentUser );
+            }
+        }
+
         issue.setUpdated( new Date() );
         if ( issue.getMilestone() != null )
         {
@@ -272,6 +304,7 @@ class IssueForm
                 issue.getWatchers().add( issue.getAssignee() );
             }
         }
+
         parent.onSubmit( issue );
 
         PageParameters params = new PageParameters();
