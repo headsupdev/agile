@@ -40,6 +40,7 @@ import org.headsupdev.agile.storage.resource.DurationWorked;
 import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.HeadsUpSession;
 import org.headsupdev.agile.web.components.FormattedDateModel;
+import org.headsupdev.agile.web.components.GravatarLinkPanel;
 import org.headsupdev.agile.web.components.MarkedUpTextModel;
 
 import java.util.Date;
@@ -64,6 +65,7 @@ public class CommentPanel
     public Link remove;
     private Storage storage;
     private Comment comment;
+    private final int ICON_EDGE_LENGTH = 30;
 
     public CommentPanel( String id, Comment comment, Project project )
     {
@@ -104,6 +106,7 @@ public class CommentPanel
         {
             comment = (Comment) o;
             add( new Image( "icon", new ResourceReference( HeadsUpPage.class, "images/comment.png" ) ) );
+            commentTitle.add( new GravatarLinkPanel( "gravatar", comment.getUser(), ICON_EDGE_LENGTH, page) );
 
             PageParameters params = page.getProjectPageParameters();
             params.put( "page", doc.getName() );
