@@ -43,6 +43,7 @@ import org.headsupdev.agile.storage.issues.Issue;
 import org.headsupdev.agile.storage.issues.Milestone;
 import org.headsupdev.agile.web.*;
 import org.headsupdev.agile.web.components.FormattedDateModel;
+import org.headsupdev.agile.web.components.GravatarLinkPanel;
 import org.headsupdev.agile.web.components.MarkedUpTextModel;
 import org.headsupdev.agile.web.components.issues.IssueFilterPanel;
 import org.headsupdev.agile.web.components.issues.IssueListPanel;
@@ -71,7 +72,7 @@ public class ViewMilestone
     private Milestone milestone;
     private HeadsUpPage page;
     private IssueFilterPanel filter;
-
+    private int ICON_EDGE_LENGTH = 30;
     public Permission getRequiredPermission()
     {
         return new MilestoneViewPermission();
@@ -116,6 +117,7 @@ public class ViewMilestone
             {
                 comment = listItem.getModelObject();
                 listItem.add( new Image( "icon", new ResourceReference( HeadsUpPage.class, "images/comment.png" ) ) );
+                listItem.add( new GravatarLinkPanel( "gravatar", comment.getUser(), ICON_EDGE_LENGTH, page) );
                 listItem.add( new Label( "username", comment.getUser().getFullnameOrUsername() ) );
                 listItem.add( new Label( "created", new FormattedDateModel( comment.getCreated(),
                         ( (HeadsUpSession) getSession() ).getTimeZone() ) ) );
