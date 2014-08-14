@@ -177,6 +177,15 @@ public class StoredUser
         return getUsername();
     }
 
+    public String getInitials()
+    {
+        if( firstname == null || lastname == null )
+        {
+            return null;
+        }
+        return firstname.substring( 0, 1 ).toUpperCase() + lastname.substring( 0, 1 ).toUpperCase();
+    }
+
     public String getDescription()
     {
         return description;

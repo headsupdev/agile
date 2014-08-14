@@ -49,6 +49,8 @@ public interface User
 
     public String getFullnameOrUsername();
 
+    public String getInitials();
+
     public Date getCreated();
 
     public Date getLastLogin();
