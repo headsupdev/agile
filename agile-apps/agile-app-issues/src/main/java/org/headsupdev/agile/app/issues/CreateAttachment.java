@@ -61,6 +61,12 @@ public class CreateAttachment
             getIssue().addAttachment( attachment );
         }
     }
+    
+    @Override
+    public String getPreamble()
+    {
+        return "Add Attachments to ";
+    }
 
     protected Event getUpdateEvent( Comment comment )
     {

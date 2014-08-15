@@ -95,7 +95,8 @@ class IssueForm
         {
             this.oldTimeRequired = new Duration( issue.getTimeRequired() );
         }
-        
+
+        add( new Subheader( "subHeader", "Edit ", issue ).setVisible( !creating ) );
         setModel( new CompoundPropertyModel<Issue>( issue ) );
 
         add( new Label( "project", issue.getProject().getAlias() ) );

@@ -18,50 +18,53 @@
 
 package org.headsupdev.agile.web;
 
-import org.apache.wicket.markup.html.CSSPackageResource;
-import org.headsupdev.agile.api.logging.Logger;
-import org.headsupdev.agile.web.auth.WebLoginManager;
-import org.headsupdev.agile.web.components.MarkedUpTextModel;
-import org.headsupdev.agile.web.components.AccountSummaryPanel;
-import org.headsupdev.agile.web.components.UserDashboard;
-import org.headsupdev.agile.web.dialogs.LoginDialog;
-import org.headsupdev.agile.web.dialogs.LogoutDialog;
 import org.apache.wicket.*;
-import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
-import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.protocol.http.WebRequest;
-import org.apache.wicket.protocol.http.WebResponse;
-import org.apache.wicket.util.time.Duration;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.markup.html.CSSPackageResource;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
+import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
-import org.headsupdev.agile.api.*;
-import org.headsupdev.agile.api.SecurityManager;
+import org.apache.wicket.protocol.http.WebRequest;
+import org.apache.wicket.protocol.http.WebResponse;
+import org.apache.wicket.util.time.Duration;
 import org.headsupdev.agile.api.Application;
+import org.headsupdev.agile.api.*;
 import org.headsupdev.agile.api.Page;
+import org.headsupdev.agile.api.SecurityManager;
+import org.headsupdev.agile.api.logging.Logger;
+import org.headsupdev.agile.core.PrivateConfiguration;
 import org.headsupdev.agile.security.permission.ProjectListPermission;
 import org.headsupdev.agile.storage.StoredProject;
+import org.headsupdev.agile.web.auth.WebLoginManager;
+import org.headsupdev.agile.web.components.AccountSummaryPanel;
+import org.headsupdev.agile.web.components.MarkedUpTextModel;
 import org.headsupdev.agile.web.components.ProjectListPanel;
-import org.headsupdev.agile.core.PrivateConfiguration;
+import org.headsupdev.agile.web.components.UserDashboard;
+import org.headsupdev.agile.web.dialogs.LoginDialog;
+import org.headsupdev.agile.web.dialogs.LogoutDialog;
 import org.wicketstuff.animator.Animator;
 import org.wicketstuff.animator.IAnimatorSubject;
 import org.wicketstuff.animator.MarkupIdModel;
 
-import java.util.*;
-import java.util.regex.Pattern;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
  * The parent to all HeadsUp styled pages
@@ -71,8 +74,8 @@ import java.io.Serializable;
  * @since 1.0
  */
 public abstract class HeadsUpPage
-    extends Page
-    implements Serializable
+        extends Page
+        implements Serializable
 {
     public static final Pattern ID_PATTERN = Pattern.compile( "[a-zA-Z0-9-_\\.]*" );
 
@@ -142,12 +145,13 @@ public abstract class HeadsUpPage
         add( CSSPackageResource.getHeaderContribution( HeadsUpPage.class, "mobile.css", "handheld, only screen and (max-width: 767px)" ) );
 
         add( new WebMarkupContainer( "headerlogo" ).add( new AttributeModifier( "src", true,
-            new PropertyModel<String>( WebManager.getInstance(), "headerLogo" ) ) ) );
+                new PropertyModel<String>( WebManager.getInstance(), "headerLogo" ) ) ) );
 
         WebMarkupContainer mainmenu = new WebMarkupContainer( "mainmenu-container" );
         mainmenu.setMarkupId( "mainmenu" );
         mainmenu.add( new ListView<Application>( "mainmenu",
-                ApplicationPageMapper.get().getApplications( getSession().getUser() ) ) {
+                ApplicationPageMapper.get().getApplications( getSession().getUser() ) )
+        {
             protected void populateItem( ListItem<Application> listItem )
             {
                 Project project = getProject();
@@ -159,10 +163,11 @@ public abstract class HeadsUpPage
                 }
 
                 String link = "/" + project.getId() + "/" + app.getApplicationId() + "/";
-                if ( ApplicationPageMapper.isHomeApp( app ) ) {
+                if ( ApplicationPageMapper.isHomeApp( app ) )
+                {
                     if ( project.equals( StoredProject.getDefault() ) )
                     {
-                        link  = "/";
+                        link = "/";
                     }
                     else
                     {
@@ -175,7 +180,8 @@ public abstract class HeadsUpPage
 
                 listItem.add( new AttributeModifier( "class", new Model<String>()
                 {
-                    public String getObject() {
+                    public String getObject()
+                    {
                         if ( app.equals( getHeadsUpApplication() ) )
                         {
                             return "mainmenu-item-selected";
@@ -197,7 +203,8 @@ public abstract class HeadsUpPage
         addAnimatedSelect( "sublink", "\u2699", submenu );
         add( submenu );
 
-        submenu.add( new ListView<Link>( "submenu", links ) {
+        submenu.add( new ListView<Link>( "submenu", links )
+        {
             protected void populateItem( ListItem<Link> listItem )
             {
                 Link link = listItem.getModelObject();
@@ -205,7 +212,8 @@ public abstract class HeadsUpPage
 
                 listItem.add( new AttributeModifier( "class", new Model<String>()
                 {
-                    public String getObject() {
+                    public String getObject()
+                    {
                         if ( getClass().equals( /* TODO find class of link */ null ) )
                         {
                             return "submenu-item-selected";
@@ -246,7 +254,7 @@ public abstract class HeadsUpPage
                     }
                     else
                     {
-                        target.appendJavascript("document.getElementById('userpanelbutton').childNodes[1].click()");
+                        target.appendJavascript( "document.getElementById('userpanelbutton').childNodes[1].click()" );
                         showDialog( new LoginDialog( DIALOG_PANEL_ID, true, HeadsUpPage.this ), target );
                     }
                 }
@@ -278,7 +286,7 @@ public abstract class HeadsUpPage
                     }
                     else
                     {
-                        target.appendJavascript("document.getElementById('userpanelbutton').childNodes[1].click()");
+                        target.appendJavascript( "document.getElementById('userpanelbutton').childNodes[1].click()" );
                         showDialog( new LogoutDialog( DIALOG_PANEL_ID, true, HeadsUpPage.this ), target );
                     }
                 }
@@ -332,7 +340,7 @@ public abstract class HeadsUpPage
                         return "totals overdue";
                     }
 
-                    if ( AccountSummaryPanel.userHasDueSoonMilestones(getSession().getUser()) )
+                    if ( AccountSummaryPanel.userHasDueSoonMilestones( getSession().getUser() ) )
                     {
                         return "totals duesoon";
                     }
@@ -355,8 +363,10 @@ public abstract class HeadsUpPage
             animator.withEaseInOutTransition();
             animator.addCssStyleSubject( new MarkupIdModel( dash ), "up", "down" );
             animator.addCssStyleSubject( new MarkupIdModel( dashBack ), "up", "down" );
-            animator.addSubject( new IAnimatorSubject() {
-                public String getJavaScript() {
+            animator.addSubject( new IAnimatorSubject()
+            {
+                public String getJavaScript()
+                {
                     return "function showBackground() {" +
                             "   var background = Wicket.$('userdashboardbackground');" +
                             "   if (userdashbuttonAnimator.state > 0) {" +
@@ -381,9 +391,11 @@ public abstract class HeadsUpPage
         }
         add( userpanel );
 
-        Form form = new Form( "quicksearch" ) {
+        Form form = new Form( "quicksearch" )
+        {
 
-            protected void onSubmit() {
+            protected void onSubmit()
+            {
                 if ( searchQuery == null )
                 {
                     return;
@@ -426,7 +438,8 @@ public abstract class HeadsUpPage
             }
         } ) );
         spinner.setOutputMarkupId( true );
-        spinner.add( new AbstractAjaxTimerBehavior( Duration.seconds( 10 ) ) {
+        spinner.add( new AbstractAjaxTimerBehavior( Duration.seconds( 10 ) )
+        {
             {
                 onlyTargetActivePage();
             }
@@ -435,7 +448,7 @@ public abstract class HeadsUpPage
             {
                 target.addComponent( spinner );
             }
-        });
+        } );
         taskLink.add( spinner );
         add( taskpanel );
 
@@ -448,7 +461,7 @@ public abstract class HeadsUpPage
                 super.onBeforeRender();
                 setVisible( getTitle() != null );
             }
-        });
+        } );
         add( new Label( "pagetitle", new PropertyModel( this, "pageTitle" ) ) );
         add( new FeedbackPanel( "messages" ) );
 
@@ -459,7 +472,7 @@ public abstract class HeadsUpPage
         add( new Label( "footer-note", noteString ).setVisible( noteString != null ) );
 
         add( new BookmarkablePageLink( "footer-update", getPageClass( "updates" ) )
-                .setVisible(getManager().isUpdateAvailable() ) );
+                .setVisible( getManager().isUpdateAvailable() ) );
 
         dialog = new WebMarkupContainer( DIALOG_PANEL_ID );
         dialog.setVisible( false );
@@ -475,8 +488,7 @@ public abstract class HeadsUpPage
 
     public String getPageTitle()
     {
-        String appProductTitle = getHeadsUpApplication().getName() + PAGE_TITLE_SEPARATOR +
-                getStorage().getGlobalConfiguration().getProductName();
+        String appProductTitle = getAppProductTitle();
 
         if ( getTitle() == null || getTitle().trim().length() == 0 )
         {
@@ -484,6 +496,12 @@ public abstract class HeadsUpPage
         }
 
         return getTitle() + PAGE_TITLE_SEPARATOR + appProductTitle;
+    }
+
+    public String getAppProductTitle()
+    {
+        return getHeadsUpApplication().getName() + PAGE_TITLE_SEPARATOR +
+                getStorage().getGlobalConfiguration().getProductName();
     }
 
     @Override
@@ -636,7 +654,8 @@ public abstract class HeadsUpPage
         PageParameters params = new PageParameters();
         params.add( "project", Project.ALL_PROJECT_ID );
         BookmarkablePageLink allProjects = new BookmarkablePageLink( "allprojects-link", getPageClass( pageHint ), params );
-        allProjects.add( new AttributeModifier( "class", new Model<String>() {
+        allProjects.add( new AttributeModifier( "class", new Model<String>()
+        {
             public String getObject()
             {
                 if ( getProject().equals( StoredProject.getDefault() ) )

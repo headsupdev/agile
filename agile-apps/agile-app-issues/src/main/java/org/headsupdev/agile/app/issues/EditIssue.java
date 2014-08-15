@@ -18,14 +18,15 @@
 
 package org.headsupdev.agile.app.issues;
 
-import org.headsupdev.agile.web.HeadsUpPage;
-import org.headsupdev.agile.web.BookmarkableMenuLink;
-import org.headsupdev.agile.web.MountPoint;
+import org.apache.wicket.markup.html.CSSPackageResource;
+import org.headsupdev.agile.api.Permission;
 import org.headsupdev.agile.app.issues.event.UpdateIssueEvent;
 import org.headsupdev.agile.app.issues.permission.IssueEditPermission;
-import org.headsupdev.agile.api.Permission;
 import org.headsupdev.agile.storage.issues.Issue;
-import org.apache.wicket.markup.html.CSSPackageResource;
+import org.headsupdev.agile.web.BookmarkableMenuLink;
+import org.headsupdev.agile.web.HeadsUpPage;
+import org.headsupdev.agile.web.MountPoint;
+import org.headsupdev.agile.web.components.issues.IssueListPanel;
 
 /**
  * Issue edit page
@@ -34,11 +35,12 @@ import org.apache.wicket.markup.html.CSSPackageResource;
  * @version $Id$
  * @since 1.0
  */
-@MountPoint( "edit" )
+@MountPoint("edit")
 public class EditIssue
-    extends HeadsUpPage
+        extends HeadsUpPage
 {
     private long issueId;
+    private Issue issue;
 
     public Permission getRequiredPermission()
     {
@@ -49,6 +51,7 @@ public class EditIssue
     {
         super.layout();
         add( CSSPackageResource.getHeaderContribution( getClass(), "issue.css" ) );
+        add( CSSPackageResource.getHeaderContribution( IssueListPanel.class, "issue.css" ) );
 
         try
         {
@@ -60,7 +63,7 @@ public class EditIssue
             return;
         }
 
-        Issue issue = IssuesApplication.getIssue( issueId, getProject() );
+        issue = IssuesApplication.getIssue( issueId, getProject() );
         if ( issue == null )
         {
             notFoundError();
@@ -74,14 +77,15 @@ public class EditIssue
             public void onSubmit( Issue issue )
             {
                 getHeadsUpApplication().addEvent( new UpdateIssueEvent( issue, issue.getProject(),
-                                                                        EditIssue.this.getSession().getUser(), "edited" ) );
+                        EditIssue.this.getSession().getUser(), "edited" ) );
             }
-        });
+        } );
+
     }
 
     @Override
-    public String getTitle()
+    public String getPageTitle()
     {
-        return "Edit Issue " + issueId;
+        return "Edit Issue:" + issueId + PAGE_TITLE_SEPARATOR + getAppProductTitle();
     }
 }

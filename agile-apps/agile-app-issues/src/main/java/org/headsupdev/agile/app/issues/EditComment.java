@@ -97,9 +97,9 @@ public class EditComment
     }
 
     @Override
-    public String getTitle()
+    public String getPageTitle()
     {
-        return "Edit Comment";
+        return getPreamble() + "Issue:" + issue.getId() + PAGE_TITLE_SEPARATOR + getAppProductTitle();
     }
 
     public Issue getIssue()
@@ -132,6 +132,16 @@ public class EditComment
         return new UpdateIssueEvent( issue, issue.getProject(), getSession().getUser(), comment, "commented on" );
     }
 
+    public String getPreamble()
+    {
+        if ( submitLabel.toLowerCase().contains( "issue" ) )
+        {
+            return submitLabel.replace( "Issue", "" );
+        }
+
+        return submitLabel + " for ";
+    }
+
     class CommentForm
             extends Form<Comment>
     {
@@ -153,6 +163,7 @@ public class EditComment
             input = new TextArea( "comment" );
             add( input );
             layoutChild( this );
+            add( new Subheader( "subHeader", getPreamble(), issue ) );
 
             add( new Button( "submit", new Model<String>()
             {
