@@ -18,22 +18,23 @@
 
 package org.headsupdev.agile.app.dashboard;
 
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.PasswordTextField;
 import org.apache.wicket.markup.html.form.validation.EqualPasswordInputValidator;
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.model.PropertyModel;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-import org.headsupdev.agile.storage.StoredUser;
-import org.headsupdev.agile.storage.HibernateStorage;
 import org.headsupdev.agile.api.Permission;
 import org.headsupdev.agile.app.dashboard.permission.MemberEditPermission;
-import org.headsupdev.agile.web.MountPoint;
+import org.headsupdev.agile.security.permission.AdminPermission;
+import org.headsupdev.agile.storage.HibernateStorage;
+import org.headsupdev.agile.storage.StoredUser;
+import org.headsupdev.agile.web.BookmarkableMenuLink;
 import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.HeadsUpSession;
-import org.headsupdev.agile.web.BookmarkableMenuLink;
-import org.headsupdev.agile.security.permission.AdminPermission;
+import org.headsupdev.agile.web.MountPoint;
+import org.headsupdev.agile.web.components.OnePressSubmitButton;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 /**
  * A simple page for changing a users password
@@ -42,9 +43,9 @@ import org.headsupdev.agile.security.permission.AdminPermission;
  * @version $Id$
  * @since 1.0
  */
-@MountPoint( "changepassword" )
+@MountPoint("changepassword")
 public class ChangePassword
-    extends HeadsUpPage
+        extends HeadsUpPage
 {
     private String username;
 
@@ -87,7 +88,8 @@ public class ChangePassword
         return "Change Password for " + username;
     }
 
-    class ChangePasswordForm extends Form
+    class ChangePasswordForm
+            extends Form
     {
         private org.headsupdev.agile.api.User user;
         private boolean me;
@@ -104,6 +106,7 @@ public class ChangePassword
             add( pass2 = new PasswordTextField( "password2", new PropertyModel( this, "pass2" ) ) );
 
             add( new EqualPasswordInputValidator( pass1, pass2 ) );
+            add( new OnePressSubmitButton( "submitPassword" ) );
         }
 
         public void onSubmit()
@@ -113,7 +116,8 @@ public class ChangePassword
             user = (org.headsupdev.agile.api.User) session.merge( user );
 
             ( (StoredUser) user ).setPassword( pass1 );
-            if ( me ) {
+            if ( me )
+            {
                 ( (HeadsUpSession) getSession() ).setUser( user );
             }
 

@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -19,6 +19,7 @@
 package org.headsupdev.agile.app.admin.configuration;
 
 import org.headsupdev.agile.app.admin.AdminApplication;
+import org.headsupdev.agile.web.components.OnePressSubmitButton;
 import org.headsupdev.agile.web.components.ProjectTreeDropDownChoice;
 import org.headsupdev.agile.web.ApplicationPageMapper;
 import org.headsupdev.agile.web.MountPoint;
@@ -104,6 +105,7 @@ public class ApplicationsConfiguration
             };
             add( config.setVisible( hasConfig ) );
             config.add( new ConfigurationPanel( "item", app.getConfigurationItems(), tree, app, null ) );
+            config.add( new OnePressSubmitButton( "submitConfig" ) );
             add( new WebMarkupContainer( "noconfig" ).setVisible( !hasConfig ) );
 
             final PropertyTree projectTree = Manager.getStorageInstance().getGlobalConfiguration().
@@ -120,7 +122,7 @@ public class ApplicationsConfiguration
                 }
             };
             projectConfig.add( new ChangeProjectDropDownChoice( "project", app ) );
-
+            projectConfig.add( new OnePressSubmitButton( "submitProjConfig" ) );
             add( projectConfig.setVisible( hasProjectConfig ) );
             projectConfig.add( new ConfigurationPanel( "item", items, projectTree, app, getProject() ) );
             WebMarkupContainer noProjectConfig = new WebMarkupContainer( "noprojectconfig" );

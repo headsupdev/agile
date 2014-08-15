@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -30,6 +30,7 @@ import org.headsupdev.agile.security.DefaultSecurityManager;
 import org.headsupdev.agile.api.Manager;
 import org.headsupdev.agile.storage.StoredUser;
 import org.headsupdev.agile.storage.AdminRole;
+import org.headsupdev.agile.web.components.OnePressSubmitButton;
 
 /**
  * A simple panel for the setup to add an administrator to the system.
@@ -73,6 +74,7 @@ public class AddAdminPanel
             add( pass2.setRequired( true ) );
 
             add( new EqualPasswordInputValidator( pass, pass2 ) );
+            add( new OnePressSubmitButton( "submitUser" ) );
         }
 
         public void onSubmit()

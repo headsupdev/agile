@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -36,6 +36,7 @@ import org.headsupdev.agile.api.PropertyTree;
 import org.headsupdev.agile.api.Project;
 import org.headsupdev.agile.storage.StoredProject;
 import org.headsupdev.agile.web.MountPoint;
+import org.headsupdev.agile.web.components.OnePressSubmitButton;
 
 /**
  * Admin of the notifiers used for HeadsUp events
@@ -117,7 +118,7 @@ public class NotifiersConfiguration
                     }
                 }
             } );
-
+            add( new OnePressSubmitButton( "submitEdit" ) );
             add( new Button( "remove" )
             {
                 public void onSubmit()
@@ -146,12 +147,16 @@ public class NotifiersConfiguration
             super( id );
 
             create = new DropDownChoice( "id", new PropertyModel( this, "adding" ) );
-            add( create );
+            add( create.setNullValid( false ) );
+            add( new OnePressSubmitButton( "submitNotifier" ) );
         }
 
         public void onSubmit()
         {
-            ( (DefaultManager) Manager.getInstance() ).addNotifier( adding, getProject() );
+            if ( adding != null )
+            {
+                ( (DefaultManager) Manager.getInstance() ).addNotifier( adding, getProject() );
+            }
             adding = null;
         }
 

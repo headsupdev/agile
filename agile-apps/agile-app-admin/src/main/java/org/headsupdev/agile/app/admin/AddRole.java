@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -18,6 +18,9 @@
 
 package org.headsupdev.agile.app.admin;
 
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.model.CompoundPropertyModel;
 import org.headsupdev.agile.api.Manager;
 import org.headsupdev.agile.api.Permission;
 import org.headsupdev.agile.api.Role;
@@ -26,9 +29,7 @@ import org.headsupdev.agile.security.permission.AdminPermission;
 import org.headsupdev.agile.storage.StoredRole;
 import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.MountPoint;
-import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.model.CompoundPropertyModel;
+import org.headsupdev.agile.web.components.OnePressSubmitButton;
 
 /**
  * TODO document me
@@ -36,9 +37,9 @@ import org.apache.wicket.model.CompoundPropertyModel;
  * @author Andrew Williams
  * @since 1.0
  */
-@MountPoint( "add-role" )
+@MountPoint("add-role")
 public class AddRole
-    extends HeadsUpPage
+        extends HeadsUpPage
 {
     private String roleid, comment;
 
@@ -74,6 +75,7 @@ public class AddRole
         };
         addRoleForm.add( new TextField( "roleid" ) );
         addRoleForm.add( new TextField( "comment" ) );
+        addRoleForm.add( new OnePressSubmitButton( "submitRole" ) );
 
         add( addRoleForm );
     }

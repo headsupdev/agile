@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -18,12 +18,6 @@
 
 package org.headsupdev.agile.app.admin.configuration;
 
-import org.headsupdev.agile.api.Project;
-import org.headsupdev.agile.app.admin.AdminApplication;
-import org.headsupdev.agile.storage.HibernateStorage;
-import org.headsupdev.agile.storage.StoredProject;
-import org.headsupdev.agile.web.MountPoint;
-import org.headsupdev.agile.web.components.ProjectTreeDropDownChoice;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.CSSPackageResource;
 import org.apache.wicket.markup.html.basic.Label;
@@ -32,6 +26,13 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.headsupdev.agile.api.Project;
+import org.headsupdev.agile.app.admin.AdminApplication;
+import org.headsupdev.agile.storage.HibernateStorage;
+import org.headsupdev.agile.storage.StoredProject;
+import org.headsupdev.agile.web.MountPoint;
+import org.headsupdev.agile.web.components.OnePressSubmitButton;
+import org.headsupdev.agile.web.components.ProjectTreeDropDownChoice;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -42,9 +43,9 @@ import org.hibernate.Transaction;
  * @version $Id$
  * @since 1.0
  */
-@MountPoint( "configuration/projects" )
+@MountPoint("configuration/projects")
 public class ProjectConfiguration
-    extends ConfigurationPage
+        extends ConfigurationPage
 {
     Project project;
 
@@ -84,12 +85,12 @@ public class ProjectConfiguration
                 project.getConfiguration(), null, project, false, 3 ) );
         projectConfig.add( new ConfigurationItemPanel( "timeweekend", StoredProject.CONFIGURATION_TIMETRACKING_IGNOREWEEKEND,
                 project.getConfiguration(), null, project, false, 4 ) );
-
+        projectConfig.add( new OnePressSubmitButton( "submitProjConfig" ) );
         add( projectConfig );
     }
 
-       class ChangeProjectDropDownChoice
-        extends ProjectTreeDropDownChoice
+    class ChangeProjectDropDownChoice
+            extends ProjectTreeDropDownChoice
     {
 
         public ChangeProjectDropDownChoice( String id )

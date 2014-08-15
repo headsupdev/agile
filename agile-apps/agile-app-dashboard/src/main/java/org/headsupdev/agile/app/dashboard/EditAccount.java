@@ -25,6 +25,7 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.headsupdev.agile.web.components.OnePressSubmitButton;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.headsupdev.agile.security.permission.AdminPermission;
@@ -106,7 +107,7 @@ public class EditAccount
             add( new TextField( "email" ) );
             add( new TextField( "telephone" ) );
             add( new TextArea( "description" ) );
-
+            add( new OnePressSubmitButton( "submitUser" ) );
             // if we are administering this account allow changing of this value
             add( new CheckBox( "hiddenInTimeTracking" ).setEnabled( getSecurityManager().userHasPermission(
                     ( (HeadsUpSession) getSession() ).getUser(), new AdminPermission(), null) ) );

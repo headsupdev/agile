@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -35,6 +35,7 @@ import org.headsupdev.agile.web.BookmarkableMenuLink;
 import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.MountPoint;
 import org.headsupdev.agile.web.components.AttachmentPanel;
+import org.headsupdev.agile.web.components.OnePressSubmitButton;
 
 import java.util.Date;
 
@@ -141,7 +142,7 @@ public class CreateComment
 
             add( new Subheader( "subHeader", getPreamble(), issue ) );
 
-            add( new Button( "submit", new Model<String>()
+            add( new OnePressSubmitButton( "submit", new Model<String>()
             {
                 public String getObject()
                 {

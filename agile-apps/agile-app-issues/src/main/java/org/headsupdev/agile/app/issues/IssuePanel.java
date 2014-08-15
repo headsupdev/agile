@@ -35,6 +35,7 @@ import org.headsupdev.agile.web.RenderUtil;
 import org.headsupdev.agile.web.components.AccountFallbackLink;
 import org.headsupdev.agile.web.components.FormattedDateModel;
 import org.headsupdev.agile.web.components.MarkedUpTextModel;
+import org.headsupdev.agile.web.components.OnePressSubmitButton;
 import org.headsupdev.agile.web.components.issues.IssueHoursEstimateModel;
 import org.headsupdev.agile.web.components.issues.IssueHoursRequiredModel;
 import org.headsupdev.agile.web.components.issues.IssueListPanel;
@@ -44,7 +45,6 @@ import org.apache.wicket.PageParameters;
 import org.apache.wicket.ResourceReference;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
@@ -106,7 +106,7 @@ public class IssuePanel
             milestoneLink.add( new Label( "milestone", milestone.toString() ) );
             add( milestoneLink );
 
-            Button addIssue = new Button( "milestone-add-issue" )
+            OnePressSubmitButton addIssue = new OnePressSubmitButton( "milestone-add-issue" )
             {
                 @Override
                 public void onSubmit()
@@ -388,7 +388,7 @@ public class IssuePanel
     {
         final Form form = new Form( "drop-issue-form" );
 
-        Button button = new Button( "drop-issue" )
+        OnePressSubmitButton button = new OnePressSubmitButton( "drop-issue" )
         {
             @Override
             public void onSubmit()
@@ -419,7 +419,7 @@ public class IssuePanel
     {
         final Form form = new Form( "begin-issue-form" );
 
-        Button button = new Button( "begin-issue" )
+        OnePressSubmitButton button = new OnePressSubmitButton( "begin-issue" )
         {
             @Override
             public void onSubmit()

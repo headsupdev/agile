@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2013 Heads Up Development Ltd.
+ * Copyright 2013-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -18,19 +18,19 @@
 
 package org.headsupdev.agile.framework;
 
+import org.apache.wicket.markup.html.CSSPackageResource;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.upload.FileUpload;
+import org.apache.wicket.markup.html.form.upload.FileUploadField;
+import org.apache.wicket.model.Model;
 import org.headsupdev.agile.api.Permission;
 import org.headsupdev.agile.api.util.FileUtil;
 import org.headsupdev.agile.core.UpdateDetails;
 import org.headsupdev.agile.security.permission.AdminPermission;
 import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.MountPoint;
-
-import org.apache.wicket.markup.html.CSSPackageResource;
-import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.upload.FileUpload;
-import org.apache.wicket.markup.html.form.upload.FileUploadField;
-import org.apache.wicket.model.Model;
+import org.headsupdev.agile.web.components.OnePressSubmitButton;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -42,9 +42,9 @@ import java.net.MalformedURLException;
  * @version $Id$
  * @since 2.0
  */
-@MountPoint( "manualupdate" )
+@MountPoint("manualupdate")
 public class ManualUpdate
-    extends HeadsUpPage
+        extends HeadsUpPage
 {
     private FileUploadField upload;
     private UpdatingPanel updating;
@@ -59,7 +59,7 @@ public class ManualUpdate
     public void layout()
     {
         super.layout();
-        add( CSSPackageResource.getHeaderContribution(getClass(), "updates.css") );
+        add( CSSPackageResource.getHeaderContribution( getClass(), "updates.css" ) );
 
         add( new Label( "productName", getStorage().getGlobalConfiguration().getProductName() ) );
 
@@ -109,7 +109,7 @@ public class ManualUpdate
                 String filename = file.getClientFileName();
                 if ( !isValidUpateFile( filename ) )
                 {
-                    error( "Not a valid upgrade file");
+                    error( "Not a valid upgrade file" );
                     return;
                 }
 
@@ -129,6 +129,7 @@ public class ManualUpdate
             }
         } );
         uploadForm.add( upload );
+        uploadForm.add( new OnePressSubmitButton( "submitUpgrade" ) );
     }
 
     protected boolean isValidUpateFile( String filename )

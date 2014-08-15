@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -26,6 +26,7 @@ import org.headsupdev.agile.app.admin.AdminApplication;
 import org.headsupdev.agile.api.logging.Logger;
 import org.headsupdev.agile.storage.DatabaseRegistry;
 import org.headsupdev.agile.web.components.BooleanImage;
+import org.headsupdev.agile.web.components.OnePressSubmitButton;
 import org.headsupdev.agile.web.components.configuration.SQLURLField;
 import org.headsupdev.agile.web.MountPoint;
 import org.apache.wicket.markup.html.CSSPackageResource;
@@ -292,6 +293,7 @@ public class SystemConfiguration
                     }
                 }
             } );
+            add( new OnePressSubmitButton( "submitConfig" ) );
         }
 
         private BooleanImage sqlTestImage;

@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -35,10 +35,7 @@ import org.headsupdev.agile.storage.issues.Milestone;
 import org.headsupdev.agile.storage.issues.MilestoneGroup;
 import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.HeadsUpSession;
-import org.headsupdev.agile.web.components.FormattedDateModel;
-import org.headsupdev.agile.web.components.IdPatternValidator;
-import org.headsupdev.agile.web.components.PercentagePanel;
-import org.headsupdev.agile.web.components.StripedListView;
+import org.headsupdev.agile.web.components.*;
 import org.headsupdev.agile.web.wicket.SortableEntityProvider;
 import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
@@ -118,6 +115,7 @@ public class EditMilestoneGroupForm
         };
 
         form.add( setupFilter() );
+        form.add( new OnePressSubmitButton( "submitGroup" ) );
         layout( form );
         add( form );
     }

@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -21,18 +21,18 @@ package org.headsupdev.agile.app.docs;
 import org.apache.wicket.markup.html.CSSPackageResource;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
-import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
-import org.headsupdev.agile.web.HeadsUpPage;
-import org.headsupdev.agile.web.BookmarkableMenuLink;
-import org.headsupdev.agile.web.MountPoint;
+import org.headsupdev.agile.web.components.OnePressSubmitButton;
 import org.headsupdev.agile.api.Permission;
-import org.headsupdev.agile.storage.HibernateStorage;
-import org.headsupdev.agile.storage.Comment;
-import org.headsupdev.agile.storage.docs.Document;
-import org.headsupdev.agile.app.docs.permission.DocEditPermission;
 import org.headsupdev.agile.app.docs.event.UpdateDocumentEvent;
+import org.headsupdev.agile.app.docs.permission.DocEditPermission;
+import org.headsupdev.agile.storage.Comment;
+import org.headsupdev.agile.storage.HibernateStorage;
+import org.headsupdev.agile.storage.docs.Document;
+import org.headsupdev.agile.web.BookmarkableMenuLink;
+import org.headsupdev.agile.web.HeadsUpPage;
+import org.headsupdev.agile.web.MountPoint;
 import org.headsupdev.agile.web.components.AttachmentPanel;
 
 import java.util.Date;
@@ -44,22 +44,23 @@ import java.util.Date;
  * @version $Id$
  * @since 1.0
  */
-@MountPoint( "comment" )
+@MountPoint("comment")
 public class CreateComment
-    extends HeadsUpPage
+        extends HeadsUpPage
 {
     private Document doc;
     private String submitLabel = "Create Comment";
     protected AttachmentPanel attachmentPanel;
 
-    public Permission getRequiredPermission() {
+    public Permission getRequiredPermission()
+    {
         return new DocEditPermission();
     }
 
     public void layout()
     {
         super.layout();
-        add( CSSPackageResource.getHeaderContribution( getClass(), "doc.css" ));
+        add( CSSPackageResource.getHeaderContribution( getClass(), "doc.css" ) );
 
         String page = getPageParameters().getString( "page" );
         if ( page == null || page.length() == 0 )
@@ -117,9 +118,10 @@ public class CreateComment
     }
 
     class CommentForm
-        extends Form<Comment>
+            extends Form<Comment>
     {
         private Comment create = new Comment();
+
         public CommentForm( String id )
         {
             super( id );
@@ -129,7 +131,7 @@ public class CreateComment
 
             layoutChild( this );
 
-            add( new Button( "submit", new Model<String>()
+            add( new OnePressSubmitButton( "submit", new Model<String>()
             {
                 public String getObject()
                 {
@@ -157,7 +159,7 @@ public class CreateComment
             }
 
             submitChild( create );
-            if (attachmentPanel != null)
+            if ( attachmentPanel != null )
             {
                 if ( attachmentPanel.getAttachments().isEmpty() )
                 {
