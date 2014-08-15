@@ -475,8 +475,7 @@ public abstract class HeadsUpPage
 
     public String getPageTitle()
     {
-        String appProductTitle = getHeadsUpApplication().getName() + PAGE_TITLE_SEPARATOR +
-                getStorage().getGlobalConfiguration().getProductName();
+        String appProductTitle = getAppProductTitle();
 
         if ( getTitle() == null || getTitle().trim().length() == 0 )
         {
@@ -484,6 +483,12 @@ public abstract class HeadsUpPage
         }
 
         return getTitle() + PAGE_TITLE_SEPARATOR + appProductTitle;
+    }
+
+    public String getAppProductTitle()
+    {
+        return getHeadsUpApplication().getName() + PAGE_TITLE_SEPARATOR +
+                getStorage().getGlobalConfiguration().getProductName();
     }
 
     @Override

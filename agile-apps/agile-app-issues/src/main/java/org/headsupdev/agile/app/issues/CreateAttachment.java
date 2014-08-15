@@ -61,6 +61,12 @@ public class CreateAttachment
             getIssue().addAttachment( attachment );
         }
     }
+    
+    @Override
+    public String getPreamble()
+    {
+        return "Add Attachments to ";
+    }
 
     protected Event getUpdateEvent( Comment comment )
     {
@@ -87,12 +93,6 @@ public class CreateAttachment
         String attachmentFilenames = stringBuilder.toString();
         return new UpdateIssueEvent( getIssue(), getIssue().getProject(), getSession().getUser(), comment,
                 "attached files " + attachmentFilenames + " to" );
-    }
-
-    @Override
-    public String getPreamble()
-    {
-        return "Add Attachments to ";
     }
 
     @Override

@@ -101,7 +101,7 @@ public class CreateRelationship
         {
             super( id );
             setModel( new CompoundPropertyModel( this ) );
-            add( new Subheader( "subHeader", "Create Relationship for Issue:", issue ) );
+            add( new Subheader( "subHeader", "Create Relationship for ", issue ) );
             add( new ProjectTreeDropDownChoice( "relatedProject" )
             {
                 @Override
@@ -220,5 +220,11 @@ public class CreateRelationship
         {
             return 0;
         }
+    }
+
+    @Override
+    public String getPageTitle()
+    {
+        return "Create Relationship for Issue:" + issue.getId() + PAGE_TITLE_SEPARATOR + getAppProductTitle();
     }
 }

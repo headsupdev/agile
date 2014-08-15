@@ -80,5 +80,12 @@ public class EditIssue
                         EditIssue.this.getSession().getUser(), "edited" ) );
             }
         } );
+
+    }
+
+    @Override
+    public String getPageTitle()
+    {
+        return "Edit Issue:" + issueId + PAGE_TITLE_SEPARATOR + getAppProductTitle();
     }
 }

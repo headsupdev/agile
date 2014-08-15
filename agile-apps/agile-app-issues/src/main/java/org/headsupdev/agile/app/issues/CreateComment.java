@@ -187,4 +187,12 @@ public class CreateComment
             setResponsePage( getPageClass( "issues/view" ), getPageParameters() );
         }
     }
+
+    @Override
+    public String getPageTitle()
+    {
+        return getPreamble() + "Issue:" + issue.getId() + PAGE_TITLE_SEPARATOR + getAppProductTitle();
+    }
+
+
 }
