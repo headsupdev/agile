@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2014 Heads Up Development Ltd.
+ * Copyright 2009-2013 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -21,7 +21,9 @@ package org.headsupdev.agile.web;
 import org.apache.wicket.markup.html.CSSPackageResource;
 import org.headsupdev.agile.api.logging.Logger;
 import org.headsupdev.agile.web.auth.WebLoginManager;
-import org.headsupdev.agile.web.components.*;
+import org.headsupdev.agile.web.components.MarkedUpTextModel;
+import org.headsupdev.agile.web.components.AccountSummaryPanel;
+import org.headsupdev.agile.web.components.UserDashboard;
 import org.headsupdev.agile.web.dialogs.LoginDialog;
 import org.headsupdev.agile.web.dialogs.LogoutDialog;
 import org.apache.wicket.*;
@@ -51,6 +53,7 @@ import org.headsupdev.agile.api.Application;
 import org.headsupdev.agile.api.Page;
 import org.headsupdev.agile.security.permission.ProjectListPermission;
 import org.headsupdev.agile.storage.StoredProject;
+import org.headsupdev.agile.web.components.ProjectListPanel;
 import org.headsupdev.agile.core.PrivateConfiguration;
 import org.wicketstuff.animator.Animator;
 import org.wicketstuff.animator.IAnimatorSubject;
@@ -401,7 +404,6 @@ public abstract class HeadsUpPage
                 setResponsePage( getPageClass( "search" ), params );
             }
         };
-        form.add( new OnePressButton( "searchSubmit" ) );
         add( form.setVisible( ApplicationPageMapper.get().getSearchApp() != null ) );
         form.add( new TextField<String>( "query", new PropertyModel<String>( this, "searchQuery" ) ) );
 
