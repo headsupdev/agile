@@ -34,7 +34,7 @@ import org.headsupdev.agile.api.Permission;
 import org.headsupdev.agile.api.User;
 import org.headsupdev.agile.storage.StoredUser;
 import org.headsupdev.agile.storage.MemberRole;
-import org.headsupdev.agile.web.components.OnePressButton;
+import org.headsupdev.agile.web.components.OnePressSubmitButton;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -98,7 +98,7 @@ public class AddAccount
             add( pass2.setRequired( true ) );
 
             add( new EqualPasswordInputValidator( pass, pass2 ) );
-            add( new OnePressButton( "submitUser" ) );
+            add( new OnePressSubmitButton( "submitUser" ) );
         }
 
         public void onSubmit()

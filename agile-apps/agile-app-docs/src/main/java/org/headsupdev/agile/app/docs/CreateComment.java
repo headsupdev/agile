@@ -23,7 +23,7 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
-import org.headsupdev.agile.web.components.OnePressButton;
+import org.headsupdev.agile.web.components.OnePressSubmitButton;
 import org.headsupdev.agile.api.Permission;
 import org.headsupdev.agile.app.docs.event.UpdateDocumentEvent;
 import org.headsupdev.agile.app.docs.permission.DocEditPermission;
@@ -131,7 +131,7 @@ public class CreateComment
 
             layoutChild( this );
 
-            add( new OnePressButton( "submit", new Model<String>()
+            add( new OnePressSubmitButton( "submit", new Model<String>()
             {
                 public String getObject()
                 {

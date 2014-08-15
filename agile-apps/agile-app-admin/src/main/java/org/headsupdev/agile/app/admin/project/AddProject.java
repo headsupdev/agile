@@ -39,7 +39,7 @@ import org.headsupdev.agile.security.permission.AdminPermission;
 import org.headsupdev.agile.storage.*;
 import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.MountPoint;
-import org.headsupdev.agile.web.components.OnePressButton;
+import org.headsupdev.agile.web.components.OnePressSubmitButton;
 import org.headsupdev.support.java.FileUtil;
 import org.headsupdev.support.java.StringUtil;
 import org.wicketstuff.animator.Animator;
@@ -121,7 +121,7 @@ public class AddProject
                 cancelImport( working );
             }
         }.setDefaultFormProcessing( false ) );
-        confirmForm.add( new OnePressButton( "submitConfirm" ) );
+        confirmForm.add( new OnePressSubmitButton( "submitConfirm" ) );
         add( confirmForm.setVisible( false ) );
     }
 
@@ -146,7 +146,7 @@ public class AddProject
             add( new TextField( "username" ).setRequired( false ) );
             add( new PasswordTextField( "password" ).setRequired( false ) );
             add( new TextField( "scmBranch" ).setRequired( false ) );
-            add( new OnePressButton( "submitProject" ) );
+            add( new OnePressSubmitButton( "submitProject" ) );
             WebMarkupContainer advanced = new WebMarkupContainer( "advanced" );
             advanced.setMarkupId( "advanced" );
             WebMarkupContainer button = new WebMarkupContainer( "advbutton" );

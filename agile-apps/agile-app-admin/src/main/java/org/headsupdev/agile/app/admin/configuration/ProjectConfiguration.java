@@ -31,7 +31,7 @@ import org.headsupdev.agile.app.admin.AdminApplication;
 import org.headsupdev.agile.storage.HibernateStorage;
 import org.headsupdev.agile.storage.StoredProject;
 import org.headsupdev.agile.web.MountPoint;
-import org.headsupdev.agile.web.components.OnePressButton;
+import org.headsupdev.agile.web.components.OnePressSubmitButton;
 import org.headsupdev.agile.web.components.ProjectTreeDropDownChoice;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -85,7 +85,7 @@ public class ProjectConfiguration
                 project.getConfiguration(), null, project, false, 3 ) );
         projectConfig.add( new ConfigurationItemPanel( "timeweekend", StoredProject.CONFIGURATION_TIMETRACKING_IGNOREWEEKEND,
                 project.getConfiguration(), null, project, false, 4 ) );
-        projectConfig.add( new OnePressButton( "submitProjConfig" ) );
+        projectConfig.add( new OnePressSubmitButton( "submitProjConfig" ) );
         add( projectConfig );
     }
 

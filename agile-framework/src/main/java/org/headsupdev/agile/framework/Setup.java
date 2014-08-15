@@ -18,9 +18,10 @@
 
 package org.headsupdev.agile.framework;
 
+import org.headsupdev.agile.framework.setup.DatabasePanel;
 import org.headsupdev.agile.framework.setup.FinishedPanel;
 import org.headsupdev.agile.framework.setup.AddAdminPanel;
-import org.headsupdev.agile.framework.setup.DatabasePanel;
+
 import org.headsupdev.agile.storage.*;
 import org.headsupdev.agile.web.components.configuration.UpdatesPanel;
 import org.headsupdev.agile.web.*;

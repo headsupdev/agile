@@ -27,7 +27,7 @@ import java.io.File;
 
 import org.headsupdev.agile.storage.StoredMavenTwoProject;
 import org.headsupdev.agile.storage.StoredProject;
-import org.headsupdev.agile.web.components.OnePressButton;
+import org.headsupdev.agile.web.components.OnePressSubmitButton;
 
 /**
  * TODO Document me!
@@ -57,7 +57,7 @@ public class Maven2ProjectImporter
         };
         add( form );
         layoutForm( form );
-        form.add( new OnePressButton( "submitContinue" ) );
+        form.add( new OnePressSubmitButton( "submitContinue" ) );
         form.add( new Button( "cancel" )
         {
             @Override

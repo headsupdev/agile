@@ -19,7 +19,6 @@
 package org.headsupdev.agile.app.issues;
 
 import org.apache.wicket.markup.html.CSSPackageResource;
-import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.model.CompoundPropertyModel;
@@ -35,7 +34,7 @@ import org.headsupdev.agile.storage.Comment;
 import org.headsupdev.agile.storage.issues.Issue;
 import org.headsupdev.agile.api.Event;
 import org.headsupdev.agile.web.components.AttachmentPanel;
-import org.headsupdev.agile.web.components.OnePressButton;
+import org.headsupdev.agile.web.components.OnePressSubmitButton;
 
 import java.util.Date;
 
@@ -140,7 +139,7 @@ public class CreateComment
 
             layoutChild( this );
 
-            add( new OnePressButton( "submit", new Model<String>()
+            add( new OnePressSubmitButton( "submit", new Model<String>()
             {
                 public String getObject()
                 {

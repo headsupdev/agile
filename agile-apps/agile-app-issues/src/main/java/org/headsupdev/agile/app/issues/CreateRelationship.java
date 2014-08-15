@@ -34,7 +34,7 @@ import org.headsupdev.agile.storage.issues.IssueRelationship;
 import org.headsupdev.agile.web.BookmarkableMenuLink;
 import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.MountPoint;
-import org.headsupdev.agile.web.components.OnePressButton;
+import org.headsupdev.agile.web.components.OnePressSubmitButton;
 import org.headsupdev.agile.web.components.ProjectTreeDropDownChoice;
 import org.headsupdev.agile.web.components.issues.IssueUtils;
 import org.hibernate.criterion.Restrictions;
@@ -158,7 +158,7 @@ public class CreateRelationship
                     return IssueUtils.getRelationshipName( (Integer) o );
                 }
             } ) );
-            add( new OnePressButton( "submitRelationship" ) );
+            add( new OnePressSubmitButton( "submitRelationship" ) );
         }
 
         public void onSubmit()

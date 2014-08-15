@@ -23,7 +23,7 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.PropertyModel;
 import org.headsupdev.agile.core.PrivateConfiguration;
-import org.headsupdev.agile.web.components.OnePressButton;
+import org.headsupdev.agile.web.components.OnePressSubmitButton;
 
 /**
  * Using this panel user can setup checking for updates (even testing versions).
@@ -42,7 +42,7 @@ public class UpdatesPanel
         super( id );
         this.setupPage = setupPage;
 
-        add( new UpdatesForm( "updates" ).add( new OnePressButton( "submitUpdates" ) ) );
+        add( new UpdatesForm( "updates" ).add( new OnePressSubmitButton( "submitUpdates" ) ) );
     }
 
     class UpdatesForm

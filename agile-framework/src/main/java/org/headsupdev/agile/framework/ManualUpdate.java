@@ -30,7 +30,7 @@ import org.headsupdev.agile.core.UpdateDetails;
 import org.headsupdev.agile.security.permission.AdminPermission;
 import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.MountPoint;
-import org.headsupdev.agile.web.components.OnePressButton;
+import org.headsupdev.agile.web.components.OnePressSubmitButton;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -129,7 +129,7 @@ public class ManualUpdate
             }
         } );
         uploadForm.add( upload );
-        uploadForm.add( new OnePressButton( "submitUpgrade" ) );
+        uploadForm.add( new OnePressSubmitButton( "submitUpgrade" ) );
     }
 
     protected boolean isValidUpateFile( String filename )

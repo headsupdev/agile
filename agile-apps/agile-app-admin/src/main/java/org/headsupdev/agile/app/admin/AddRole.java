@@ -29,7 +29,7 @@ import org.headsupdev.agile.security.permission.AdminPermission;
 import org.headsupdev.agile.storage.StoredRole;
 import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.MountPoint;
-import org.headsupdev.agile.web.components.OnePressButton;
+import org.headsupdev.agile.web.components.OnePressSubmitButton;
 
 /**
  * TODO document me
@@ -75,7 +75,7 @@ public class AddRole
         };
         addRoleForm.add( new TextField( "roleid" ) );
         addRoleForm.add( new TextField( "comment" ) );
-        addRoleForm.add( new OnePressButton( "submitRole" ) );
+        addRoleForm.add( new OnePressSubmitButton( "submitRole" ) );
 
         add( addRoleForm );
     }

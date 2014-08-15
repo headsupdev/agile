@@ -39,7 +39,7 @@ import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.HeadsUpSession;
 import org.headsupdev.agile.web.MountPoint;
 import org.headsupdev.agile.web.components.IdPatternValidator;
-import org.headsupdev.agile.web.components.OnePressButton;
+import org.headsupdev.agile.web.components.OnePressSubmitButton;
 import org.headsupdev.agile.web.components.history.HistoryPanel;
 import org.headsupdev.support.java.StringUtil;
 import wicket.contrib.tinymce.TinyMceBehavior;
@@ -159,7 +159,7 @@ public class Edit
                 }
             };
             add( contentArea.setOutputMarkupId( true ) );
-            add( new OnePressButton( "submitDoc" ) );
+            add( new OnePressSubmitButton( "submitDoc" ) );
 
             TinyMCESettings settings = new TinyMCESettings( TinyMCESettings.Theme.advanced );
             settings.setToolbarAlign( TinyMCESettings.Align.left );

@@ -30,7 +30,7 @@ import org.headsupdev.agile.security.DefaultSecurityManager;
 import org.headsupdev.agile.api.Manager;
 import org.headsupdev.agile.storage.StoredUser;
 import org.headsupdev.agile.storage.AdminRole;
-import org.headsupdev.agile.web.components.OnePressButton;
+import org.headsupdev.agile.web.components.OnePressSubmitButton;
 
 /**
  * A simple panel for the setup to add an administrator to the system.
@@ -74,7 +74,7 @@ public class AddAdminPanel
             add( pass2.setRequired( true ) );
 
             add( new EqualPasswordInputValidator( pass, pass2 ) );
-            add( new OnePressButton( "submitUser" ) );
+            add( new OnePressSubmitButton( "submitUser" ) );
         }
 
         public void onSubmit()

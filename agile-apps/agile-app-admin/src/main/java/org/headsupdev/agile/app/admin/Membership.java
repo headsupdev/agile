@@ -31,7 +31,7 @@ import org.headsupdev.agile.security.permission.AdminPermission;
 import org.headsupdev.agile.storage.*;
 import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.MountPoint;
-import org.headsupdev.agile.web.components.OnePressButton;
+import org.headsupdev.agile.web.components.OnePressSubmitButton;
 import org.hibernate.Session;
 
 import java.util.*;
@@ -117,7 +117,7 @@ public class Membership
             } );
 
             add( new ProjectPermissionsListView( "projectlist", projects ) );
-            add( new OnePressButton( "membershipSubmit" ) );
+            add( new OnePressSubmitButton( "membershipSubmit" ) );
         }
 
         protected void onSubmit()

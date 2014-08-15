@@ -18,7 +18,7 @@
 
 package org.headsupdev.agile.framework;
 
-import org.headsupdev.agile.web.components.OnePressAjaxButton;
+import org.headsupdev.agile.web.components.OnePressAjaxSubmitButton;
 import org.headsupdev.support.java.FileUtil;
 import org.headsupdev.support.java.IOUtil;
 import org.headsupdev.support.java.compression.GZipFile;
@@ -37,7 +37,6 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.Session;
 import org.apache.wicket.model.Model;
@@ -101,7 +100,7 @@ public class UpdatingPanel extends Panel
         };
 
         final Form updateForm = new Form( "updatenow" );
-        updateForm.add( new OnePressAjaxButton( "submit", updateForm )
+        updateForm.add( new OnePressAjaxSubmitButton( "submit", updateForm )
         {
             public void onSubmit( AjaxRequestTarget target, Form form )
             {

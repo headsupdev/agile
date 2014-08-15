@@ -36,7 +36,7 @@ import org.headsupdev.agile.api.PropertyTree;
 import org.headsupdev.agile.api.Project;
 import org.headsupdev.agile.storage.StoredProject;
 import org.headsupdev.agile.web.MountPoint;
-import org.headsupdev.agile.web.components.OnePressButton;
+import org.headsupdev.agile.web.components.OnePressSubmitButton;
 
 /**
  * Admin of the notifiers used for HeadsUp events
@@ -118,7 +118,7 @@ public class NotifiersConfiguration
                     }
                 }
             } );
-            add( new OnePressButton( "submitEdit" ) );
+            add( new OnePressSubmitButton( "submitEdit" ) );
             add( new Button( "remove" )
             {
                 public void onSubmit()
@@ -148,7 +148,7 @@ public class NotifiersConfiguration
 
             create = new DropDownChoice( "id", new PropertyModel( this, "adding" ) );
             add( create.setNullValid( false ) );
-            add( new OnePressButton( "submitNotifier" ) );
+            add( new OnePressSubmitButton( "submitNotifier" ) );
         }
 
         public void onSubmit()

@@ -18,25 +18,27 @@
 
 package org.headsupdev.agile.web.components;
 
-import org.apache.wicket.markup.html.form.Button;
-import org.apache.wicket.model.IModel;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import org.apache.wicket.markup.html.form.Form;
 
 /**
- * Created by Gordon Edwards on 06/08/2014.
+ * Created by Gordon Edwards on 11/08/2014.
  *
- * A button that disables itself when pressed
+ * An AjaxButton that disables itself when pressed
+ * @since 2.1
  */
-public class OnePressButton
-        extends Button
+public class OnePressAjaxSubmitButton
+        extends AjaxButton
 {
-    public OnePressButton( String id )
+    public OnePressAjaxSubmitButton( String id, Form<?> form )
     {
-        super( id );
+        super( id, form );
     }
 
-    public OnePressButton( String id, IModel<String> model )
+    @Override
+    protected void onSubmit( AjaxRequestTarget ajaxRequestTarget, Form<?> form )
     {
-        super( id, model );
     }
 
     @Override

@@ -34,7 +34,7 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.model.Model;
-import org.headsupdev.agile.web.components.OnePressButton;
+import org.headsupdev.agile.web.components.OnePressSubmitButton;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.headsupdev.agile.web.components.StripedListView;
@@ -123,7 +123,7 @@ public class Permissions
             Link add = new BookmarkablePageLink( "addrole", AddRole.class );
             add.add( new Image( "add-icon", new ResourceReference( HeadsUpPage.class, "images/add.png" ) ) );
             add( add );
-            add ( new OnePressButton( "userRolesSubmit" ) );
+            add ( new OnePressSubmitButton( "userRolesSubmit" ) );
 
             add( new StripedListView<User>( "userlist", users )
             {
@@ -266,7 +266,7 @@ public class Permissions
                     listItem.add( group );
                 }
             } );
-            add (new OnePressButton( "rolePermissionsSubmit" ) );
+            add (new OnePressSubmitButton( "rolePermissionsSubmit" ) );
         }
 
         protected void onSubmit()

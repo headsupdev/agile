@@ -26,7 +26,7 @@ import org.headsupdev.agile.app.admin.AdminApplication;
 import org.headsupdev.agile.api.logging.Logger;
 import org.headsupdev.agile.storage.DatabaseRegistry;
 import org.headsupdev.agile.web.components.BooleanImage;
-import org.headsupdev.agile.web.components.OnePressButton;
+import org.headsupdev.agile.web.components.OnePressSubmitButton;
 import org.headsupdev.agile.web.components.configuration.SQLURLField;
 import org.headsupdev.agile.web.MountPoint;
 import org.apache.wicket.markup.html.CSSPackageResource;
@@ -293,7 +293,7 @@ public class SystemConfiguration
                     }
                 }
             } );
-            add( new OnePressButton( "submitConfig" ) );
+            add( new OnePressSubmitButton( "submitConfig" ) );
         }
 
         private BooleanImage sqlTestImage;

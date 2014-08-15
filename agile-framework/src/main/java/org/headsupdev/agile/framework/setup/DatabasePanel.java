@@ -31,7 +31,7 @@ import org.headsupdev.agile.core.PrivateConfiguration;
 import org.headsupdev.agile.runtime.HeadsUpRuntime;
 import org.headsupdev.agile.storage.DatabaseRegistry;
 import org.headsupdev.agile.web.components.BooleanImage;
-import org.headsupdev.agile.web.components.OnePressButton;
+import org.headsupdev.agile.web.components.OnePressSubmitButton;
 import org.headsupdev.agile.web.components.configuration.SQLURLField;
 import org.headsupdev.support.java.IOUtil;
 
@@ -107,7 +107,7 @@ public class DatabasePanel
                     testSQL( target );
                 }
             } ) );
-            add( new OnePressButton( "submitDatabase" ) );
+            add( new OnePressSubmitButton( "submitDatabase" ) );
         }
 
         void testSQL( AjaxRequestTarget target )

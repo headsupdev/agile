@@ -32,7 +32,7 @@ import org.headsupdev.agile.web.BookmarkableMenuLink;
 import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.HeadsUpSession;
 import org.headsupdev.agile.web.MountPoint;
-import org.headsupdev.agile.web.components.OnePressButton;
+import org.headsupdev.agile.web.components.OnePressSubmitButton;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -106,7 +106,7 @@ public class ChangePassword
             add( pass2 = new PasswordTextField( "password2", new PropertyModel( this, "pass2" ) ) );
 
             add( new EqualPasswordInputValidator( pass1, pass2 ) );
-            add( new OnePressButton( "submitPassword" ) );
+            add( new OnePressSubmitButton( "submitPassword" ) );
         }
 
         public void onSubmit()
