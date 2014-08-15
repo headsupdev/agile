@@ -115,7 +115,7 @@ public class EditMilestoneGroupForm
         };
 
         form.add( setupFilter() );
-        form.add( new OnePressButton( "submitGroup" ) );
+        form.add( new OnePressSubmitButton( "submitGroup" ) );
         layout( form );
         add( form );
     }
