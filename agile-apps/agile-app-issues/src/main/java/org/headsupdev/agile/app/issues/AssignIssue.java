@@ -24,8 +24,8 @@ import org.headsupdev.agile.api.Event;
 import org.headsupdev.agile.api.User;
 import org.headsupdev.agile.app.issues.event.UpdateIssueEvent;
 import org.headsupdev.agile.storage.Comment;
-import org.headsupdev.agile.web.MountPoint;
 import org.headsupdev.agile.storage.issues.Issue;
+import org.headsupdev.agile.web.MountPoint;
 import org.headsupdev.agile.web.components.UserDropDownChoice;
 
 /**
@@ -35,16 +35,16 @@ import org.headsupdev.agile.web.components.UserDropDownChoice;
  * @version $Id$
  * @since 2.0
  */
-@MountPoint( "assign" )
+@MountPoint("assign")
 public class AssignIssue
-    extends CreateComment
+        extends CreateComment
 {
     private UserDropDownChoice userChoice;
 
     protected void layoutChild( Form form )
     {
         form.add( userChoice = new UserDropDownChoice( "userChoice", getIssue().getAssignee() ) );
-        userChoice.setModel( new PropertyModel<User>( getIssue(),  "assignee" ) );
+        userChoice.setModel( new PropertyModel<User>( getIssue(), "assignee" ) );
         userChoice.setNullValid( true );
         userChoice.setRequired( false );
 
@@ -67,5 +67,6 @@ public class AssignIssue
         return new UpdateIssueEvent( getIssue(), getIssue().getProject(), getSession().getUser(), comment,
                 "assigned" );
     }
+
 
 }
