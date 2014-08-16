@@ -23,23 +23,21 @@
         <table class="issues listing">
           <thead>
           <tr>
-            <td colspan="8" class="paging" wicket:id="headerPaging"></td>
+            <td colspan="7" class="paging" wicket:id="headerPaging"></td>
           </tr>
           </thead>
           <tr>
             <th>
+              <span class="id" wicket:id="orderById" style="width:5pt">#</span>
+              <script type="text/javascript">
+                function moveIconBackground( value ) {
+                  Wicket.$('icon').style.backgroundPosition = '0px ' + ( 0 + ( value * 16 ) ) + 'px';
+                }
+              </script>
               <a id="quickAdd" wicket:id="quickAdd">
-                <div id="icon" wicket:id="icon">
-                  <script type="text/javascript">
-                    function moveIconBackground( value ) {
-                      Wicket.$('icon').style.backgroundPosition = '0px ' + ( 0 + ( value * 16 ) ) + 'px';
-                    }
-                  </script>
-                </div>
+                <span id="icon" wicket:id="icon">
+                </span>
               </a>
-            </th>
-            <th>
-              <div class="id" wicket:id="orderById" style="width:5pt">#</div>
             </th>
             <th class="summary" wicket:id="orderBySummary">Summary</th>
             <th class="status" wicket:id="orderByStatus">Status</th>
@@ -51,9 +49,6 @@
             <th class="hours" wicket:id="hours-header">Remaining</th>
           </tr>
           <tr wicket:id="rowAdd" id="rowAdd">
-            <td>
-              <label></label>
-            </td>
             <td>
               <input wicket:id="submit" type="submit" value="Add" id="submit"/>
             </td>
@@ -98,11 +93,11 @@
 
           <tfoot>
           <tr>
-            <td colspan="8" class="paging" wicket:id="footerPaging"></td>
+            <td colspan="7" class="paging" wicket:id="footerPaging"></td>
           </tr>
 
           <tr wicket:id="totals" class="total">
-            <td colspan="6" wicket:id="allCell" class="allcell"><a wicket:id="allLink">Show all...</a></td>
+            <td colspan="5" wicket:id="allCell" class="allcell"><a wicket:id="allLink">Show all...</a></td>
             <td wicket:id="requiredlabel">total</td>
             <td wicket:id="hours" class="hours">0h</td>
           </tr>

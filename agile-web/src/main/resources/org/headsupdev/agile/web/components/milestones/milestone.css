@@ -39,7 +39,13 @@
     overflow:hidden;
 }
 
-.listing .rowAdd input.shown, .listing .rowAdd div.shown, .listing .rowAdd span.shown {
+.listing .rowAdd input.shown {
+    height: auto;
+    display: inline;
+    overflow: visible;
+}
+
+.listing .rowAdd div.shown, .listing .rowAdd span.shown {
     height: auto;
     display: block;
     overflow: visible;
@@ -47,6 +53,7 @@
 
 .quickAddIconMilestone{
     background-image: url( /resources/org.headsupdev.agile.web.HeadsUpPage/images/add-delete.png );
+    display: inline-block;
     cursor:pointer;
     height:16px;
     width:16px;

@@ -28,14 +28,14 @@
       </thead>
       <tr>
         <th>
+          <span wicket:id="orderByName">Name</span>
           <a id="quickAdd" wicket:id="quickAdd">
-            <div class="quickAddIconMilestone" id = "ic" wicket:id="icon">
-              <script type="text/javascript" wicket:id="iconToggleScript">
-              </script>
-            </div>
+            <script type="text/javascript" wicket:id="iconToggleScript">
+            </script>
+            <span class="quickAddIconMilestone" id="ic" wicket:id="icon">
+            </span>
           </a>
         </th>
-        <th class="name" wicket:id="orderByName">Name</th>
         <th class="percent">Progress</th>
         <th class="issues">Issues</th>
         <th class="open">Open</th>
@@ -46,8 +46,6 @@
       <tr wicket:id="rowAddMilestone" class="rowAdd">
         <td>
           <input wicket:id="submit" type="submit" value="Add" class="hidden"/>
-        </td>
-        <td>
           <input wicket:id="name" type="text" style="width:150pt"  class="hidden"/>
         </td>
         <td>
@@ -72,7 +70,6 @@
         </td>
       </tr>
       <tr wicket:id="milestones">
-        <td style="width:30pt">&nbsp;</td>
         <td wicket:id="id-cell" class="name"><a wicket:id="id-link"><span wicket:id="id-label">id</span></a></td>
         <td wicket:id="bar" class="bar">bar</td>
         <td wicket:id="issues" class="issues">0</td>
@@ -82,12 +79,12 @@
       </tr>
       <tfoot>
         <tr>
-          <td colspan="7" class="paging bottom" wicket:id="footerPaging"></td>
+          <td colspan="6" class="paging bottom" wicket:id="footerPaging"></td>
         </tr>
 
         <wicket:enclosure child="allCell">
           <tr>
-            <td colspan="7" wicket:id="allCell" class="allcell"><a wicket:id="allLink">Show all...</a></td>
+            <td colspan="6" wicket:id="allCell" class="allcell"><a wicket:id="allLink">Show all...</a></td>
           </tr>
         </wicket:enclosure>
       </tfoot>

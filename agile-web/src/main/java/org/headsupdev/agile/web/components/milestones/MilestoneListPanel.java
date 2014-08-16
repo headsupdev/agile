@@ -232,7 +232,7 @@ public class MilestoneListPanel
         );
 
         iconToggleScript.setEscapeModelStrings( false );
-        icon.add( iconToggleScript );
+        quickAdd.add( iconToggleScript );
 
         Animator animator = new Animator( "" + group + "Animator" );
 
