@@ -106,7 +106,7 @@ public class Issue
     private Date created = new Date(), updated;
 
     @Publish
-    private int type, priority = PRIORITY_MAJOR, status = STATUS_NEW, resolution;
+    private int type = Issue.TYPE_BUG, priority = PRIORITY_MAJOR, status = STATUS_NEW, resolution;
     @Publish
     private String version, environment;
 
