@@ -94,7 +94,6 @@ table.issues td.hours {
 
 #icon{
     background-image: url( /resources/org.headsupdev.agile.web.HeadsUpPage/images/add-delete.png );
-    display: inline-block;
     cursor:pointer;
     height:16px;
     width:16px;

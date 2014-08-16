@@ -238,7 +238,7 @@ public class MilestoneListPanel
         );
 
         iconToggleScript.setEscapeModelStrings( false );
-        quickAdd.add( iconToggleScript );
+        icon.add( iconToggleScript );
 
         Animator animator = new Animator( "" + group + "Animator" );
 

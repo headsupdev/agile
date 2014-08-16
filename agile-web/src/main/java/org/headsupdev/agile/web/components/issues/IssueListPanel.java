@@ -119,7 +119,7 @@ public class IssueListPanel
             @Override
             public Integer getObject()
             {
-                int cols = 9;
+                int cols = 10;
                 if ( hideMilestone )
                 {
                     cols--;
@@ -161,7 +161,7 @@ public class IssueListPanel
             @Override
             public Integer getObject()
             {
-                int cols = 7;
+                int cols = 8;
                 if ( hideMilestone )
                 {
                     cols--;
