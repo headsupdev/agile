@@ -39,13 +39,7 @@
     overflow:hidden;
 }
 
-.listing .rowAdd input.shown {
-    height: auto;
-    display: inline;
-    overflow: visible;
-}
-
-.listing .rowAdd div.shown, .listing .rowAdd span.shown {
+.listing .rowAdd input.shown, .listing .rowAdd div.shown, .listing .rowAdd span.shown {
     height: auto;
     display: block;
     overflow: visible;
