@@ -5,6 +5,11 @@
 * Allow deleting of comments, attachments and time worked - issue:86
 * Add a HipChat notifier - issue:88
 * Add quick add issue and milestone rows to the tables - issue:76 and issue:81
+* Add select all and select none buttons to filters - issue:97
+* Support setting the group a milestone is in directly - issue:99 and issue:100
+* Don't automatically watch a new issue unless the user chooses to - issue:103
+* Add issue summary to all issue page titles - issue:102
+* Disable submit buttons once pressed to avoid double submissions - issue:98
 
 
 2.0.1
