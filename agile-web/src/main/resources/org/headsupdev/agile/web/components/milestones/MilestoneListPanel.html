@@ -1,6 +1,6 @@
 <!--
   ~ HeadsUp Agile
-  ~ Copyright 2009-2012 Heads Up Development Ltd.
+  ~ Copyright 2009-2014 Heads Up Development Ltd.
   ~
   ~ This program is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU Affero General Public License as
@@ -28,9 +28,14 @@
       </thead>
       <tr>
         <th>
-          <img wicket:id="addIcon"/>
+          <span wicket:id="orderByName">Name</span>
+          <a id="quickAdd" wicket:id="quickAdd">
+            <script type="text/javascript" wicket:id="iconToggleScript">
+            </script>
+            <span class="quickAddIconMilestone" id="ic" wicket:id="icon">
+            </span>
+          </a>
         </th>
-        <th class="name" wicket:id="orderByName">Name</th>
         <th class="percent">Progress</th>
         <th class="issues">Issues</th>
         <th class="open">Open</th>
@@ -38,36 +43,33 @@
         <th class="due" wicket:id="orderByDue">Due</th>
       </tr>
 
-      <tr>
+      <tr wicket:id="rowAddMilestone" class="rowAdd">
         <td>
-          <input type="submit" value="Add"/>
+          <input wicket:id="submit" type="submit" value="Add" class="hidden"/>
+          <input wicket:id="name" type="text" style="width:150pt"  class="hidden"/>
         </td>
         <td>
-          <input wicket:id="name" type="text" style="width:100%"/>
-        </td>
-        <td>
-          <div wicket:id="completeness">
+          <div wicket:id="completeness" class="hidden">
           </div>
         </td>
         <td>
-          <label wicket:id="issues">
-          </label>
+          <div wicket:id="issues" class="hidden">
+          </div>
         </td>
         <td>
-          <label wicket:id="open">
-          </label>
+          <div wicket:id="open" class="hidden">
+          </div>
         </td>
         <td>
-          <label wicket:id="projects">
-          </label>
+          <div wicket:id="project" class="hidden">
+          </div>
         </td>
         <td>
-          <div wicket:id="due">
+          <div wicket:id="due" class="hidden">
           </div>
         </td>
       </tr>
       <tr wicket:id="milestones">
-        <td style="width:30pt">&nbsp;</td>
         <td wicket:id="id-cell" class="name"><a wicket:id="id-link"><span wicket:id="id-label">id</span></a></td>
         <td wicket:id="bar" class="bar">bar</td>
         <td wicket:id="issues" class="issues">0</td>
@@ -75,17 +77,17 @@
         <td wicket:id="project" class="project">project</td>
         <td wicket:id="due" class="due">due</td>
       </tr>
-      <tfoor>
+      <tfoot>
         <tr>
-          <td colspan="7" class="paging bottom" wicket:id="footerPaging"></td>
+          <td colspan="6" class="paging bottom" wicket:id="footerPaging"></td>
         </tr>
 
         <wicket:enclosure child="allCell">
           <tr>
-            <td colspan="7" wicket:id="allCell" class="allcell"><a wicket:id="allLink">Show all...</a></td>
+            <td colspan="6" wicket:id="allCell" class="allcell"><a wicket:id="allLink">Show all...</a></td>
           </tr>
         </wicket:enclosure>
-      </tfoor>
+      </tfoot>
     </table>
   </form>
 </wicket:panel>

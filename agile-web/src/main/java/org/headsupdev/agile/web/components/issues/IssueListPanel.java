@@ -33,6 +33,7 @@ import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
+import org.headsupdev.agile.api.User;
 import org.headsupdev.agile.storage.StoredProject;
 import org.headsupdev.agile.storage.dao.IssuesDAO;
 import org.headsupdev.agile.storage.issues.Duration;
@@ -40,15 +41,20 @@ import org.headsupdev.agile.storage.issues.Issue;
 import org.headsupdev.agile.storage.issues.Milestone;
 import org.headsupdev.agile.web.DurationTextField;
 import org.headsupdev.agile.web.HeadsUpPage;
+import org.headsupdev.agile.web.HeadsUpSession;
 import org.headsupdev.agile.web.components.IssueTypeDropDownChoice;
 import org.headsupdev.agile.web.components.StripedDataView;
 import org.headsupdev.agile.web.components.UserDropDownChoice;
 import org.headsupdev.agile.web.components.milestones.MilestoneDropDownChoice;
 import org.headsupdev.agile.web.wicket.StyledPagingNavigator;
 import org.wicketstuff.animator.Animator;
+import org.wicketstuff.animator.IAnimatorSubject;
 import org.wicketstuff.animator.MarkupIdModel;
 
 import java.util.Iterator;
+
+//import org.headsupdev.agile.app.issues.event.CreateIssueEvent;
+//import org.headsupdev.agile.app.issues.permission.IssueEditPermission;
 
 /**
  * A panel that displays a formatted, coloured list of the issues passed in
@@ -63,13 +69,14 @@ public class IssueListPanel
     private static final int ITEMS_PER_PAGE = 25;
     private final boolean hideMilestone;
     private final boolean hideProject;
-    private WebMarkupContainer addIcon;
     private StyledPagingNavigator pagingHeader, pagingFooter;
 
     private Issue quickIssue;
     private HeadsUpPage page;
     private Milestone milestone;
     private final WebMarkupContainer rowAdd;
+    private WebMarkupContainer quickAdd;
+    private Component icon;
 
     public IssueListPanel( String id, final SortableDataProvider<Issue> issues, final HeadsUpPage page, final boolean hideProject,
                            final boolean hideMilestone, final Milestone milestone )
@@ -112,7 +119,7 @@ public class IssueListPanel
             @Override
             public Integer getObject()
             {
-                int cols = 10;
+                int cols = 9;
                 if ( hideMilestone )
                 {
                     cols--;
@@ -135,7 +142,7 @@ public class IssueListPanel
 
         inlineForm.add( new OrderByBorder( "orderById", "id.id", issues ) );
 
-        inlineForm.add( addIcon );
+        inlineForm.add( quickAdd );
 
         inlineForm.add( new OrderByBorder( "orderBySummary", "summary", issues ) );
         inlineForm.add( new OrderByBorder( "orderByStatus", "status", issues ) );
@@ -154,7 +161,7 @@ public class IssueListPanel
             @Override
             public Integer getObject()
             {
-                int cols = 8;
+                int cols = 7;
                 if ( hideMilestone )
                 {
                     cols--;
@@ -194,7 +201,6 @@ public class IssueListPanel
                 return super.getObject();
             }
         } ).setVisible( timeEnabled ) );
-
     }
 
     private Form<Issue> getInlineForm()
@@ -218,6 +224,8 @@ public class IssueListPanel
                 quickIssue.setTimeRequired( quickIssue.getTimeEstimate() );
                 IssuesDAO dao = new IssuesDAO();
                 dao.save( quickIssue );
+                //TODO: problem with dependency below
+//                page.getHeadsUpApplication().addEvent( new CreateIssueEvent( quickIssue, quickIssue.getProject() ) );
                 quickIssue = createIssue();
             }
         };
@@ -248,7 +256,24 @@ public class IssueListPanel
         rowAddComponents[5] = new UserDropDownChoice( "assignee" ).setMarkupId( "assignee" );
         rowAddComponents[6] = new Label( "project", page.getProject().toString() ).setVisible( !hideProject ).setMarkupId( "pro" );
         rowAddComponents[7] = new MilestoneDropDownChoice( "milestone", page.getProject() ).setNullValid( true ).setVisible( !hideMilestone ).setMarkupId( "milestone" );
-        rowAddComponents[8] = new DurationTextField( "timeEstimate" ).setMarkupId( "timeEstimate" );
+        rowAddComponents[8] = new DurationTextField( "timeEstimate", new Model<Duration>()
+        {
+            @Override
+            public void setObject( Duration duration )
+            {
+                quickIssue.setTimeEstimate( duration );
+            }
+
+            @Override
+            public Duration getObject()
+            {
+                if ( quickIssue.getTimeEstimate().equals( new Duration( 0 ) ) )
+                {
+                    return null;
+                }
+                return quickIssue.getTimeEstimate();
+            }
+        } ).setType( Duration.class ).setMarkupId( "timeEstimate" );
 
         addAnimatorToForm( rowAddComponents );
         inlineForm.add( rowAdd );
@@ -257,10 +282,16 @@ public class IssueListPanel
 
     private void addAnimatorToForm( Component[] rowAddComponents )
     {
-        addIcon = new WebMarkupContainer( "addIcon" );
+        User currentUser = ( (HeadsUpSession) getSession() ).getUser();
+        quickAdd = new WebMarkupContainer( "quickAdd" );
+        quickAdd.setVisible( Permissions.canEditIssue( currentUser, page.getProject() ) );
+
+        icon = new WebMarkupContainer( "icon" );
+
         Animator animator = new Animator();
         animator.addCssStyleSubject( new MarkupIdModel( rowAdd.setMarkupId( "rowAdd" ) ), "rowhidden", "rowshown" );
-        animator.addCssStyleSubject( new MarkupIdModel( addIcon.setMarkupId( "addIcon" ) ), "iconPlus", "iconMinus" );
+
+
         for ( Component rowAddComponent : rowAddComponents )
         {
             rowAdd.add( rowAddComponent );
@@ -269,7 +300,16 @@ public class IssueListPanel
                 animator.addCssStyleSubject( new MarkupIdModel( rowAddComponent ), "hidden", "shown" );
             }
         }
-        animator.attachTo( addIcon, "onclick", Animator.Action.toggle() );
+        animator.addSubject( new IAnimatorSubject()
+        {
+            public String getJavaScript()
+            {
+                return "moveIconBackground";
+            }
+        } );
+        animator.attachTo( quickAdd, "onclick", Animator.Action.toggle() );
+        quickAdd.add( icon );
+
     }
 
     private Issue createIssue()

@@ -230,7 +230,8 @@ public abstract class HeadsUpPage
         WebMarkupContainer projectmenu = createProjectMenu( user );
         add( projectmenu );
 
-        if ( !getClass().getName().endsWith( "Login" ) && !getClass().getName().endsWith( "Logout" ) )
+        if ( !getClass().getName().endsWith( "Login" ) && !getClass().getName().endsWith( "Logout" )
+                && !getClass().getName().endsWith( "Error404Page" ) )
         {
             getSession().setPreviousPageClass( getClass() );
             getSession().setPreviousPageParameters( getPageParameters() );
