@@ -19,11 +19,14 @@ package org.headsupdev.agile.web.wicket;
 
 import org.apache.wicket.util.convert.converters.AbstractConverter;
 import org.headsupdev.agile.storage.issues.Duration;
+import org.headsupdev.support.java.StringUtil;
 
 import java.util.Locale;
 
 /**
  * Created by Gordon Edwards on 02/07/2014.
+ *
+ * @since 2.1
  */
 public class DurationConverter
         extends AbstractConverter
@@ -37,15 +40,18 @@ public class DurationConverter
     @Override
     public Object convertToObject( String value, Locale locale )
     {
-        Duration duration = null;
+        if ( StringUtil.isEmpty( value ) )
+        {
+            return null;
+        }
+
         try
         {
-            duration = Duration.fromString( value );
+            return Duration.fromString( value );
         }
         catch ( Exception e )
         {
             throw newConversionException( "Invalid", value, locale );
         }
-        return duration;
     }
 }
