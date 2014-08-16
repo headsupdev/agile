@@ -73,7 +73,7 @@ public class AddRole
                 setResponsePage( Permissions.class );
             }
         };
-        addRoleForm.add( new TextField( "roleid" ) );
+        addRoleForm.add( new TextField( "roleid" ).setRequired( true ) );
         addRoleForm.add( new TextField( "comment" ) );
         addRoleForm.add( new OnePressSubmitButton( "submitRole" ) );
 

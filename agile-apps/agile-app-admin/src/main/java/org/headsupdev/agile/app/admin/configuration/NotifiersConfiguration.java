@@ -139,15 +139,15 @@ public class NotifiersConfiguration
 
     class NotifierAddForm extends Form
     {
-        private DropDownChoice create;
+        private DropDownChoice<String> create;
         private String adding;
 
         public NotifierAddForm( String id )
         {
             super( id );
 
-            create = new DropDownChoice( "id", new PropertyModel( this, "adding" ) );
-            add( create.setNullValid( false ) );
+            create = new DropDownChoice<String>( "id" );
+            add( create.setRequired( true ) );
             add( new OnePressSubmitButton( "submitNotifier" ) );
         }
 
@@ -165,7 +165,7 @@ public class NotifiersConfiguration
 
             create.setChoices( getOtherNotifiers() );
             // strange, the model is reset
-            create.setModel( new PropertyModel( this, "adding" ) );
+            create.setModel( new PropertyModel<String>( this, "adding" ) );
         }
     }
 
