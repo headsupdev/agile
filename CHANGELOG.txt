@@ -10,6 +10,7 @@
 * Don't automatically watch a new issue unless the user chooses to - issue:103
 * Add issue summary to all issue page titles - issue:102
 * Disable submit buttons once pressed to avoid double submissions - issue:98
+* Support bulk changes of issues and milestones
 
 
 2.0.1
