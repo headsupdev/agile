@@ -222,8 +222,7 @@ public class IssueListPanel
                 quickIssue.setReporter( page.getSession().getUser() );
                 quickIssue.getWatchers().add( page.getSession().getUser() );
                 quickIssue.setTimeRequired( quickIssue.getTimeEstimate() );
-                IssuesDAO dao = new IssuesDAO();
-                dao.save( quickIssue );
+                saveIssue( quickIssue );
                 //TODO: problem with dependency below
 //                page.getHeadsUpApplication().addEvent( new CreateIssueEvent( quickIssue, quickIssue.getProject() ) );
                 quickIssue = createIssue();
@@ -318,5 +317,13 @@ public class IssueListPanel
         issue.setTimeEstimate( new Duration( 0, Duration.UNIT_HOURS ) );
         issue.setMilestone( milestone );
         return issue;
+    }
+
+    private void saveIssue( Issue issue )
+    {
+        Session session = ( (HibernateStorage) Manager.getStorageInstance() ).getHibernateSession();
+        Transaction tx = session.beginTransaction();
+        session.save( issue );
+        tx.commit();
     }
 }

@@ -190,6 +190,7 @@ public class MilestoneListPanel
                 }
                 quickMilestone.setUpdated( new Date() );
                 dao.save( quickMilestone );
+                saveMilestone( quickMilestone );
                 //TODO: problem with dependency below
                 User currentUser = ( (HeadsUpSession) getSession() ).getUser();
 //                page.getHeadsUpApplication().addEvent( new CreateMilestoneEvent( quickMilestone, quickMilestone.getProject(), currentUser ) );
@@ -272,5 +273,14 @@ public class MilestoneListPanel
         Milestone milestone = new Milestone( "", project );
         milestone.setGroup( group );
         return milestone;
+    }
+
+    private void saveMilestone( Milestone milestone )
+    {
+        Session session = ( (HibernateStorage) Manager.getStorageInstance() ).getHibernateSession();
+
+        Transaction tx = session.beginTransaction();
+        session.save( milestone );
+        tx.commit();
     }
 }
