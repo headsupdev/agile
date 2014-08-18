@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -64,7 +64,7 @@ public class AccountAddEvent
         {
             public Panel getPanel()
             {
-                return new UserDetailsPanel( RenderUtil.PANEL_ID, user, project, false, ( HeadsUpPage) getPanel().getPage() );
+                return new UserDetailsPanel( RenderUtil.PANEL_ID, user, project, false, false, ( HeadsUpPage) getPanel().getPage() );
             }
         }.getRenderedContent();
     }

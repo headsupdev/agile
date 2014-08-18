@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -136,7 +136,7 @@ public class HistoryPanel
                 listItem.add( new WebMarkupContainer( "project-link" ).setVisible( false ) );
             }
             User user = Manager.getSecurityInstance().getUserByUsername( event.getUsername() );
-            listItem.add( new GravatarLinkPanel( "gravatar", user, ICON_EDGE_LENGTH, page ) );
+            listItem.add( new GravatarLinkPanel( "gravatar", user, ICON_EDGE_LENGTH ) );
             ExternalLink link = new ExternalLink( "history-link", "/activity/event/id/" + event.getId() );
             link.add( new Label( "history-title", event.getTitle() ) );
             listItem.add( link );

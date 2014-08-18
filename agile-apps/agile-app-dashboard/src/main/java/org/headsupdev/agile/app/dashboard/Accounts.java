@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -89,7 +89,7 @@ public class Accounts
                 link = new BookmarkablePageLink( "user-link2", getPageClass( "account" ), params );
                 link.add( new Label( "user-label", user.getUsername() ) );
                 listItem.add( link );
-                listItem.add( new GravatarLinkPanel( "gravatar" , user, ICON_EDGE_LENGTH, Accounts.this ) );
+                listItem.add( new GravatarLinkPanel( "gravatar" , user, ICON_EDGE_LENGTH ) );
             }
         } );
     }

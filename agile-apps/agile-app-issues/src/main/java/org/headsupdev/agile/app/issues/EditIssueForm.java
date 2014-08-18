@@ -23,6 +23,8 @@ import org.apache.wicket.markup.html.CSSPackageResource;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.*;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
@@ -41,6 +43,7 @@ import org.headsupdev.agile.web.components.issues.IssueListPanel;
 import org.headsupdev.agile.web.components.issues.IssueUtils;
 import org.headsupdev.agile.web.components.milestones.MilestoneDropDownChoice;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 
@@ -80,6 +83,7 @@ class IssueForm
     private AttachmentPanel attachmentPanel;
     private CheckBox toggleWatchers;
     private User currentUser;
+    private int ICON_EDGE_LENGTH = 30;
 
     public IssueForm( String id, final Issue issue, final boolean creating, final HeadsUpPage owner, EditIssueForm parent )
     {
@@ -95,7 +99,7 @@ class IssueForm
         {
             this.oldTimeRequired = new Duration( issue.getTimeRequired() );
         }
-        
+
         setModel( new CompoundPropertyModel<Issue>( issue ) );
 
         add( new Label( "project", issue.getProject().getAlias() ) );
@@ -152,6 +156,7 @@ class IssueForm
                 return currentUser.getPreference( "issue.automaticallyWatch", true );
             }
         } );
+
         toggleWatchers.setVisible( creating );
         add( toggleWatchers );
 
@@ -188,14 +193,16 @@ class IssueForm
         }
         add( new TextField( "order" ).setRequired( false ) );
 
-        add( new Label( "watchers", new Model<String>()
+        ListView<User> watchers = new ListView<User>( "watchers", new ArrayList<User>( issue.getWatchers() ) )
         {
+
             @Override
-            public String getObject()
+            protected void populateItem( ListItem<User> listItem )
             {
-                return IssueUtils.getWatchersDescription( issue, currentUser );
+                listItem.add( new GravatarLinkPanel( "gravatar", listItem.getModelObject(), ICON_EDGE_LENGTH ) );
             }
-        } ).setVisible( !creating ) );
+        };
+        add( watchers.setVisible( !creating ) );
 
         add( new TextField( "summary" ).setRequired( true ) );
         add( new TextField( "environment" ) );

@@ -307,14 +307,7 @@ public class ViewIssue
         Transaction tx = session.beginTransaction();
         session.update( issue );
         tx.commit();
-        add( new AjaxEventBehavior("onclick")
-        {
-            @Override
-            protected void onEvent( AjaxRequestTarget ajaxRequestTarget )
-            {
-                ajaxRequestTarget.addComponent( issuePanel.getWatchers() );
-            }
-        } );
+        setResponsePage( ApplicationPageMapper.get().getPageClass( "issues/view" ), getPageParameters() );
         watching = !watching;
     }
 }

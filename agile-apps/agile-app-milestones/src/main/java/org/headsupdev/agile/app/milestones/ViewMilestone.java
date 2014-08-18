@@ -117,12 +117,17 @@ public class ViewMilestone
             {
                 comment = listItem.getModelObject();
                 listItem.add( new Image( "icon", new ResourceReference( HeadsUpPage.class, "images/comment.png" ) ) );
-                listItem.add( new GravatarLinkPanel( "gravatar", comment.getUser(), ICON_EDGE_LENGTH, page) );
-                listItem.add( new Label( "username", comment.getUser().getFullnameOrUsername() ) );
+                listItem.add( new GravatarLinkPanel( "gravatar", comment.getUser(), ICON_EDGE_LENGTH ) );
+                PageParameters params = page.getProjectPageParameters();
+                params.add( "username", comment.getUser().getUsername() );
+                params.add( "silent", "true" );
+                BookmarkablePageLink usernameLink = new BookmarkablePageLink( "usernameLink", page.getPageClass( "account" ), params );
+                usernameLink.add( new Label( "username", comment.getUser().getFullnameOrUsername() ) );
+                listItem.add( usernameLink );
                 listItem.add( new Label( "created", new FormattedDateModel( comment.getCreated(),
                         ( (HeadsUpSession) getSession() ).getTimeZone() ) ) );
 
-                PageParameters params = page.getProjectPageParameters();
+
                 params.put( "id", milestone.getName() );
                 params.put( "commentId", comment.getId() );
                 Link edit = new BookmarkablePageLink( "editComment", EditComment.class, params );

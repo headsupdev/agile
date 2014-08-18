@@ -106,7 +106,7 @@ public class CommentPanel
         {
             comment = (Comment) o;
             add( new Image( "icon", new ResourceReference( HeadsUpPage.class, "images/comment.png" ) ) );
-            commentTitle.add( new GravatarLinkPanel( "gravatar", comment.getUser(), ICON_EDGE_LENGTH, page) );
+            commentTitle.add( new GravatarLinkPanel( "gravatar", comment.getUser(), ICON_EDGE_LENGTH ) );
 
             PageParameters params = page.getProjectPageParameters();
             params.put( "page", doc.getName() );
@@ -130,7 +130,11 @@ public class CommentPanel
             };
             commentTitle.add( remove.setVisible( userHasPermission ) );
 
-            commentTitle.add( new Label( "username", comment.getUser().getFullnameOrUsername() ) );
+            params.add( "username", comment.getUser().getUsername() );
+            params.add( "silent", "true" );
+            BookmarkablePageLink usernameLink = new BookmarkablePageLink( "usernameLink", page.getPageClass( "account" ), params );
+            usernameLink.add( new Label( "username", comment.getUser().getFullnameOrUsername() ) );
+            commentTitle.add( usernameLink );
             commentTitle.add( new Label( "created", new FormattedDateModel( comment.getCreated(),
                     ( (HeadsUpSession) getSession() ).getTimeZone() ) ) );
             add( new Label( "comment", new MarkedUpTextModel( comment.getComment(), project ) )

@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2013 Heads Up Development Ltd.
+ * Copyright 2009-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -151,19 +151,10 @@ public class IssuePanel
             @Override
             protected void populateItem( ListItem<User> listItem )
             {
-                listItem.add( new GravatarLinkPanel( "gravatar", listItem.getModelObject(), ICON_EDGE_LENGTH, page ) );
+                listItem.add( new GravatarLinkPanel( "gravatar", listItem.getModelObject(), ICON_EDGE_LENGTH ) );
             }
         };
         add( watchers );
-
-//        add( new Label( "watchers", new Model<String>()
-//        {
-//            @Override
-//            public String getObject()
-//            {
-//                return IssueUtils.getWatchersDescription( issue, getSessionUser() );
-//            }
-//        } ) );
 
         // TODO move the relationship comparators out of here, they are basically the same but opposite end of relationship compared
         List<IssueRelationship> relationships = new LinkedList<IssueRelationship>();

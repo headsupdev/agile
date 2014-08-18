@@ -113,8 +113,13 @@ public class CommentPanel
             Link edit = new BookmarkablePageLink( "editComment", EditComment.class, params );
 
             commentTitle.add( edit.setVisible( userHasPermission ) );
-            commentTitle.add( new GravatarLinkPanel( "gravatar", comment.getUser(), ICON_EDGE_LENGTH, page) );
-            commentTitle.add( new Label( "username", comment.getUser().getFullnameOrUsername() ) );
+            commentTitle.add( new GravatarLinkPanel( "gravatar", comment.getUser(), ICON_EDGE_LENGTH ) );
+
+            params.add( "username", comment.getUser().getUsername() );
+            params.add( "silent", "true" );
+            BookmarkablePageLink usernameLink = new BookmarkablePageLink( "usernameLink", page.getPageClass( "account" ), params );
+            usernameLink.add( new Label( "username", comment.getUser().getFullnameOrUsername() ) );
+            commentTitle.add( usernameLink );
             commentTitle.add( new Label( "created", new FormattedDateModel( comment.getCreated(),
                     ( (HeadsUpSession) getSession() ).getTimeZone() ) ) );
             add( new Label( "comment", new MarkedUpTextModel( comment.getComment(), project ) )
@@ -145,7 +150,7 @@ public class CommentPanel
             params.put( "durationId", duration.getId() );
             Link edit = new BookmarkablePageLink( "editComment", EditProgressIssue.class, params );
             workedTitle.add( edit.setVisible( userHasPermission ) );
-            workedTitle.add( new GravatarLinkPanel( "gravatar", duration.getUser(), ICON_EDGE_LENGTH, page) );
+            workedTitle.add( new GravatarLinkPanel( "gravatar", duration.getUser(), ICON_EDGE_LENGTH ) );
             Link remove = new Link( "removeComment" )
             {
                 @Override
@@ -172,7 +177,11 @@ public class CommentPanel
                 time = worked.getWorked().toString();
             }
             workedTitle.add( new Label( "worked", time ) );
-            workedTitle.add( new Label( "username", worked.getUser().getFullnameOrUsername() ) );
+            params.add( "username", duration.getUser().getUsername() );
+            params.add( "silent", "true" );
+            BookmarkablePageLink usernameLink = new BookmarkablePageLink( "usernameLink", page.getPageClass( "account" ), params );
+            usernameLink.add( new Label( "username", duration.getUser().getFullnameOrUsername() ) );
+            workedTitle.add( usernameLink );
             workedTitle.add( new Label( "created", new FormattedDateModel( worked.getDay(),
                     ( (HeadsUpSession) getSession() ).getTimeZone() ) ) );
 

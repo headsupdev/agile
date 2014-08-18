@@ -26,7 +26,7 @@
         <td class="comment-title" wicket:id="comment-title">
           <div style="display:inline" wicket:id="gravatar">
           </div>
-          Comment added by <span wicket:id="username">username</span>
+          Comment added by <a wicket:id="usernameLink"><span wicket:id="username">username</span></a>
           on <span wicket:id="created">created</span>
           <a wicket:id="editComment" href="#" title = "edit">
             <img src="/resources/org.headsupdev.agile.web.HeadsUpPage/images/comment_edit.png"/>
@@ -38,7 +38,7 @@
         <td class="comment-title" wicket:id="worked-title">
           <div style="display:inline" wicket:id="gravatar">
           </div>
-          <span wicket:id="worked">0h</span> work logged by <span wicket:id="username">username</span>
+          <span wicket:id="worked">0h</span> work logged by <a wicket:id="usernameLink"><span wicket:id="username">username</span></a>
           on <span wicket:id="created">created</span>
           <a wicket:id="editComment" href="#" title = "edit">
             <img src="/resources/org.headsupdev.agile.web.HeadsUpPage/images/clock_edit.png"/>

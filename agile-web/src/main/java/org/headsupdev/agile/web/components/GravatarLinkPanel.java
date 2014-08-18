@@ -2,34 +2,28 @@ package org.headsupdev.agile.web.components;
 
 import com.timgroup.jgravatar.Gravatar;
 import com.timgroup.jgravatar.GravatarDownloadException;
-import org.apache.wicket.Application;
-import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.PageParameters;
-import org.apache.wicket.ResourceReference;
-import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.behavior.SimpleAttributeModifier;
-import org.apache.wicket.extensions.markup.html.repeater.data.sort.OrderByLink;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.image.NonCachingImage;
-import org.apache.wicket.markup.html.image.resource.BufferedDynamicImageResource;
-import org.apache.wicket.markup.html.image.resource.DynamicImageResource;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.resource.ByteArrayResource;
 import org.headsupdev.agile.api.Manager;
 import org.headsupdev.agile.api.User;
 import org.headsupdev.agile.api.logging.Logger;
-import org.headsupdev.agile.web.HeadsUpPage;
+import org.headsupdev.agile.web.ApplicationPageMapper;
 import org.headsupdev.agile.web.HeadsUpSession;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Created by Gordon Edwards on 12/08/2014.
@@ -39,55 +33,60 @@ public class GravatarLinkPanel
 {
     private final Logger log;
     private User user;
-    private HeadsUpPage page;
     private boolean hasGravatar;
 
-    public GravatarLinkPanel( String id, User user, int iconEdgeLength, HeadsUpPage page )
+    public GravatarLinkPanel( String id, User user, int iconEdgeLength )
     {
         super( id );
         this.user = user;
-        this.page = page;
         log = Manager.getLogger( getClass().getName() );
 
-        NonCachingImage avatar = null;
-        if ( user != null && !user.equals( HeadsUpSession.ANONYMOUS_USER ))
+        NonCachingImage icon = null;
+        if ( user != null && !user.equals( HeadsUpSession.ANONYMOUS_USER ) )
         {
             try
             {
-                avatar = getAvatar( user, iconEdgeLength );
+                icon = getIcon( user, iconEdgeLength );
             }
             catch ( IOException e )
             {
                 log.error( e.getMessage() );
-                avatar = null;
+                icon = null;
             }
-            if ( avatar == null )
+            if ( icon == null )
             {
                 addBlankImage();
                 return;
             }
-            String style = "text-decoration: none; display:inline; ";
             if ( getLink() instanceof BookmarkablePageLink )
             {
                 Link link = (Link) getLink();
                 link.add( new SimpleAttributeModifier( "title", user.getFullname() ) );
-                style += "cursor: pointer";
-                link.add( new SimpleAttributeModifier( "style", style ) );
-                link.add( avatar );
+                link.add( icon.setVisible( true ) );
+                if ( hasGravatar && user.getPreference( "gravatar.show", true) )
+                {
+                    link.add( new NonCachingImage( "alternativeIcon" ).setVisible( false ) );
+                }
+                else
+                {
+                    link.add( new NonCachingImage( "avatar" ).setVisible( false ) );
+                }
                 add( link );
             }
             else if ( getLink() instanceof ExternalLink )
             {
                 ExternalLink link = (ExternalLink) getLink();
                 link.add( new SimpleAttributeModifier( "title", user.getFullname() ) );
-                style += "cursor: pointer";
-                link.add( new SimpleAttributeModifier( "style", style ) );
-                link.add( avatar );
+                link.add( icon.setVisible( true ) );
+                if ( hasGravatar && user.getPreference( "gravatar.show", true) )
+                {
+                    link.add( new NonCachingImage( "alternativeIcon" ).setVisible( false ) );
+                }
+                else
+                {
+                    link.add( new NonCachingImage( "avatar" ).setVisible( false ) );
+                }
                 add( link );
-            }
-            else if ( getLink() instanceof WebMarkupContainer )
-            {
-                add( ( (WebMarkupContainer) getLink() ).add( avatar ) );
             }
         }
         else
@@ -111,7 +110,7 @@ public class GravatarLinkPanel
     }
 
 
-    private NonCachingImage getAvatar( User user, int iconEdgeLength )
+    private NonCachingImage getIcon( User user, int iconEdgeLength )
             throws IOException
     {
         byte[] avatarBytes = null;
@@ -121,13 +120,15 @@ public class GravatarLinkPanel
         }
         catch ( GravatarDownloadException e )
         {
+            warn("noimage" );
         }
         hasGravatar = avatarBytes != null;
-        if ( !hasGravatar )
+        user.setPreference( "user.hasGravatar", hasGravatar );
+        if ( !hasGravatar || !user.getPreference( "gravatar.show", true ) )
         {
-            BufferedImage avatar = new BufferedImage( iconEdgeLength, iconEdgeLength,
+            BufferedImage alternativeIcon = new BufferedImage( iconEdgeLength, iconEdgeLength,
                     BufferedImage.TYPE_INT_RGB );
-            Graphics graphics = avatar.getGraphics();
+            Graphics graphics = alternativeIcon.getGraphics();
             graphics.setColor( Color.BLACK );
             graphics.setColor( Color.WHITE );
             graphics.setFont( new Font( "Arial Black", Font.BOLD, iconEdgeLength / 2 ) );
@@ -135,19 +136,26 @@ public class GravatarLinkPanel
             if ( initials == null )
             {
                 InputStream stream = getClass().getClassLoader().getResourceAsStream( "/org/headsupdev/agile/web/images/person-icon.png" );
-                avatar = ImageIO.read( stream );
-                avatarBytes = getImageBytes( avatar );
-                avatarBytes = scale( avatarBytes, iconEdgeLength, iconEdgeLength );
-                return new NonCachingImage( "avatar", new ByteArrayResource( "image/jpeg", avatarBytes ) );
+                alternativeIcon = ImageIO.read( stream );
+                byte[] iconBytes = getImageBytes( alternativeIcon );
+                iconBytes = scale( iconBytes , iconEdgeLength, iconEdgeLength );
+                return new NonCachingImage( "alternativeIcon", new ByteArrayResource( "image/jpeg", iconBytes ) );
             }
             int stringLen = (int) graphics.getFontMetrics().getStringBounds( initials, graphics ).getWidth();
             int start = iconEdgeLength / 2 - stringLen / 2;
             graphics.drawString( initials, start, (int) ( iconEdgeLength / 1.4 ) );
-            avatarBytes = getImageBytes( avatar );
+            byte[] iconBytes = getImageBytes( alternativeIcon );
+            iconBytes = scale( iconBytes , iconEdgeLength, iconEdgeLength );
+            return new NonCachingImage( "alternativeIcon", new ByteArrayResource( "image/jpeg", iconBytes ) );
+        }
+        else
+        {
+            avatarBytes = scale( avatarBytes, iconEdgeLength, iconEdgeLength );
+            return new NonCachingImage( "avatar", new ByteArrayResource( "image/jpeg", avatarBytes ) );
         }
 
-        avatarBytes = scale( avatarBytes, iconEdgeLength, iconEdgeLength );
-        return new NonCachingImage( "avatar", new ByteArrayResource( "image/jpeg", avatarBytes ) );
+//        avatarBytes = scale( avatarBytes, iconEdgeLength, iconEdgeLength );
+//        return new NonCachingImage( "avatar", new ByteArrayResource( "image/jpeg", avatarBytes ) );
     }
 
     public byte[] scale( byte[] imageBytes, int width, int height )
@@ -183,7 +191,7 @@ public class GravatarLinkPanel
         PageParameters params = new PageParameters();
         params.add( "username", user.getUsername() );
         params.add( "silent", "true" );
-        return new BookmarkablePageLink( "link", page.getPageClass( "account" ), params );
+        return new BookmarkablePageLink( "link", ApplicationPageMapper.get().getPageClass( "account" ), params );
     }
 
     public boolean hasGravatar()
