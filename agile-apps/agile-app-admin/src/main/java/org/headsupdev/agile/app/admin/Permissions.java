@@ -66,7 +66,7 @@ public class Permissions
     {
         super.layout();
 
-        add( CSSPackageResource.getHeaderContribution( getClass(), "admin.css" ));
+        add( CSSPackageResource.getHeaderContribution( getClass(), "admin.css" ) );
 
         add( new UserRolesForm( "users" ) );
         add( new RolePermissionsForm( "roles" ) );
@@ -98,7 +98,8 @@ public class Permissions
                     Link delete = new Link( "deleterole" )
                     {
                         @Override
-                        public void onClick() {
+                        public void onClick()
+                        {
                             for ( User user : getSecurityManager().getUsers() )
                             {
                                 boolean me = user.getUsername().equals( ( (HeadsUpSession) getSession() ).getUser().getUsername() );
@@ -107,7 +108,8 @@ public class Permissions
                                 {
                                     user.getRoles().remove( role );
 
-                                    if ( me ) {
+                                    if ( me )
+                                    {
                                         ( (HeadsUpSession) getSession() ).setUser( user );
                                     }
                                 }
@@ -220,10 +222,10 @@ public class Permissions
     }
 
     class RolePermissionsForm
-        extends Form
+            extends Form
     {
         private List<Permission> permissionNames;
-        private Map<Permission,List<Role>> permissions = new HashMap<Permission,List<Role>>();
+        private Map<Permission, List<Role>> permissions = new HashMap<Permission, List<Role>>();
 
         public RolePermissionsForm( String id )
         {
@@ -278,7 +280,7 @@ public class Permissions
             }
         }
 
-        private void convertToMap( Map<Permission,List<Role>> map )
+        private void convertToMap( Map<Permission, List<Role>> map )
         {
             for ( Permission permission : getSecurityManager().getPermissions() )
             {
@@ -296,7 +298,7 @@ public class Permissions
             }
         }
 
-        private List<Role> convertFromMap( Map<Permission,List<Role>> map )
+        private List<Role> convertFromMap( Map<Permission, List<Role>> map )
         {
             List<Role> ret = getSecurityManager().getRoles();
 
