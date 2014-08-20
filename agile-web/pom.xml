@@ -109,7 +109,10 @@
       <version>2.4</version>
       <scope>provided</scope>
     </dependency>
-
+    <dependency>
+      <groupId>org.wicketstuff</groupId>
+      <artifactId>jwicket-tooltip-walterzorn</artifactId>
+    </dependency>
     <dependency>
       <groupId>com.google.zxing</groupId>
       <artifactId>core</artifactId>
@@ -120,6 +123,7 @@
       <artifactId>icu4j</artifactId>
       <version>4.8.1.1</version>
     </dependency>
+
 
     <!-- Wicket dependency -->
     <dependency>

@@ -276,6 +276,11 @@
         <artifactId>jgravatar</artifactId>
         <version>1.0</version>
       </dependency>
+      <dependency>
+        <groupId>org.wicketstuff</groupId>
+        <artifactId>jwicket-tooltip-walterzorn</artifactId>
+        <version>1.4.18</version>
+      </dependency>
 
     </dependencies>
   </dependencyManagement>
