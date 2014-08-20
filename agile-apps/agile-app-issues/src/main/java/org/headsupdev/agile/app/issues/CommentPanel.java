@@ -56,12 +56,10 @@ import java.util.List;
 public class CommentPanel
         extends Panel
 {
-    private HeadsUpPage page;
     private Issue issue;
     private List commentList;
     private Project project;
 
-    private Storage storage;
     private DurationWorked duration;
     private Comment comment;
 
@@ -81,14 +79,12 @@ public class CommentPanel
         layout();
     }
 
-    public CommentPanel( String id, IModel model, Project project, List commentList, Issue issue, HeadsUpPage page )
+    public CommentPanel( String id, IModel model, Project project, List commentList, Issue issue )
     {
         super( id, model );
         this.project = project;
         this.commentList = commentList;
         this.issue = issue;
-        this.page = page;
-        this.storage = page.getStorage();
         layout();
     }
 
@@ -105,7 +101,8 @@ public class CommentPanel
             comment = (Comment) o;
             add( new Image( "icon", new ResourceReference( HeadsUpPage.class, "images/comment.png" ) ) );
 
-            PageParameters params = page.getProjectPageParameters();
+            PageParameters params = new PageParameters();
+            params.put( "project", project );
             params.put( "id", issue.getId() );
             params.put( "commentId", comment.getId() );
             Link edit = new BookmarkablePageLink( "editComment", EditComment.class, params );
@@ -121,6 +118,7 @@ public class CommentPanel
                 @Override
                 public void onClick()
                 {
+                    Storage storage = Manager.getStorageInstance();
                     Comment comm = (Comment) ( (HibernateStorage) storage ).merge( comment );
                     issue.getComments().remove( comm );
                     Issue iss = (Issue) ( (HibernateStorage) storage ).merge( issue );
@@ -137,7 +135,8 @@ public class CommentPanel
             duration = (DurationWorked) o;
             add( new Image( "icon", new ResourceReference( HeadsUpPage.class, "images/worked.png" ) ) );
 
-            PageParameters params = page.getProjectPageParameters();
+            PageParameters params = new PageParameters();
+            params.put( "project", project );
             params.put( "id", issue.getId() );
             params.put( "durationId", duration.getId() );
             Link edit = new BookmarkablePageLink( "editComment", EditProgressIssue.class, params );
@@ -148,6 +147,7 @@ public class CommentPanel
                 @Override
                 public void onClick()
                 {
+                    Storage storage = Manager.getStorageInstance();
                     DurationWorked dur = (DurationWorked) ( (HibernateStorage) storage ).merge( duration );
                     issue.getTimeWorked().remove( dur );
                     issue.setUpdated( new Date() );
