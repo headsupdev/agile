@@ -52,7 +52,7 @@ public class Accounts
     {
         return new MemberListPermission();
     }
-    private final int ICON_EDGE_LENGTH = 50;
+    private final int ICON_EDGE_LENGTH = 60;
     public void layout()
     {
         super.layout();

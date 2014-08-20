@@ -140,7 +140,7 @@ public class Account
 
         add( new Image( "account", new ResourceReference( "member.png" ), params ) );
 
-        add( new UserDetailsPanel( "details", user, getProject(), shouldShowFullDetails(), showTools, this) );
+        add( new UserDetailsPanel( "details", user, getProject(), shouldShowFullDetails() ) );
 
         if ( showTools )
         {

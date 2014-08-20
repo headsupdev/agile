@@ -136,7 +136,7 @@ class IssueForm
         } );
         add( status );
 
-        add( new Label( "reporter", issue.getReporter().getFullnameOrUsername() ) );
+        add( new GravatarLinkPanel( "reporterGravatar", issue.getReporter(), ICON_EDGE_LENGTH ) );
         final DropDownChoice<User> assignees = new UserDropDownChoice( "assignee", issue.getAssignee() );
         assignees.setNullValid( true );
         add( assignees );
@@ -159,7 +159,6 @@ class IssueForm
 
         toggleWatchers.setVisible( creating );
         add( toggleWatchers );
-
 
         Button assignToMe = new Button( "assignToMe" )
         {

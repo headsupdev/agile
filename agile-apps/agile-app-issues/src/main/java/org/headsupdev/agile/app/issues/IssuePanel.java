@@ -295,13 +295,9 @@ public class IssuePanel
         {
             add( new Form( "begin-issue-form" ).setVisible( false ) );
         }
-        params = getProjectPageParameters( issue.getProject() );
-        params.add( "username", issue.getReporter().getUsername() );
-        Link reporterLink = new BookmarkablePageLink( "reporter-link", userPage, params );
-        reporterLink.add( new Label( "reporter", issue.getReporter().getFullnameOrUsername() ) );
-        add( reporterLink );
 
-        add( new AccountFallbackLink( "assigned-link", issue.getAssignee() ) );
+        add( new GravatarLinkPanel( "gravatarReporter", issue.getReporter(), ICON_EDGE_LENGTH ) );
+        add( new GravatarLinkPanel( "gravatarAssignee", issue.getAssignee(), ICON_EDGE_LENGTH ) );
         if ( isSessionUserAssignedToIssue( issue ) )
         {
             addDropIssueButton( issue );
@@ -449,6 +445,7 @@ public class IssuePanel
 
         return ret;
     }
+
     public ListView<User> getWatchers()
     {
         return watchers;

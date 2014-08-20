@@ -18,31 +18,37 @@
 
 package org.headsupdev.agile.app.admin;
 
-import org.headsupdev.agile.api.*;
-import org.headsupdev.agile.security.DefaultSecurityManager;
-import org.headsupdev.agile.storage.*;
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.ResourceReference;
 import org.apache.wicket.markup.html.CSSPackageResource;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.CheckGroup;
 import org.apache.wicket.markup.html.form.Check;
+import org.apache.wicket.markup.html.form.CheckGroup;
+import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.util.string.Strings;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-import org.headsupdev.agile.web.components.StripedListView;
+import org.headsupdev.agile.api.Manager;
+import org.headsupdev.agile.api.Permission;
+import org.headsupdev.agile.api.Role;
+import org.headsupdev.agile.api.User;
+import org.headsupdev.agile.security.DefaultSecurityManager;
+import org.headsupdev.agile.security.permission.AdminPermission;
+import org.headsupdev.agile.storage.AnonymousRole;
+import org.headsupdev.agile.storage.HibernateUtil;
+import org.headsupdev.agile.storage.StoredUser;
+import org.headsupdev.agile.web.ApplicationPageMapper;
 import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.HeadsUpSession;
 import org.headsupdev.agile.web.MountPoint;
-import org.headsupdev.agile.security.permission.AdminPermission;
+import org.headsupdev.agile.web.components.GravatarLinkPanel;
+import org.headsupdev.agile.web.components.StripedListView;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import java.util.*;
 
@@ -53,10 +59,12 @@ import java.util.*;
  * @version $Id$
  * @since 1.0
  */
-@MountPoint( "permissions" )
+@MountPoint("permissions")
 public class Permissions
-    extends HeadsUpPage
+        extends HeadsUpPage
 {
+    private final int ICON_EDGE_LENGTH = 25;
+
     public Permission getRequiredPermission()
     {
         return new AdminPermission();
@@ -79,9 +87,10 @@ public class Permissions
     }
 
     class UserRolesForm
-        extends Form
+            extends Form
     {
         private List<User> users;
+
         public UserRolesForm( String id )
         {
             super( id );
@@ -135,20 +144,28 @@ public class Permissions
 
                     final User user = listItem.getModelObject();
                     final boolean anon;
+                    listItem.add( new GravatarLinkPanel( "gravatar", user, ICON_EDGE_LENGTH ) );
+                    BookmarkablePageLink userLink;
+                    PageParameters params = new PageParameters();
+                    params.add( "username", user.getUsername() );
+                    params.add( "silent", "true" );
                     if ( user.equals( HeadsUpSession.ANONYMOUS_USER ) )
                     {
                         user.getRoles().add( new AnonymousRole() );
                         anon = true;
+                        userLink = new BookmarkablePageLink( "userLink", getPageClass(), params );
                     }
                     else
                     {
                         anon = false;
+                        userLink = new BookmarkablePageLink( "userLink", ApplicationPageMapper.get().getPageClass( "account" ), params );
                     }
 
-                    listItem.add( new Label( "username", new Model<String>()
+                    Label username = new Label( "username", new Model<String>()
                     {
                         @Override
-                        public String getObject() {
+                        public String getObject()
+                        {
                             String username = user.getUsername();
                             if ( ( (StoredUser) user ).isDisabled() )
                             {
@@ -157,7 +174,9 @@ public class Permissions
 
                             return username;
                         }
-                    } ).add( new AttributeModifier( "class", true, new Model<String>() {
+                    } );
+                    username.add( new AttributeModifier( "class", true, new Model<String>()
+                    {
                         @Override
                         public String getObject()
                         {
@@ -168,7 +187,9 @@ public class Permissions
 
                             return "";
                         }
-                    } ) ) );
+                    } ) );
+                    userLink.add( username );
+                    listItem.add( userLink );
                     Link disable = new Link( "disable" )
                     {
                         @Override

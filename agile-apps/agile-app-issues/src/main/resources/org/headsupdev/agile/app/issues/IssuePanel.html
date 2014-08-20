@@ -52,10 +52,10 @@
         </tr>
         <tr>
           <th class="reporter">Reported By</th>
-          <td class="reporter"><a wicket:id="reporter-link"><span wicket:id="reporter">reporter</span></a></td>
+          <td class="reporter"><span wicket:id="gravatarReporter"></span></td>
           <th class="assigned">Assigned To</th>
           <td class="assigned">
-              <span wicket:id="assigned-link">assigned</span>
+              <span wicket:id="gravatarAssignee"></span>
               <form wicket:id="drop-issue-form" style="display: inline">
                   <input type="submit" wicket:id="drop-issue" value="drop" />
               </form>
@@ -66,8 +66,8 @@
           <!--<td class="watchers" wicket:id="watchers"></td>-->
           <td class="watchers">
             <wicket:container wicket:id="watchers">
-              <div style="display:inline" wicket:id="gravatar">
-              </div>
+              <span style="display:inline" wicket:id="gravatar">
+              </span>
             </wicket:container>
           </td>
           <wicket:enclosure child="order">

@@ -3,9 +3,9 @@ package org.headsupdev.agile.web.components;
 import com.timgroup.jgravatar.Gravatar;
 import com.timgroup.jgravatar.GravatarDownloadException;
 import org.apache.wicket.PageParameters;
-import org.apache.wicket.behavior.SimpleAttributeModifier;
+import org.apache.wicket.Resource;
+import org.apache.wicket.ResourceReference;
 import org.apache.wicket.markup.html.image.Image;
-import org.apache.wicket.markup.html.image.NonCachingImage;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.link.Link;
@@ -16,6 +16,7 @@ import org.headsupdev.agile.api.User;
 import org.headsupdev.agile.api.logging.Logger;
 import org.headsupdev.agile.web.ApplicationPageMapper;
 import org.headsupdev.agile.web.HeadsUpSession;
+import org.wicketstuff.jwicket.tooltip.WalterZornTips;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -24,6 +25,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.Security;
 
 /**
  * Created by Gordon Edwards on 12/08/2014.
@@ -34,25 +36,43 @@ public class GravatarLinkPanel
     private final Logger log;
     private User user;
     private boolean hasGravatar;
+    private ResourceReference reference;
 
-    public GravatarLinkPanel( String id, User user, int iconEdgeLength )
+    public GravatarLinkPanel( String id, final User user, final int iconEdgeLength )
     {
         super( id );
         this.user = user;
         log = Manager.getLogger( getClass().getName() );
 
-        NonCachingImage icon = null;
+        Image icon = null;
         if ( user != null && !user.equals( HeadsUpSession.ANONYMOUS_USER ) )
         {
-            try
+            WalterZornTips tooltip = new WalterZornTips( user.getFullname() );
+            tooltip.setBgColor( "#E6E5BA" );
+            tooltip.setDelay( 0 );
+            tooltip.setShadow( true );
+            tooltip.setShadowWidth( 2 );
+            tooltip.setJumphorz( true );
+            boolean displayGravatar = user.getPreference( "gravatar.show", true );
+            reference = new ResourceReference( getClass(), "" + user.getEmail().hashCode() + iconEdgeLength + displayGravatar )
             {
-                icon = getIcon( user, iconEdgeLength );
-            }
-            catch ( IOException e )
-            {
-                log.error( e.getMessage() );
-                icon = null;
-            }
+                @Override
+                protected Resource newResource()
+                {
+                    try
+                    {
+                        return getIcon( user, iconEdgeLength );
+                    }
+                    catch ( IOException e )
+                    {
+                        e.printStackTrace();
+                        log.error( e.getMessage() );
+                    }
+                    return null;
+                }
+            };
+            icon = new Image( "avatar", reference );
+
             if ( icon == null )
             {
                 addBlankImage();
@@ -61,31 +81,23 @@ public class GravatarLinkPanel
             if ( getLink() instanceof BookmarkablePageLink )
             {
                 Link link = (Link) getLink();
-                link.add( new SimpleAttributeModifier( "title", user.getFullname() ) );
                 link.add( icon.setVisible( true ) );
-                if ( hasGravatar && user.getPreference( "gravatar.show", true) )
+                if ( displayHoverText() )
                 {
-                    link.add( new NonCachingImage( "alternativeIcon" ).setVisible( false ) );
+                    link.add( tooltip );
                 }
-                else
-                {
-                    link.add( new NonCachingImage( "avatar" ).setVisible( false ) );
-                }
+
                 add( link );
             }
             else if ( getLink() instanceof ExternalLink )
             {
                 ExternalLink link = (ExternalLink) getLink();
-                link.add( new SimpleAttributeModifier( "title", user.getFullname() ) );
                 link.add( icon.setVisible( true ) );
-                if ( hasGravatar && user.getPreference( "gravatar.show", true) )
+                if ( displayHoverText() )
                 {
-                    link.add( new NonCachingImage( "alternativeIcon" ).setVisible( false ) );
+                    link.add( tooltip );
                 }
-                else
-                {
-                    link.add( new NonCachingImage( "avatar" ).setVisible( false ) );
-                }
+
                 add( link );
             }
         }
@@ -110,7 +122,7 @@ public class GravatarLinkPanel
     }
 
 
-    private NonCachingImage getIcon( User user, int iconEdgeLength )
+    private ByteArrayResource getIcon( User user, int iconEdgeLength )
             throws IOException
     {
         byte[] avatarBytes = null;
@@ -120,7 +132,6 @@ public class GravatarLinkPanel
         }
         catch ( GravatarDownloadException e )
         {
-            warn("noimage" );
         }
         hasGravatar = avatarBytes != null;
         user.setPreference( "user.hasGravatar", hasGravatar );
@@ -138,20 +149,20 @@ public class GravatarLinkPanel
                 InputStream stream = getClass().getClassLoader().getResourceAsStream( "/org/headsupdev/agile/web/images/person-icon.png" );
                 alternativeIcon = ImageIO.read( stream );
                 byte[] iconBytes = getImageBytes( alternativeIcon );
-                iconBytes = scale( iconBytes , iconEdgeLength, iconEdgeLength );
-                return new NonCachingImage( "alternativeIcon", new ByteArrayResource( "image/jpeg", iconBytes ) );
+                iconBytes = scale( iconBytes, iconEdgeLength, iconEdgeLength );
+                return new ByteArrayResource( "image/jpeg", iconBytes );
             }
             int stringLen = (int) graphics.getFontMetrics().getStringBounds( initials, graphics ).getWidth();
             int start = iconEdgeLength / 2 - stringLen / 2;
             graphics.drawString( initials, start, (int) ( iconEdgeLength / 1.4 ) );
             byte[] iconBytes = getImageBytes( alternativeIcon );
-            iconBytes = scale( iconBytes , iconEdgeLength, iconEdgeLength );
-            return new NonCachingImage( "alternativeIcon", new ByteArrayResource( "image/jpeg", iconBytes ) );
+            iconBytes = scale( iconBytes, iconEdgeLength, iconEdgeLength );
+            return new ByteArrayResource( "image/jpeg", iconBytes );
         }
         else
         {
             avatarBytes = scale( avatarBytes, iconEdgeLength, iconEdgeLength );
-            return new NonCachingImage( "avatar", new ByteArrayResource( "image/jpeg", avatarBytes ) );
+            return new ByteArrayResource( "image/jpeg", avatarBytes );
         }
 
 //        avatarBytes = scale( avatarBytes, iconEdgeLength, iconEdgeLength );
@@ -198,4 +209,10 @@ public class GravatarLinkPanel
     {
         return hasGravatar;
     }
+
+    public boolean displayHoverText()
+    {
+        return true;
+    }
+
 }

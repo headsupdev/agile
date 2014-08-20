@@ -48,12 +48,13 @@ img.icon {
 }
 
 #content div.user {
+    padding-top:20px;
     width: 241px;
 }
 
 #content div.project, #content div.user {
     float: left;
-    height: 180px;
+    height: 230px;
 
     padding-bottom: 5px;
 
@@ -91,4 +92,8 @@ table.project-details td {
 
 table.project-details, table.details, table.moredetails {
     width: 100%;
+}
+
+.gravatar {
+    padding-top:5px;
 }

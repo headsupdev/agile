@@ -19,6 +19,7 @@
 package org.headsupdev.agile.web.components;
 
 import com.timgroup.jgravatar.Gravatar;
+import com.timgroup.jgravatar.GravatarDownloadException;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
@@ -31,7 +32,6 @@ import org.apache.wicket.model.Model;
 import org.headsupdev.agile.api.Project;
 import org.headsupdev.agile.api.User;
 import org.headsupdev.agile.web.ApplicationPageMapper;
-import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.HeadsUpSession;
 
 /**
@@ -43,18 +43,20 @@ import org.headsupdev.agile.web.HeadsUpSession;
 public class UserDetailsPanel
         extends Panel
 {
-    private final int ICON_EDGE_LENGTH = 100;
+    private final int ICON_EDGE_LENGTH = 80;
     private final GravatarLinkPanel gravatarLinkPanel;
+    private User user;
 
-    public UserDetailsPanel( String id, final User user, Project project, boolean showFullDetails, boolean isCurrentUser, HeadsUpPage page )
+    public UserDetailsPanel( String id, final User user, Project project, boolean showFullDetails )
     {
         super( id );
+        this.user = user;
         gravatarLinkPanel = new GravatarLinkPanel( "gravatar", user, ICON_EDGE_LENGTH )
         {
             @Override
             public Object getLink()
             {
-                if ( hasGravatar() && user.getPreference( "gravatar.show", true ) )
+                if ( showCheckbox() && user.getPreference( "gravatar.show", true ) )
                 {
                     return new ExternalLink( "link", new Gravatar().getUrl( user.getEmail() ) );
                 }
@@ -62,6 +64,12 @@ public class UserDetailsPanel
                 params.add( "username", user.getUsername() );
                 params.add( "silent", "true" );
                 return new BookmarkablePageLink( "link", ApplicationPageMapper.get().getPageClass( "account" ), params );
+            }
+
+            @Override
+            public boolean displayHoverText()
+            {
+                return false;
             }
         };
         add( gravatarLinkPanel );
@@ -90,7 +98,8 @@ public class UserDetailsPanel
         };
         WebMarkupContainer container = new WebMarkupContainer( "checkboxContainer" );
         container.add( checkBox );
-        add( container.setVisible( isCurrentUser && user.getPreference( "user.hasGravatar", false ) ) );
+        boolean isCurrentUser = user.equals( ( (HeadsUpSession) getSession() ).getUser() ) && !user.equals( HeadsUpSession.ANONYMOUS_USER );
+        add( container.setVisible( isCurrentUser && showCheckbox() ) );
 
         add( new Label( "username", user.getUsername() ) );
         add( new Label( "firstname", user.getFirstname() ) );
@@ -101,6 +110,19 @@ public class UserDetailsPanel
                 ( (HeadsUpSession) getSession() ).getTimeZone() ) ) );
         add( new Label( "description", new MarkedUpTextModel( user.getDescription(), project ) )
                 .setEscapeModelStrings( false ) );
+    }
+
+    private boolean showCheckbox()
+    {
+        byte[] avatarBytes = null;
+        try
+        {
+            avatarBytes = new Gravatar().download( user.getEmail() );
+        }
+        catch ( GravatarDownloadException e )
+        {
+        }
+        return avatarBytes != null;
     }
 
 }
