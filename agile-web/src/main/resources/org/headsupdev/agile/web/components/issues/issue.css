@@ -78,17 +78,17 @@ table.issues td.hours {
     padding: 0 10px;
 }
 
-#pro.hidden, #submit.hidden, #summary.hidden, #status.hidden, #type.hidden, #rank.hidden, #assignee.hidden, #milestone.hidden, #timeEstimate.hidden{
+#pro.hidden, #add.hidden, #summary.hidden, #status.hidden, #type.hidden, #rank.hidden, #assignee.hidden, #milestone.hidden, #timeEstimate.hidden{
     display:none !important;
     overflow:hidden;
 }
 
-#pro.shown, #submit.shown, #summary.shown, #status.shown, #type.shown, #rank.shown, #assignee.shown, #milestone.shown, #timeEstimate.shown{
+#pro.shown, #add.shown, #summary.shown, #status.shown, #type.shown, #rank.shown, #assignee.shown, #milestone.shown, #timeEstimate.shown{
     display:block !important;
     overflow:hidden;
 }
 
-#pro, #submit, #summary, #status, #type, #rank, #assignee, #milestone, #timeEstimate{
+#pro, #add, #summary, #status, #type, #rank, #assignee, #milestone, #timeEstimate{
     display:none;
 }
 

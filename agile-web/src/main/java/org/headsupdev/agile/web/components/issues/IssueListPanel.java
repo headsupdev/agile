@@ -233,7 +233,7 @@ public class IssueListPanel
         };
 
         Component[] rowAddComponents = new Component[9];
-        rowAddComponents[0] = new WebMarkupContainer( "submit" ).setMarkupId( "submit" );
+        rowAddComponents[0] = new WebMarkupContainer( "submit" ).setMarkupId( "add" );
         rowAddComponents[1] = new TextField<String>( "summary" ).setRequired( true ).setMarkupId( "summary" );
         rowAddComponents[2] = new Label( "status", IssueUtils.getStatusName( Issue.STATUS_NEW ) ).setMarkupId( "status" );
         rowAddComponents[3] = new IssueTypeDropDownChoice( "type", IssueUtils.getTypes() ).setRequired( true ).setMarkupId( "type" );
