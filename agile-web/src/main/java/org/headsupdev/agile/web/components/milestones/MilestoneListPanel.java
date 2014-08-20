@@ -193,7 +193,6 @@ public class MilestoneListPanel
                     return;
                 }
                 quickMilestone.setUpdated( new Date() );
-                dao.save( quickMilestone );
                 saveMilestone( quickMilestone );
                 //TODO: problem with dependency below
                 User currentUser = ( (HeadsUpSession) getSession() ).getUser();

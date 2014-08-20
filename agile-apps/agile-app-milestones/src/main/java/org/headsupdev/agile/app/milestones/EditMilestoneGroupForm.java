@@ -94,6 +94,7 @@ public class EditMilestoneGroupForm
                 }
 
                 group.setUpdated( new Date() );
+                group.updateDueDate();
                 MilestoneGroupsDAO dao = new MilestoneGroupsDAO();
 
                 if ( creating )
