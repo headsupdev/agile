@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2013 Heads Up Development Ltd.
+ * Copyright 2013-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -43,6 +43,11 @@ public class ReopenMilestone
     protected void submitChild()
     {
         getMilestone().setCompletedDate( null );
+
+        if ( getMilestone().getGroup() != null )
+        {
+            getMilestone().getGroup().setCompletedDate( null );
+        }
     }
 
     @Override
