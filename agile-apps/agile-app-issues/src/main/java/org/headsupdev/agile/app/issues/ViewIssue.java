@@ -250,7 +250,8 @@ public class ViewIssue
         {
             protected void populateItem( ListItem listItem )
             {
-                CommentPanel panel = new CommentPanel( "comment", listItem.getModel(), getProject(), commentList, issue, ViewIssue.this );
+
+                CommentPanel panel = new CommentPanel( "comment", listItem.getModel(), getProject(), commentList, issue );
                 listItem.add( panel );
             }
         } );

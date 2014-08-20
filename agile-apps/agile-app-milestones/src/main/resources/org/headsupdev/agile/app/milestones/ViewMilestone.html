@@ -26,24 +26,7 @@
           <th class="comments" colspan="2">comments</th>
         </tr>
         <wicket:container wicket:id="comments">
-        <tr>
-          <td class="comment-icon"><img wicket:id="icon"/></td>
-          <td class="comment-title">
-            <div style="display:inline" wicket:id="gravatar">
-            </div>
-            Comment added by <a wicket:id="usernameLink"><span wicket:id="username">username</span></a>
-            on <span wicket:id="created">created</span>
-            <a wicket:id="editComment" href="#" title = "edit">
-              <img src="/resources/org.headsupdev.agile.web.HeadsUpPage/images/comment_edit.png"/>
-            </a>
-            <a wicket:id="removeComment" href="#" title = "delete">
-              <img src="/resources/org.headsupdev.agile.web.HeadsUpPage/images/comment_delete.png"/>
-            </a>
-          </td>
-        </tr>
-        <tr>
-          <td colspan="2" wicket:id="comment">comment</td>
-        </tr>
+          <wicket:container wicket:id="comment">[comment]</wicket:container>
         </wicket:container>
       </table>
 
