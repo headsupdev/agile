@@ -5,6 +5,7 @@ import com.timgroup.jgravatar.GravatarDownloadException;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.Resource;
 import org.apache.wicket.ResourceReference;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.ExternalLink;
@@ -65,7 +66,6 @@ public class GravatarLinkPanel
                     }
                     catch ( IOException e )
                     {
-                        e.printStackTrace();
                         log.error( e.getMessage() );
                     }
                     return null;
@@ -110,13 +110,7 @@ public class GravatarLinkPanel
     private void addBlankImage()
     {
         Image avatar = new Image( "avatar" );
-        Link link = new Link( "link" )
-        {
-            @Override
-            public void onClick()
-            {
-            }
-        };
+        WebMarkupContainer link = new WebMarkupContainer( "link" );
         link.add( avatar.setVisible( false ) );
         add( link.setVisible( false ) );
     }
@@ -164,9 +158,6 @@ public class GravatarLinkPanel
             avatarBytes = scale( avatarBytes, iconEdgeLength, iconEdgeLength );
             return new ByteArrayResource( "image/jpeg", avatarBytes );
         }
-
-//        avatarBytes = scale( avatarBytes, iconEdgeLength, iconEdgeLength );
-//        return new NonCachingImage( "avatar", new ByteArrayResource( "image/jpeg", avatarBytes ) );
     }
 
     public byte[] scale( byte[] imageBytes, int width, int height )
@@ -203,11 +194,6 @@ public class GravatarLinkPanel
         params.add( "username", user.getUsername() );
         params.add( "silent", "true" );
         return new BookmarkablePageLink( "link", ApplicationPageMapper.get().getPageClass( "account" ), params );
-    }
-
-    public boolean hasGravatar()
-    {
-        return hasGravatar;
     }
 
     public boolean displayHoverText()

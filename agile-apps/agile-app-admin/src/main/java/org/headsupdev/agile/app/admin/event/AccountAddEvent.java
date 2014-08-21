@@ -64,7 +64,7 @@ public class AccountAddEvent
         {
             public Panel getPanel()
             {
-                return new UserDetailsPanel( RenderUtil.PANEL_ID, user, project, false, false, ( HeadsUpPage) getPanel().getPage() );
+                return new UserDetailsPanel( RenderUtil.PANEL_ID, user, project, false);
             }
         }.getRenderedContent();
     }
