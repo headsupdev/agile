@@ -41,6 +41,7 @@ import org.headsupdev.agile.web.BookmarkableMenuLink;
 import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.HeadsUpSession;
 import org.headsupdev.agile.web.components.FormattedDateModel;
+import org.headsupdev.agile.web.components.GravatarLinkPanel;
 import org.headsupdev.agile.web.components.MarkedUpTextModel;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -61,6 +62,7 @@ public class View
     private String title;
     private boolean watching = false;
     private Document doc;
+    private int ICON_EDGE_LENGTH = 30;
 
     public Permission getRequiredPermission()
     {
@@ -148,7 +150,14 @@ public class View
             protected void populateItem( ListItem<Attachment> listItem )
             {
                 attachment = listItem.getModelObject();
+                PageParameters params = new PageParameters();
+                listItem.add( new GravatarLinkPanel( "avatar", attachment.getUser(), ICON_EDGE_LENGTH ) );
                 listItem.add( new Label( "username", attachment.getUser().getFullnameOrUsername() ) );
+                params.add( "username", attachment.getUser().getUsername() );
+                params.add( "silent", "true" );
+                BookmarkablePageLink usernameLink = new BookmarkablePageLink( "usernameLink", View.this.getPageClass( "account" ), params );
+                usernameLink.add( new Label( "username", attachment.getUser().getFullnameOrUsername() ) );
+                listItem.add( usernameLink );
                 listItem.add( new Label( "created", new FormattedDateModel( attachment.getCreated(),
                         ( (HeadsUpSession) getSession() ).getTimeZone() ) ) );
 

@@ -26,6 +26,7 @@ import org.apache.wicket.markup.html.CSSPackageResource;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.image.Image;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.DownloadLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -46,6 +47,7 @@ import org.headsupdev.agile.storage.resource.DurationWorked;
 import org.headsupdev.agile.web.*;
 import org.headsupdev.agile.web.components.EmbeddedFilePanel;
 import org.headsupdev.agile.web.components.FormattedDateModel;
+import org.headsupdev.agile.web.components.GravatarLinkPanel;
 import org.headsupdev.agile.web.components.MarkedUpTextModel;
 import org.headsupdev.agile.web.components.issues.IssueListPanel;
 import org.hibernate.Session;
@@ -69,6 +71,7 @@ public class ViewIssue
     private Issue issue;
     private boolean watching;
     private IssuePanel issuePanel;
+    private final int ICON_EDGE_LENGTH = 30;
 
     public Permission getRequiredPermission()
     {
@@ -141,8 +144,14 @@ public class ViewIssue
             protected void populateItem( ListItem<Attachment> listItem )
             {
                 attachment = listItem.getModelObject();
-
+                PageParameters params = new PageParameters();
+                listItem.add( new GravatarLinkPanel( "avatar", attachment.getUser(), ICON_EDGE_LENGTH ) );
                 listItem.add( new Label( "username", attachment.getUser().getFullnameOrUsername() ) );
+                params.add( "username", attachment.getUser().getUsername() );
+                params.add( "silent", "true" );
+                BookmarkablePageLink usernameLink = new BookmarkablePageLink( "usernameLink", ViewIssue.this.getPageClass( "account" ), params );
+                usernameLink.add( new Label( "username", attachment.getUser().getFullnameOrUsername() ) );
+                listItem.add( usernameLink );
                 listItem.add( new Label( "created", new FormattedDateModel( attachment.getCreated(),
                         ( (HeadsUpSession) getSession() ).getTimeZone() ) ) );
 

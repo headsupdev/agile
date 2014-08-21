@@ -104,3 +104,9 @@ h1 input {
     font-size: 22pt;
     font-weight: bold;
 }
+
+.comment-text {
+    position:relative;
+    bottom:10px;
+    left:5px
+}
