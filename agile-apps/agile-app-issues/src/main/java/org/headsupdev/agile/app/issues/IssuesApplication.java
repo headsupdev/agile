@@ -18,17 +18,12 @@
 
 package org.headsupdev.agile.app.issues;
 
-import org.apache.wicket.extensions.markup.html.repeater.util.SortParam;
-import org.headsupdev.agile.api.LinkProvider;
-import org.headsupdev.agile.api.Manager;
-import org.headsupdev.agile.api.MenuLink;
-import org.headsupdev.agile.api.Page;
-import org.headsupdev.agile.api.Permission;
-import org.headsupdev.agile.api.Project;
-import org.headsupdev.agile.api.SimpleMenuLink;
+import org.headsupdev.agile.api.*;
 import org.headsupdev.agile.api.rest.Api;
 import org.headsupdev.agile.app.issues.dao.SortableIssuesProvider;
 import org.headsupdev.agile.app.issues.event.CloseIssueEvent;
+import org.headsupdev.agile.app.issues.event.CommentEvent;
+import org.headsupdev.agile.app.issues.event.ProgressEvent;
 import org.headsupdev.agile.app.issues.event.CreateIssueEvent;
 import org.headsupdev.agile.app.issues.event.UpdateIssueEvent;
 import org.headsupdev.agile.app.issues.permission.IssueEditPermission;
@@ -38,7 +33,7 @@ import org.headsupdev.agile.app.issues.rest.IssuesApi;
 import org.headsupdev.agile.storage.Comment;
 import org.headsupdev.agile.storage.HibernateStorage;
 import org.headsupdev.agile.storage.issues.Issue;
-import org.headsupdev.agile.storage.issues.Milestone;
+import org.headsupdev.agile.storage.resource.DurationWorked;
 import org.headsupdev.agile.web.WebApplication;
 import org.headsupdev.agile.web.components.issues.IssueFilterPanel;
 import org.headsupdev.agile.web.wicket.SortableEntityProvider;
@@ -46,11 +41,8 @@ import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -62,7 +54,7 @@ import java.util.List;
  * @since 1.0
  */
 public class IssuesApplication
-    extends WebApplication
+        extends WebApplication
 {
     public static final String ID = "issues";
 
@@ -114,37 +106,41 @@ public class IssuesApplication
         return links;
     }
 
-    public List<String> getEventTypes() {
+    public List<String> getEventTypes()
+    {
         return eventTypes;
     }
 
     @Override
-    public Class<? extends Page>[] getPages() {
-        return new Class[]{ AssignIssue.class, CloseIssue.class, CreateAttachment.class, CreateComment.class,
-            CreateIssue.class, CreateRelationship.class, EditIssue.class, EditComment.class, Issues.class, ReopenIssue.class,
-            ResolveIssue.class, ProgressIssue.class, EditProgressIssue.class, ViewIssue.class };
+    public Class<? extends Page>[] getPages()
+    {
+        return new Class[]{AssignIssue.class, CloseIssue.class, CreateAttachment.class, CreateComment.class,
+                CreateIssue.class, CreateRelationship.class, EditIssue.class, EditComment.class, Issues.class, ReopenIssue.class,
+                ResolveIssue.class, ProgressIssue.class, EditProgressIssue.class, ViewIssue.class};
     }
 
     @Override
-    public Class<? extends Page> getHomePage() {
+    public Class<? extends Page> getHomePage()
+    {
         return Issues.class;
     }
 
     @Override
     public Class<? extends Api>[] getApis()
     {
-        return new Class[]{ IssuesApi.class };
+        return new Class[]{IssuesApi.class};
     }
 
     @Override
-    public Permission[] getPermissions() {
-        return new Permission[]{ new IssueEditPermission(), new IssueListPermission(), new IssueViewPermission() };
+    public Permission[] getPermissions()
+    {
+        return new Permission[]{new IssueEditPermission(), new IssueListPermission(), new IssueViewPermission()};
     }
 
     @Override
     public LinkProvider[] getLinkProviders()
     {
-        return new LinkProvider[]{ new IssueLinkProvider() };
+        return new LinkProvider[]{new IssueLinkProvider()};
     }
 
     public static SortableEntityProvider<Issue> getIssueProvider( final IssueFilterPanel filter )
@@ -155,9 +151,11 @@ public class IssuesApplication
     public static SortableEntityProvider<Issue> getIssueProviderForProject( final Project project,
                                                                             final IssueFilterPanel filter )
     {
-        return new SortableIssuesProvider( filter ) {
+        return new SortableIssuesProvider( filter )
+        {
             @Override
-            protected Criteria createCriteria() {
+            protected Criteria createCriteria()
+            {
                 Criteria c = super.createCriteria();
 
                 c.add( Restrictions.eq( "id.project", project ) );
@@ -203,7 +201,8 @@ public class IssuesApplication
         tx.commit();
     }
 
-    public Class[] getPersistantClasses() {
+    public Class[] getPersistantClasses()
+    {
         return new Class[]{CloseIssueEvent.class, CreateIssueEvent.class, UpdateIssueEvent.class, CommentEvent.class, ProgressEvent.class};
     }
 }
