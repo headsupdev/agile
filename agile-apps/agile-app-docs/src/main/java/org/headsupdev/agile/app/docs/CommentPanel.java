@@ -56,13 +56,11 @@ import java.util.List;
 public class CommentPanel
         extends Panel
 {
-    private HeadsUpPage page;
     private Document doc;
     private IModel model;
     private List commentList;
     private Project project;
     public Link remove;
-    private Storage storage;
     private Comment comment;
 
     public CommentPanel( String id, Comment comment, Project project )
@@ -81,14 +79,12 @@ public class CommentPanel
         layout();
     }
 
-    public CommentPanel( String id, IModel model, Project project, List commentList, Document doc, HeadsUpPage page )
+    public CommentPanel( String id, IModel model, Project project, List commentList, Document doc )
     {
         super( id, model );
         this.project = project;
         this.commentList = commentList;
         this.doc = doc;
-        this.page = page;
-        this.storage = page.getStorage();
         layout();
     }
 
@@ -105,7 +101,8 @@ public class CommentPanel
             comment = (Comment) o;
             add( new Image( "icon", new ResourceReference( HeadsUpPage.class, "images/comment.png" ) ) );
 
-            PageParameters params = page.getProjectPageParameters();
+            PageParameters params = new PageParameters();
+            params.put( "project", project );
             params.put( "page", doc.getName() );
             params.put( "commentId", comment.getId() );
             Link edit = new BookmarkablePageLink( "editComment", EditComment.class, params );
@@ -117,6 +114,7 @@ public class CommentPanel
                 @Override
                 public void onClick()
                 {
+                    Storage storage = Manager.getStorageInstance();
                     Comment comm = (Comment) ( (HibernateStorage) storage ).merge( comment );
                     doc.getComments().remove( comm );
                     Document d = (Document) ( (HibernateStorage) storage ).merge( doc );

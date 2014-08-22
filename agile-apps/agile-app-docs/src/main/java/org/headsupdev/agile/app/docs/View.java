@@ -36,7 +36,6 @@ import org.headsupdev.agile.storage.Attachment;
 import org.headsupdev.agile.storage.Comment;
 import org.headsupdev.agile.storage.HibernateStorage;
 import org.headsupdev.agile.storage.docs.Document;
-import org.headsupdev.agile.storage.issues.Issue;
 import org.headsupdev.agile.web.BookmarkableMenuLink;
 import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.HeadsUpSession;
@@ -201,7 +200,7 @@ public class View
         {
             protected void populateItem( ListItem<Comment> listItem )
             {
-                listItem.add( new CommentPanel( "comment", listItem.getModel(), getProject(), commentList, doc, (HeadsUpPage) getPage() ) );
+                listItem.add( new CommentPanel( "comment", listItem.getModel(), getProject(), commentList, doc ) );
             }
         } );
     }
