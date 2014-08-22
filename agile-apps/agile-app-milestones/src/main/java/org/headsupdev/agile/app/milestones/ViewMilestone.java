@@ -114,36 +114,8 @@ public class ViewMilestone
 
             protected void populateItem( ListItem<Comment> listItem )
             {
-                comment = listItem.getModelObject();
-                listItem.add( new Image( "icon", new ResourceReference( HeadsUpPage.class, "images/comment.png" ) ) );
-                listItem.add( new Label( "username", comment.getUser().getFullnameOrUsername() ) );
-                listItem.add( new Label( "created", new FormattedDateModel( comment.getCreated(),
-                        ( (HeadsUpSession) getSession() ).getTimeZone() ) ) );
-
-                PageParameters params = page.getProjectPageParameters();
-                params.put( "id", milestone.getName() );
-                params.put( "commentId", comment.getId() );
-                Link edit = new BookmarkablePageLink( "editComment", EditComment.class, params );
-
-                listItem.add( edit.setVisible( userHasPermission ) );
-
-                Link remove = new Link( "removeComment" )
-                {
-                    @Override
-                    public void onClick()
-                    {
-                        Comment comm = (Comment) ( (HibernateStorage) getStorage() ).merge( comment );
-                        milestone.getComments().remove( comm );
-                        Milestone mile = (Milestone) ( (HibernateStorage) getStorage() ).merge( milestone );
-                        commentList.remove( comm );
-                        mile.setUpdated( new Date() );
-                        ( (HibernateStorage) getStorage() ).delete( comm );
-                    }
-                };
-                listItem.add( remove.setVisible( userHasPermission ) );
-
-                listItem.add( new Label( "comment", new MarkedUpTextModel( comment.getComment(), getProject() ) )
-                        .setEscapeModelStrings( false ) );
+                CommentPanel panel = new CommentPanel( "comment", listItem.getModel(), getProject(), commentList, milestone );
+                listItem.add( panel );
             }
         } );
 

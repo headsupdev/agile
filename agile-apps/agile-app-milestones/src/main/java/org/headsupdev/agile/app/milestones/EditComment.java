@@ -132,7 +132,7 @@ public class EditComment
 
     protected Event getUpdateEvent( Comment comment )
     {
-        return new UpdateMilestoneEvent( milestone, milestone.getProject(), getSession().getUser(), comment, "commented on" );
+        return new UpdateMilestoneEvent( milestone, milestone.getProject(), getSession().getUser(), comment, "edited a comment on" );
     }
 
     class CommentForm

@@ -22,6 +22,7 @@ import org.headsupdev.agile.api.*;
 import org.headsupdev.agile.api.rest.Api;
 import org.headsupdev.agile.app.milestones.event.*;
 import org.headsupdev.agile.app.milestones.rest.MilestonesApi;
+import org.headsupdev.agile.storage.Comment;
 import org.headsupdev.agile.storage.StoredProject;
 import org.headsupdev.agile.storage.issues.Milestone;
 import org.headsupdev.agile.storage.HibernateStorage;
@@ -31,6 +32,7 @@ import org.headsupdev.agile.app.milestones.permission.MilestoneViewPermission;
 import org.headsupdev.agile.app.milestones.permission.MilestoneListPermission;
 import org.headsupdev.agile.app.milestones.permission.MilestoneEditPermission;
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Criterion;
@@ -151,6 +153,14 @@ public class MilestonesApplication
         }
 
         return (List<MilestoneGroup>) c.list();
+    }
+    public static Comment getComment( long id )
+    {
+        Session session = ( (HibernateStorage) Manager.getStorageInstance() ).getHibernateSession();
+
+        Query q = session.createQuery( "from Comment c where id.id = :id" );
+        q.setLong( "id", id );
+        return (Comment) q.uniqueResult();
     }
 
     public void addMilestone( Milestone milestone )

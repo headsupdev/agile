@@ -18,21 +18,25 @@
 
 package org.headsupdev.agile.app.milestones.event;
 
-import org.headsupdev.agile.api.*;
-import org.headsupdev.agile.storage.dao.MilestonesDAO;
-import org.headsupdev.agile.web.components.PercentagePanel;
-import org.headsupdev.agile.web.AbstractEvent;
+import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.Model;
+import org.headsupdev.agile.api.Project;
+import org.headsupdev.agile.api.User;
+import org.headsupdev.agile.app.milestones.CommentPanel;
 import org.headsupdev.agile.app.milestones.MilestonesApplication;
 import org.headsupdev.agile.app.milestones.ViewMilestone;
-import org.headsupdev.agile.storage.issues.Milestone;
 import org.headsupdev.agile.storage.Comment;
+import org.headsupdev.agile.storage.dao.MilestonesDAO;
+import org.headsupdev.agile.storage.issues.Milestone;
+import org.headsupdev.agile.web.AbstractEvent;
+import org.headsupdev.agile.web.RenderUtil;
+import org.headsupdev.agile.web.components.PercentagePanel;
 
-import javax.persistence.Entity;
 import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
 import javax.persistence.Transient;
-
-import java.util.List;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Event added when a milestone is updated
@@ -42,9 +46,9 @@ import java.util.LinkedList;
  * @since 1.0
  */
 @Entity
-@DiscriminatorValue( "updatemilestone" )
+@DiscriminatorValue("updatemilestone")
 public class UpdateMilestoneEvent
-    extends AbstractEvent
+        extends AbstractEvent
 {
     @Transient
     private MilestonesDAO dao = new MilestonesDAO();
@@ -64,28 +68,41 @@ public class UpdateMilestoneEvent
         setObjectId( milestone.getName() );
     }
 
-    public UpdateMilestoneEvent( Milestone milestone, Project project, User user, Comment comment, String type )
+    public UpdateMilestoneEvent( Milestone milestone, Project project, User user, Comment comment, String action )
     {
-        super( type + " added to milestone " + milestone.getName() + " by " + user.getFullnameOrUsername(),
+        super( user.getFullnameOrUsername() + " " + action + " milestone " + milestone.getName(),
                 comment.getComment(), milestone.getUpdated() );
-
         setApplicationId( MilestonesApplication.ID );
         setProject( project );
         setUser( user );
         setObjectId( milestone.getName() );
+        setSubObjectId( String.valueOf( comment.getId() ) );
     }
 
-    public String getBody() {
+    public String getBody()
+    {
         String name = getObjectId();
-        Milestone milestone = dao.find(name, getProject());
+        Milestone milestone = dao.find( name, getProject() );
         if ( milestone == null )
         {
             return "<p>Milestone " + getObjectId() + " does not exist for project " + getProject().getAlias() + "</p>";
         }
 
         addLinks( ViewMilestone.getLinks( milestone ) );
+        if ( getSubObjectId() == null || "0".equals( getSubObjectId() ) )
+        {
+            return CreateMilestoneEvent.renderMilestone( milestone );
+        }
+        else
+        {
+            Comment comment = MilestonesApplication.getComment( Long.parseLong( getSubObjectId() ) );
+            if ( comment == null )
+            {
+                return "<p>Comment " + getSubObjectId() + " does not exist</p>";
+            }
 
-        return CreateMilestoneEvent.renderMilestone( milestone );
+            return renderComment( comment, milestone );
+        }
     }
 
     public List<CssReference> getBodyCssReferences()
@@ -95,5 +112,23 @@ public class UpdateMilestoneEvent
         ret.add( referenceForCss( PercentagePanel.class, "percent.css" ) );
 
         return ret;
+    }
+
+    private String renderComment( final Comment comment, final Milestone milestone )
+    {
+        if ( comment == null )
+        {
+            return "";
+        }
+
+        String content = new RenderUtil()
+        {
+            public Panel getPanel()
+            {
+                return new CommentPanel( RenderUtil.PANEL_ID, new Model( comment ), getProject(), null, milestone );
+            }
+        }.getRenderedContent();
+
+        return "<table class=\"comments vertical\">" + content + "</table>";
     }
 }

@@ -104,7 +104,7 @@ public class CreateComment
 
     protected Event getUpdateEvent( Comment comment )
     {
-        return new UpdateMilestoneEvent( milestone, milestone.getProject(), getSession().getUser(), comment, "Comment" );
+        return new UpdateMilestoneEvent( milestone, milestone.getProject(), getSession().getUser(), comment, "commented on" );
     }
 
     class CommentForm
