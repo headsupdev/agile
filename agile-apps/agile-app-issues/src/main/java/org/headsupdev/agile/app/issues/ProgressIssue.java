@@ -19,6 +19,7 @@
 package org.headsupdev.agile.app.issues;
 
 import org.headsupdev.agile.api.Event;
+import org.headsupdev.agile.app.issues.event.ProgressEvent;
 import org.headsupdev.agile.app.issues.event.UpdateIssueEvent;
 import org.headsupdev.agile.storage.Comment;
 import org.headsupdev.agile.storage.HibernateStorage;
@@ -78,7 +79,7 @@ public class ProgressIssue
 
     protected Event getUpdateEvent( Comment comment )
     {
-        return new UpdateIssueEvent( getIssue(), getIssue().getProject(), getSession().getUser(), comment,
+        return new ProgressEvent( getIssue(), getIssue().getProject(), getSession().getUser(), duration,
                 "progressed" );
     }
 

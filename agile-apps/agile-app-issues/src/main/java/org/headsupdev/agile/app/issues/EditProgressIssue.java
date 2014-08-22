@@ -23,6 +23,7 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.headsupdev.agile.api.Event;
+import org.headsupdev.agile.app.issues.event.ProgressEvent;
 import org.headsupdev.agile.app.issues.event.UpdateIssueEvent;
 import org.headsupdev.agile.storage.Comment;
 import org.headsupdev.agile.storage.HibernateStorage;
@@ -85,8 +86,8 @@ public class EditProgressIssue
 
     protected Event getUpdateEvent( Comment comment )
     {
-        return new UpdateIssueEvent( getIssue(), getIssue().getProject(), getSession().getUser(), comment,
-                "progressed" );
+        return new ProgressEvent( getIssue(), getIssue().getProject(), getSession().getUser(), duration,
+                "edited progress on" );
     }
 
     protected void submitChild( Comment comment )

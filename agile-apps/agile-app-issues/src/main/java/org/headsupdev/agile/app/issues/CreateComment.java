@@ -19,14 +19,13 @@
 package org.headsupdev.agile.app.issues;
 
 import org.apache.wicket.markup.html.CSSPackageResource;
-import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
 import org.headsupdev.agile.api.Event;
 import org.headsupdev.agile.api.Permission;
-import org.headsupdev.agile.app.issues.event.UpdateIssueEvent;
+import org.headsupdev.agile.app.issues.event.CommentEvent;
 import org.headsupdev.agile.app.issues.permission.IssueEditPermission;
 import org.headsupdev.agile.storage.Comment;
 import org.headsupdev.agile.storage.HibernateStorage;
@@ -123,7 +122,7 @@ public class CreateComment
 
     protected Event getUpdateEvent( Comment comment )
     {
-        return new UpdateIssueEvent( issue, issue.getProject(), getSession().getUser(), comment, "commented on" );
+        return new CommentEvent( issue, issue.getProject(), getSession().getUser(), comment, "commented on" );
     }
 
     class CommentForm

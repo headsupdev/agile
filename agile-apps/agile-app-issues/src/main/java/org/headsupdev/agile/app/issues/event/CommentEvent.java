@@ -19,11 +19,11 @@
 package org.headsupdev.agile.app.issues.event;
 
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.Model;
 import org.headsupdev.agile.api.Project;
 import org.headsupdev.agile.api.User;
 import org.headsupdev.agile.app.issues.CommentPanel;
 import org.headsupdev.agile.app.issues.IssuesApplication;
-import org.headsupdev.agile.app.issues.ViewIssue;
 import org.headsupdev.agile.storage.Comment;
 import org.headsupdev.agile.storage.issues.Issue;
 import org.headsupdev.agile.web.AbstractEvent;
@@ -43,28 +43,17 @@ import java.util.List;
  * @since 1.0
  */
 @Entity
-@DiscriminatorValue("updateissue")
-public class UpdateIssueEvent
+@DiscriminatorValue("comment")
+public class CommentEvent
         extends AbstractEvent
 {
-    UpdateIssueEvent()
+    CommentEvent()
     {
     }
 
-    public UpdateIssueEvent( Issue issue, Project project, User user, String action )
+    public CommentEvent( Issue issue, Project project, User user, Comment comment, String type )
     {
-        super( user.getFullnameOrUsername() + " " + action + " Issue:" + issue.getId() + " \"" + issue.getSummary() + "\"",
-                CreateIssueEvent.getBodySummary( issue.getBody() ), issue.getUpdated() );
-
-        setApplicationId( IssuesApplication.ID );
-        setProject( project );
-        setUser( user );
-        setObjectId( String.valueOf( issue.getId() ) );
-    }
-
-    public UpdateIssueEvent( Issue issue, Project project, User user, Comment comment, String action )
-    {
-        super( user.getFullnameOrUsername() + " " + action + " Issue:" + issue.getId() + " \"" + issue.getSummary() + "\"",
+        super( user.getFullnameOrUsername() + " " + type + " issue:" + issue.getId() + " \"" + issue.getSummary() + "\"",
                 comment.getComment(), issue.getUpdated() );
 
         setApplicationId( IssuesApplication.ID );
@@ -92,9 +81,13 @@ public class UpdateIssueEvent
             return "<p>Issue " + getObjectId() + " does not exist for project " + getProject().getAlias() + "</p>";
         }
 
-        addLinks( ViewIssue.getLinks( issue ) );
-        return CreateIssueEvent.renderIssue( issue );
+        Comment comment = IssuesApplication.getComment( Long.parseLong( getSubObjectId() ) );
+        if ( comment == null )
+        {
+            return "<p>Comment " + getSubObjectId() + " does not exist for Issue:" + issue.getId() + "</p>";
+        }
 
+        return renderComment( comment, issue );
     }
 
     public List<CssReference> getBodyCssReferences()
@@ -106,6 +99,23 @@ public class UpdateIssueEvent
         return ret;
     }
 
+    private String renderComment( final Comment comment, final Issue issue )
+    {
+        if ( comment == null )
+        {
+            return "";
+        }
+
+        String content = new RenderUtil()
+        {
+            public Panel getPanel()
+            {
+                return new CommentPanel( RenderUtil.PANEL_ID, new Model( comment ), getProject(), null, issue );
+            }
+        }.getRenderedContent();
+
+        return "<table class=\"comments vertical\">" + content + "</table>";
+    }
 
     @Override
     public boolean shouldNotify( User user )
@@ -113,6 +123,11 @@ public class UpdateIssueEvent
         int id = Integer.parseInt( getObjectId() );
         Issue issue = IssuesApplication.getIssue( id, getProject() );
 
-        return CreateIssueEvent.notifyUserForIssue( user, issue );
+        return CommentEvent.notifyUserForIssue( user, issue );
+    }
+
+    static boolean notifyUserForIssue( User user, Issue issue )
+    {
+        return issue.getWatchers().contains( user );
     }
 }

@@ -85,6 +85,8 @@ public class IssuesApplication
         eventTypes.add( "closeissue" );
         eventTypes.add( "createissue" );
         eventTypes.add( "updateissue" );
+        eventTypes.add( "comment" );
+        eventTypes.add( "progress" );
     }
 
     public SimpleMenuLink getMenuItemCreate()
@@ -183,6 +185,15 @@ public class IssuesApplication
         return (Comment) q.uniqueResult();
     }
 
+    public static DurationWorked getDurationWorked( long id )
+    {
+        Session session = ( (HibernateStorage) Manager.getStorageInstance() ).getHibernateSession();
+
+        Query q = session.createQuery( "from DurationWorked c where id.id = :id" );
+        q.setLong( "id", id );
+        return (DurationWorked) q.uniqueResult();
+    }
+
     public void addIssue( Issue issue )
     {
         Session session = ( (HibernateStorage) Manager.getStorageInstance() ).getHibernateSession();
@@ -193,6 +204,6 @@ public class IssuesApplication
     }
 
     public Class[] getPersistantClasses() {
-        return new Class[] { CloseIssueEvent.class, CreateIssueEvent.class, UpdateIssueEvent.class };
+        return new Class[]{CloseIssueEvent.class, CreateIssueEvent.class, UpdateIssueEvent.class, CommentEvent.class, ProgressEvent.class};
     }
 }

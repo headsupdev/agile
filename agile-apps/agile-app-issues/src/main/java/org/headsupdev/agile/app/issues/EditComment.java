@@ -25,7 +25,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.util.string.StringValueConversionException;
 import org.headsupdev.agile.api.Event;
 import org.headsupdev.agile.api.Permission;
-import org.headsupdev.agile.app.issues.event.UpdateIssueEvent;
+import org.headsupdev.agile.app.issues.event.CommentEvent;
 import org.headsupdev.agile.app.issues.permission.IssueEditPermission;
 import org.headsupdev.agile.storage.Comment;
 import org.headsupdev.agile.storage.HibernateStorage;
@@ -129,7 +129,7 @@ public class EditComment
 
     protected Event getUpdateEvent( Comment comment )
     {
-        return new UpdateIssueEvent( issue, issue.getProject(), getSession().getUser(), comment, "commented on" );
+        return new CommentEvent( issue, issue.getProject(), getSession().getUser(), comment, "edited a comment on" );
     }
 
     public String getPreamble()
