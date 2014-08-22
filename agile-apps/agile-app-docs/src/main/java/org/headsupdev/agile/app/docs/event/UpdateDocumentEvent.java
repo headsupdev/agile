@@ -18,6 +18,7 @@
 
 package org.headsupdev.agile.app.docs.event;
 
+import org.apache.wicket.model.Model;
 import org.headsupdev.agile.api.User;
 import org.headsupdev.agile.app.docs.CommentPanel;
 import org.headsupdev.agile.app.docs.DocsApplication;
@@ -60,6 +61,14 @@ public class UpdateDocumentEvent
     }
 
     public String getBody() {
+
+        String name = getObjectId();
+
+        Document doc = DocsApplication.getDocument( name, getProject() );
+        if ( doc == null )
+        {
+            return "<p>Document " + name + " does not exist for project " + getProject().getAlias() + "</p>";
+        }
         if ( getSubObjectId() == null || "0".equals( getSubObjectId() ) )
         {
             return super.getBody();
@@ -72,11 +81,11 @@ public class UpdateDocumentEvent
                 return "<p>Comment " + getSubObjectId() + " does not exist</p>";
             }
 
-            return renderComment( comment );
+            return renderComment( comment, doc );
         }
     }
 
-    private String renderComment( final Comment comment )
+    private String renderComment( final Comment comment, final Document doc )
     {
         if ( comment == null )
         {
@@ -87,7 +96,7 @@ public class UpdateDocumentEvent
         {
             public Panel getPanel()
             {
-                return new CommentPanel( RenderUtil.PANEL_ID, comment, getProject() );
+                return new CommentPanel( RenderUtil.PANEL_ID, new Model(comment), getProject(), null, doc );
             }
         }.getRenderedContent();
 

@@ -117,7 +117,7 @@ public class EditComment
 
     protected Event getUpdateEvent( Comment comment )
     {
-        return new UpdateDocumentEvent( doc, getSession().getUser(), comment, "commented on" );
+        return new UpdateDocumentEvent( doc, getSession().getUser(), comment, "edited a comment on" );
     }
 
     protected boolean willChildConsumeComment()
