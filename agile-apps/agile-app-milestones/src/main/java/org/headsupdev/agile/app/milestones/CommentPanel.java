@@ -39,6 +39,7 @@ import org.headsupdev.agile.storage.issues.Milestone;
 import org.headsupdev.agile.storage.resource.DurationWorked;
 import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.HeadsUpSession;
+import org.headsupdev.agile.web.RenderUtil;
 import org.headsupdev.agile.web.components.FormattedDateModel;
 import org.headsupdev.agile.web.components.GravatarLinkPanel;
 import org.headsupdev.agile.web.components.MarkedUpTextModel;
@@ -95,7 +96,7 @@ public class CommentPanel
             commentTitle.add( edit.setVisible( userHasPermission ) );
             params.add( "username", comment.getUser().getUsername() );
             params.add( "silent", "true" );
-            BookmarkablePageLink usernameLink = new BookmarkablePageLink( "usernameLink", page.getPageClass( "account" ), params );
+            BookmarkablePageLink usernameLink = new BookmarkablePageLink( "usernameLink", RenderUtil.getPageClass( "account" ), params );
             usernameLink.add( new Label( "username", comment.getUser().getFullnameOrUsername() ) );
             commentTitle.add( usernameLink );
             commentTitle.add( new Label( "created", new FormattedDateModel( comment.getCreated(),

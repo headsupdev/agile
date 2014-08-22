@@ -147,3 +147,9 @@ table.remaining td.number {
     height:16px;
     width:16px;
 }
+
+.comment-text {
+    position:relative;
+    bottom:10px;
+    left:5px
+}
