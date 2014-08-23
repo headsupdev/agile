@@ -71,7 +71,6 @@
     <dependency>
       <groupId>com.github</groupId>
       <artifactId>jHipchat</artifactId>
-      <version>LATEST</version>
     </dependency>
 
     <dependency>
