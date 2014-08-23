@@ -39,7 +39,6 @@ import org.headsupdev.agile.storage.Attachment;
 import org.headsupdev.agile.storage.Comment;
 import org.headsupdev.agile.storage.HibernateStorage;
 import org.headsupdev.agile.storage.StoredProject;
-import org.headsupdev.agile.storage.docs.Document;
 import org.headsupdev.agile.storage.issues.Issue;
 import org.headsupdev.agile.storage.resource.DurationWorked;
 import org.headsupdev.agile.web.*;
@@ -51,7 +50,6 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import java.io.File;
-import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -240,7 +238,7 @@ public class ViewIssue
         {
             protected void populateItem( ListItem listItem )
             {
-                CommentPanel panel = new CommentPanel( "comment", listItem.getModel(), getProject(), commentList, issue, (HeadsUpPage) getPage() );
+                CommentPanel panel = new CommentPanel( "comment", listItem.getModel(), getProject(), commentList, issue );
                 listItem.add( panel );
             }
         } );
