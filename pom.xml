@@ -268,7 +268,7 @@
       <dependency>
         <groupId>com.github</groupId>
         <artifactId>jHipchat</artifactId>
-        <version>LATEST</version>
+        <version>0.0.1</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
