@@ -108,6 +108,10 @@ public class CIBuilder
         {
             return;
         }
+        if ( isBuildConfigDisabled( config ) )
+        {
+            return;
+        }
 
         synchronized ( pendingBuilds )
         {
@@ -366,5 +370,15 @@ public class CIBuilder
                 application.saveBuild( running );
             }
         }
+    }
+
+    public static boolean isBuildConfigDisabled( PropertyTree config )
+    {
+        if ( config == null )
+        {
+            return (Boolean) CIApplication.CONFIGURATION_BUILD_DISABLED.getDefault();
+        }
+        return config.getProperty( CIApplication.CONFIGURATION_BUILD_DISABLED.getKey(),
+                String.valueOf( CIApplication.CONFIGURATION_BUILD_DISABLED.getDefault() ) ).equals( "true" );
     }
 }

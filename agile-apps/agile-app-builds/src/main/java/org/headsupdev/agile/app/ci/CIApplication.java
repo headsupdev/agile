@@ -172,6 +172,8 @@ public class CIApplication
 
     public static final ConfigurationItem CONFIGURATION_BUILD_NAME = new ConfigurationItem( "name",
             "", "Configuration Name", "A name used to identify this build configuration" );
+    public static final ConfigurationItem CONFIGURATION_BUILD_DISABLED = new ConfigurationItem( "disabled",
+            false, "Disable Configuration", "Disable this build from being included in any automated running" );
     public static final ConfigurationItem CONFIGURATION_CRON_EXPRESSION = new ConfigurationItem(
         ConfigurationItem.TYPE_CRON, "cron", "0 15 23 * * ?", "Cron Expression",
         "A cron expression to specify when the schedule should run (use format s m h DoM M DoW) or 'never' to disable the schedule" );
@@ -233,12 +235,14 @@ public class CIApplication
         items.add( CONFIGURATION_BUILD_NAME );
         items.add( CONFIGURATION_ANT_TASKS );
         items.add( CONFIGURATION_ANT_HOME_OVERRIDE );
+        items.add( CONFIGURATION_BUILD_DISABLED );
         antProjectItems.add( new ConfigurationItem( "schedule.default", "Default Build Schedule", items ) );
         items = new LinkedList<ConfigurationItem>();
         items.add( CONFIGURATION_BUILD_NAME );
         items.add( CONFIGURATION_ANT_TASKS );
         items.add( CONFIGURATION_ANT_HOME_OVERRIDE );
         items.add( CONFIGURATION_CRON_EXPRESSION );
+        items.add( CONFIGURATION_BUILD_DISABLED );
         antProjectItems.add( new ConfigurationItem( "schedule", "Build Schedule",
                 new ConfigurationItem( "schedule", "Build Schedule", items ) ) );
 
@@ -246,34 +250,40 @@ public class CIApplication
         items.add( CONFIGURATION_BUILD_NAME );
         items.add( CONFIGURATION_GRADLE_TASKS );
         items.add( CONFIGURATION_GRADLE_HOME_OVERRIDE );
+        items.add( CONFIGURATION_BUILD_DISABLED );
         gradleProjectItems.add( new ConfigurationItem( "schedule.default", "Default Build Schedule", items ) );
         items = new LinkedList<ConfigurationItem>();
         items.add( CONFIGURATION_BUILD_NAME );
         items.add( CONFIGURATION_GRADLE_TASKS );
         items.add( CONFIGURATION_GRADLE_HOME_OVERRIDE );
         items.add( CONFIGURATION_CRON_EXPRESSION );
+        items.add( CONFIGURATION_BUILD_DISABLED );
         gradleProjectItems.add( new ConfigurationItem( "schedule", "Build Schedule",
                 new ConfigurationItem( "schedule", "Build Schedule", items ) ) );
 
         items = new LinkedList<ConfigurationItem>();
         items.add( CONFIGURATION_BUILD_NAME );
         items.add( CONFIGURATION_ECLIPSE_HOME_OVERRIDE );
+        items.add( CONFIGURATION_BUILD_DISABLED );
         eclipseProjectItems.add( new ConfigurationItem( "schedule.default", "Default Build Schedule", items ) );
         items = new LinkedList<ConfigurationItem>();
         items.add( CONFIGURATION_BUILD_NAME );
         items.add( CONFIGURATION_ECLIPSE_HOME_OVERRIDE );
         items.add( CONFIGURATION_CRON_EXPRESSION );
+        items.add( CONFIGURATION_BUILD_DISABLED );
         eclipseProjectItems.add( new ConfigurationItem( "schedule", "Build Schedule",
                 new ConfigurationItem( "schedule", "Build Schedule", items ) ) );
 
         items = new LinkedList<ConfigurationItem>();
         items.add( CONFIGURATION_BUILD_NAME );
         items.add( CONFIGURATION_COMMAND_LINE );
+        items.add( CONFIGURATION_BUILD_DISABLED );
         cmdProjectItems.add( new ConfigurationItem( "schedule.default", "Default Build Schedule", items ) );
         items = new LinkedList<ConfigurationItem>();
         items.add( CONFIGURATION_BUILD_NAME );
         items.add( CONFIGURATION_COMMAND_LINE );
         items.add( CONFIGURATION_CRON_EXPRESSION );
+        items.add( CONFIGURATION_BUILD_DISABLED );
         cmdProjectItems.add( new ConfigurationItem( "schedule", "Build Schedule",
                 new ConfigurationItem( "schedule", "Build Schedule", items ) ) );
 
@@ -291,6 +301,7 @@ public class CIApplication
         items.add( CONFIGURATION_XCODE_SDK ) ;
         items.add( CONFIGURATION_XCODE_RUN_TESTS );
         items.add( CONFIGURATION_ANALYZE );
+        items.add( CONFIGURATION_BUILD_DISABLED );
         xcodeProjectItems.add( new ConfigurationItem( "schedule.default", "Default Build Schedule", items ) );
 
         items = new LinkedList<ConfigurationItem>();
@@ -308,6 +319,7 @@ public class CIApplication
         items.add( CONFIGURATION_XCODE_RUN_TESTS );
         items.add( CONFIGURATION_ANALYZE );
         items.add( CONFIGURATION_CRON_EXPRESSION );
+        items.add( CONFIGURATION_BUILD_DISABLED );
         xcodeProjectItems.add( new ConfigurationItem( "schedule", "Build Schedule",
                 new ConfigurationItem( "schedule", "Build Schedule", items ) ) );
 
@@ -315,10 +327,12 @@ public class CIApplication
 // This could do anything based on the builder code loaded at the time...
         items = new LinkedList<ConfigurationItem>();
         items.add( CONFIGURATION_BUILD_NAME );
+        items.add( CONFIGURATION_BUILD_DISABLED );
         otherProjectItems.add( new ConfigurationItem( "schedule.default", "Default Build Schedule", items ) );
         items = new LinkedList<ConfigurationItem>();
         items.add( CONFIGURATION_BUILD_NAME );
         items.add( CONFIGURATION_CRON_EXPRESSION );
+        items.add( CONFIGURATION_BUILD_DISABLED );
         otherProjectItems.add( new ConfigurationItem( "schedule", "Build Schedule",
                 new ConfigurationItem( "schedule", "Build Schedule", items ) ) );
 
@@ -456,6 +470,7 @@ public class CIApplication
         {
             items.add( CONFIGURATION_ANALYZE );
         }
+        items.add( CONFIGURATION_BUILD_DISABLED );
 
         mavenItems.add( new ConfigurationItem( "schedule.default", "Default Build Schedule", items ) );
         items = new LinkedList<ConfigurationItem>();
@@ -468,6 +483,7 @@ public class CIApplication
             items.add( CONFIGURATION_ANALYZE );
         }
         items.add( CONFIGURATION_CRON_EXPRESSION );
+        items.add( CONFIGURATION_BUILD_DISABLED );
         mavenItems.add( new ConfigurationItem( "schedule", "Build Schedule",
                 new ConfigurationItem( "schedule", "Build Schedule", items ) ) );
 

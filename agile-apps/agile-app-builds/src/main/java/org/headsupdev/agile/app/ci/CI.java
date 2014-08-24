@@ -165,13 +165,16 @@ public class CI
             {
                 if ( status != Build.BUILD_RUNNING && !CIBuilder.isProjectQueued( getProject() ) )
                 {
-                    addLink( new DynamicMenuLink( "build" )
+                    if ( isDefaultScheduleEnabled() )
                     {
-                        public void onClick()
+                        addLink(new DynamicMenuLink( "build" )
                         {
-                            buildProject( getProject() );
-                        }
-                    } );
+                            public void onClick()
+                            {
+                                buildProject(getProject());
+                            }
+                        });
+                    }
 
                     final PropertyTree buildConfigs = Manager.getStorageInstance().getGlobalConfiguration().
                             getApplicationConfigurationForProject( CIApplication.ID, getProject() ).getSubTree( "schedule" );
@@ -190,6 +193,11 @@ public class CI
                             final String configId = listItem.getModelObject();
                             final PropertyTree config = buildConfigs.getSubTree( configId );
                             String configName = config.getProperty( "name" );
+                            if ( CIBuilder.isBuildConfigDisabled(config) )
+                            {
+                                listItem.setVisible( false );
+                                return;
+                            }
 
                             if ( configName == null )
                             {
@@ -282,6 +290,25 @@ public class CI
             add( new WebMarkupContainer( "build" ).setVisible( false ) );
             add( new WebMarkupContainer( "buildConfigs" ).setVisible( false ) );
         }
+    }
+
+    private boolean isDefaultScheduleEnabled()
+    {
+        if ( !CIApplication.getHandlerFactory().supportsBuilding( getProject() ) )
+        {
+            return false;
+        }
+
+        final PropertyTree buildConfigs = Manager.getStorageInstance().getGlobalConfiguration().
+                getApplicationConfigurationForProject( CIApplication.ID, getProject() ).getSubTree( "schedule" );
+
+        PropertyTree defaultConfig = buildConfigs.getSubTree( "default" );
+        if ( defaultConfig == null )
+        {
+            return !(Boolean) CIApplication.CONFIGURATION_BUILD_DISABLED.getDefault();
+        }
+
+        return !CIBuilder.isBuildConfigDisabled(defaultConfig);
     }
 
     private void renderBuild( final Build build, final Project project, final boolean projectList,

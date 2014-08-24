@@ -1,5 +1,9 @@
 2.1
 
+* Add ability to disable any build configuration
+
+2.1-beta1
+
 * Add multiple attachments in one submission - issue:85
 * Allow editing of comments and time worked - issue:87
 * Allow deleting of comments, attachments and time worked - issue:86
