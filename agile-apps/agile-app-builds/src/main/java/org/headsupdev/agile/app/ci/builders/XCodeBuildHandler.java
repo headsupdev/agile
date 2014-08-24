@@ -202,7 +202,7 @@ public class XCodeBuildHandler
             throws FileNotFoundException
     {
         boolean buildWorkspace = config.getProperty( CIApplication.CONFIGURATION_XCODE_BUILD_WORKSPACE.getKey(),
-                (String) CIApplication.CONFIGURATION_XCODE_SDK.getDefault() ).equals( "true" );
+                String.valueOf( CIApplication.CONFIGURATION_XCODE_SDK.getDefault() ) ).equals( "true" );
 
         String sdkName = config.getProperty( CIApplication.CONFIGURATION_XCODE_SDK.getKey(),
                 (String) CIApplication.CONFIGURATION_XCODE_SDK.getDefault() );
