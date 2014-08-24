@@ -61,4 +61,15 @@ public class StoredMavenTwoProjectTest
         List<MavenDependency> deps = project.getDependencies();
         assertTrue( deps.size() > 0 );
     }
+
+    public void testModuleParse()
+    {
+        final String moduleString = "module1|module2";
+        StoredMavenTwoProject project = new StoredMavenTwoProject();
+        project.modules = moduleString;
+
+        List<String> modules = project.getModules();
+        assertEquals( 2, modules.size() );
+        assertEquals( "module1", modules.get( 0 ) );
+    }
 }

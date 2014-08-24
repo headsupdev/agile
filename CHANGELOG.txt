@@ -2,6 +2,8 @@
 
 * Add ability to disable any build configuration
 
+* Fix importing of child modules in large maven projects
+
 2.1-beta1
 
 * Add multiple attachments in one submission - issue:85

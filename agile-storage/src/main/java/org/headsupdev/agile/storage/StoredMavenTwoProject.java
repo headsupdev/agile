@@ -70,6 +70,7 @@ public class StoredMavenTwoProject
     protected String dependencies;
 
     private static final String LIST_SPLIT_STRING = "\\|";
+    private static final String LIST_JOIN_STRING = "|";
 
     protected StoredMavenTwoProject()
     {
@@ -113,7 +114,7 @@ public class StoredMavenTwoProject
             {
                 if ( !first )
                 {
-                    developers.append( LIST_SPLIT_STRING );
+                    developers.append( LIST_JOIN_STRING );
                 }
 
                 developers.append( developer.getId() );
@@ -127,7 +128,7 @@ public class StoredMavenTwoProject
             {
                 if ( !first )
                 {
-                    modules.append( LIST_SPLIT_STRING );
+                    modules.append( LIST_JOIN_STRING );
                 }
 
                 modules.append( module );
@@ -143,7 +144,7 @@ public class StoredMavenTwoProject
                     dependency.getVersion() + ":" + dependency.getType();
                 if ( !first )
                 {
-                    dependencies.append( LIST_SPLIT_STRING );
+                    dependencies.append( LIST_JOIN_STRING );
                 }
 
                 dependencies.append( depStr );
