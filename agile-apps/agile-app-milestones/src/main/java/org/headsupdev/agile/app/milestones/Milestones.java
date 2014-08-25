@@ -102,7 +102,7 @@ public class Milestones
                 item.add( panel );
 
                 SortableEntityProvider<Milestone> provider = new GroupedMilestoneProvider( group, filter );
-                item.add( new MilestoneListPanel( "milestones", provider, Milestones.this, hideProject, group ) );
+                item.add( new MilestoneListPanel( "milestones", provider, Milestones.this, hideProject, group, item.getIndex() ) );
             }
         } );
 
@@ -118,7 +118,7 @@ public class Milestones
 
         add( ungrouped = new WebMarkupContainer( "ungrouped" ) );
         ungrouped.setOutputMarkupPlaceholderTag( true );
-        add( ungroupedMilestones = new MilestoneListPanel( "milestones", ungroupedProvider, this, hideProject, null) );
+        add( ungroupedMilestones = new MilestoneListPanel( "milestones", ungroupedProvider, this, hideProject, null ) );
         ungroupedMilestones.setOutputMarkupPlaceholderTag( true );
     }
 

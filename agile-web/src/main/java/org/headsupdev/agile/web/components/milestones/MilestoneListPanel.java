@@ -70,25 +70,40 @@ public class MilestoneListPanel
 {
     private static final int ITEMS_PER_PAGE = 25;
     private final WebMarkupContainer rowAdd;
+    private MilestoneGroup group;
+    private String formNo;
     private StyledPagingNavigator pagingHeader, pagingFooter;
     private Milestone quickMilestone;
     private HeadsUpPage page;
-    private MilestoneGroup group;
     private WebMarkupContainer quickAdd;
     private WebMarkupContainer icon;
 
     public MilestoneListPanel( String id, final SortableDataProvider<Milestone> provider, final HeadsUpPage page,
-                               final boolean hideProject, final MilestoneGroup group )
+                               final boolean hideProject, MilestoneGroup group )
+    {
+        this( id, provider,  page, hideProject,group, -1);
+    }
+
+    public MilestoneListPanel( String id, final SortableDataProvider<Milestone> provider, final HeadsUpPage page,
+                               final boolean hideProject, MilestoneGroup group, int formNo )
     {
         super( id );
 
         add( CSSPackageResource.getHeaderContribution( getClass(), "milestone.css" ) );
         this.page = page;
         this.group = group;
+        if ( formNo == -1 )
+        {
+            this.formNo = "form";
+        }
+        else
+        {
+            this.formNo = "form" + formNo;
+        }
 
 
         rowAdd = new WebMarkupContainer( "rowAddMilestone" );
-        rowAdd.setMarkupId( "rowAddMilestone" + group );
+        rowAdd.setMarkupId( "rowAddMilestone" + formNo );
 
         Form<Milestone> inlineForm = getInlineForm();
         add( inlineForm );
@@ -178,7 +193,7 @@ public class MilestoneListPanel
 
     private Form<Milestone> getInlineForm()
     {
-        quickMilestone = createMilestone( group );
+        quickMilestone = createMilestone();
         CompoundPropertyModel<Milestone> formPropertyModel = new CompoundPropertyModel<Milestone>( quickMilestone );
         Form<Milestone> inlineForm = new Form<Milestone>( "milestoneInlineForm", formPropertyModel )
         {
@@ -197,7 +212,7 @@ public class MilestoneListPanel
                 //TODO: problem with dependency below
                 User currentUser = ( (HeadsUpSession) getSession() ).getUser();
 //                page.getHeadsUpApplication().addEvent( new CreateMilestoneEvent( quickMilestone, quickMilestone.getProject(), currentUser ) );
-                quickMilestone = createMilestone( group );
+                quickMilestone = createMilestone();
             }
         };
 
@@ -224,27 +239,27 @@ public class MilestoneListPanel
         } );
         rowAddComponents[6] = due;
 
-        addAnimatorToForm( rowAddComponents, group );
+        addAnimatorToForm( rowAddComponents );
         inlineForm.add( rowAdd );
         return inlineForm;
     }
 
-    private void addAnimatorToForm( Component[] rowAddComponents, final MilestoneGroup group )
+    private void addAnimatorToForm( Component[] rowAddComponents )
     {
         User currentUser = ( (HeadsUpSession) getSession() ).getUser();
         quickAdd = new WebMarkupContainer( "quickAdd" );
         quickAdd.setVisible( Permissions.canEditDoc( currentUser, page.getProject() ) );
 
         icon = new WebMarkupContainer( "icon" );
-        icon.setMarkupId( "icon" + group ).setOutputMarkupId( true );
-        Label iconToggleScript = new Label( "iconToggleScript", "function moveIconBackground" + group + "( value ) {" +
-                "Wicket.$('icon" + group + "').style.backgroundPosition = '0px ' + ( 0 + ( value * 16 ) ) + 'px';}"
+        icon.setMarkupId( "icon" + formNo ).setOutputMarkupId( true );
+        Label iconToggleScript = new Label( "iconToggleScript", "function moveIconBackground" + formNo + "( value ) {" +
+                "Wicket.$('icon" + formNo + "').style.backgroundPosition = '0px ' + ( 0 + ( value * 16 ) ) + 'px';}"
         );
 
         iconToggleScript.setEscapeModelStrings( false );
         quickAdd.add( iconToggleScript );
 
-        Animator animator = new Animator( "" + group + "Animator" );
+        Animator animator = new Animator( "" + formNo + "Animator" );
 
         animator.addCssStyleSubject( new MarkupIdModel( rowAdd.setOutputMarkupId( true ) ), "rowhidden", "rowshown" );
 
@@ -261,7 +276,7 @@ public class MilestoneListPanel
         {
             public String getJavaScript()
             {
-                return "moveIconBackground" + group;
+                return "moveIconBackground" + formNo;
             }
 
         } );
@@ -270,7 +285,7 @@ public class MilestoneListPanel
         quickAdd.add( icon );
     }
 
-    private Milestone createMilestone( MilestoneGroup group )
+    private Milestone createMilestone()
     {
         Project project = page.getProject();
         Milestone milestone = new Milestone( "", project );
