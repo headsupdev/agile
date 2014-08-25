@@ -72,21 +72,22 @@ public class MilestoneListPanel
     private final WebMarkupContainer rowAdd;
     private boolean hideProject;
     private MilestoneGroup group;
-    private String formNo;
+    private String groupReference;
     private StyledPagingNavigator pagingHeader, pagingFooter;
     private Milestone quickMilestone;
     private HeadsUpPage page;
     private WebMarkupContainer quickAdd;
     private WebMarkupContainer icon;
+    private static final int UNGROUPED_NUMBER = -1;
 
     public MilestoneListPanel( String id, final SortableDataProvider<Milestone> provider, final HeadsUpPage page,
                                boolean hideProject, MilestoneGroup group )
     {
-        this( id, provider, page, hideProject,group, -1);
+        this( id, provider, page, hideProject, group, UNGROUPED_NUMBER );
     }
 
     public MilestoneListPanel( String id, final SortableDataProvider<Milestone> provider, final HeadsUpPage page,
-                               final boolean hideProject, MilestoneGroup group, int formNo )
+                               final boolean hideProject, MilestoneGroup group, int groupNumber )
     {
         super( id );
 
@@ -95,18 +96,17 @@ public class MilestoneListPanel
         this.group = group;
         this.hideProject = hideProject;
 
-        if ( formNo == -1 )
+        if ( groupNumber == UNGROUPED_NUMBER )
         {
-            this.formNo = "form";
+            this.groupReference = "group";
         }
         else
         {
-            this.formNo = "form" + formNo;
+            this.groupReference = "group" + groupNumber;
         }
 
-
         rowAdd = new WebMarkupContainer( "rowAddMilestone" );
-        rowAdd.setMarkupId( "rowAddMilestone" + formNo );
+        rowAdd.setMarkupId( "rowAddMilestone" + groupNumber );
 
         Form<Milestone> inlineForm = getInlineForm();
         add( inlineForm );
@@ -255,15 +255,15 @@ public class MilestoneListPanel
         quickAdd.setVisible( Permissions.canEditDoc( currentUser, page.getProject() ) );
 
         icon = new WebMarkupContainer( "icon" );
-        icon.setMarkupId( "icon" + formNo ).setOutputMarkupId( true );
-        Label iconToggleScript = new Label( "iconToggleScript", "function moveIconBackground" + formNo + "( value ) {" +
-                "Wicket.$('icon" + formNo + "').style.backgroundPosition = '0px ' + ( 0 + ( value * 16 ) ) + 'px';}"
+        icon.setMarkupId( "icon" + groupReference ).setOutputMarkupId( true );
+        Label iconToggleScript = new Label( "iconToggleScript", "function moveIconBackground" + groupReference + "( value ) {" +
+                "Wicket.$('icon" + groupReference + "').style.backgroundPosition = '0px ' + ( 0 + ( value * 16 ) ) + 'px';}"
         );
 
         iconToggleScript.setEscapeModelStrings( false );
         quickAdd.add( iconToggleScript );
 
-        Animator animator = new Animator( "" + formNo + "Animator" );
+        Animator animator = new Animator( "" + groupReference + "Animator" );
 
         animator.addCssStyleSubject( new MarkupIdModel( rowAdd.setOutputMarkupId( true ) ), "rowhidden", "rowshown" );
 
@@ -280,7 +280,7 @@ public class MilestoneListPanel
         {
             public String getJavaScript()
             {
-                return "moveIconBackground" + formNo;
+                return "moveIconBackground" + groupReference;
             }
 
         } );
