@@ -20,6 +20,7 @@ package org.headsupdev.agile.app.milestones;
 
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.ResourceReference;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.CSSPackageResource;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.image.Image;
@@ -46,6 +47,7 @@ import org.headsupdev.agile.web.components.FormattedDateModel;
 import org.headsupdev.agile.web.components.MarkedUpTextModel;
 import org.headsupdev.agile.web.components.issues.IssueFilterPanel;
 import org.headsupdev.agile.web.components.issues.IssueListPanel;
+import org.headsupdev.agile.web.dialogs.ConfirmDialog;
 import org.headsupdev.agile.web.wicket.SortableEntityProvider;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -109,12 +111,15 @@ public class ViewMilestone
         } );
         add( new ListView<Comment>( "comments", commentList )
         {
-
-            private Comment comment;
-
             protected void populateItem( ListItem<Comment> listItem )
             {
-                CommentPanel panel = new CommentPanel( "comment", listItem.getModel(), getProject(), commentList, milestone );
+                CommentPanel panel = new CommentPanel( "comment", listItem.getModel(), getProject(), commentList, milestone ){
+                    @Override
+                    public void showConfirmDialog( ConfirmDialog dialog, AjaxRequestTarget target )
+                    {
+                        showDialog( dialog, target );
+                    }
+                };
                 listItem.add( panel );
             }
         } );

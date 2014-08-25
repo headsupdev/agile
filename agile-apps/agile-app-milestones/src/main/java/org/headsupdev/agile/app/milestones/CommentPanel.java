@@ -20,6 +20,8 @@ package org.headsupdev.agile.app.milestones;
 
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.ResourceReference;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.image.Image;
@@ -27,7 +29,6 @@ import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 import org.headsupdev.agile.api.Manager;
 import org.headsupdev.agile.api.Project;
 import org.headsupdev.agile.api.Storage;
@@ -36,11 +37,11 @@ import org.headsupdev.agile.app.milestones.permission.MilestoneEditPermission;
 import org.headsupdev.agile.storage.Comment;
 import org.headsupdev.agile.storage.HibernateStorage;
 import org.headsupdev.agile.storage.issues.Milestone;
-import org.headsupdev.agile.storage.resource.DurationWorked;
 import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.HeadsUpSession;
 import org.headsupdev.agile.web.components.FormattedDateModel;
 import org.headsupdev.agile.web.components.MarkedUpTextModel;
+import org.headsupdev.agile.web.dialogs.ConfirmDialog;
 
 import java.util.Date;
 import java.util.List;
@@ -95,18 +96,26 @@ public class CommentPanel
                     ( (HeadsUpSession) getSession() ).getTimeZone() ) ) );
             add( new Label( "comment", new MarkedUpTextModel( comment.getComment(), project ) )
                     .setEscapeModelStrings( false ) );
-            Link remove = new Link( "removeComment" )
+            Link remove = new AjaxFallbackLink( "removeComment" )
             {
                 @Override
-                public void onClick()
+                public void onClick( AjaxRequestTarget target )
                 {
-                    Storage storage = Manager.getStorageInstance();
-                    Comment comm = (Comment) ( (HibernateStorage) storage ).merge( comment );
-                    milestone.getComments().remove( comm );
-                    Milestone mile = (Milestone) ( (HibernateStorage) storage ).merge( milestone );
-                    commentList.remove( comm );
-                    mile.setUpdated( new Date() );
-                    ( (HibernateStorage) storage ).delete( comm );
+                    ConfirmDialog dialog = new ConfirmDialog( HeadsUpPage.DIALOG_PANEL_ID, "Delete Comment", "delete this comment" )
+                    {
+                        @Override
+                        public void onDialogConfirmed()
+                        {
+                            Storage storage = Manager.getStorageInstance();
+                            Comment comm = (Comment) ( (HibernateStorage) storage ).merge( comment );
+                            milestone.getComments().remove( comm );
+                            Milestone mile = (Milestone) ( (HibernateStorage) storage ).merge( milestone );
+                            commentList.remove( comm );
+                            mile.setUpdated( new Date() );
+                            ( (HibernateStorage) storage ).delete( comm );
+                        }
+                    };
+                    showConfirmDialog( dialog, target );
                 }
             };
             commentTitle.add( remove.setVisible( userHasPermission ) );
@@ -117,5 +126,9 @@ public class CommentPanel
             add( new WebMarkupContainer( "comment" ).setVisible( false ) );
         }
         add( commentTitle );
+    }
+
+    public void showConfirmDialog( ConfirmDialog dialog, AjaxRequestTarget target )
+    {
     }
 }

@@ -20,6 +20,8 @@ package org.headsupdev.agile.app.docs;
 
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.ResourceReference;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.image.Image;
@@ -41,6 +43,7 @@ import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.HeadsUpSession;
 import org.headsupdev.agile.web.components.FormattedDateModel;
 import org.headsupdev.agile.web.components.MarkedUpTextModel;
+import org.headsupdev.agile.web.dialogs.ConfirmDialog;
 
 import java.util.Date;
 import java.util.List;
@@ -109,18 +112,26 @@ public class CommentPanel
 
             commentTitle.add( edit.setVisible( userHasPermission ) );
 
-            remove = new Link( "removeComment" )
+            remove = new AjaxFallbackLink( "removeComment" )
             {
                 @Override
-                public void onClick()
+                public void onClick( AjaxRequestTarget target )
                 {
-                    Storage storage = Manager.getStorageInstance();
-                    Comment comm = (Comment) ( (HibernateStorage) storage ).merge( comment );
-                    doc.getComments().remove( comm );
-                    Document d = (Document) ( (HibernateStorage) storage ).merge( doc );
-                    commentList.remove( comm );
-                    d.setUpdated( new Date() );
-                    ( (HibernateStorage) storage ).delete( comm );
+                    ConfirmDialog dialog = new ConfirmDialog( HeadsUpPage.DIALOG_PANEL_ID, "Delete Comment", "delete this comment" )
+                    {
+                        @Override
+                        public void onDialogConfirmed()
+                        {
+                            Storage storage = Manager.getStorageInstance();
+                            Comment comm = (Comment) ( (HibernateStorage) storage ).merge( comment );
+                            doc.getComments().remove( comm );
+                            Document d = (Document) ( (HibernateStorage) storage ).merge( doc );
+                            commentList.remove( comm );
+                            d.setUpdated( new Date() );
+                            ( (HibernateStorage) storage ).delete( comm );
+                        }
+                    };
+                    showConfirmDialog( dialog, target );
                 }
             };
             commentTitle.add( remove.setVisible( userHasPermission ) );
@@ -137,5 +148,9 @@ public class CommentPanel
             add( new WebMarkupContainer( "comment" ).setVisible( false ) );
         }
         add( commentTitle );
+    }
+
+    public void showConfirmDialog( ConfirmDialog dialog, AjaxRequestTarget target )
+    {
     }
 }

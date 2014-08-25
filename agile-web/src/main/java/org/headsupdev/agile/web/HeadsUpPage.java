@@ -79,7 +79,7 @@ public abstract class HeadsUpPage
 {
     public static final Pattern ID_PATTERN = Pattern.compile( "[a-zA-Z0-9-_\\.]*" );
 
-    protected static final String DIALOG_PANEL_ID = "agile-dialog";
+    public static final String DIALOG_PANEL_ID = "agile-dialog";
     protected static final String PAGE_TITLE_SEPARATOR = " :: ";
 
     private Application application;
@@ -288,7 +288,7 @@ public abstract class HeadsUpPage
                     else
                     {
                         target.appendJavascript( "document.getElementById('userpanelbutton').childNodes[1].click()" );
-                        showDialog( new LogoutDialog( DIALOG_PANEL_ID, true, HeadsUpPage.this ), target );
+                        showDialog( new LogoutDialog( DIALOG_PANEL_ID, true ), target );
                     }
                 }
             };

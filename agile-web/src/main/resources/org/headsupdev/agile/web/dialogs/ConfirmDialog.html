@@ -1,6 +1,6 @@
 <!--
   ~ HeadsUp Agile
-  ~ Copyright 2009-2012 Heads Up Development Ltd.
+  ~ Copyright 2014 Heads Up Development Ltd.
   ~
   ~ This program is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU Affero General Public License as
@@ -21,14 +21,14 @@
     <wicket:panel>
       <div class="dialog">
         <div class="dialogcontent">
-          <span class="dialogtitle"><h3>Logout</h3></span>
+          <span class="dialogtitle"><h3><span wicket:id="title"></span></h3></span>
 
-          <p>Are you sure you want to log out?</p>
+          <p>Are you sure you want to <span wicket:id="message"></span>?</p>
 
           <form wicket:id="dialogform">
             <div class="formbuttons">
-              <input type="submit" wicket:id="yes" value="Logout" class="switchformbuttonsok" />
-              <input type="submit" wicket:id="no" value="Cancel" class="switchformbuttonscancel" />
+              <input type="submit" wicket:id="yes" value="Yes" class="switchformbuttonsok" />
+              <input type="submit" wicket:id="no" value="No" class="switchformbuttonscancel" />
             </div>
           </form>
           <br />
