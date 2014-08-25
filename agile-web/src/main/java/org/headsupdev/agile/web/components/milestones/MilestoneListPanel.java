@@ -81,7 +81,7 @@ public class MilestoneListPanel
     private static final int UNGROUPED_NUMBER = -1;
 
     public MilestoneListPanel( String id, final SortableDataProvider<Milestone> provider, final HeadsUpPage page,
-                               boolean hideProject, MilestoneGroup group )
+                               final boolean hideProject, MilestoneGroup group )
     {
         this( id, provider, page, hideProject, group, UNGROUPED_NUMBER );
     }
