@@ -20,6 +20,8 @@ package org.headsupdev.agile.app.issues;
 
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.ResourceReference;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.image.Image;
@@ -41,6 +43,7 @@ import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.HeadsUpSession;
 import org.headsupdev.agile.web.components.FormattedDateModel;
 import org.headsupdev.agile.web.components.MarkedUpTextModel;
+import org.headsupdev.agile.web.dialogs.ConfirmDialog;
 
 import java.util.Date;
 import java.util.List;
@@ -113,18 +116,26 @@ public class CommentPanel
                     ( (HeadsUpSession) getSession() ).getTimeZone() ) ) );
             add( new Label( "comment", new MarkedUpTextModel( comment.getComment(), project ) )
                     .setEscapeModelStrings( false ) );
-            Link remove = new Link( "removeComment" )
+            Link remove = new AjaxFallbackLink( "removeComment" )
             {
                 @Override
-                public void onClick()
+                public void onClick( AjaxRequestTarget target )
                 {
-                    Storage storage = Manager.getStorageInstance();
-                    Comment comm = (Comment) ( (HibernateStorage) storage ).merge( comment );
-                    issue.getComments().remove( comm );
-                    Issue iss = (Issue) ( (HibernateStorage) storage ).merge( issue );
-                    commentList.remove( comm );
-                    iss.setUpdated( new Date() );
-                    ( (HibernateStorage) storage ).delete( comm );
+                    ConfirmDialog dialog = new ConfirmDialog( HeadsUpPage.DIALOG_PANEL_ID, "Delete Comment", "delete this comment" )
+                    {
+                        @Override
+                        public void onDialogConfirmed()
+                        {
+                            Storage storage = Manager.getStorageInstance();
+                            Comment comm = (Comment) ( (HibernateStorage) storage ).merge( comment );
+                            issue.getComments().remove( comm );
+                            Issue iss = (Issue) ( (HibernateStorage) storage ).merge( issue );
+                            commentList.remove( comm );
+                            iss.setUpdated( new Date() );
+                            ( (HibernateStorage) storage ).delete( comm );
+                        }
+                    };
+                    showConfirmDialog( dialog, target );
                 }
             };
             commentTitle.add( remove.setVisible( userHasPermission ) );
@@ -142,18 +153,26 @@ public class CommentPanel
             Link edit = new BookmarkablePageLink( "editComment", EditProgressIssue.class, params );
             workedTitle.add( edit.setVisible( userHasPermission ) );
 
-            Link remove = new Link( "removeComment" )
+            Link remove = new AjaxFallbackLink( "removeComment" )
             {
                 @Override
-                public void onClick()
+                public void onClick( AjaxRequestTarget target )
                 {
-                    Storage storage = Manager.getStorageInstance();
-                    DurationWorked dur = (DurationWorked) ( (HibernateStorage) storage ).merge( duration );
-                    issue.getTimeWorked().remove( dur );
-                    issue.setUpdated( new Date() );
-                    commentList.remove( dur );
-                    dur.setIssue( null );
-                    ( (HibernateStorage) storage ).delete( dur );
+                    ConfirmDialog dialog = new ConfirmDialog( HeadsUpPage.DIALOG_PANEL_ID, "Delete Progress", "delete this progress" )
+                    {
+                        @Override
+                        public void onDialogConfirmed()
+                        {
+                            Storage storage = Manager.getStorageInstance();
+                            DurationWorked dur = (DurationWorked) ( (HibernateStorage) storage ).merge( duration );
+                            issue.getTimeWorked().remove( dur );
+                            issue.setUpdated( new Date() );
+                            commentList.remove( dur );
+                            dur.setIssue( null );
+                            ( (HibernateStorage) storage ).delete( dur );
+                        }
+                    };
+                    showConfirmDialog( dialog, target );
                 }
             };
             workedTitle.add( remove.setVisible( userHasPermission ) );
@@ -196,4 +215,10 @@ public class CommentPanel
         add( commentTitle );
         add( workedTitle );
     }
+
+    public void showConfirmDialog( ConfirmDialog dialog, AjaxRequestTarget target )
+    {
+    }
+
+
 }

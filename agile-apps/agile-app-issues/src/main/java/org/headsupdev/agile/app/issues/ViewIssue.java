@@ -20,6 +20,8 @@ package org.headsupdev.agile.app.issues;
 
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.ResourceReference;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.CSSPackageResource;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -46,6 +48,7 @@ import org.headsupdev.agile.web.components.EmbeddedFilePanel;
 import org.headsupdev.agile.web.components.FormattedDateModel;
 import org.headsupdev.agile.web.components.MarkedUpTextModel;
 import org.headsupdev.agile.web.components.issues.IssueListPanel;
+import org.headsupdev.agile.web.dialogs.ConfirmDialog;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -153,18 +156,25 @@ public class ViewIssue
                 download.add( new Label( "attachment-label", attachment.getFilename() ) );
                 listItem.add( download );
                 User currentUser = ( (HeadsUpSession) getSession() ).getUser();
-                listItem.add( new Link( "attachment-delete" )
+                listItem.add( new AjaxFallbackLink( "attachment-delete" )
                 {
                     @Override
-                    public void onClick()
+                    public void onClick( AjaxRequestTarget ajaxRequestTarget )
                     {
-                        attachment = (Attachment) ( (HibernateStorage) getStorage() ).getHibernateSession().merge( attachment );
-                        issue = (Issue) ( (HibernateStorage) getStorage() ).getHibernateSession().merge( issue );
-                        attachmentList.remove( attachment );
-                        issue.getAttachments().remove( attachment );
-                        ((HibernateStorage) getStorage() ).delete( attachment );
-                        attachment.getFile( getStorage() ).delete();
-
+                        ConfirmDialog dialog = new ConfirmDialog( HeadsUpPage.DIALOG_PANEL_ID, "Delete Attachment", "delete this attachment" )
+                        {
+                            @Override
+                            public void onDialogConfirmed()
+                            {
+                                attachment = (Attachment) ( (HibernateStorage) getStorage() ).getHibernateSession().merge( attachment );
+                                issue = (Issue) ( (HibernateStorage) getStorage() ).getHibernateSession().merge( issue );
+                                attachmentList.remove( attachment );
+                                issue.getAttachments().remove( attachment );
+                                ( (HibernateStorage) getStorage() ).delete( attachment );
+                                attachment.getFile( getStorage() ).delete();
+                            }
+                        };
+                        showDialog( dialog, ajaxRequestTarget );
                     }
                 }.setVisible( Manager.getSecurityInstance().userHasPermission( currentUser, new IssueEditPermission(), getProject() ) ) );
                 Comment comment = attachment.getComment();
@@ -236,9 +246,15 @@ public class ViewIssue
         } );
         add( new ListView( "comments", commentList )
         {
-            protected void populateItem( ListItem listItem )
+            protected void populateItem( final ListItem listItem )
             {
-                CommentPanel panel = new CommentPanel( "comment", listItem.getModel(), getProject(), commentList, issue );
+                CommentPanel panel = new CommentPanel( "comment", listItem.getModel(), getProject(), commentList, issue ){
+                    @Override
+                    public void showConfirmDialog( ConfirmDialog dialog, AjaxRequestTarget target )
+                    {
+                        showDialog( dialog, target );
+                    }
+                };
                 listItem.add( panel );
             }
         } );
