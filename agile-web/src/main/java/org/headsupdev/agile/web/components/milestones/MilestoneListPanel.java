@@ -70,6 +70,7 @@ public class MilestoneListPanel
 {
     private static final int ITEMS_PER_PAGE = 25;
     private final WebMarkupContainer rowAdd;
+    private boolean hideProject;
     private MilestoneGroup group;
     private String formNo;
     private StyledPagingNavigator pagingHeader, pagingFooter;
@@ -79,9 +80,9 @@ public class MilestoneListPanel
     private WebMarkupContainer icon;
 
     public MilestoneListPanel( String id, final SortableDataProvider<Milestone> provider, final HeadsUpPage page,
-                               final boolean hideProject, MilestoneGroup group )
+                               boolean hideProject, MilestoneGroup group )
     {
-        this( id, provider,  page, hideProject,group, -1);
+        this( id, provider, page, hideProject,group, -1);
     }
 
     public MilestoneListPanel( String id, final SortableDataProvider<Milestone> provider, final HeadsUpPage page,
@@ -92,6 +93,8 @@ public class MilestoneListPanel
         add( CSSPackageResource.getHeaderContribution( getClass(), "milestone.css" ) );
         this.page = page;
         this.group = group;
+        this.hideProject = hideProject;
+
         if ( formNo == -1 )
         {
             this.formNo = "form";
@@ -223,6 +226,7 @@ public class MilestoneListPanel
         rowAddComponents[3] = new Label( "issues", "0" );
         rowAddComponents[4] = new Label( "open", "0" );
         rowAddComponents[5] = new Label( "project", page.getProject().toString() );
+        rowAddComponents[5].setVisible( !hideProject );
         DateTimeWithTimeZoneField due = new DateTimeWithTimeZoneField( "due", new Model<Date>()
         {
             @Override
