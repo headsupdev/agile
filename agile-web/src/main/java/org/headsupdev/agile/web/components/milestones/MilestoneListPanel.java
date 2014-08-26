@@ -49,6 +49,7 @@ import org.headsupdev.agile.web.components.DateTimeWithTimeZoneField;
 import org.headsupdev.agile.web.components.FormattedDateModel;
 import org.headsupdev.agile.web.components.PercentagePanel;
 import org.headsupdev.agile.web.components.StripedDataView;
+import org.headsupdev.agile.web.components.*;
 import org.headsupdev.agile.web.wicket.StyledPagingNavigator;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -252,6 +253,7 @@ public class MilestoneListPanel
     {
         User currentUser = ( (HeadsUpSession) getSession() ).getUser();
         quickAdd = new WebMarkupContainer( "quickAdd" );
+        quickAdd.add( new HeadsUpTooltip( "Quick-add a milestone" ) );
         quickAdd.setVisible( Permissions.canEditDoc( currentUser, page.getProject() ) );
 
         icon = new WebMarkupContainer( "icon" );
