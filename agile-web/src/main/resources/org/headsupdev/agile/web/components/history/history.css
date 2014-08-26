@@ -54,8 +54,10 @@
 
 .history-link {
     text-decoration: none;
-    display: block;
-    
+    display:inline;
+    position: relative;
+    left:6pt;
+    bottom:1pt;
     padding-top: 10pt;
     padding-left: 15pt;
 }
@@ -140,3 +142,10 @@ div.filterapp {
 .activity-group .history-summary {
     display: none;
 }
+
+.gravatar{
+    position:relative;
+    top:5pt;
+    left:15pt;
+}
+
