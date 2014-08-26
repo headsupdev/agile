@@ -199,9 +199,6 @@ public class Permissions
                         listItem.add( userLink );
                     }
 
-
-
-
                     Link disable = new Link( "disable" )
                     {
                         @Override
