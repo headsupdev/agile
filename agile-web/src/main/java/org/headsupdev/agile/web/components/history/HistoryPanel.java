@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -18,6 +18,8 @@
 
 package org.headsupdev.agile.web.components.history;
 
+import org.headsupdev.agile.api.Manager;
+import org.headsupdev.agile.api.User;
 import org.headsupdev.agile.api.rest.Api;
 import org.headsupdev.agile.web.HeadsUpSession;
 import org.headsupdev.agile.web.components.FormattedDateModel;
@@ -35,6 +37,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.ResourceReference;
 import org.headsupdev.agile.api.Event;
+import org.headsupdev.agile.web.components.GravatarLinkPanel;
 import org.headsupdev.agile.web.components.MarkedUpTextModel;
 import org.headsupdev.agile.web.HeadsUpPage;
 
@@ -129,7 +132,8 @@ public class HistoryPanel
             {
                 listItem.add( new WebMarkupContainer( "project-link" ).setVisible( false ) );
             }
-
+            User user = Manager.getSecurityInstance().getUserByUsername( event.getUsername() );
+            listItem.add( new GravatarLinkPanel( "gravatar", user, HeadsUpPage.DEFAULT_AVATAR_EDGE_LENGTH ) );
             ExternalLink link = new ExternalLink( "history-link", "/activity/event/id/" + event.getId() );
             link.add( new Label( "history-title", event.getTitle() ) );
             listItem.add( link );

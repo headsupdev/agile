@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -18,23 +18,24 @@
 
 package org.headsupdev.agile.app.dashboard;
 
-import org.headsupdev.agile.api.User;
-import org.apache.wicket.markup.html.CSSPackageResource;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.ResourceReference;
+import org.apache.wicket.markup.html.CSSPackageResource;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.image.Image;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
+import org.headsupdev.agile.web.components.GravatarLinkPanel;
 import org.headsupdev.agile.api.Permission;
+import org.headsupdev.agile.api.User;
 import org.headsupdev.agile.app.dashboard.permission.MemberListPermission;
-import org.headsupdev.agile.web.MountPoint;
 import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.HeadsUpSession;
+import org.headsupdev.agile.web.MountPoint;
 
-import java.util.List;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * A simple members page, listing the current members.
@@ -43,15 +44,15 @@ import java.util.Collections;
  * @version $Id$
  * @since 1.0
  */
-@MountPoint( "accounts" )
+@MountPoint("accounts")
 public class Accounts
-    extends HeadsUpPage
+        extends HeadsUpPage
 {
     public Permission getRequiredPermission()
     {
         return new MemberListPermission();
     }
-
+    private static final int ICON_EDGE_LENGTH = 60;
     public void layout()
     {
         super.layout();
@@ -71,7 +72,8 @@ public class Accounts
                     return;
                 }
 
-                if ( user.equals( HeadsUpSession.ANONYMOUS_USER ) ) {
+                if ( user.equals( HeadsUpSession.ANONYMOUS_USER ) )
+                {
                     listItem.setVisible( false );
                     return;
                 }
@@ -87,6 +89,7 @@ public class Accounts
                 link = new BookmarkablePageLink( "user-link2", getPageClass( "account" ), params );
                 link.add( new Label( "user-label", user.getUsername() ) );
                 listItem.add( link );
+                listItem.add( new GravatarLinkPanel( "gravatar" , user, ICON_EDGE_LENGTH ) );
             }
         } );
     }
@@ -96,4 +99,5 @@ public class Accounts
     {
         return "Accounts";
     }
+
 }

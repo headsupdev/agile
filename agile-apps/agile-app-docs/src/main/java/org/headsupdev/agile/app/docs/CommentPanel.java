@@ -41,7 +41,9 @@ import org.headsupdev.agile.storage.docs.Document;
 import org.headsupdev.agile.storage.resource.DurationWorked;
 import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.HeadsUpSession;
+import org.headsupdev.agile.web.RenderUtil;
 import org.headsupdev.agile.web.components.FormattedDateModel;
+import org.headsupdev.agile.web.components.GravatarLinkPanel;
 import org.headsupdev.agile.web.components.MarkedUpTextModel;
 import org.headsupdev.agile.web.dialogs.ConfirmDialog;
 
@@ -103,6 +105,7 @@ public class CommentPanel
         {
             comment = (Comment) o;
             add( new Image( "icon", new ResourceReference( HeadsUpPage.class, "images/comment.png" ) ) );
+            commentTitle.add( new GravatarLinkPanel( "gravatar", comment.getUser(), HeadsUpPage.DEFAULT_AVATAR_EDGE_LENGTH ) );
 
             PageParameters params = new PageParameters();
             params.put( "project", project );
@@ -136,7 +139,11 @@ public class CommentPanel
             };
             commentTitle.add( remove.setVisible( userHasPermission ) );
 
-            commentTitle.add( new Label( "username", comment.getUser().getFullnameOrUsername() ) );
+            params.add( "username", comment.getUser().getUsername() );
+            params.add( "silent", "true" );
+            BookmarkablePageLink usernameLink = new BookmarkablePageLink( "usernameLink", RenderUtil.getPageClass( "account" ), params );
+            usernameLink.add( new Label( "username", comment.getUser().getFullnameOrUsername() ) );
+            commentTitle.add( usernameLink );
             commentTitle.add( new Label( "created", new FormattedDateModel( comment.getCreated(),
                     ( (HeadsUpSession) getSession() ).getTimeZone() ) ) );
             add( new Label( "comment", new MarkedUpTextModel( comment.getComment(), project ) )

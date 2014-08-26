@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -40,6 +40,7 @@ import org.headsupdev.agile.storage.StoredProject;
 import org.headsupdev.agile.storage.issues.Issue;
 import org.headsupdev.agile.storage.issues.Milestone;
 import org.headsupdev.agile.web.HeadsUpPage;
+import org.headsupdev.agile.web.components.GravatarLinkPanel;
 import org.headsupdev.agile.web.components.UserDropDownChoice;
 import org.headsupdev.agile.web.components.milestones.MilestoneDropDownChoice;
 
@@ -195,6 +196,7 @@ public class IssuePanelRow
                 Class<? extends Page> userClass = page.getPageClass( "account" );
                 if ( userClass != null )
                 {
+                    cell.add( new GravatarLinkPanel( "gravatar", issue.getAssignee(), HeadsUpPage.DEFAULT_AVATAR_EDGE_LENGTH ) );
                     Link assignedLink = new BookmarkablePageLink( "assigned-link", userClass, params );
                     assignedLink.add( new Label( "assigned-label", issue.getAssignee().getFullnameOrUsername() ) );
                     cell.add( assignedLink );
@@ -204,6 +206,7 @@ public class IssuePanelRow
                 }
                 else
                 {
+                    cell.add( new WebMarkupContainer( "gravatar" ).setVisible( false ) );
                     cell.add( new WebMarkupContainer( "assigned-link" ).setVisible( false ) );
                     cell.add( new Label( "assigned-label", issue.getAssignee().getFullnameOrUsername() ) );
                     cell.add( new WebMarkupContainer( "assign-link" ).setVisible( false ) );
@@ -246,7 +249,9 @@ public class IssuePanelRow
                         ajaxRequestTarget.addComponent( assignChoice );
                     }
                 };
+
                 cell.add( assignLink.setOutputMarkupId( true ).setVisible( Permissions.canEditIssue( currentUser, page.getProject() ) ) );
+                cell.add( new WebMarkupContainer( "gravatar" ).setVisible( false ) );
                 cell.add( assignChoice.setOutputMarkupId( true ).setOutputMarkupPlaceholderTag( true ).setVisible( false ) );
                 cell.add( new WebMarkupContainer( "assigned-label" ).setVisible( false ) );
                 cell.add( new WebMarkupContainer( "assigned-link" ).setVisible( false ) );
@@ -254,6 +259,7 @@ public class IssuePanelRow
         }
         else
         {
+            cell.add( new WebMarkupContainer( "gravatar" ).setVisible( false ) );
             cell.add( new WebMarkupContainer( "assigned-link" ).setVisible( false ) );
             cell.add( new WebMarkupContainer( "assigned-label" ).setVisible( false ) );
             cell.add( new WebMarkupContainer( "assign-link" ).setVisible( false ) );

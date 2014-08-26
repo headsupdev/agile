@@ -39,7 +39,9 @@ import org.headsupdev.agile.storage.HibernateStorage;
 import org.headsupdev.agile.storage.issues.Milestone;
 import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.HeadsUpSession;
+import org.headsupdev.agile.web.RenderUtil;
 import org.headsupdev.agile.web.components.FormattedDateModel;
+import org.headsupdev.agile.web.components.GravatarLinkPanel;
 import org.headsupdev.agile.web.components.MarkedUpTextModel;
 import org.headsupdev.agile.web.dialogs.ConfirmDialog;
 
@@ -84,6 +86,8 @@ public class CommentPanel
             comment = (Comment) o;
             add( new Image( "icon", new ResourceReference( HeadsUpPage.class, "images/comment.png" ) ) );
 
+            commentTitle.add( new GravatarLinkPanel( "gravatar", comment.getUser(), HeadsUpPage.DEFAULT_AVATAR_EDGE_LENGTH ) );
+
             PageParameters params = new PageParameters();
             params.put( "project", project );
             params.put( "id", milestone.getName() );
@@ -91,11 +95,18 @@ public class CommentPanel
             Link edit = new BookmarkablePageLink( "editComment", EditComment.class, params );
 
             commentTitle.add( edit.setVisible( userHasPermission ) );
-            commentTitle.add( new Label( "username", comment.getUser().getFullnameOrUsername() ) );
+
+            params.add( "username", comment.getUser().getUsername() );
+            params.add( "silent", "true" );
+            BookmarkablePageLink usernameLink = new BookmarkablePageLink( "usernameLink", RenderUtil.getPageClass( "account" ), params );
+            usernameLink.add( new Label( "username", comment.getUser().getFullnameOrUsername() ) );
+            commentTitle.add( usernameLink );
+
             commentTitle.add( new Label( "created", new FormattedDateModel( comment.getCreated(),
                     ( (HeadsUpSession) getSession() ).getTimeZone() ) ) );
             add( new Label( "comment", new MarkedUpTextModel( comment.getComment(), project ) )
                     .setEscapeModelStrings( false ) );
+
             Link remove = new AjaxFallbackLink( "removeComment" )
             {
                 @Override
@@ -131,4 +142,5 @@ public class CommentPanel
     public void showConfirmDialog( ConfirmDialog dialog, AjaxRequestTarget target )
     {
     }
+
 }

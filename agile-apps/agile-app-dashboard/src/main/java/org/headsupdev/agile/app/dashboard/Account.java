@@ -57,7 +57,6 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -138,6 +137,7 @@ public class Account
         PageParameters params = new PageParameters();
         params.add( "username", user.getUsername() );
         params.add( "silent", "true" );
+
         add( new Image( "account", new ResourceReference( "member.png" ), params ) );
 
         add( new UserDetailsPanel( "details", user, getProject(), shouldShowFullDetails() ) );

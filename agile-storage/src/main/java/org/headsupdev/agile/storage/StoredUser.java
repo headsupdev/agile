@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -18,15 +18,15 @@
 
 package org.headsupdev.agile.storage;
 
+import org.headsupdev.agile.api.*;
 import org.headsupdev.agile.api.rest.Publish;
 import org.headsupdev.agile.api.util.HashUtil;
 import org.headsupdev.support.java.StringUtil;
-import org.headsupdev.agile.api.*;
 import org.hibernate.annotations.Type;
-import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.DocumentId;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Index;
+import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
 import java.util.*;
@@ -39,10 +39,10 @@ import java.util.*;
  * @since 1.0
  */
 @Entity
-@Table( name = "Users" )
-@Indexed( index = "Users" )
+@Table(name = "Users")
+@Indexed(index = "Users")
 public class StoredUser
-    implements User, SearchResult
+        implements User, SearchResult
 {
     @Id
     @DocumentId
@@ -56,16 +56,16 @@ public class StoredUser
     @Publish
     private String firstname, lastname, email, telephone;
 
-    @Type( type = "text" )
+    @Type(type = "text")
     @Field(index = Index.TOKENIZED)
     @Publish
     private String description;
 
-    @Temporal( TemporalType.TIMESTAMP )
+    @Temporal(TemporalType.TIMESTAMP)
     @Publish
     private Date created = new Date();
 
-    @Temporal( TemporalType.TIMESTAMP )
+    @Temporal(TemporalType.TIMESTAMP)
     @Publish
     private Date lastLogin = null;
 
@@ -76,14 +76,14 @@ public class StoredUser
 
     private Boolean hiddenInTimeTracking = Boolean.FALSE;
 
-    @ManyToMany( targetEntity = StoredRole.class, fetch = FetchType.LAZY )
+    @ManyToMany(targetEntity = StoredRole.class, fetch = FetchType.LAZY)
     private Set<Role> roles = new HashSet<Role>();
 
-    @ManyToMany( targetEntity = StoredProject.class, fetch = FetchType.LAZY )
+    @ManyToMany(targetEntity = StoredProject.class, fetch = FetchType.LAZY)
     private Set<Project> projects = new HashSet<Project>();
 
-    @ManyToMany( targetEntity = StoredProject.class, fetch = FetchType.LAZY )
-    @JoinTable( name = "Users_Subscriptions" )
+    @ManyToMany(targetEntity = StoredProject.class, fetch = FetchType.LAZY)
+    @JoinTable(name = "Users_Subscriptions")
     private Set<Project> subscriptions = new HashSet<Project>();
 
     private transient Map<String, String> preferences = null;
@@ -177,6 +177,15 @@ public class StoredUser
         return getUsername();
     }
 
+    public String getInitials()
+    {
+        if ( StringUtil.isEmpty( firstname ) || StringUtil.isEmpty( lastname ) )
+        {
+            return null;
+        }
+        return firstname.substring( 0, 1 ).toUpperCase() + lastname.substring( 0, 1 ).toUpperCase();
+    }
+
     public String getDescription()
     {
         return description;
@@ -245,8 +254,8 @@ public class StoredUser
     public boolean isSubscribedTo( Project project )
     {
         return ( getSubscriptions() != null && getSubscriptions().contains( project ) ) ||
-            ( ( project == null || project.equals( StoredProject.getDefault() ) ) &&
-                StoredProject.getDefaultProjectSubscribers().contains( this ) );
+                ( ( project == null || project.equals( StoredProject.getDefault() ) ) &&
+                        StoredProject.getDefaultProjectSubscribers().contains( this ) );
     }
 
     public void setProjects( Set<Project> projects )
@@ -255,11 +264,13 @@ public class StoredUser
         this.projects.addAll( projects );
     }
 
-    public String getIconPath() {
+    public String getIconPath()
+    {
         return null;
     }
 
-    public String getLink() {
+    public String getLink()
+    {
         return "/account/username/" + getUsername();
     }
 
@@ -298,10 +309,10 @@ public class StoredUser
     {
         this.hiddenInTimeTracking = hidden;
     }
-    
+
     public void loadPreferences()
     {
-        preferences = new Hashtable<String,String>();
+        preferences = new Hashtable<String, String>();
         preferences.putAll( Manager.getStorageInstance().getConfigurationItems( "user." + username + "." ) );
     }
 
@@ -393,7 +404,7 @@ public class StoredUser
         if ( value == null )
         {
             preferences.remove( key );
-            Manager.getStorageInstance().removeConfigurationItem(  key );
+            Manager.getStorageInstance().removeConfigurationItem( key );
         }
         else if ( oldValue == null || !value.equals( oldValue ) )
         {
@@ -404,12 +415,12 @@ public class StoredUser
 
     public void setPreference( String key, int value )
     {
-        setPreference(key, String.valueOf(value));
+        setPreference( key, String.valueOf( value ) );
     }
 
     public void setPreference( String key, boolean value )
     {
-        setPreference(key, String.valueOf(value));
+        setPreference( key, String.valueOf( value ) );
     }
 
     public boolean equals( Object user )
@@ -436,7 +447,8 @@ public class StoredUser
     public int hashCode()
     {
         // TODO wtf?
-        if ( username == null ) {
+        if ( username == null )
+        {
             return 0;
         }
 
@@ -467,4 +479,5 @@ public class StoredUser
 
         return u.getUsername().compareToIgnoreCase( u.getUsername() );
     }
+
 }

@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2013 Heads Up Development Ltd.
+ * Copyright 2009-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -78,7 +78,7 @@ public abstract class HeadsUpPage
         implements Serializable
 {
     public static final Pattern ID_PATTERN = Pattern.compile( "[a-zA-Z0-9-_\\.]*" );
-
+    public static final int DEFAULT_AVATAR_EDGE_LENGTH = 30;
     public static final String DIALOG_PANEL_ID = "agile-dialog";
     protected static final String PAGE_TITLE_SEPARATOR = " :: ";
 

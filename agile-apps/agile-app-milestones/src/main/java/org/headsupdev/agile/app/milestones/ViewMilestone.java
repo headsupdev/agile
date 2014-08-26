@@ -44,6 +44,7 @@ import org.headsupdev.agile.storage.issues.Issue;
 import org.headsupdev.agile.storage.issues.Milestone;
 import org.headsupdev.agile.web.*;
 import org.headsupdev.agile.web.components.FormattedDateModel;
+import org.headsupdev.agile.web.components.GravatarLinkPanel;
 import org.headsupdev.agile.web.components.MarkedUpTextModel;
 import org.headsupdev.agile.web.components.issues.IssueFilterPanel;
 import org.headsupdev.agile.web.components.issues.IssueListPanel;
@@ -71,9 +72,7 @@ public class ViewMilestone
     private MilestonesDAO dao = new MilestonesDAO();
 
     private Milestone milestone;
-    private HeadsUpPage page;
     private IssueFilterPanel filter;
-
     public Permission getRequiredPermission()
     {
         return new MilestoneViewPermission();
@@ -82,7 +81,6 @@ public class ViewMilestone
     public void layout()
     {
         super.layout();
-        page = this;
         add( CSSPackageResource.getHeaderContribution( getClass(), "milestone.css" ) );
 
         String name = getPageParameters().getString( "id" );

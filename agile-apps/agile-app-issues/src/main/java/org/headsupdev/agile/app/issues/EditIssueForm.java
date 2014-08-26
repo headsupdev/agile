@@ -23,6 +23,8 @@ import org.apache.wicket.markup.html.CSSPackageResource;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.*;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
@@ -41,6 +43,7 @@ import org.headsupdev.agile.web.components.issues.IssueListPanel;
 import org.headsupdev.agile.web.components.issues.IssueUtils;
 import org.headsupdev.agile.web.components.milestones.MilestoneDropDownChoice;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 
@@ -133,7 +136,7 @@ class IssueForm
         } );
         add( status );
 
-        add( new Label( "reporter", issue.getReporter().getFullnameOrUsername() ) );
+        add( new GravatarLinkPanel( "reporterGravatar", issue.getReporter(), HeadsUpPage.DEFAULT_AVATAR_EDGE_LENGTH ) );
         final DropDownChoice<User> assignees = new UserDropDownChoice( "assignee", issue.getAssignee() );
         assignees.setNullValid( true );
         add( assignees );
@@ -153,9 +156,9 @@ class IssueForm
                 return currentUser.getPreference( "issue.automaticallyWatch", true );
             }
         } );
+
         toggleWatchers.setVisible( creating );
         add( toggleWatchers );
-
 
         Button assignToMe = new Button( "assignToMe" )
         {
@@ -189,14 +192,15 @@ class IssueForm
         }
         add( new TextField( "order" ).setRequired( false ) );
 
-        add( new Label( "watchers", new Model<String>()
+        ListView<User> watchers = new ListView<User>( "watchers", new ArrayList<User>( issue.getWatchers() ) )
         {
             @Override
-            public String getObject()
+            protected void populateItem( ListItem<User> listItem )
             {
-                return IssueUtils.getWatchersDescription( issue, currentUser );
+                listItem.add( new GravatarLinkPanel( "gravatar", listItem.getModelObject(), HeadsUpPage.DEFAULT_AVATAR_EDGE_LENGTH ) );
             }
-        } ).setVisible( !creating ) );
+        };
+        add( watchers.setVisible( !creating ) );
 
         add( new TextField( "summary" ).setRequired( true ) );
         add( new TextField( "environment" ) );

@@ -117,3 +117,10 @@ table.remaining td.number {
 .inlinevelocity td.dashheader, .inlinevelocity td.velnumber, .inlinevelocity td.dashfooter{
     border-left: none;
 }
+
+.comment-text {
+    position:relative;
+    bottom:10px;
+    left:5px
+}
+

@@ -16,7 +16,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 table.importproject, table.importproject input,
 form.projectlist table.projects, form.projectlist table.projects input {
     width: 100%;
@@ -161,4 +160,14 @@ form.config fieldset {
 }
 .projectmembership input {
     margin-top: 6px;
+}
+
+.userlink{
+    position:relative;
+    bottom:7pt;
+}
+
+.disable{
+    position:relative;
+    bottom:5pt;
 }

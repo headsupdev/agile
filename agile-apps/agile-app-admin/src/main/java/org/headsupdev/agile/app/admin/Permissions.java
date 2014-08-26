@@ -18,30 +18,39 @@
 
 package org.headsupdev.agile.app.admin;
 
-import org.headsupdev.agile.api.*;
-import org.headsupdev.agile.security.DefaultSecurityManager;
-import org.headsupdev.agile.storage.*;
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.ResourceReference;
 import org.apache.wicket.markup.html.CSSPackageResource;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.CheckGroup;
 import org.apache.wicket.markup.html.form.Check;
+import org.apache.wicket.markup.html.form.CheckGroup;
+import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.Model;
-import org.headsupdev.agile.web.components.OnePressSubmitButton;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-import org.headsupdev.agile.web.components.StripedListView;
+import org.headsupdev.agile.api.Manager;
+import org.headsupdev.agile.api.Permission;
+import org.headsupdev.agile.api.Role;
+import org.headsupdev.agile.api.User;
+import org.headsupdev.agile.security.DefaultSecurityManager;
+import org.headsupdev.agile.security.permission.AdminPermission;
+import org.headsupdev.agile.storage.AnonymousRole;
+import org.headsupdev.agile.storage.HibernateUtil;
+import org.headsupdev.agile.storage.StoredUser;
+import org.headsupdev.agile.web.ApplicationPageMapper;
 import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.HeadsUpSession;
 import org.headsupdev.agile.web.MountPoint;
-import org.headsupdev.agile.security.permission.AdminPermission;
+import org.headsupdev.agile.web.components.GravatarLinkPanel;
+import org.headsupdev.agile.web.components.OnePressSubmitButton;
+import org.headsupdev.agile.web.components.StripedListView;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import java.util.*;
 
@@ -52,10 +61,11 @@ import java.util.*;
  * @version $Id$
  * @since 1.0
  */
-@MountPoint( "permissions" )
+@MountPoint("permissions")
 public class Permissions
-    extends HeadsUpPage
+        extends HeadsUpPage
 {
+
     public Permission getRequiredPermission()
     {
         return new AdminPermission();
@@ -65,7 +75,7 @@ public class Permissions
     {
         super.layout();
 
-        add( CSSPackageResource.getHeaderContribution( getClass(), "admin.css" ));
+        add( CSSPackageResource.getHeaderContribution( getClass(), "admin.css" ) );
 
         add( new UserRolesForm( "users" ) );
         add( new RolePermissionsForm( "roles" ) );
@@ -78,9 +88,10 @@ public class Permissions
     }
 
     class UserRolesForm
-        extends Form
+            extends Form
     {
         private List<User> users;
+
         public UserRolesForm( String id )
         {
             super( id );
@@ -97,7 +108,8 @@ public class Permissions
                     Link delete = new Link( "deleterole" )
                     {
                         @Override
-                        public void onClick() {
+                        public void onClick()
+                        {
                             for ( User user : getSecurityManager().getUsers() )
                             {
                                 boolean me = user.getUsername().equals( ( (HeadsUpSession) getSession() ).getUser().getUsername() );
@@ -106,7 +118,8 @@ public class Permissions
                                 {
                                     user.getRoles().remove( role );
 
-                                    if ( me ) {
+                                    if ( me )
+                                    {
                                         ( (HeadsUpSession) getSession() ).setUser( user );
                                     }
                                 }
@@ -123,7 +136,7 @@ public class Permissions
             Link add = new BookmarkablePageLink( "addrole", AddRole.class );
             add.add( new Image( "add-icon", new ResourceReference( HeadsUpPage.class, "images/add.png" ) ) );
             add( add );
-            add ( new OnePressSubmitButton( "userRolesSubmit" ) );
+            add( new OnePressSubmitButton( "userRolesSubmit" ) );
 
             add( new StripedListView<User>( "userlist", users )
             {
@@ -133,20 +146,13 @@ public class Permissions
 
                     final User user = listItem.getModelObject();
                     final boolean anon;
-                    if ( user.equals( HeadsUpSession.ANONYMOUS_USER ) )
-                    {
-                        user.getRoles().add( new AnonymousRole() );
-                        anon = true;
-                    }
-                    else
-                    {
-                        anon = false;
-                    }
+                    listItem.add( new GravatarLinkPanel( "gravatar", user, HeadsUpPage.DEFAULT_AVATAR_EDGE_LENGTH ) );
 
-                    listItem.add( new Label( "username", new Model<String>()
+                    Model<String> usernameModel = new Model<String>()
                     {
                         @Override
-                        public String getObject() {
+                        public String getObject()
+                        {
                             String username = user.getUsername();
                             if ( ( (StoredUser) user ).isDisabled() )
                             {
@@ -155,7 +161,10 @@ public class Permissions
 
                             return username;
                         }
-                    } ).add( new AttributeModifier( "class", true, new Model<String>() {
+                    };
+
+                    AttributeModifier modifier = new AttributeModifier( "class", true, new Model<String>()
+                    {
                         @Override
                         public String getObject()
                         {
@@ -166,7 +175,32 @@ public class Permissions
 
                             return "";
                         }
-                    } ) ) );
+                    } );
+
+                    if ( user.equals( HeadsUpSession.ANONYMOUS_USER ) )
+                    {
+                        listItem.add( new Label( "username", usernameModel ).add( modifier ) );
+                        Label usernameInLink = new Label( "usernameInLink" );
+                        WebMarkupContainer userLink = new WebMarkupContainer( "userLink" );
+                        userLink.add( usernameInLink.setVisible( false ) );
+                        listItem.add( userLink.setVisible( false ) );
+                        user.getRoles().add( new AnonymousRole() );
+                        anon = true;
+                    }
+                    else
+                    {
+                        listItem.add( new Label( "username", usernameModel ).setVisible( false ) );
+                        Label usernameInLink = new Label( "usernameInLink", usernameModel );
+                        usernameInLink.add( modifier );
+                        PageParameters params = new PageParameters();
+                        params.add( "username", user.getUsername() );
+                        params.add( "silent", "true" );
+                        anon = false;
+                        BookmarkablePageLink userLink = new BookmarkablePageLink( "userLink", ApplicationPageMapper.get().getPageClass( "account" ), params );
+                        userLink.add( usernameInLink );
+                        listItem.add( userLink );
+                    }
+
                     Link disable = new Link( "disable" )
                     {
                         @Override
@@ -220,10 +254,10 @@ public class Permissions
     }
 
     class RolePermissionsForm
-        extends Form
+            extends Form
     {
         private List<Permission> permissionNames;
-        private Map<Permission,List<Role>> permissions = new HashMap<Permission,List<Role>>();
+        private Map<Permission, List<Role>> permissions = new HashMap<Permission, List<Role>>();
 
         public RolePermissionsForm( String id )
         {
@@ -266,7 +300,7 @@ public class Permissions
                     listItem.add( group );
                 }
             } );
-            add (new OnePressSubmitButton( "rolePermissionsSubmit" ) );
+            add( new OnePressSubmitButton( "rolePermissionsSubmit" ) );
         }
 
         protected void onSubmit()
@@ -279,7 +313,7 @@ public class Permissions
             }
         }
 
-        private void convertToMap( Map<Permission,List<Role>> map )
+        private void convertToMap( Map<Permission, List<Role>> map )
         {
             for ( Permission permission : getSecurityManager().getPermissions() )
             {
@@ -297,7 +331,7 @@ public class Permissions
             }
         }
 
-        private List<Role> convertFromMap( Map<Permission,List<Role>> map )
+        private List<Role> convertFromMap( Map<Permission, List<Role>> map )
         {
             List<Role> ret = getSecurityManager().getRoles();
 
