@@ -63,7 +63,6 @@ import java.util.*;
 public class Permissions
         extends HeadsUpPage
 {
-    private final int ICON_EDGE_LENGTH = 25;
 
     public Permission getRequiredPermission()
     {
@@ -144,7 +143,7 @@ public class Permissions
 
                     final User user = listItem.getModelObject();
                     final boolean anon;
-                    listItem.add( new GravatarLinkPanel( "gravatar", user, ICON_EDGE_LENGTH ) );
+                    listItem.add( new GravatarLinkPanel( "gravatar", user, HeadsUpPage.DEFAULT_ICON_EDGE_LENGTH ) );
                     BookmarkablePageLink userLink;
                     PageParameters params = new PageParameters();
                     params.add( "username", user.getUsername() );

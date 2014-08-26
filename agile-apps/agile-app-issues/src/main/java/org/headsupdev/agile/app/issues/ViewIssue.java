@@ -71,7 +71,6 @@ public class ViewIssue
     private Issue issue;
     private boolean watching;
     private IssuePanel issuePanel;
-    private final int ICON_EDGE_LENGTH = 30;
 
     public Permission getRequiredPermission()
     {
@@ -145,7 +144,7 @@ public class ViewIssue
             {
                 attachment = listItem.getModelObject();
                 PageParameters params = new PageParameters();
-                listItem.add( new GravatarLinkPanel( "avatar", attachment.getUser(), ICON_EDGE_LENGTH ) );
+                listItem.add( new GravatarLinkPanel( "avatar", attachment.getUser(), HeadsUpPage.DEFAULT_ICON_EDGE_LENGTH ) );
                 params.add( "username", attachment.getUser().getUsername() );
                 params.add( "silent", "true" );
                 BookmarkablePageLink usernameLink = new BookmarkablePageLink( "usernameLink", ViewIssue.this.getPageClass( "account" ), params );

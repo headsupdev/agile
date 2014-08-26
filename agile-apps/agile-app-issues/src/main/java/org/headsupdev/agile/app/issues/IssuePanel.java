@@ -63,7 +63,6 @@ import java.util.*;
 public class IssuePanel
         extends Panel
 {
-    private final int ICON_EDGE_LENGTH = 30;
     private final ListView<User> watchers;
 
     public IssuePanel( String id, final Issue issue, final HeadsUpPage page )
@@ -151,7 +150,7 @@ public class IssuePanel
             @Override
             protected void populateItem( ListItem<User> listItem )
             {
-                listItem.add( new GravatarLinkPanel( "gravatar", listItem.getModelObject(), ICON_EDGE_LENGTH ) );
+                listItem.add( new GravatarLinkPanel( "gravatar", listItem.getModelObject(), HeadsUpPage.DEFAULT_ICON_EDGE_LENGTH  ) );
             }
         };
         add( watchers );
@@ -296,8 +295,8 @@ public class IssuePanel
             add( new Form( "begin-issue-form" ).setVisible( false ) );
         }
 
-        add( new GravatarLinkPanel( "gravatarReporter", issue.getReporter(), ICON_EDGE_LENGTH ) );
-        add( new GravatarLinkPanel( "gravatarAssignee", issue.getAssignee(), ICON_EDGE_LENGTH ) );
+        add( new GravatarLinkPanel( "gravatarReporter", issue.getReporter(), HeadsUpPage.DEFAULT_ICON_EDGE_LENGTH  ) );
+        add( new GravatarLinkPanel( "gravatarAssignee", issue.getAssignee(), HeadsUpPage.DEFAULT_ICON_EDGE_LENGTH  ) );
         if ( isSessionUserAssignedToIssue( issue ) )
         {
             addDropIssueButton( issue );

@@ -83,7 +83,6 @@ class IssueForm
     private AttachmentPanel attachmentPanel;
     private CheckBox toggleWatchers;
     private User currentUser;
-    private int ICON_EDGE_LENGTH = 30;
 
     public IssueForm( String id, final Issue issue, final boolean creating, final HeadsUpPage owner, EditIssueForm parent )
     {
@@ -136,7 +135,7 @@ class IssueForm
         } );
         add( status );
 
-        add( new GravatarLinkPanel( "reporterGravatar", issue.getReporter(), ICON_EDGE_LENGTH ) );
+        add( new GravatarLinkPanel( "reporterGravatar", issue.getReporter(), HeadsUpPage.DEFAULT_ICON_EDGE_LENGTH  ) );
         final DropDownChoice<User> assignees = new UserDropDownChoice( "assignee", issue.getAssignee() );
         assignees.setNullValid( true );
         add( assignees );
@@ -198,7 +197,7 @@ class IssueForm
             @Override
             protected void populateItem( ListItem<User> listItem )
             {
-                listItem.add( new GravatarLinkPanel( "gravatar", listItem.getModelObject(), ICON_EDGE_LENGTH ) );
+                listItem.add( new GravatarLinkPanel( "gravatar", listItem.getModelObject(), HeadsUpPage.DEFAULT_ICON_EDGE_LENGTH  ) );
             }
         };
         add( watchers.setVisible( !creating ) );

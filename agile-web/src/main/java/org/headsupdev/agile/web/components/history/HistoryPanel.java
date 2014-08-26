@@ -54,14 +54,12 @@ public class HistoryPanel
     extends Panel
 {
     public static final int SUMMARY_LENGTH = 500;
-    private HeadsUpPage page;
     private boolean showProjects;
-    private final int ICON_EDGE_LENGTH = 40;
+
     public HistoryPanel( String id, final List<? extends Event> events, boolean showProjects, HeadsUpPage page )
     {
         super( id );
         this.showProjects = showProjects;
-        this.page = page;
         add( CSSPackageResource.getHeaderContribution( HistoryPanel.class, "history.css" ) );
 
         IModel<List<? extends Event>> listModel = new AbstractReadOnlyModel<List<? extends Event>>() {
@@ -78,7 +76,6 @@ public class HistoryPanel
     {
         super( id );
         this.showProjects = showProjects;
-        this.page = page;
         add( CSSPackageResource.getHeaderContribution( HistoryPanel.class, "history.css" ) );
 
         add( new HistoryPanel.HistoryListView( "history", events ) );
@@ -136,7 +133,7 @@ public class HistoryPanel
                 listItem.add( new WebMarkupContainer( "project-link" ).setVisible( false ) );
             }
             User user = Manager.getSecurityInstance().getUserByUsername( event.getUsername() );
-            listItem.add( new GravatarLinkPanel( "gravatar", user, ICON_EDGE_LENGTH ) );
+            listItem.add( new GravatarLinkPanel( "gravatar", user, HeadsUpPage.DEFAULT_ICON_EDGE_LENGTH ) );
             ExternalLink link = new ExternalLink( "history-link", "/activity/event/id/" + event.getId() );
             link.add( new Label( "history-title", event.getTitle() ) );
             listItem.add( link );

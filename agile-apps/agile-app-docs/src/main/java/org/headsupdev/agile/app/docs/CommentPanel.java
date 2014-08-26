@@ -64,7 +64,6 @@ public class CommentPanel
     private Project project;
     public Link remove;
     private Comment comment;
-    private final int ICON_EDGE_LENGTH = 30;
 
     public CommentPanel( String id, Comment comment, Project project )
     {
@@ -103,7 +102,7 @@ public class CommentPanel
         {
             comment = (Comment) o;
             add( new Image( "icon", new ResourceReference( HeadsUpPage.class, "images/comment.png" ) ) );
-            commentTitle.add( new GravatarLinkPanel( "gravatar", comment.getUser(), ICON_EDGE_LENGTH ) );
+            commentTitle.add( new GravatarLinkPanel( "gravatar", comment.getUser(), HeadsUpPage.DEFAULT_ICON_EDGE_LENGTH ) );
 
             PageParameters params = new PageParameters();
             params.put( "project", project );
