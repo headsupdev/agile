@@ -42,6 +42,7 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 import org.headsupdev.agile.web.HeadsUpSession;
+import org.headsupdev.agile.web.components.GravatarLinkPanel;
 import org.headsupdev.agile.web.components.UserDropDownChoice;
 import org.headsupdev.agile.web.components.milestones.MilestoneDropDownChoice;
 
@@ -58,6 +59,7 @@ import java.util.List;
 public class IssuePanelRow
     extends Panel
 {
+    private static final int ICON_EDGE_LENGTH = 30;
     private Issue issue;
     public IssuePanelRow( String id, Issue issue, final HeadsUpPage page, final boolean hideProject,
                           final boolean hideMilestone, boolean hideAssignee )
@@ -194,6 +196,7 @@ public class IssuePanelRow
                 Class<? extends Page> userClass = page.getPageClass( "account" );
                 if ( userClass != null )
                 {
+                    cell.add( new GravatarLinkPanel( "gravatar", issue.getAssignee(), ICON_EDGE_LENGTH ) );
                     Link assignedLink = new BookmarkablePageLink( "assigned-link", userClass, params );
                     assignedLink.add( new Label( "assigned-label", issue.getAssignee().getFullnameOrUsername() ) );
                     cell.add( assignedLink );
@@ -203,6 +206,7 @@ public class IssuePanelRow
                 }
                 else
                 {
+                    cell.add( new WebMarkupContainer( "gravatar" ).setVisible( false ) );
                     cell.add( new WebMarkupContainer( "assigned-link" ).setVisible( false ) );
                     cell.add( new Label( "assigned-label", issue.getAssignee().getFullnameOrUsername() ) );
                     cell.add( new WebMarkupContainer( "assign-link" ).setVisible( false ) );
@@ -244,6 +248,7 @@ public class IssuePanelRow
                         ajaxRequestTarget.addComponent( assignChoice );
                     }
                 };
+                cell.add( new WebMarkupContainer( "gravatar" ).setVisible( false ) );
                 cell.add( assignLink.setOutputMarkupId( true ).setVisible( canEditIssue() ) );
                 cell.add( assignChoice.setOutputMarkupId( true ).setOutputMarkupPlaceholderTag( true ).setVisible( false ) );
                 cell.add( new WebMarkupContainer( "assigned-label" ).setVisible( false ) );
