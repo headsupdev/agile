@@ -3,6 +3,7 @@
 * Add ability to disable any build configuration
 
 * Fix importing of child modules in large maven projects
+* Resolve issue with exceptions adding issues with very long summaries - Issue:104
 
 2.1-beta1
 

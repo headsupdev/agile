@@ -54,7 +54,10 @@ public class StoredEvent
     @Index( name="timeIndex" )
     private Date time;
 
-    private String title, username, applicationId;
+    @Type( type = "text" )
+    private String title;
+
+    private String username, applicationId;
 
     private String objectId;
 
