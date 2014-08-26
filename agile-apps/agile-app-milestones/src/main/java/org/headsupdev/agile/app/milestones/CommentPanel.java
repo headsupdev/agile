@@ -27,7 +27,6 @@ import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 import org.headsupdev.agile.api.Manager;
 import org.headsupdev.agile.api.Project;
 import org.headsupdev.agile.api.Storage;
@@ -36,7 +35,6 @@ import org.headsupdev.agile.app.milestones.permission.MilestoneEditPermission;
 import org.headsupdev.agile.storage.Comment;
 import org.headsupdev.agile.storage.HibernateStorage;
 import org.headsupdev.agile.storage.issues.Milestone;
-import org.headsupdev.agile.storage.resource.DurationWorked;
 import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.HeadsUpSession;
 import org.headsupdev.agile.web.RenderUtil;
@@ -84,7 +82,7 @@ public class CommentPanel
         {
             comment = (Comment) o;
             add( new Image( "icon", new ResourceReference( HeadsUpPage.class, "images/comment.png" ) ) );
-            commentTitle.add( new GravatarLinkPanel( "gravatar", comment.getUser(), HeadsUpPage.DEFAULT_ICON_EDGE_LENGTH  ) );
+            commentTitle.add( new GravatarLinkPanel( "gravatar", comment.getUser(), HeadsUpPage.DEFAULT_AVATAR_EDGE_LENGTH ) );
 
             PageParameters params = new PageParameters();
             params.put( "project", project );

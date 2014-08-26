@@ -135,7 +135,7 @@ class IssueForm
         } );
         add( status );
 
-        add( new GravatarLinkPanel( "reporterGravatar", issue.getReporter(), HeadsUpPage.DEFAULT_ICON_EDGE_LENGTH  ) );
+        add( new GravatarLinkPanel( "reporterGravatar", issue.getReporter(), HeadsUpPage.DEFAULT_AVATAR_EDGE_LENGTH ) );
         final DropDownChoice<User> assignees = new UserDropDownChoice( "assignee", issue.getAssignee() );
         assignees.setNullValid( true );
         add( assignees );
@@ -197,7 +197,7 @@ class IssueForm
             @Override
             protected void populateItem( ListItem<User> listItem )
             {
-                listItem.add( new GravatarLinkPanel( "gravatar", listItem.getModelObject(), HeadsUpPage.DEFAULT_ICON_EDGE_LENGTH  ) );
+                listItem.add( new GravatarLinkPanel( "gravatar", listItem.getModelObject(), HeadsUpPage.DEFAULT_AVATAR_EDGE_LENGTH ) );
             }
         };
         add( watchers.setVisible( !creating ) );

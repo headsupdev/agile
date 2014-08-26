@@ -95,7 +95,7 @@ public class History
                     return ( (HistoryApplication) getHeadsUpApplication() ).getEventsForProject( project, before, types, ROWS_PER_PAGE );
                 }
             }
-        }, allProject, History.this ) );
+        }, allProject ) );
 
         boolean more = false;
         List<Event> events;

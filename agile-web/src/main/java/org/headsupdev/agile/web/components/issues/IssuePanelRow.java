@@ -195,7 +195,7 @@ public class IssuePanelRow
                 Class<? extends Page> userClass = page.getPageClass( "account" );
                 if ( userClass != null )
                 {
-                    cell.add( new GravatarLinkPanel( "gravatar", issue.getAssignee(), HeadsUpPage.DEFAULT_ICON_EDGE_LENGTH ) );
+                    cell.add( new GravatarLinkPanel( "gravatar", issue.getAssignee(), HeadsUpPage.DEFAULT_AVATAR_EDGE_LENGTH ) );
                     Link assignedLink = new BookmarkablePageLink( "assigned-link", userClass, params );
                     assignedLink.add( new Label( "assigned-label", issue.getAssignee().getFullnameOrUsername() ) );
                     cell.add( assignedLink );
@@ -256,6 +256,7 @@ public class IssuePanelRow
         }
         else
         {
+            cell.add( new WebMarkupContainer( "gravatar" ).setVisible( false ) );
             cell.add( new WebMarkupContainer( "assigned-link" ).setVisible( false ) );
             cell.add( new WebMarkupContainer( "assigned-label" ).setVisible( false ) );
             cell.add( new WebMarkupContainer( "assign-link" ).setVisible( false ) );

@@ -56,7 +56,7 @@ public class HistoryPanel
     public static final int SUMMARY_LENGTH = 500;
     private boolean showProjects;
 
-    public HistoryPanel( String id, final List<? extends Event> events, boolean showProjects, HeadsUpPage page )
+    public HistoryPanel( String id, final List<? extends Event> events, boolean showProjects )
     {
         super( id );
         this.showProjects = showProjects;
@@ -72,7 +72,7 @@ public class HistoryPanel
         add( new HistoryPanel.HistoryListView( "history", listModel ) );
     }
 
-    public HistoryPanel( String id, final IModel<List<? extends Event>> events, boolean showProjects, HeadsUpPage page )
+    public HistoryPanel( String id, final IModel<List<? extends Event>> events, boolean showProjects )
     {
         super( id );
         this.showProjects = showProjects;
@@ -133,7 +133,7 @@ public class HistoryPanel
                 listItem.add( new WebMarkupContainer( "project-link" ).setVisible( false ) );
             }
             User user = Manager.getSecurityInstance().getUserByUsername( event.getUsername() );
-            listItem.add( new GravatarLinkPanel( "gravatar", user, HeadsUpPage.DEFAULT_ICON_EDGE_LENGTH ) );
+            listItem.add( new GravatarLinkPanel( "gravatar", user, HeadsUpPage.DEFAULT_AVATAR_EDGE_LENGTH ) );
             ExternalLink link = new ExternalLink( "history-link", "/activity/event/id/" + event.getId() );
             link.add( new Label( "history-title", event.getTitle() ) );
             listItem.add( link );

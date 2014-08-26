@@ -58,93 +58,84 @@ public class GravatarLinkPanel
     private final Logger log;
     private static final int defaultID = -1;
     private User user;
-    private boolean hasGravatar;
-    private ResourceReference reference;
 
-    public GravatarLinkPanel( String id, final User user, final int iconEdgeLength )
+    public GravatarLinkPanel( String id, final User gravatarUser, final int iconEdgeLength )
     {
         super( id );
-        this.user = user;
-        log = Manager.getLogger( getClass().getName() );
-
-        Image icon = null;
-        if ( user != null )
+        if ( gravatarUser == null )
         {
-            HeadsUpTooltip tooltip = new HeadsUpTooltip( user.getFullname() );
-
-            boolean displayGravatar = user.getPreference( "gravatar.show", true );
-            int uniqueId;
-            if ( user.getEmail() != null )
-            {
-                uniqueId = user.getEmail().hashCode();
-            }
-            else
-            {
-                uniqueId = defaultID;
-            }
-            reference = new ResourceReference( getClass(), "" + uniqueId + iconEdgeLength + displayGravatar )
-            {
-                @Override
-                protected Resource newResource()
-                {
-                    try
-                    {
-                        return getIcon( user, iconEdgeLength );
-                    }
-                    catch ( IOException e )
-                    {
-                        log.error( e.getMessage() );
-                    }
-                    return null;
-                }
-            };
-
-            if ( user.equals( HeadsUpSession.ANONYMOUS_USER ) )
-            {
-                icon = new Image( "avatarNoLink", reference );
-                add( new WebMarkupContainer( "link" ).setVisible( false ) );
-                add( new WebMarkupContainer( "nolink" ).add( icon ) );
-                return;
-            }
-            icon = new Image( "avatar", reference );
-            if ( getLink() instanceof BookmarkablePageLink )
-            {
-                Link link = (Link) getLink();
-                link.add( icon );
-                if ( displayHoverText() )
-                {
-                    link.add( tooltip );
-                }
-
-                add( link );
-            }
-            else if ( getLink() instanceof ExternalLink )
-            {
-                ExternalLink link = (ExternalLink) getLink();
-                link.add( icon );
-                if ( displayHoverText() )
-                {
-                    link.add( tooltip );
-                }
-
-                add( link );
-            }
+            this.user = HeadsUpSession.ANONYMOUS_USER;
         }
         else
         {
-            addBlankImage();
+            this.user = gravatarUser;
         }
+        log = Manager.getLogger( getClass().getName() );
+
+
+        HeadsUpTooltip tooltip = new HeadsUpTooltip( user.getFullname() );
+
+        boolean displayGravatar = user.getPreference( "gravatar.show", true );
+        String uniqueId;
+        if ( user.getEmail() != null )
+        {
+            uniqueId = user.getUsername() + user.getFullname() + user.getEmail().hashCode();
+        }
+        else
+        {
+            uniqueId = "" + defaultID;
+        }
+        ResourceReference reference = new ResourceReference( getClass(), uniqueId + iconEdgeLength + displayGravatar )
+        {
+            @Override
+            protected Resource newResource()
+            {
+                try
+                {
+                    return getIcon( user, iconEdgeLength );
+                }
+                catch ( IOException e )
+                {
+                    log.error( e.getMessage() );
+                }
+                return null;
+            }
+        };
+
+        Image icon;
+        if ( user.equals( HeadsUpSession.ANONYMOUS_USER ) )
+        {
+            icon = new Image( "avatarNoLink", reference );
+            add( new WebMarkupContainer( "link" ).setVisible( false ) );
+            add( new WebMarkupContainer( "nolink" ).add( icon ) );
+            return;
+        }
+        icon = new Image( "avatar", reference );
+        if ( getLink() instanceof BookmarkablePageLink )
+        {
+            Link link = (Link) getLink();
+            link.add( icon );
+            if ( displayHoverText() )
+            {
+                link.add( tooltip );
+            }
+
+            add( link );
+        }
+        else if ( getLink() instanceof ExternalLink )
+        {
+            ExternalLink link = (ExternalLink) getLink();
+            link.add( icon );
+            if ( displayHoverText() )
+            {
+                link.add( tooltip );
+            }
+
+            add( link );
+        }
+
         add( new WebMarkupContainer( "nolink" ).add( new WebMarkupContainer( "avatarNoLink" ) ).setVisible( false ) );
     }
-
-    private void addBlankImage()
-    {
-        Image avatar = new Image( "avatar" );
-        WebMarkupContainer link = new WebMarkupContainer( "link" );
-        link.add( avatar.setVisible( false ) );
-        add( link.setVisible( false ) );
-    }
-
 
     private ByteArrayResource getIcon( User user, int iconEdgeLength )
             throws IOException
@@ -163,21 +154,21 @@ public class GravatarLinkPanel
         {
             log.error( "No Gravatar for user" );
         }
-        hasGravatar = avatarBytes != null;
+        boolean hasGravatar = avatarBytes != null;
         user.setPreference( "user.hasGravatar", hasGravatar );
         if ( !hasGravatar || !user.getPreference( "gravatar.show", true ) )
         {
+            String initials = user.getInitials();
+            if ( initials == null )
+            {
+                return getDefaultResource( iconEdgeLength );
+            }
             BufferedImage alternativeIcon = new BufferedImage( iconEdgeLength, iconEdgeLength,
                     BufferedImage.TYPE_INT_RGB );
             Graphics graphics = alternativeIcon.getGraphics();
             graphics.setColor( Color.BLACK );
             graphics.setColor( Color.WHITE );
             graphics.setFont( new Font( "Arial Black", Font.BOLD, iconEdgeLength / 2 ) );
-            String initials = user.getInitials();
-            if ( initials == null )
-            {
-                return getDefaultResource( iconEdgeLength );
-            }
             int stringLen = (int) graphics.getFontMetrics().getStringBounds( initials, graphics ).getWidth();
             int start = iconEdgeLength / 2 - stringLen / 2;
             graphics.drawString( initials, start, (int) ( iconEdgeLength / 1.4 ) );

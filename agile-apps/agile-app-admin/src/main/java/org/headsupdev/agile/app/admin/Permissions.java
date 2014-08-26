@@ -144,7 +144,7 @@ public class Permissions
 
                     final User user = listItem.getModelObject();
                     final boolean anon;
-                    listItem.add( new GravatarLinkPanel( "gravatar", user, HeadsUpPage.DEFAULT_ICON_EDGE_LENGTH ) );
+                    listItem.add( new GravatarLinkPanel( "gravatar", user, HeadsUpPage.DEFAULT_AVATAR_EDGE_LENGTH ) );
 
                     Model<String> usernameModel = new Model<String>()
                     {

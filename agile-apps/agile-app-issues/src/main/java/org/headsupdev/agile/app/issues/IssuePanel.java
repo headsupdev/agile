@@ -150,7 +150,7 @@ public class IssuePanel
             @Override
             protected void populateItem( ListItem<User> listItem )
             {
-                listItem.add( new GravatarLinkPanel( "gravatar", listItem.getModelObject(), HeadsUpPage.DEFAULT_ICON_EDGE_LENGTH  ) );
+                listItem.add( new GravatarLinkPanel( "gravatar", listItem.getModelObject(), HeadsUpPage.DEFAULT_AVATAR_EDGE_LENGTH ) );
             }
         };
         add( watchers );
@@ -295,8 +295,8 @@ public class IssuePanel
             add( new Form( "begin-issue-form" ).setVisible( false ) );
         }
 
-        add( new GravatarLinkPanel( "gravatarReporter", issue.getReporter(), HeadsUpPage.DEFAULT_ICON_EDGE_LENGTH  ) );
-        add( new GravatarLinkPanel( "gravatarAssignee", issue.getAssignee(), HeadsUpPage.DEFAULT_ICON_EDGE_LENGTH  ) );
+        add( new GravatarLinkPanel( "gravatarReporter", issue.getReporter(), HeadsUpPage.DEFAULT_AVATAR_EDGE_LENGTH ) );
+        add( new GravatarLinkPanel( "gravatarAssignee", issue.getAssignee(), HeadsUpPage.DEFAULT_AVATAR_EDGE_LENGTH ) );
         if ( isSessionUserAssignedToIssue( issue ) )
         {
             addDropIssueButton( issue );

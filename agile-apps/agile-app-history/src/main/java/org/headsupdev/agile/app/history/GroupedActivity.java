@@ -105,7 +105,7 @@ public class GroupedActivity
                             return ( (HistoryApplication) getHeadsUpApplication() ).getEventsForProject( project, before, appTypes, ROWS_IN_GROUP );
                         }
                     }
-                }, allProject, GroupedActivity.this ) );
+                }, allProject ) );
             }
         } );
 

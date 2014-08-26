@@ -110,7 +110,7 @@ public class CommentPanel
             Link edit = new BookmarkablePageLink( "editComment", EditComment.class, params );
 
             commentTitle.add( edit.setVisible( userHasPermission ) );
-            commentTitle.add( new GravatarLinkPanel( "gravatar", comment.getUser(), HeadsUpPage.DEFAULT_ICON_EDGE_LENGTH  ) );
+            commentTitle.add( new GravatarLinkPanel( "gravatar", comment.getUser(), HeadsUpPage.DEFAULT_AVATAR_EDGE_LENGTH ) );
 
             params.add( "username", comment.getUser().getUsername() );
             params.add( "silent", "true" );
@@ -149,7 +149,7 @@ public class CommentPanel
             params.put( "durationId", duration.getId() );
             Link edit = new BookmarkablePageLink( "editComment", EditProgressIssue.class, params );
             workedTitle.add( edit.setVisible( userHasPermission ) );
-            workedTitle.add( new GravatarLinkPanel( "gravatar", duration.getUser(), HeadsUpPage.DEFAULT_ICON_EDGE_LENGTH  ) );
+            workedTitle.add( new GravatarLinkPanel( "gravatar", duration.getUser(), HeadsUpPage.DEFAULT_AVATAR_EDGE_LENGTH ) );
             Link remove = new Link( "removeComment" )
             {
                 @Override

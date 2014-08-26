@@ -102,7 +102,7 @@ public class CommentPanel
         {
             comment = (Comment) o;
             add( new Image( "icon", new ResourceReference( HeadsUpPage.class, "images/comment.png" ) ) );
-            commentTitle.add( new GravatarLinkPanel( "gravatar", comment.getUser(), HeadsUpPage.DEFAULT_ICON_EDGE_LENGTH ) );
+            commentTitle.add( new GravatarLinkPanel( "gravatar", comment.getUser(), HeadsUpPage.DEFAULT_AVATAR_EDGE_LENGTH ) );
 
             PageParameters params = new PageParameters();
             params.put( "project", project );

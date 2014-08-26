@@ -179,7 +179,7 @@ public class StoredUser
 
     public String getInitials()
     {
-        if( firstname == null || lastname == null )
+        if ( StringUtil.isEmpty( firstname ) || StringUtil.isEmpty( lastname ) )
         {
             return null;
         }

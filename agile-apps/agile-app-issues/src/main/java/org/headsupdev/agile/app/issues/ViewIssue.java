@@ -20,8 +20,6 @@ package org.headsupdev.agile.app.issues;
 
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.ResourceReference;
-import org.apache.wicket.ajax.AjaxEventBehavior;
-import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.CSSPackageResource;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -144,7 +142,7 @@ public class ViewIssue
             {
                 attachment = listItem.getModelObject();
                 PageParameters params = new PageParameters();
-                listItem.add( new GravatarLinkPanel( "avatar", attachment.getUser(), HeadsUpPage.DEFAULT_ICON_EDGE_LENGTH ) );
+                listItem.add( new GravatarLinkPanel( "avatar", attachment.getUser(), HeadsUpPage.DEFAULT_AVATAR_EDGE_LENGTH ) );
                 params.add( "username", attachment.getUser().getUsername() );
                 params.add( "silent", "true" );
                 BookmarkablePageLink usernameLink = new BookmarkablePageLink( "usernameLink", ViewIssue.this.getPageClass( "account" ), params );
