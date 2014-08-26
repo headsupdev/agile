@@ -151,7 +151,6 @@ public class View
                 attachment = listItem.getModelObject();
                 PageParameters params = new PageParameters();
                 listItem.add( new GravatarLinkPanel( "avatar", attachment.getUser(), ICON_EDGE_LENGTH ) );
-                listItem.add( new Label( "username", attachment.getUser().getFullnameOrUsername() ) );
                 params.add( "username", attachment.getUser().getUsername() );
                 params.add( "silent", "true" );
                 BookmarkablePageLink usernameLink = new BookmarkablePageLink( "usernameLink", View.this.getPageClass( "account" ), params );
