@@ -22,6 +22,7 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.ResourceReference;
 import org.apache.wicket.markup.html.CSSPackageResource;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Check;
 import org.apache.wicket.markup.html.form.CheckGroup;
@@ -144,23 +145,8 @@ public class Permissions
                     final User user = listItem.getModelObject();
                     final boolean anon;
                     listItem.add( new GravatarLinkPanel( "gravatar", user, HeadsUpPage.DEFAULT_ICON_EDGE_LENGTH ) );
-                    BookmarkablePageLink userLink;
-                    PageParameters params = new PageParameters();
-                    params.add( "username", user.getUsername() );
-                    params.add( "silent", "true" );
-                    if ( user.equals( HeadsUpSession.ANONYMOUS_USER ) )
-                    {
-                        user.getRoles().add( new AnonymousRole() );
-                        anon = true;
-                        userLink = new BookmarkablePageLink( "userLink", getPageClass(), params );
-                    }
-                    else
-                    {
-                        anon = false;
-                        userLink = new BookmarkablePageLink( "userLink", ApplicationPageMapper.get().getPageClass( "account" ), params );
-                    }
 
-                    Label username = new Label( "username", new Model<String>()
+                    Model<String> usernameModel = new Model<String>()
                     {
                         @Override
                         public String getObject()
@@ -173,8 +159,9 @@ public class Permissions
 
                             return username;
                         }
-                    } );
-                    username.add( new AttributeModifier( "class", true, new Model<String>()
+                    };
+
+                    AttributeModifier modifier = new AttributeModifier( "class", true, new Model<String>()
                     {
                         @Override
                         public String getObject()
@@ -186,9 +173,35 @@ public class Permissions
 
                             return "";
                         }
-                    } ) );
-                    userLink.add( username );
-                    listItem.add( userLink );
+                    } );
+
+                    if ( user.equals( HeadsUpSession.ANONYMOUS_USER ) )
+                    {
+                        listItem.add( new Label( "username", usernameModel ).add( modifier ) );
+                        Label usernameInLink = new Label( "usernameInLink");
+                        WebMarkupContainer userLink = new WebMarkupContainer( "userLink" );
+                        userLink.add( usernameInLink.setVisible( false ) );
+                        listItem.add( userLink.setVisible( false ) );
+                        user.getRoles().add( new AnonymousRole() );
+                        anon = true;
+                    }
+                    else
+                    {
+                        listItem.add( new Label( "username", usernameModel ).setVisible( false ) );
+                        Label usernameInLink = new Label( "usernameInLink", usernameModel );
+                        usernameInLink.add( modifier );
+                        PageParameters params = new PageParameters();
+                        params.add( "username", user.getUsername() );
+                        params.add( "silent", "true" );
+                        anon = false;
+                        BookmarkablePageLink userLink = new BookmarkablePageLink( "userLink", ApplicationPageMapper.get().getPageClass( "account" ), params );
+                        userLink.add( usernameInLink );
+                        listItem.add( userLink );
+                    }
+
+
+
+
                     Link disable = new Link( "disable" )
                     {
                         @Override

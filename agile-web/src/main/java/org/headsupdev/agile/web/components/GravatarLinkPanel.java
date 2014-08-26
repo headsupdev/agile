@@ -1,3 +1,21 @@
+/*
+ * HeadsUp Agile
+ * Copyright 2014 Heads Up Development Ltd.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package org.headsupdev.agile.web.components;
 
 import com.timgroup.jgravatar.Gravatar;
@@ -17,7 +35,6 @@ import org.headsupdev.agile.api.User;
 import org.headsupdev.agile.api.logging.Logger;
 import org.headsupdev.agile.web.ApplicationPageMapper;
 import org.headsupdev.agile.web.HeadsUpSession;
-import org.wicketstuff.jwicket.tooltip.WalterZornTips;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -26,15 +43,20 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.Security;
 
 /**
- * Created by Gordon Edwards on 12/08/2014.
+ * Component that displays the user's Gravatar if they have one, or displays an alternative image: their intials if they have
+ * provided their full name. Provides link to the user's account page.
+ *
+ * @author Gordon Edwards
+ * @version $Id$
+ * @since 2.1
  */
 public class GravatarLinkPanel
         extends Panel
 {
     private final Logger log;
+    private static final int defaultID = -1;
     private User user;
     private boolean hasGravatar;
     private ResourceReference reference;
@@ -46,16 +68,21 @@ public class GravatarLinkPanel
         log = Manager.getLogger( getClass().getName() );
 
         Image icon = null;
-        if ( user != null && !user.equals( HeadsUpSession.ANONYMOUS_USER ) )
+        if ( user != null )
         {
-            WalterZornTips tooltip = new WalterZornTips( user.getFullname() );
-            tooltip.setBgColor( "#E6E5BA" );
-            tooltip.setDelay( 0 );
-            tooltip.setShadow( true );
-            tooltip.setShadowWidth( 2 );
-            tooltip.setJumphorz( true );
+            HeadsUpTooltip tooltip = new HeadsUpTooltip( user.getFullname() );
+
             boolean displayGravatar = user.getPreference( "gravatar.show", true );
-            reference = new ResourceReference( getClass(), "" + user.getEmail().hashCode() + iconEdgeLength + displayGravatar )
+            int uniqueId;
+            if ( user.getEmail() != null )
+            {
+                uniqueId = user.getEmail().hashCode();
+            }
+            else
+            {
+                uniqueId = defaultID;
+            }
+            reference = new ResourceReference( getClass(), "" + uniqueId + iconEdgeLength + displayGravatar )
             {
                 @Override
                 protected Resource newResource()
@@ -71,17 +98,19 @@ public class GravatarLinkPanel
                     return null;
                 }
             };
-            icon = new Image( "avatar", reference );
 
-            if ( icon == null )
+            if ( user.equals( HeadsUpSession.ANONYMOUS_USER ) )
             {
-                addBlankImage();
+                icon = new Image( "avatarNoLink", reference );
+                add( new WebMarkupContainer( "link" ).setVisible( false ) );
+                add( new WebMarkupContainer( "nolink" ).add( icon ) );
                 return;
             }
+            icon = new Image( "avatar", reference );
             if ( getLink() instanceof BookmarkablePageLink )
             {
                 Link link = (Link) getLink();
-                link.add( icon.setVisible( true ) );
+                link.add( icon );
                 if ( displayHoverText() )
                 {
                     link.add( tooltip );
@@ -92,7 +121,7 @@ public class GravatarLinkPanel
             else if ( getLink() instanceof ExternalLink )
             {
                 ExternalLink link = (ExternalLink) getLink();
-                link.add( icon.setVisible( true ) );
+                link.add( icon );
                 if ( displayHoverText() )
                 {
                     link.add( tooltip );
@@ -105,6 +134,7 @@ public class GravatarLinkPanel
         {
             addBlankImage();
         }
+        add( new WebMarkupContainer( "nolink" ).add( new WebMarkupContainer( "avatarNoLink" ) ).setVisible( false ) );
     }
 
     private void addBlankImage()
@@ -119,6 +149,11 @@ public class GravatarLinkPanel
     private ByteArrayResource getIcon( User user, int iconEdgeLength )
             throws IOException
     {
+
+        if ( user.equals( HeadsUpSession.ANONYMOUS_USER ) )
+        {
+            return getDefaultResource( iconEdgeLength );
+        }
         byte[] avatarBytes = null;
         try
         {
@@ -126,6 +161,7 @@ public class GravatarLinkPanel
         }
         catch ( GravatarDownloadException e )
         {
+            log.error( "No Gravatar for user" );
         }
         hasGravatar = avatarBytes != null;
         user.setPreference( "user.hasGravatar", hasGravatar );
@@ -140,11 +176,7 @@ public class GravatarLinkPanel
             String initials = user.getInitials();
             if ( initials == null )
             {
-                InputStream stream = getClass().getClassLoader().getResourceAsStream( "/org/headsupdev/agile/web/images/person-icon.png" );
-                alternativeIcon = ImageIO.read( stream );
-                byte[] iconBytes = getImageBytes( alternativeIcon );
-                iconBytes = scale( iconBytes, iconEdgeLength, iconEdgeLength );
-                return new ByteArrayResource( "image/jpeg", iconBytes );
+                return getDefaultResource( iconEdgeLength );
             }
             int stringLen = (int) graphics.getFontMetrics().getStringBounds( initials, graphics ).getWidth();
             int start = iconEdgeLength / 2 - stringLen / 2;
@@ -191,8 +223,11 @@ public class GravatarLinkPanel
     public Object getLink()
     {
         PageParameters params = new PageParameters();
-        params.add( "username", user.getUsername() );
-        params.add( "silent", "true" );
+        if ( user != HeadsUpSession.ANONYMOUS_USER )
+        {
+            params.add( "username", user.getUsername() );
+            params.add( "silent", "true" );
+        }
         return new BookmarkablePageLink( "link", ApplicationPageMapper.get().getPageClass( "account" ), params );
     }
 
@@ -201,4 +236,13 @@ public class GravatarLinkPanel
         return true;
     }
 
+    public ByteArrayResource getDefaultResource( int iconEdgeLength )
+            throws IOException
+    {
+        InputStream stream = getClass().getClassLoader().getResourceAsStream( "/org/headsupdev/agile/web/images/person-icon.png" );
+        BufferedImage alternativeIcon = ImageIO.read( stream );
+        byte[] iconBytes = getImageBytes( alternativeIcon );
+        iconBytes = scale( iconBytes, iconEdgeLength, iconEdgeLength );
+        return new ByteArrayResource( "image/jpeg", iconBytes );
+    }
 }
