@@ -70,9 +70,7 @@ public class ViewMilestone
     private MilestonesDAO dao = new MilestonesDAO();
 
     private Milestone milestone;
-    private HeadsUpPage page;
     private IssueFilterPanel filter;
-    private int ICON_EDGE_LENGTH = 30;
     public Permission getRequiredPermission()
     {
         return new MilestoneViewPermission();
@@ -81,7 +79,6 @@ public class ViewMilestone
     public void layout()
     {
         super.layout();
-        page = this;
         add( CSSPackageResource.getHeaderContribution( getClass(), "milestone.css" ) );
 
         String name = getPageParameters().getString( "id" );
