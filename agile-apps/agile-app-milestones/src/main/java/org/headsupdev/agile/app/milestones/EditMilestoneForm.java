@@ -66,7 +66,16 @@ public class EditMilestoneForm
         {
             public void onSubmit()
             {
-                if ( !creating )
+                if ( creating )
+                {
+                    if ( milestone.getGroup() != null )
+                    {
+                        MilestoneGroup group = milestone.getGroup();
+                        group = (MilestoneGroup) ( (HibernateStorage) owner.getStorage() ).getHibernateSession().merge( group );
+                        milestone.setGroup( group );
+                    }
+                }
+                else
                 {
                     milestone = (Milestone) ( (HibernateStorage) owner.getStorage() ).getHibernateSession().merge( milestone );
                 }
