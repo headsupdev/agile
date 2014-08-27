@@ -18,16 +18,13 @@
 
 package org.headsupdev.agile.app.issues.event;
 
-import org.apache.wicket.markup.html.panel.Panel;
 import org.headsupdev.agile.api.Project;
 import org.headsupdev.agile.api.User;
-import org.headsupdev.agile.app.issues.CommentPanel;
 import org.headsupdev.agile.app.issues.IssuesApplication;
 import org.headsupdev.agile.app.issues.ViewIssue;
 import org.headsupdev.agile.storage.Comment;
 import org.headsupdev.agile.storage.issues.Issue;
 import org.headsupdev.agile.web.AbstractEvent;
-import org.headsupdev.agile.web.RenderUtil;
 import org.headsupdev.agile.web.components.issues.IssueListPanel;
 
 import javax.persistence.DiscriminatorValue;
