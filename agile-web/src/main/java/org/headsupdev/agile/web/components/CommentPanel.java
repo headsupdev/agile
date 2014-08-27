@@ -50,7 +50,7 @@ import java.util.List;
  * @author Gordon Edwards
  * @since 2.1
  */
-public abstract class CommentPanel<T extends CommentableEntity>
+public class CommentPanel<T extends CommentableEntity>
         extends Panel
 {
     protected Permission permission;
@@ -83,9 +83,15 @@ public abstract class CommentPanel<T extends CommentableEntity>
             boolean userHasPermission = Manager.getSecurityInstance().userHasPermission( currentUser, permission, project );
             comment = (Comment) o;
             add( new Image( "icon", new ResourceReference( HeadsUpPage.class, "images/comment.png" ) ) );
-
-            Link edit = getLink();
-            commentTitle.add( edit.setVisible( userHasPermission ) );
+            if ( getLink() != null )
+            {
+                Link edit = getLink();
+                commentTitle.add( edit.setVisible( userHasPermission ) );
+            }
+            else
+            {
+                commentTitle.add( new WebMarkupContainer( "editComment" ) );
+            }
             commentTitle.add( new GravatarLinkPanel( "gravatar", comment.getUser(), HeadsUpPage.DEFAULT_AVATAR_EDGE_LENGTH ) );
 
             PageParameters params = new PageParameters();
@@ -209,9 +215,15 @@ public abstract class CommentPanel<T extends CommentableEntity>
     {
     }
 
-    public abstract void showConfirmDialog( ConfirmDialog dialog, AjaxRequestTarget target );
+    public void showConfirmDialog( ConfirmDialog dialog, AjaxRequestTarget target )
+    {
 
-    public abstract Link getLink();
+    }
+
+    public Link getLink()
+    {
+        return null;
+    }
 
     public Comment getComment()
     {

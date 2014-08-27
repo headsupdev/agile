@@ -59,7 +59,7 @@ import java.util.List;
  * @since 2.1
  */
 
-public abstract class IssueCommentPanel
+public class IssueCommentPanel
         extends CommentPanel
 {
     public IssueCommentPanel( String id, IModel model, Project project, List commentList, CommentableEntity commentableEntity )

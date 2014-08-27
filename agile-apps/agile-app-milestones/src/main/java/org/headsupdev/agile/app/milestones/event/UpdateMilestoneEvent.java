@@ -18,19 +18,23 @@
 
 package org.headsupdev.agile.app.milestones.event;
 
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 import org.headsupdev.agile.api.Project;
 import org.headsupdev.agile.api.User;
-import org.headsupdev.agile.app.milestones.CommentPanel;
 import org.headsupdev.agile.app.milestones.MilestonesApplication;
 import org.headsupdev.agile.app.milestones.ViewMilestone;
+import org.headsupdev.agile.app.milestones.permission.MilestoneEditPermission;
 import org.headsupdev.agile.storage.Comment;
 import org.headsupdev.agile.storage.dao.MilestonesDAO;
 import org.headsupdev.agile.storage.issues.Milestone;
 import org.headsupdev.agile.web.AbstractEvent;
 import org.headsupdev.agile.web.RenderUtil;
+import org.headsupdev.agile.web.components.CommentPanel;
 import org.headsupdev.agile.web.components.PercentagePanel;
+import org.headsupdev.agile.web.dialogs.ConfirmDialog;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -125,7 +129,7 @@ public class UpdateMilestoneEvent
         {
             public Panel getPanel()
             {
-                return new CommentPanel( RenderUtil.PANEL_ID, new Model( comment ), getProject(), null, milestone );
+                return new CommentPanel<Milestone>( RenderUtil.PANEL_ID, new Model( comment ), getProject(), null, milestone, new MilestoneEditPermission() );
             }
         }.getRenderedContent();
 

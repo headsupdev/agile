@@ -18,17 +18,20 @@
 
 package org.headsupdev.agile.app.issues.event;
 
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 import org.headsupdev.agile.api.Project;
 import org.headsupdev.agile.api.User;
-import org.headsupdev.agile.app.issues.CommentPanel;
+import org.headsupdev.agile.app.issues.IssueCommentPanel;
 import org.headsupdev.agile.app.issues.IssuesApplication;
 import org.headsupdev.agile.storage.Comment;
 import org.headsupdev.agile.storage.issues.Issue;
 import org.headsupdev.agile.web.AbstractEvent;
 import org.headsupdev.agile.web.RenderUtil;
 import org.headsupdev.agile.web.components.issues.IssueListPanel;
+import org.headsupdev.agile.web.dialogs.ConfirmDialog;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -110,7 +113,7 @@ public class CommentEvent
         {
             public Panel getPanel()
             {
-                return new CommentPanel( RenderUtil.PANEL_ID, new Model( comment ), getProject(), null, issue );
+                return new IssueCommentPanel( RenderUtil.PANEL_ID, new Model( comment ), getProject(), null, issue );
             }
         }.getRenderedContent();
 
