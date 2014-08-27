@@ -1,0 +1,66 @@
+<!--
+  ~ HeadsUp Agile
+  ~ Copyright 2014 Heads Up Development Ltd.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<html>
+<body>
+<wicket:panel>
+  <tr>
+    <td class="comment-icon">
+      <img wicket:id="icon" />
+    </td>
+    <td class="comment-title" wicket:id="comment-title">
+          <span style="display:inline" wicket:id="gravatar">
+          </span>
+          <span class="comment-text">
+            Comment added by <a wicket:id="usernameLink"><span wicket:id="username">username</span></a>
+            on <span wicket:id="created">created</span>
+            <a wicket:id="editComment" href="#" title="edit">
+              <img src="/resources/org.headsupdev.agile.web.HeadsUpPage/images/comment_edit.png" />
+            </a>
+            <a wicket:id="removeComment" href="#" title="delete">
+              <img src="/resources/org.headsupdev.agile.web.HeadsUpPage/images/comment_delete.png" />
+            </a>
+          </span>
+    </td>
+    <td class="comment-title" wicket:id="worked-title">
+      <div style="display:inline" wicket:id="gravatar">
+      </div>
+          <span class="comment-text">
+            <span wicket:id="worked">0h</span> work logged by <a wicket:id="usernameLink"><span wicket:id="username">username</span></a>
+            on <span wicket:id="created">created</span>
+            <a wicket:id="editComment" href="#" title="edit">
+              <img src="/resources/org.headsupdev.agile.web.HeadsUpPage/images/clock_edit.png" />
+            </a>
+            <a wicket:id="removeComment" href="#" title="delete">
+              <img src="/resources/org.headsupdev.agile.web.HeadsUpPage/images/clock_delete.png" />
+            </a>
+          </span>
+    </td>
+  </tr>
+  <wicket:enclosure>
+    <tr>
+      <td colspan="2" wicket:id="comment">comment</td>
+    </tr>
+  </wicket:enclosure>
+  <tr>
+    <td colspan="2">&nbsp;</td>
+  </tr>
+
+</wicket:panel>
+</body>
+</html>

@@ -55,6 +55,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -252,15 +253,26 @@ public class ViewIssue
                 return date1.compareTo( date2 );
             }
         } );
-        add( new ListView( "comments", commentList )
+        add( new ListView<Serializable>( "comments", commentList )
         {
             protected void populateItem( final ListItem listItem )
             {
-                CommentPanel panel = new CommentPanel( "comment", listItem.getModel(), getProject(), commentList, issue ){
+                IssueCommentPanel panel = new IssueCommentPanel( "comment", listItem.getModel(), getProject(), commentList, issue )
+                {
                     @Override
                     public void showConfirmDialog( ConfirmDialog dialog, AjaxRequestTarget target )
                     {
                         showDialog( dialog, target );
+                    }
+
+                    @Override
+                    public Link getLink()
+                    {
+                        PageParameters params = new PageParameters();
+                        params.put( "project", getProject() );
+                        params.put( "id", issue.getId() );
+                        params.put( "commentId", getComment().getId() );
+                        return new BookmarkablePageLink( "editComment", EditComment.class, params );
                     }
                 };
                 listItem.add( panel );

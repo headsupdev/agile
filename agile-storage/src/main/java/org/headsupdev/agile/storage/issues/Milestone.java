@@ -23,6 +23,7 @@ import org.headsupdev.agile.api.Project;
 import org.headsupdev.agile.api.SearchResult;
 import org.headsupdev.agile.api.rest.Publish;
 import org.headsupdev.agile.storage.Comment;
+import org.headsupdev.agile.storage.CommentableEntity;
 import org.headsupdev.agile.storage.HibernateStorage;
 import org.headsupdev.agile.storage.hibernate.NameProjectBridge;
 import org.headsupdev.agile.storage.hibernate.NameProjectId;
@@ -46,7 +47,7 @@ import java.util.Set;
 @Table(name = "Milestones")
 @Indexed(index = "Milestones")
 public class Milestone
-        implements Serializable, SearchResult
+        implements Serializable, SearchResult, CommentableEntity
 {
     @EmbeddedId
     @DocumentId

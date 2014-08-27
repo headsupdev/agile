@@ -19,6 +19,7 @@
 package org.headsupdev.agile.storage.docs;
 
 import org.headsupdev.agile.api.*;
+import org.headsupdev.agile.storage.CommentableEntity;
 import org.headsupdev.agile.storage.hibernate.NameProjectBridge;
 import org.headsupdev.agile.storage.hibernate.NameProjectId;
 import org.headsupdev.agile.storage.StoredUser;
@@ -45,7 +46,7 @@ import org.hibernate.search.annotations.*;
 @Table( name = "Documents" )
 @Indexed( index = "Documents" )
 public class Document
-    implements Serializable, SearchResult, Comparable<Document>
+    implements Serializable, SearchResult, Comparable<Document>, CommentableEntity
 {
     public static final String DEFAULT_PAGE = "Welcome";
     @EmbeddedId
