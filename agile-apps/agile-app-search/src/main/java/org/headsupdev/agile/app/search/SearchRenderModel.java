@@ -161,7 +161,7 @@ public class SearchRenderModel
         return null;
     }
 
-    private void renderField( String field, String content, List<String> matches, StringBuffer out )
+    void renderField( String field, String content, List<String> matches, StringBuffer out )
     {
         List<RenderedMatch> renderedMatches = new LinkedList<RenderedMatch>();
 
@@ -175,6 +175,7 @@ public class SearchRenderModel
             return;
         }
 
+        renderedMatches = findNonSubstringMatches( renderedMatches );
         Collections.sort( renderedMatches );
 
         int renderStart = renderedMatches.get( 0 ).getStart() - BUFFER_CHARS;
@@ -218,6 +219,44 @@ public class SearchRenderModel
         {
             out.append( "..." );
         }
+    }
+
+    private List<RenderedMatch> findNonSubstringMatches( List<RenderedMatch> renderedMatches )
+    {
+        Collections.sort( renderedMatches, new Comparator<RenderedMatch>()
+                {
+                    @Override
+                    public int compare( RenderedMatch renderedMatch, RenderedMatch renderedMatch2 )
+                    {
+                        int length1 = renderedMatch.getEnd() - renderedMatch.getStart();
+                        int length2 = renderedMatch2.getEnd() - renderedMatch.getEnd();
+                        return length1 - length2;
+                    }
+                } );
+        Iterator<RenderedMatch> matchIter = renderedMatches.iterator();
+        ArrayList<RenderedMatch> out = new ArrayList<RenderedMatch>( renderedMatches.size() );
+
+        while ( matchIter.hasNext() )
+        {
+            RenderedMatch match = matchIter.next();
+            boolean addMatch = true;
+
+            for ( RenderedMatch supermatch : out )
+            {
+                if ( match.getStart() >= supermatch.getStart() && match.getEnd() <= supermatch.getEnd() )
+                {
+                    addMatch = false;
+                    break;
+                }
+            }
+
+            if ( addMatch )
+            {
+                out.add( match );
+            }
+        }
+
+        return out;
     }
 
     private List<RenderedMatch> renderMatch( String field, String content, String match )

@@ -168,7 +168,7 @@ public class Search
         if ( e.getDescription().contains( "fieldWeight" ) )
         {
             String desc = e.getDescription();
-            String sub = desc.substring(desc.indexOf('(') + 1, desc.indexOf(')') );
+            String sub = desc.substring( desc.indexOf( '(' ) + 1, desc.indexOf( ')' ) );
 
             int colon = sub.indexOf( ':' );
             String field = sub.substring( 0, colon );
