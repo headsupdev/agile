@@ -90,7 +90,7 @@ public class CommentPanel<T extends CommentableEntity>
             }
             else
             {
-                commentTitle.add( new WebMarkupContainer( "editComment" ) );
+                commentTitle.add( new WebMarkupContainer( "editComment" ).setVisible( false ) );
             }
             commentTitle.add( new GravatarLinkPanel( "gravatar", comment.getUser(), HeadsUpPage.DEFAULT_AVATAR_EDGE_LENGTH ) );
 
