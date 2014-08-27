@@ -142,11 +142,12 @@ public class IssuePanel
                 setVisible( issue.getOrder() != null ) );
         watchers = new ListView<User>( "watchers", new ArrayList<User>( issue.getWatchers() ) )
         {
-
             @Override
             protected void populateItem( ListItem<User> listItem )
             {
-                listItem.add( new GravatarLinkPanel( "gravatar", listItem.getModelObject(), HeadsUpPage.DEFAULT_AVATAR_EDGE_LENGTH ) );
+                User user = listItem.getModelObject();
+                GravatarLinkPanel gravatarLinkPanel = new GravatarLinkPanel( "gravatar", user, HeadsUpPage.DEFAULT_AVATAR_EDGE_LENGTH );
+                listItem.add( gravatarLinkPanel.setVisible( user != null ) );
             }
         };
         add( watchers );
@@ -291,8 +292,10 @@ public class IssuePanel
             add( new Form( "begin-issue-form" ).setVisible( false ) );
         }
 
-        add( new GravatarLinkPanel( "gravatarReporter", issue.getReporter(), HeadsUpPage.DEFAULT_AVATAR_EDGE_LENGTH ) );
-        add( new GravatarLinkPanel( "gravatarAssignee", issue.getAssignee(), HeadsUpPage.DEFAULT_AVATAR_EDGE_LENGTH ) );
+        GravatarLinkPanel gravatarLinkReporter = new GravatarLinkPanel( "gravatarReporter", issue.getReporter(), HeadsUpPage.DEFAULT_AVATAR_EDGE_LENGTH );
+        add( gravatarLinkReporter.setVisible( issue.getReporter() != null ) );
+        GravatarLinkPanel gravatarLinkAssignee = new GravatarLinkPanel( "gravatarAssignee", issue.getAssignee(), HeadsUpPage.DEFAULT_AVATAR_EDGE_LENGTH );
+        add( gravatarLinkAssignee.setVisible( issue.getAssignee() != null ) );
         if ( isSessionUserAssignedToIssue( issue ) )
         {
             addDropIssueButton( issue );
