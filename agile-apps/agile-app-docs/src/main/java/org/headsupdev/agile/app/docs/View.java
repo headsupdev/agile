@@ -183,7 +183,7 @@ public class View
                                 doc = (Document) ( (HibernateStorage) getStorage() ).getHibernateSession().merge( doc );
                                 attachmentList.remove( attachment );
                                 doc.getAttachments().remove( attachment );
-                                ((HibernateStorage) getStorage() ).delete( attachment );
+                                ( (HibernateStorage) getStorage() ).delete( attachment );
                                 attachment.getFile( getStorage() ).delete();
                             }
                         };
@@ -218,7 +218,8 @@ public class View
         {
             protected void populateItem( ListItem<Comment> listItem )
             {
-                listItem.add( new CommentPanel( "comment", listItem.getModel(), getProject(), commentList, doc ){
+                listItem.add( new CommentPanel<Document>( "comment", listItem.getModel(), getProject(), commentList, doc, new DocEditPermission() )
+                {
                     @Override
                     public void showConfirmDialog( ConfirmDialog dialog, AjaxRequestTarget target )
                     {

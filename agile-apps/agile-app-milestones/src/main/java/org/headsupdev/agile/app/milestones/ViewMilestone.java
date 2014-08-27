@@ -111,7 +111,8 @@ public class ViewMilestone
         {
             protected void populateItem( ListItem<Comment> listItem )
             {
-                CommentPanel panel = new CommentPanel( "comment", listItem.getModel(), getProject(), commentList, milestone ){
+                CommentPanel panel = new CommentPanel<Milestone>( "comment", listItem.getModel(), getProject(), commentList, milestone, new MilestoneEditPermission() )
+                {
                     @Override
                     public void showConfirmDialog( ConfirmDialog dialog, AjaxRequestTarget target )
                     {

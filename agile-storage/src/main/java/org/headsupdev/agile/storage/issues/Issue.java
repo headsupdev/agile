@@ -423,7 +423,7 @@ public class Issue
         return reverseRelationships;
     }
 
-    public void addComment(Comment comment)
+    public void addComment( Comment comment )
     {
         comments.add( comment );
     }
