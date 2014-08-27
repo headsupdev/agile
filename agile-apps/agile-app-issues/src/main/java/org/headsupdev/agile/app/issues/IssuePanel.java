@@ -444,9 +444,4 @@ public class IssuePanel
         return ret;
     }
 
-    public ListView<User> getWatchers()
-    {
-        return watchers;
-    }
-
 }
