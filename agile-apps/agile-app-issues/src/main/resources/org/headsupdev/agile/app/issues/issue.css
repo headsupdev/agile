@@ -60,3 +60,9 @@ table.comments td, table.attachments td {
 .sidebar {
     border-left: 1px solid #c3c3c3 !important;
 }
+
+.comment-text {
+    position:relative;
+    bottom:10px;
+    left:5px
+}

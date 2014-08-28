@@ -1,6 +1,6 @@
 <!--
   ~ HeadsUp Agile
-  ~ Copyright 2009-2013 Heads Up Development Ltd.
+  ~ Copyright 2009-2014 Heads Up Development Ltd.
   ~
   ~ This program is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU Affero General Public License as
@@ -52,10 +52,10 @@
         </tr>
         <tr>
           <th class="reporter">Reported By</th>
-          <td class="reporter"><a wicket:id="reporter-link"><span wicket:id="reporter">reporter</span></a></td>
+          <td class="reporter"><span wicket:id="gravatarReporter"></span></td>
           <th class="assigned">Assigned To</th>
           <td class="assigned">
-              <span wicket:id="assigned-link">assigned</span>
+              <span wicket:id="gravatarAssignee"></span>
               <form wicket:id="drop-issue-form" style="display: inline">
                   <input type="submit" wicket:id="drop-issue" value="drop" />
               </form>
@@ -63,7 +63,12 @@
         </tr>
         <tr>
           <th class="watchers">Watched By</th>
-          <td class="watchers" wicket:id="watchers"></td>
+          <td class="watchers">
+            <wicket:container wicket:id="watchers">
+              <span style="display:inline" wicket:id="gravatar">
+              </span>
+            </wicket:container>
+          </td>
           <wicket:enclosure child="order">
           <th class="order">Order</th>
           <td class="order" wicket:id="order"></td>

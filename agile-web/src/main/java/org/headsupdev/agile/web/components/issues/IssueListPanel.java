@@ -43,6 +43,7 @@ import org.headsupdev.agile.storage.issues.Milestone;
 import org.headsupdev.agile.web.DurationTextField;
 import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.HeadsUpSession;
+import org.headsupdev.agile.web.components.HeadsUpTooltip;
 import org.headsupdev.agile.web.components.IssueTypeDropDownChoice;
 import org.headsupdev.agile.web.components.StripedDataView;
 import org.headsupdev.agile.web.components.UserDropDownChoice;
@@ -286,6 +287,7 @@ public class IssueListPanel
     {
         User currentUser = ( (HeadsUpSession) getSession() ).getUser();
         quickAdd = new WebMarkupContainer( "quickAdd" );
+        quickAdd.add( new HeadsUpTooltip( "Quick-add an issue" ) );
         quickAdd.setVisible( Permissions.canEditIssue( currentUser, page.getProject() ) );
 
         icon = new WebMarkupContainer( "icon" );

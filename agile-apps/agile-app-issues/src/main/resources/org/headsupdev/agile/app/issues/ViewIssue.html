@@ -44,7 +44,14 @@
               <img src="/resources/org.headsupdev.agile.web.HeadsUpPage/images/page_white_delete.png"/>
             </a>
           </td>
-          <td class="attachment-username" wicket:id="username">username</td>
+          <td class="attachment-username">
+            <div wicket:id="avatar"></div>
+            <div>
+              <a wicket:id="usernameLink">
+                <span wicket:id="username">username</span>
+              </a>
+            </div>
+          </td>
           <td class="attachment-created" wicket:id="created">created</td>
         </tr>
         <wicket:enclosure>

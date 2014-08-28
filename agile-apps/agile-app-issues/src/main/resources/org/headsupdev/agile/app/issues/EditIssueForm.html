@@ -42,7 +42,10 @@
           </tr>
           <tr>
             <th class="reporter">Reported By</th>
-            <td wicket:id="reporter" class="reporter">reporter</td>
+            <td class="reporter">
+              <div wicket:id="reporterGravatar">
+              </div>
+            </td>
             <th class="assigned">Assigned To</th>
             <td class="assigned">
               <select wicket:id="assignee"><option>admin</option></select>
@@ -56,7 +59,10 @@
                 <input type="checkbox" wicket:id="toggleWatchers"/>
                 watch this issue
               </wicket:enclosure>
-              <div wicket:id="watchers"></div>
+              <wicket:container wicket:id="watchers">
+                <div style="display:inline" wicket:id="gravatar">
+                </div>
+              </wicket:container>
             </td>
             <th class="order">Order</th>
             <td class="order"><input type="text" wicket:id="order" /></td>

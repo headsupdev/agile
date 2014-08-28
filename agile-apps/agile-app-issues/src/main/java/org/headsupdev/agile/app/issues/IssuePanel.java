@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2013 Heads Up Development Ltd.
+ * Copyright 2009-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -18,6 +18,17 @@
 
 package org.headsupdev.agile.app.issues;
 
+import org.apache.wicket.PageParameters;
+import org.apache.wicket.ResourceReference;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.image.Image;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.markup.html.panel.Panel;
 import org.headsupdev.agile.api.Manager;
 import org.headsupdev.agile.api.Project;
 import org.headsupdev.agile.api.User;
@@ -32,36 +43,12 @@ import org.headsupdev.agile.web.ApplicationPageMapper;
 import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.HeadsUpSession;
 import org.headsupdev.agile.web.RenderUtil;
-import org.headsupdev.agile.web.components.AccountFallbackLink;
-import org.headsupdev.agile.web.components.FormattedDateModel;
-import org.headsupdev.agile.web.components.MarkedUpTextModel;
-import org.headsupdev.agile.web.components.OnePressSubmitButton;
-import org.headsupdev.agile.web.components.issues.IssueHoursEstimateModel;
-import org.headsupdev.agile.web.components.issues.IssueHoursRequiredModel;
-import org.headsupdev.agile.web.components.issues.IssueListPanel;
-import org.headsupdev.agile.web.components.issues.IssueStatusModifier;
-import org.headsupdev.agile.web.components.issues.IssueUtils;
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.ResourceReference;
-import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.image.Image;
-import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.Model;
+import org.headsupdev.agile.web.components.*;
+import org.headsupdev.agile.web.components.issues.*;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * A panel which shows the details of an issue with icons and links to milestones etc
@@ -72,6 +59,8 @@ import java.util.List;
 public class IssuePanel
         extends Panel
 {
+    private final ListView<User> watchers;
+
     public IssuePanel( String id, final Issue issue )
     {
         super( id );
@@ -151,14 +140,17 @@ public class IssuePanel
         }
         add( new Label( "order", issue.getOrder() == null ? "" : String.valueOf( issue.getOrder() ) ).
                 setVisible( issue.getOrder() != null ) );
-        add( new Label( "watchers", new Model<String>()
+        watchers = new ListView<User>( "watchers", new ArrayList<User>( issue.getWatchers() ) )
         {
             @Override
-            public String getObject()
+            protected void populateItem( ListItem<User> listItem )
             {
-                return IssueUtils.getWatchersDescription( issue, getSessionUser() );
+                User user = listItem.getModelObject();
+                GravatarLinkPanel gravatarLinkPanel = new GravatarLinkPanel( "gravatar", user, HeadsUpPage.DEFAULT_AVATAR_EDGE_LENGTH );
+                listItem.add( gravatarLinkPanel.setVisible( user != null ) );
             }
-        } ) );
+        };
+        add( watchers );
 
         // TODO move the relationship comparators out of here, they are basically the same but opposite end of relationship compared
         List<IssueRelationship> relationships = new LinkedList<IssueRelationship>();
@@ -291,21 +283,19 @@ public class IssuePanel
         } );
 
         add( new Label( "status", IssueUtils.getStatusDescription( issue ) ) );
-        if ( canSessionUserBeginIssue(issue) )
+        if ( canSessionUserBeginIssue( issue ) )
         {
-            addBeginIssueButton(issue);
+            addBeginIssueButton( issue );
         }
         else
         {
             add( new Form( "begin-issue-form" ).setVisible( false ) );
         }
-        params = getProjectPageParameters( issue.getProject() );
-        params.add( "username", issue.getReporter().getUsername() );
-        Link reporterLink = new BookmarkablePageLink( "reporter-link", userPage, params );
-        reporterLink.add( new Label( "reporter", issue.getReporter().getFullnameOrUsername() ) );
-        add( reporterLink );
 
-        add( new AccountFallbackLink( "assigned-link", issue.getAssignee() ) );
+        GravatarLinkPanel gravatarLinkReporter = new GravatarLinkPanel( "gravatarReporter", issue.getReporter(), HeadsUpPage.DEFAULT_AVATAR_EDGE_LENGTH );
+        add( gravatarLinkReporter.setVisible( issue.getReporter() != null ) );
+        GravatarLinkPanel gravatarLinkAssignee = new GravatarLinkPanel( "gravatarAssignee", issue.getAssignee(), HeadsUpPage.DEFAULT_AVATAR_EDGE_LENGTH );
+        add( gravatarLinkAssignee.setVisible( issue.getAssignee() != null ) );
         if ( isSessionUserAssignedToIssue( issue ) )
         {
             addDropIssueButton( issue );
@@ -381,7 +371,7 @@ public class IssuePanel
 
     private User getSessionUser()
     {
-        return ((HeadsUpSession) getSession()).getUser();
+        return ( (HeadsUpSession) getSession() ).getUser();
     }
 
     private void addDropIssueButton( final Issue issue )
@@ -427,7 +417,7 @@ public class IssuePanel
                 super.onSubmit();
 
                 issue.setAssignee( getSessionUser() );
-                issue.getWatchers().add(getSessionUser());
+                issue.getWatchers().add( getSessionUser() );
                 issue.setStatus( Issue.STATUS_INPROGRESS );
                 issue.setUpdated( new Date() );
 
@@ -453,4 +443,5 @@ public class IssuePanel
 
         return ret;
     }
+
 }

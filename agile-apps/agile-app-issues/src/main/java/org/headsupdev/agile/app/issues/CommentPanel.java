@@ -41,7 +41,9 @@ import org.headsupdev.agile.storage.issues.Issue;
 import org.headsupdev.agile.storage.resource.DurationWorked;
 import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.HeadsUpSession;
+import org.headsupdev.agile.web.RenderUtil;
 import org.headsupdev.agile.web.components.FormattedDateModel;
+import org.headsupdev.agile.web.components.GravatarLinkPanel;
 import org.headsupdev.agile.web.components.MarkedUpTextModel;
 import org.headsupdev.agile.web.dialogs.ConfirmDialog;
 
@@ -111,7 +113,13 @@ public class CommentPanel
             Link edit = new BookmarkablePageLink( "editComment", EditComment.class, params );
 
             commentTitle.add( edit.setVisible( userHasPermission ) );
-            commentTitle.add( new Label( "username", comment.getUser().getFullnameOrUsername() ) );
+            commentTitle.add( new GravatarLinkPanel( "gravatar", comment.getUser(), HeadsUpPage.DEFAULT_AVATAR_EDGE_LENGTH ) );
+
+            params.add( "username", comment.getUser().getUsername() );
+            params.add( "silent", "true" );
+            BookmarkablePageLink usernameLink = new BookmarkablePageLink( "usernameLink", RenderUtil.getPageClass( "account" ), params );
+            usernameLink.add( new Label( "username", comment.getUser().getFullnameOrUsername() ) );
+            commentTitle.add( usernameLink );
             commentTitle.add( new Label( "created", new FormattedDateModel( comment.getCreated(),
                     ( (HeadsUpSession) getSession() ).getTimeZone() ) ) );
             add( new Label( "comment", new MarkedUpTextModel( comment.getComment(), project ) )
@@ -152,6 +160,7 @@ public class CommentPanel
             params.put( "durationId", duration.getId() );
             Link edit = new BookmarkablePageLink( "editComment", EditProgressIssue.class, params );
             workedTitle.add( edit.setVisible( userHasPermission ) );
+            workedTitle.add( new GravatarLinkPanel( "gravatar", duration.getUser(), HeadsUpPage.DEFAULT_AVATAR_EDGE_LENGTH ) );
 
             Link remove = new AjaxFallbackLink( "removeComment" )
             {
@@ -188,7 +197,11 @@ public class CommentPanel
                 time = worked.getWorked().toString();
             }
             workedTitle.add( new Label( "worked", time ) );
-            workedTitle.add( new Label( "username", worked.getUser().getFullnameOrUsername() ) );
+            params.add( "username", duration.getUser().getUsername() );
+            params.add( "silent", "true" );
+            BookmarkablePageLink usernameLink = new BookmarkablePageLink( "usernameLink", RenderUtil.getPageClass( "account" ), params );
+            usernameLink.add( new Label( "username", duration.getUser().getFullnameOrUsername() ) );
+            workedTitle.add( usernameLink );
             workedTitle.add( new Label( "created", new FormattedDateModel( worked.getDay(),
                     ( (HeadsUpSession) getSession() ).getTimeZone() ) ) );
 

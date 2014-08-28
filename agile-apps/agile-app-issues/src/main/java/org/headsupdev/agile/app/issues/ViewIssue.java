@@ -26,6 +26,7 @@ import org.apache.wicket.markup.html.CSSPackageResource;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.image.Image;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.DownloadLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -46,6 +47,7 @@ import org.headsupdev.agile.storage.resource.DurationWorked;
 import org.headsupdev.agile.web.*;
 import org.headsupdev.agile.web.components.EmbeddedFilePanel;
 import org.headsupdev.agile.web.components.FormattedDateModel;
+import org.headsupdev.agile.web.components.GravatarLinkPanel;
 import org.headsupdev.agile.web.components.MarkedUpTextModel;
 import org.headsupdev.agile.web.components.issues.IssueListPanel;
 import org.headsupdev.agile.web.dialogs.ConfirmDialog;
@@ -69,6 +71,7 @@ public class ViewIssue
     private long issueId;
     private Issue issue;
     private boolean watching;
+    private IssuePanel issuePanel;
 
     public Permission getRequiredPermission()
     {
@@ -121,8 +124,8 @@ public class ViewIssue
             } );
         }
         addLinks( links );
-
-        add( new IssuePanel( "issue", issue ) );
+        issuePanel = new IssuePanel( "issue", issue );
+        add( issuePanel );
 
         final List<Attachment> attachmentList = new LinkedList<Attachment>();
         attachmentList.addAll( issue.getAttachments() );
@@ -141,8 +144,13 @@ public class ViewIssue
             protected void populateItem( ListItem<Attachment> listItem )
             {
                 attachment = listItem.getModelObject();
-
-                listItem.add( new Label( "username", attachment.getUser().getFullnameOrUsername() ) );
+                PageParameters params = new PageParameters();
+                listItem.add( new GravatarLinkPanel( "avatar", attachment.getUser(), HeadsUpPage.DEFAULT_AVATAR_EDGE_LENGTH ) );
+                params.add( "username", attachment.getUser().getUsername() );
+                params.add( "silent", "true" );
+                BookmarkablePageLink usernameLink = new BookmarkablePageLink( "usernameLink", ViewIssue.this.getPageClass( "account" ), params );
+                usernameLink.add( new Label( "username", attachment.getUser().getFullnameOrUsername() ) );
+                listItem.add( usernameLink );
                 listItem.add( new Label( "created", new FormattedDateModel( attachment.getCreated(),
                         ( (HeadsUpSession) getSession() ).getTimeZone() ) ) );
 
@@ -320,7 +328,7 @@ public class ViewIssue
         Transaction tx = session.beginTransaction();
         session.update( issue );
         tx.commit();
-
+        setResponsePage( ApplicationPageMapper.get().getPageClass( "issues/view" ), getPageParameters() );
         watching = !watching;
     }
 }
