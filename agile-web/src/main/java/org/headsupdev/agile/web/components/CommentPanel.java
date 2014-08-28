@@ -33,7 +33,6 @@ import org.headsupdev.agile.api.*;
 import org.headsupdev.agile.storage.Comment;
 import org.headsupdev.agile.storage.CommentableEntity;
 import org.headsupdev.agile.storage.HibernateStorage;
-import org.headsupdev.agile.storage.resource.DurationWorked;
 import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.HeadsUpSession;
 import org.headsupdev.agile.web.RenderUtil;
@@ -58,8 +57,7 @@ public class CommentPanel<T extends CommentableEntity>
     protected List commentList;
     protected Project project;
     private Comment comment;
-    protected WebMarkupContainer commentTitle;
-    protected WebMarkupContainer workedTitle;
+//    protected WebMarkupContainer workedTitle;
 
     public CommentPanel( String id, IModel model, Project project, List commentList, T commentable, Permission permission )
     {
@@ -74,8 +72,8 @@ public class CommentPanel<T extends CommentableEntity>
     private void layout()
     {
         Object o = getDefaultModel().getObject();
-        commentTitle = new WebMarkupContainer( "comment-title" );
-        workedTitle = new WebMarkupContainer( "worked-title" );
+        WebMarkupContainer commentTitle = new WebMarkupContainer( "comment-title" );
+//        workedTitle = new WebMarkupContainer( "worked-title" );
 
         if ( o instanceof Comment )
         {
@@ -83,9 +81,9 @@ public class CommentPanel<T extends CommentableEntity>
             boolean userHasPermission = Manager.getSecurityInstance().userHasPermission( currentUser, permission, project );
             comment = (Comment) o;
             add( new Image( "icon", new ResourceReference( HeadsUpPage.class, "images/comment.png" ) ) );
-            if ( getLink() != null )
+            if ( getEditLink() != null )
             {
-                Link edit = getLink();
+                Link edit = getEditLink();
                 commentTitle.add( edit.setVisible( userHasPermission ) );
             }
             else
@@ -127,26 +125,27 @@ public class CommentPanel<T extends CommentableEntity>
                 }
             };
             commentTitle.add( remove.setVisible( userHasPermission ) );
-            workedTitle.setVisible( false );
+//            workedTitle.setVisible( false );
         }
-        else if ( o instanceof DurationWorked )
+        else
         {
-            addProgressPanel();
+            commentTitle.setVisible( false );
         }
-
         add( commentTitle );
-        add( workedTitle );
-    }
+//        else if ( o instanceof DurationWorked )
+//        {
+//            addProgressPanel();
+//        }
 
-    public void addProgressPanel()
-    {
+
+//        add( workedTitle );
     }
 
     public void showConfirmDialog( ConfirmDialog dialog, AjaxRequestTarget target )
     {
     }
 
-    public Link getLink()
+    public Link getEditLink()
     {
         return null;
     }

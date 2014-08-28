@@ -266,7 +266,7 @@ public class ViewIssue
                     }
 
                     @Override
-                    public Link getLink()
+                    public Link getEditLink()
                     {
                         PageParameters params = new PageParameters();
                         params.put( "project", getProject() );

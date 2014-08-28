@@ -65,9 +65,18 @@ public class IssueCommentPanel
     public IssueCommentPanel( String id, IModel model, Project project, List commentList, CommentableEntity commentableEntity )
     {
         super( id, model, project, commentList, commentableEntity, new IssueEditPermission() );
+        Object o = getDefaultModel().getObject();
+
+        if ( o instanceof DurationWorked )
+        {
+            addProgressPanel();
+        }
+        else
+        {
+            add( new WebMarkupContainer( "worked-title" ).setVisible( false ) );
+        }
     }
 
-    @Override
     public void addProgressPanel()
     {
         final DurationWorked duration = (DurationWorked) getDefaultModel().getObject();
@@ -80,6 +89,7 @@ public class IssueCommentPanel
         Link edit = new BookmarkablePageLink( "editComment", EditProgressIssue.class, params );
         User currentUser = ( (HeadsUpSession) getSession() ).getUser();
         boolean userHasPermission = Manager.getSecurityInstance().userHasPermission( currentUser, permission, project );
+        WebMarkupContainer workedTitle = new WebMarkupContainer( "worked-title" );
         workedTitle.add( edit.setVisible( userHasPermission ) );
         workedTitle.add( new GravatarLinkPanel( "gravatar", duration.getUser(), HeadsUpPage.DEFAULT_AVATAR_EDGE_LENGTH ) );
 
@@ -125,8 +135,6 @@ public class IssueCommentPanel
         workedTitle.add( new Label( "created", new FormattedDateModel( duration.getDay(),
                 ( (HeadsUpSession) getSession() ).getTimeZone() ) ) );
 
-        commentTitle.setVisible( false );
-
         Comment comment = duration.getComment();
         if ( comment != null )
         {
@@ -139,7 +147,6 @@ public class IssueCommentPanel
             add( new WebMarkupContainer( "comment" ).setVisible( false ) );
         }
 
-        add( commentTitle );
         add( workedTitle );
     }
 }

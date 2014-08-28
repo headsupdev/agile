@@ -14,6 +14,6 @@ import java.util.Set;
  */
 public interface CommentableEntity
 {
-    public Set<? extends Serializable> getComments();
+    public Set<Comment> getComments();
     public void setUpdated( Date date );
 }
