@@ -1,6 +1,7 @@
 2.1
 
 * Add ability to disable any build configuration
+* Add Gravatars to user references and allow individuals to decide if they should be displayed
 
 * Fix importing of child modules in large maven projects
 * Resolve issue with exceptions adding issues with very long summaries - Issue:104
