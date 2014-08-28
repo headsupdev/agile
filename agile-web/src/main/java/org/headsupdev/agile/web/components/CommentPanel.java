@@ -133,80 +133,7 @@ public class CommentPanel<T extends CommentableEntity>
         {
             addProgressPanel();
         }
-//            duration = (DurationWorked) o;
-//            add( new Image( "icon", new ResourceReference( HeadsUpPage.class, "images/worked.png" ) ) );
-//
-//            PageParameters params = new PageParameters();
-//            params.put( "project", project );
-//            params.put( "id", commentable.getId() );
-//            params.put( "durationId", duration.getId() );
-//            Link edit = new BookmarkablePageLink( "editComment", EditProgressIssue.class, params );
-//            workedTitle.add( edit.setVisible( userHasPermission ) );
-//            workedTitle.add( new GravatarLinkPanel( "gravatar", duration.getUser(), HeadsUpPage.DEFAULT_AVATAR_EDGE_LENGTH ) );
-//
-//            Link remove = new AjaxFallbackLink( "removeComment" )
-//            {
-//                @Override
-//                public void onClick( AjaxRequestTarget target )
-//                {
-//                    ConfirmDialog dialog = new ConfirmDialog( HeadsUpPage.DIALOG_PANEL_ID, "Delete Progress", "delete this progress" )
-//                    {
-//                        @Override
-//                        public void onDialogConfirmed()
-//                        {
-//                            Storage storage = Manager.getStorageInstance();
-//                            DurationWorked dur = (DurationWorked) ( (HibernateStorage) storage ).merge( duration );
-//                            commentable.getTimeWorked().remove( dur );
-//                            commentable.setUpdated( new Date() );
-//                            commentList.remove( dur );
-//                            dur.setIssue( null );
-//                            ( (HibernateStorage) storage ).delete( dur );
-//                        }
-//                    };
-//                    showConfirmDialog( dialog, target );
-//                }
-//            };
-//            workedTitle.add( remove.setVisible( userHasPermission ) );
-//            DurationWorked worked = (DurationWorked) o;
-//            if ( worked.getWorked() == null || worked.getWorked().getHours() == 0 )
-//            {
-//                setVisible( false );
-//                return;
-//            }
-//            String time = "";
-//            if ( worked.getWorked() != null )
-//            {
-//                time = worked.getWorked().toString();
-//            }
-//            workedTitle.add( new Label( "worked", time ) );
-//            params.add( "username", duration.getUser().getUsername() );
-//            params.add( "silent", "true" );
-//            BookmarkablePageLink usernameLink = new BookmarkablePageLink( "usernameLink", RenderUtil.getPageClass( "account" ), params );
-//            usernameLink.add( new Label( "username", duration.getUser().getFullnameOrUsername() ) );
-//            workedTitle.add( usernameLink );
-//            workedTitle.add( new Label( "created", new FormattedDateModel( worked.getDay(),
-//                    ( (HeadsUpSession) getSession() ).getTimeZone() ) ) );
-//
-//            commentTitle.setVisible( false );
-//
-//            Comment comment = worked.getComment();
-//            if ( comment != null )
-//            {
-//                Label commentLabel = new Label( "comment", new MarkedUpTextModel( comment.getComment(), project ) );
-//                commentLabel.setEscapeModelStrings( false );
-//                add( commentLabel );
-//            }
-//            else
-//            {
-//                add( new WebMarkupContainer( "comment" ).setVisible( false ) );
-//            }
-//        }
-//        else
-//        {
-//            commentTitle.setVisible( false );
-//            workedTitle.setVisible( false );
-//            add( new WebMarkupContainer( "comment" ).setVisible( false ) );
-//        }
+
         add( commentTitle );
         add( workedTitle );
     }
@@ -217,7 +144,6 @@ public class CommentPanel<T extends CommentableEntity>
 
     public void showConfirmDialog( ConfirmDialog dialog, AjaxRequestTarget target )
     {
-
     }
 
     public Link getLink()

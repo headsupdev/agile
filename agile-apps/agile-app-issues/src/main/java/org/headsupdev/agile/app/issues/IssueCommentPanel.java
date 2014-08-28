@@ -106,7 +106,6 @@ public class IssueCommentPanel
             }
         };
         workedTitle.add( remove.setVisible( userHasPermission ) );
-//        DurationWorked worked = (DurationWorked) o;
         if ( duration.getWorked() == null || duration.getWorked().getHours() == 0 )
         {
             setVisible( false );
