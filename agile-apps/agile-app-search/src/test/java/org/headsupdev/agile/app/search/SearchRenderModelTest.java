@@ -40,8 +40,17 @@ public class SearchRenderModelTest
         SearchRenderModel model = new SearchRenderModel( "", new HashMap<String, List<String>>(), new HashMap<String, Integer>() );
 
         StringBuffer out = new StringBuffer();
-        model.renderField( "summary", "A substring string test", Arrays.asList( "string", "substring" ),
-                out );
+        model.renderField( "summary", "A substring string test", Arrays.asList( "string", "substring" ), out );
+        // if this test completes we are happy - it has a habit of crashing on render
+    }
+
+    public void testOverlappingStringMatches()
+            throws Exception
+    {
+        SearchRenderModel model = new SearchRenderModel( "", new HashMap<String, List<String>>(), new HashMap<String, Integer>() );
+
+        StringBuffer out = new StringBuffer();
+        model.renderField( "summary", "A stringer test", Arrays.asList( "string", "ringer" ), out );
         // if this test completes we are happy - it has a habit of crashing on render
     }
 }

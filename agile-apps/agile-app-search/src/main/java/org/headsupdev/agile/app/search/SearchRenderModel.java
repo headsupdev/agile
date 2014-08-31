@@ -178,15 +178,20 @@ public class SearchRenderModel
         renderedMatches = findNonSubstringMatches( renderedMatches );
         Collections.sort( renderedMatches );
 
-        int renderStart = renderedMatches.get( 0 ).getStart() - BUFFER_CHARS;
-        if ( renderStart <= 0 )
+        int renderStart = 0;
+        int renderEnd = content.length();
+        if ( renderedMatches.size() > 0 )
         {
-            renderStart = 0;
-        }
-        int  renderEnd = renderedMatches.get( renderedMatches.size() - 1 ).getEnd() + BUFFER_CHARS;
-        if ( renderEnd >= content.length() )
-        {
-            renderEnd = content.length();
+            renderStart = renderedMatches.get( 0 ).getStart() - BUFFER_CHARS;
+            if ( renderStart <= 0 )
+            {
+                renderStart = 0;
+            }
+            renderEnd = renderedMatches.get( renderedMatches.size() - 1 ).getEnd() + BUFFER_CHARS;
+            if ( renderEnd >= content.length() )
+            {
+                renderEnd = content.length();
+            }
         }
 
         if ( renderStart > 0 )
@@ -230,22 +235,30 @@ public class SearchRenderModel
                     {
                         int length1 = renderedMatch.getEnd() - renderedMatch.getStart();
                         int length2 = renderedMatch2.getEnd() - renderedMatch.getEnd();
-                        return length1 - length2;
+                        return length2 - length1;
                     }
                 } );
-        Iterator<RenderedMatch> matchIter = renderedMatches.iterator();
         ArrayList<RenderedMatch> out = new ArrayList<RenderedMatch>( renderedMatches.size() );
 
-        while ( matchIter.hasNext() )
+        for ( RenderedMatch match : renderedMatches )
         {
-            RenderedMatch match = matchIter.next();
             boolean addMatch = true;
 
-            for ( RenderedMatch supermatch : out )
+            Iterator<RenderedMatch> superIter = out.iterator();
+            while ( superIter.hasNext() )
             {
+                RenderedMatch supermatch = superIter.next();
+
                 if ( match.getStart() >= supermatch.getStart() && match.getEnd() <= supermatch.getEnd() )
                 {
                     addMatch = false;
+                    break;
+                }
+                else if ( ( match.getStart() > supermatch.getStart() && match.getStart() < supermatch.getEnd() ) ||
+                        ( match.getEnd() > supermatch.getStart() && match.getEnd() < supermatch.getEnd() ) )
+                {
+                    addMatch = false;
+                    superIter.remove();
                     break;
                 }
             }
