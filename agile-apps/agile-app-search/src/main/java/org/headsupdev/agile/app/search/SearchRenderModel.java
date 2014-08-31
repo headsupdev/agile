@@ -234,7 +234,7 @@ public class SearchRenderModel
                     public int compare( RenderedMatch renderedMatch, RenderedMatch renderedMatch2 )
                     {
                         int length1 = renderedMatch.getEnd() - renderedMatch.getStart();
-                        int length2 = renderedMatch2.getEnd() - renderedMatch.getEnd();
+                        int length2 = renderedMatch2.getEnd() - renderedMatch2.getStart();
                         return length2 - length1;
                     }
                 } );
