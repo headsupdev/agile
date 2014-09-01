@@ -127,29 +127,32 @@ public class IssueCommentPanel
         workedTitle.add( new AccountFallbackLink( "usernameLink", duration.getUser() ) );
         workedTitle.add( new Label( "created", new FormattedDateModel( duration.getDay(),
                 ( (HeadsUpSession) getSession() ).getTimeZone() ) ) );
-        if ( duration.getComment().getEditor() != null )
-        {
-            workedTitle.add( new AccountFallbackLink( "editorLink", duration.getComment().getEditor() ) );
-            workedTitle.add( new Label( "updated", new FormattedDateModel( duration.getComment().getUpdated(),
-                    ( (HeadsUpSession) getSession() ).getTimeZone() ) ) );
-        }
-        else
-        {
-            workedTitle.add( new WebMarkupContainer( "editorLink" ).setVisible( false ) );
-            workedTitle.add( new WebMarkupContainer( "updated" ).setVisible( false ) );
-        }
+
         Comment comment = duration.getComment();
         if ( comment != null )
         {
             Label commentLabel = new Label( "comment", new MarkedUpTextModel( comment.getComment(), project ) );
             commentLabel.setEscapeModelStrings( false );
             add( commentLabel );
+
+            if ( comment.getEditor() != null )
+            {
+                workedTitle.add( new AccountFallbackLink( "editorLink", duration.getComment().getEditor() ) );
+                workedTitle.add( new Label( "updated", new FormattedDateModel( duration.getComment().getUpdated(),
+                        ( (HeadsUpSession) getSession() ).getTimeZone() ) ) );
+            }
+            else
+            {
+                workedTitle.add( new WebMarkupContainer( "editorLink" ).setVisible( false ) );
+                workedTitle.add( new WebMarkupContainer( "updated" ).setVisible( false ) );
+            }
         }
         else
         {
+            workedTitle.add( new WebMarkupContainer( "editorLink" ).setVisible( false ) );
+            workedTitle.add( new WebMarkupContainer( "updated" ).setVisible( false ) );
             add( new WebMarkupContainer( "comment" ).setVisible( false ) );
         }
-
         add( workedTitle );
     }
 }
