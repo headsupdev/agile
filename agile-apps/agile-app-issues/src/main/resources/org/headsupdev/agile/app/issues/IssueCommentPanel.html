@@ -22,8 +22,11 @@
       <div style="display:inline" wicket:id="gravatar">
       </div>
       <span class="comment-text">
-        <span wicket:id="worked">0h</span> work logged by <a wicket:id="usernameLink"><span wicket:id="username">username</span></a>
-        on <span wicket:id="created">created</span>
+        <span wicket:id="worked">0h</span> work logged by <span wicket:id="usernameLink"></span>
+        on <span wicket:id="created">created</span>.
+        <wicket:enclosure child="editorLink">
+          Edited by <span wicket:id="editorLink"></span> on <span wicket:id="updated">updated</span>
+        </wicket:enclosure>
         <a wicket:id="editComment" href="#" title="edit">
           <img src="/resources/org.headsupdev.agile.web.HeadsUpPage/images/clock_edit.png" />
         </a>

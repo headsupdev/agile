@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -46,12 +46,39 @@ public class Comment
     @IndexedEmbedded( targetElement = StoredUser.class )
     private User user;
 
+    @OneToOne( targetEntity = StoredUser.class )
+    @IndexedEmbedded( targetElement = StoredUser.class )
+    private User editor;
+
     @Type( type = "text" )
     @Field(index = Index.TOKENIZED)
     private String comment;
 
     @Temporal( TemporalType.TIMESTAMP )
     private Date created;
+
+    @Temporal( TemporalType.TIMESTAMP )
+    private Date updated;
+
+    public User getEditor()
+    {
+        return editor;
+    }
+
+    public void setEditor( User editor )
+    {
+        this.editor = editor;
+    }
+
+    public Date getUpdated()
+    {
+        return updated;
+    }
+
+    public void setUpdated( Date updated )
+    {
+        this.updated = updated;
+    }
 
     public long getId()
     {

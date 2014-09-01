@@ -85,11 +85,10 @@ public class EditProgressIssue
                 "edited progress on" );
     }
 
+    @Override
     protected void submitChild( Comment comment )
     {
         duration = (DurationWorked) ( (HibernateStorage) getStorage() ).merge( duration );
-
-        duration.setUser( getSession().getUser() );
         duration.setIssue( getIssue() );
         if ( willChildConsumeComment() )
         {

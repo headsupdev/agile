@@ -27,8 +27,11 @@
           <span style="display:inline" wicket:id="gravatar">
           </span>
           <span class="comment-text">
-            Comment added by<a wicket:id="usernameLink"> <span wicket:id="username">username</span></a>
-            on <span wicket:id="created">created</span>
+            Comment added by <span wicket:id="usernameLink"></span>
+            on <span wicket:id="created">created</span>.
+            <wicket:enclosure child="editorLink"> Edited by
+              <span wicket:id="editorLink"></span> on <span wicket:id="updated">updated</span>.
+            </wicket:enclosure>
             <a wicket:id="editComment" href="#" title="edit">
               <img src="/resources/org.headsupdev.agile.web.HeadsUpPage/images/comment_edit.png" />
             </a>

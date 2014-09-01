@@ -40,11 +40,7 @@ import org.headsupdev.agile.storage.issues.Issue;
 import org.headsupdev.agile.storage.resource.DurationWorked;
 import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.HeadsUpSession;
-import org.headsupdev.agile.web.RenderUtil;
-import org.headsupdev.agile.web.components.CommentPanel;
-import org.headsupdev.agile.web.components.FormattedDateModel;
-import org.headsupdev.agile.web.components.GravatarLinkPanel;
-import org.headsupdev.agile.web.components.MarkedUpTextModel;
+import org.headsupdev.agile.web.components.*;
 import org.headsupdev.agile.web.dialogs.ConfirmDialog;
 
 import java.util.Date;
@@ -127,14 +123,21 @@ public class IssueCommentPanel
             time = duration.getWorked().toString();
         }
         workedTitle.add( new Label( "worked", time ) );
-        params.add( "username", duration.getUser().getUsername() );
-        params.add( "silent", "true" );
-        BookmarkablePageLink usernameLink = new BookmarkablePageLink( "usernameLink", RenderUtil.getPageClass( "account" ), params );
-        usernameLink.add( new Label( "username", duration.getUser().getFullnameOrUsername() ) );
-        workedTitle.add( usernameLink );
+
+        workedTitle.add( new AccountFallbackLink( "usernameLink", duration.getUser() ) );
         workedTitle.add( new Label( "created", new FormattedDateModel( duration.getDay(),
                 ( (HeadsUpSession) getSession() ).getTimeZone() ) ) );
-
+        if ( duration.getComment().getEditor() != null )
+        {
+            workedTitle.add( new AccountFallbackLink( "editorLink", duration.getComment().getEditor() ) );
+            workedTitle.add( new Label( "updated", new FormattedDateModel( duration.getComment().getUpdated(),
+                    ( (HeadsUpSession) getSession() ).getTimeZone() ) ) );
+        }
+        else
+        {
+            workedTitle.add( new WebMarkupContainer( "editorLink" ).setVisible( false ) );
+            workedTitle.add( new WebMarkupContainer( "updated" ).setVisible( false ) );
+        }
         Comment comment = duration.getComment();
         if ( comment != null )
         {

@@ -18,14 +18,12 @@
 
 package org.headsupdev.agile.web.components;
 
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.ResourceReference;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.image.Image;
-import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
@@ -35,7 +33,6 @@ import org.headsupdev.agile.storage.CommentableEntity;
 import org.headsupdev.agile.storage.HibernateStorage;
 import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.HeadsUpSession;
-import org.headsupdev.agile.web.RenderUtil;
 import org.headsupdev.agile.web.dialogs.ConfirmDialog;
 
 import java.util.Date;
@@ -57,7 +54,6 @@ public class CommentPanel<T extends CommentableEntity>
     protected List commentList;
     protected Project project;
     private Comment comment;
-//    protected WebMarkupContainer workedTitle;
 
     public CommentPanel( String id, IModel model, Project project, List commentList, T commentable, Permission permission )
     {
@@ -73,7 +69,6 @@ public class CommentPanel<T extends CommentableEntity>
     {
         Object o = getDefaultModel().getObject();
         WebMarkupContainer commentTitle = new WebMarkupContainer( "comment-title" );
-//        workedTitle = new WebMarkupContainer( "worked-title" );
 
         if ( o instanceof Comment )
         {
@@ -92,14 +87,20 @@ public class CommentPanel<T extends CommentableEntity>
             }
             commentTitle.add( new GravatarLinkPanel( "gravatar", comment.getUser(), HeadsUpPage.DEFAULT_AVATAR_EDGE_LENGTH ) );
 
-            PageParameters params = new PageParameters();
-            params.add( "username", comment.getUser().getUsername() );
-            params.add( "silent", "true" );
-            BookmarkablePageLink usernameLink = new BookmarkablePageLink( "usernameLink", RenderUtil.getPageClass( "account" ), params );
-            usernameLink.add( new Label( "username", comment.getUser().getFullnameOrUsername() ) );
-            commentTitle.add( usernameLink );
+            commentTitle.add( new AccountFallbackLink( "usernameLink", comment.getUser() ) );
             commentTitle.add( new Label( "created", new FormattedDateModel( comment.getCreated(),
                     ( (HeadsUpSession) getSession() ).getTimeZone() ) ) );
+            if ( comment.getEditor() != null )
+            {
+                commentTitle.add( new AccountFallbackLink( "editorLink", comment.getEditor() ) );
+                commentTitle.add( new Label( "updated", new FormattedDateModel( comment.getUpdated(),
+                        ( (HeadsUpSession) getSession() ).getTimeZone() ) ) );
+            }
+            else
+            {
+                commentTitle.add( new WebMarkupContainer( "editorLink" ).setVisible( false ) );
+                commentTitle.add( new WebMarkupContainer( "updated" ).setVisible( false ) );
+            }
             add( new Label( "comment", new MarkedUpTextModel( comment.getComment(), project ) )
                     .setEscapeModelStrings( false ) );
             Link remove = new AjaxFallbackLink( "removeComment" )
@@ -114,7 +115,7 @@ public class CommentPanel<T extends CommentableEntity>
                         {
                             Storage storage = Manager.getStorageInstance();
                             Comment comm = (Comment) ( (HibernateStorage) storage ).merge( comment );
-                            commentable.getComments().remove( comm );
+                            commentable.removeComment( comm );
                             T iss = (T) ( (HibernateStorage) storage ).merge( commentable );
                             commentList.remove( comm );
                             iss.setUpdated( new Date() );
@@ -125,20 +126,13 @@ public class CommentPanel<T extends CommentableEntity>
                 }
             };
             commentTitle.add( remove.setVisible( userHasPermission ) );
-//            workedTitle.setVisible( false );
         }
         else
         {
             commentTitle.setVisible( false );
         }
         add( commentTitle );
-//        else if ( o instanceof DurationWorked )
-//        {
-//            addProgressPanel();
-//        }
 
-
-//        add( workedTitle );
     }
 
     public void showConfirmDialog( ConfirmDialog dialog, AjaxRequestTarget target )
