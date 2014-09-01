@@ -35,7 +35,7 @@ import org.headsupdev.agile.web.RenderUtil;
  * @since 2.0
  */
 public class AccountFallbackLink
-    extends Panel
+        extends Panel
 {
     public AccountFallbackLink( String id, String userString )
     {
@@ -62,7 +62,7 @@ public class AccountFallbackLink
         {
             PageParameters params = new PageParameters();
             params.add( "username", user.getUsername() );
-            authorLink = new BookmarkablePageLink( "author-link", RenderUtil.getPageClass("account"), params );
+            authorLink = new BookmarkablePageLink( "author-link", RenderUtil.getPageClass( "account" ), params );
 
             authorLabel = new Label( "author-label", user.getFullnameOrUsername() );
             authorLink.add( authorLabel );
