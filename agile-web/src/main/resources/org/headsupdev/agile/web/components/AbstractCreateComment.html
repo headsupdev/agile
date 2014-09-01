@@ -17,22 +17,23 @@
   -->
 
 <html>
-<body>
-<wicket:extend>
-  <form wicket:id="comment">
-    <wicket:child />
-    <table class="details">
-      <tr>
-        <th class="comment" colspan="2">Comment</th>
-      </tr>
-      <tr>
-        <td class="comment" colspan="2"><textarea rows="8" cols="25" wicket:id="comment"> </textarea></td>
-      </tr>
-      <tr>
-        <td colspan="2"><input type="submit" wicket:id="submit" value="Create Comment" /></td>
-      </tr>
-    </table>
-  </form>
-</wicket:extend>
-</body>
+  <body>
+    <wicket:extend>
+      <form wicket:id="comment">
+        <div wicket:id="subHeader"></div>
+        <wicket:child />
+        <table class="details">
+          <tr>
+            <th class="comment" colspan="2">Comment</th>
+          </tr>
+          <tr>
+            <td class="comment" colspan="2"><textarea rows="8" cols="25" wicket:id="comment"></textarea></td>
+          </tr>
+          <tr>
+            <td colspan="2"><input type="submit" wicket:id="submit" value="Create Comment" /></td>
+          </tr>
+        </table>
+      </form>
+    </wicket:extend>
+  </body>
 </html>

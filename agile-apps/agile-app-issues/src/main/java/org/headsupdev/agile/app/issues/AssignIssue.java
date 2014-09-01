@@ -43,8 +43,8 @@ public class AssignIssue
 
     protected void layoutChild( Form form )
     {
-        form.add( userChoice = new UserDropDownChoice( "userChoice", getIssue().getAssignee() ) );
-        userChoice.setModel( new PropertyModel<User>( getIssue(), "assignee" ) );
+        form.add( userChoice = new UserDropDownChoice( "userChoice", commentable.getAssignee() ) );
+        userChoice.setModel( new PropertyModel<User>( commentable, "assignee" ) );
         userChoice.setNullValid( true );
         userChoice.setRequired( false );
 
@@ -54,17 +54,17 @@ public class AssignIssue
     protected void submitChild( Comment comment )
     {
         // if we have an assignee that is not watching then add them to the watchers
-        if ( getIssue().getAssignee() != null && !getIssue().getWatchers().contains( getIssue().getAssignee() ) )
+        if ( commentable.getAssignee() != null && !commentable.getWatchers().contains( commentable.getAssignee() ) )
         {
-            getIssue().getWatchers().add( getIssue().getAssignee() );
+            commentable.getWatchers().add( commentable.getAssignee() );
         }
 
-        getIssue().setStatus( Issue.STATUS_ASSIGNED );
+        commentable.setStatus( Issue.STATUS_ASSIGNED );
     }
 
     protected Event getUpdateEvent( Comment comment )
     {
-        return new UpdateIssueEvent( getIssue(), getIssue().getProject(), getSession().getUser(), comment,
+        return new UpdateIssueEvent( commentable, commentable.getProject(), getSession().getUser(), comment,
                 "assigned" );
     }
 

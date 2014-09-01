@@ -102,7 +102,7 @@ public class CreateRelationship
         {
             super( id );
             setModel( new CompoundPropertyModel( this ) );
-            add( new Subheader( "subHeader", "Create Relationship for ", issue ) );
+            add( new IssueSubheader( "subHeader", "Create Relationship for ", issue ) );
             add( new ProjectTreeDropDownChoice( "relatedProject" )
             {
                 @Override

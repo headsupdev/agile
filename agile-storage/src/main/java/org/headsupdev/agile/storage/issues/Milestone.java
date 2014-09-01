@@ -237,6 +237,12 @@ public class Milestone
         comments.add( comment );
     }
 
+    @Override
+    public void removeComment( Comment comment )
+    {
+        comments.remove( comment );
+    }
+
     public Set<Comment> getComments()
     {
         return comments;

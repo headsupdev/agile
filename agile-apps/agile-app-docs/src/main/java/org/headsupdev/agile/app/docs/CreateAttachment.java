@@ -23,8 +23,11 @@ import org.apache.wicket.util.lang.Bytes;
 import org.headsupdev.agile.app.docs.event.UpdateDocumentEvent;
 import org.headsupdev.agile.storage.Attachment;
 import org.headsupdev.agile.storage.Comment;
+import org.headsupdev.agile.storage.docs.Document;
 import org.headsupdev.agile.web.MountPoint;
+import org.headsupdev.agile.web.SubmitChildException;
 import org.headsupdev.agile.web.components.AttachmentPanel;
+import org.headsupdev.agile.web.components.Subheader;
 
 /**
  * Add an attachment to a doc
@@ -37,6 +40,8 @@ import org.headsupdev.agile.web.components.AttachmentPanel;
 public class CreateAttachment
         extends CreateComment
 {
+    private AttachmentPanel attachmentPanel;
+
     protected void layoutChild( Form form )
     {
         form.setMultiPart( true );
@@ -53,7 +58,7 @@ public class CreateAttachment
         {
             if ( attachmentPanel.getAttachments().size() == 1 )
             {
-                return new UpdateDocumentEvent( getDocument(), getSession().getUser(), comment,
+                return new UpdateDocumentEvent( commentable, getSession().getUser(), comment,
                         "attached file " + attachment.getFilename() + " to" );
             }
             attachmentNo++;
@@ -67,31 +72,36 @@ public class CreateAttachment
             }
         }
         String attachmentFilenames = stringBuilder.toString();
-        return new UpdateDocumentEvent( getDocument(), getSession().getUser(), comment,
+        return new UpdateDocumentEvent( commentable, getSession().getUser(), comment,
                 "attached files " + attachmentFilenames + " to" );
     }
 
     @Override
     protected void submitChild( Comment comment )
+            throws SubmitChildException
     {
-        super.submitChild( comment );
         if ( attachmentPanel.getAttachments().isEmpty() )
         {
-            return;
+            throw new SubmitChildException( "No attachments added!" );
         }
         for ( Attachment attachment : attachmentPanel.getAttachments() )
         {
             attachment.setComment( comment );
-            getDocument().addAttachment( attachment );
+            commentable.addAttachment( attachment );
         }
 
     }
-
-
 
     @Override
     protected boolean willChildConsumeComment()
     {
         return true;
+    }
+
+    @Override
+    public Subheader<Document> getSubheader()
+    {
+        String preamble = submitLabel + " to Document" + commentable.getName();
+        return new Subheader<Document>( "subHeader", preamble, commentable );
     }
 }

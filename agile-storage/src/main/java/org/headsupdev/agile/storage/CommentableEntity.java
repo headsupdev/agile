@@ -15,5 +15,8 @@ import java.util.Set;
 public interface CommentableEntity
 {
     public Set<Comment> getComments();
+    public void addComment( Comment comment );
+    public void removeComment( Comment comment );
     public void setUpdated( Date date );
+
 }

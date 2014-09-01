@@ -17,25 +17,22 @@
  */
 package org.headsupdev.agile.app.docs;
 
-import org.apache.wicket.markup.html.CSSPackageResource;
-import org.apache.wicket.markup.html.form.Button;
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.TextArea;
-import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.util.string.StringValueConversionException;
 import org.headsupdev.agile.api.Event;
+import org.headsupdev.agile.api.MenuLink;
+import org.headsupdev.agile.api.Page;
 import org.headsupdev.agile.api.Permission;
 import org.headsupdev.agile.app.docs.event.UpdateDocumentEvent;
 import org.headsupdev.agile.app.docs.permission.DocEditPermission;
 import org.headsupdev.agile.storage.Comment;
-import org.headsupdev.agile.storage.HibernateStorage;
 import org.headsupdev.agile.storage.docs.Document;
 import org.headsupdev.agile.web.BookmarkableMenuLink;
-import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.MountPoint;
-
-import java.util.Date;
+import org.headsupdev.agile.web.SubmitChildException;
+import org.headsupdev.agile.web.components.AbstractEditComment;
+import org.headsupdev.agile.web.components.Subheader;
 
 
 /**
@@ -45,136 +42,81 @@ import java.util.Date;
 
 @MountPoint("editComment")
 public class EditComment
-        extends HeadsUpPage
-
+        extends AbstractEditComment<Document>
 {
-    private String submitLabel = "Edit Comment";
+    @Override
+    protected Subheader<Document> getSubheader()
+    {
+        String preamble;
+        if ( submitLabel.toLowerCase().contains( "document" ) )
+        {
+            preamble = submitLabel.replace( "document", "" );
+        }
+        else
+        {
+            preamble = submitLabel + " for ";
+        }
+        return new Subheader<Document>( "subHeader", preamble, commentable );
+    }
 
-    private long commentId;
-
-    private Document doc;
-
+    @Override
     public Permission getRequiredPermission()
     {
         return new DocEditPermission();
     }
 
     @Override
-    public void layout()
+    protected Document getObject()
     {
-        super.layout();
-        add( CSSPackageResource.getHeaderContribution( getClass(), "doc.css" ) );
-
-        String page = getPageParameters().getString( "page" );
-        if ( page == null || page.length() == 0 )
-        {
-            page = "Welcome";
-        }
-
+        String page;
         try
         {
-            commentId = getPageParameters().getInt( "commentId" );
-        }
-        catch ( NumberFormatException e )
-        {
-            notFoundError();
-            return;
+            page = getPageParameters().getString( "page" );
+            if ( page == null || page.length() == 0 )
+            {
+                page = "Welcome";
+            }
         }
         catch ( StringValueConversionException e )
         {
-            notFoundError();
-            return;
+            return null;
         }
-
-        Document doc = DocsApplication.getDocument( page, getProject() );
-        if ( doc == null )
-        {
-
-            notFoundError();
-            return;
-        }
-
-        this.doc = doc;
-
-        add( new CommentForm( "comment" ) );
-        addLink( new BookmarkableMenuLink( getPageClass( "docs/" ), getPageParameters(), "view" ) );
-
+        return DocsApplication.getDocument( page, getProject() );
     }
 
     @Override
-    public String getTitle()
+    protected Event getUpdateEvent( Comment comment )
     {
-        return "Edit Comment";
+        return new UpdateDocumentEvent( commentable, getSession().getUser(), comment, "edited a comment on" );
     }
 
+    @Override
+    protected MenuLink getViewLink()
+    {
+        return new BookmarkableMenuLink( getPageClass( "docs/" ), getPageParameters(), "view" );
+    }
+
+    @Override
     protected void layoutChild( Form form )
     {
     }
 
+    @Override
     protected void submitChild( Comment comment )
+            throws SubmitChildException
     {
     }
 
-    protected Event getUpdateEvent( Comment comment )
+    @Override
+    protected PageParameters getSubmitPageParameters()
     {
-        return new UpdateDocumentEvent( doc, getSession().getUser(), comment, "edited a comment on" );
+        return getPageParameters();
     }
 
-    protected boolean willChildConsumeComment()
+    @Override
+    protected Class<? extends Page> getSubmitPageClass()
     {
-        return false;
+        return getPageClass( "docs/" );
     }
 
-    class CommentForm
-            extends Form<Comment>
-    {
-        private TextArea input;
-        private Comment editedComment = new Comment();
-
-        public CommentForm( String id )
-        {
-            super( id );
-            for ( Comment comment : doc.getComments() )
-            {
-                if ( comment.getId() == commentId )
-                {
-                    editedComment = comment;
-                    break;
-                }
-            }
-
-            setModel( new CompoundPropertyModel<Comment>( editedComment ) );
-            input = new TextArea( "comment" );
-            add( input );
-            layoutChild( this );
-
-            add( new Button( "submit", new Model<String>()
-            {
-                public String getObject()
-                {
-                    return submitLabel;
-                }
-            } ) );
-        }
-
-        public void onSubmit()
-        {
-            doc = (Document) ( (HibernateStorage) getStorage() ).getHibernateSession().merge( doc );
-            editedComment = (Comment) ( (HibernateStorage) getStorage() ).getHibernateSession().merge( editedComment );
-            Date now = new Date();
-            if ( editedComment.getComment() != null )
-            {
-                editedComment.setUser( EditComment.this.getSession().getUser() );
-                editedComment.setComment( input.getInput() );
-            }
-
-            submitChild( editedComment );
-
-            // this line is needed by things that extend our form...
-            doc.setUpdated( now );
-            getHeadsUpApplication().addEvent( getUpdateEvent( editedComment ) );
-
-            setResponsePage( getPageClass( "docs/" ), getPageParameters() );
-        }
-    }
 }

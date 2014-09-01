@@ -18,24 +18,21 @@
 
 package org.headsupdev.agile.app.docs;
 
-import org.apache.wicket.markup.html.CSSPackageResource;
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.TextArea;
-import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.Model;
-import org.headsupdev.agile.web.components.OnePressSubmitButton;
+import org.headsupdev.agile.api.Event;
+import org.headsupdev.agile.api.MenuLink;
+import org.headsupdev.agile.api.Page;
 import org.headsupdev.agile.api.Permission;
 import org.headsupdev.agile.app.docs.event.UpdateDocumentEvent;
 import org.headsupdev.agile.app.docs.permission.DocEditPermission;
 import org.headsupdev.agile.storage.Comment;
-import org.headsupdev.agile.storage.HibernateStorage;
 import org.headsupdev.agile.storage.docs.Document;
 import org.headsupdev.agile.web.BookmarkableMenuLink;
-import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.MountPoint;
-import org.headsupdev.agile.web.components.AttachmentPanel;
-
-import java.util.Date;
+import org.headsupdev.agile.web.SubmitChildException;
+import org.headsupdev.agile.web.components.AbstractCreateComment;
+import org.headsupdev.agile.web.components.Subheader;
 
 /**
  * Add a comment for a document
@@ -46,133 +43,65 @@ import java.util.Date;
  */
 @MountPoint("comment")
 public class CreateComment
-        extends HeadsUpPage
+        extends AbstractCreateComment<Document>
 {
-    private Document doc;
-    private String submitLabel = "Create Comment";
-    protected AttachmentPanel attachmentPanel;
+    @Override
+    protected Subheader<Document> getSubheader()
+    {
+        String preamble = submitLabel + " for Document " + commentable.getName();
+        return new Subheader<Document>( "subHeader", preamble, commentable );
+    }
 
+    @Override
     public Permission getRequiredPermission()
     {
         return new DocEditPermission();
     }
 
-    public void layout()
+    @Override
+    protected Document getObject()
     {
-        super.layout();
-        add( CSSPackageResource.getHeaderContribution( getClass(), "doc.css" ) );
-
         String page = getPageParameters().getString( "page" );
         if ( page == null || page.length() == 0 )
         {
             page = "Welcome";
         }
 
-        Document doc = DocsApplication.getDocument( page, getProject() );
-        if ( doc == null )
-        {
-            notFoundError();
-            return;
-        }
-
-        addLink( new BookmarkableMenuLink( getPageClass( "docs/" ), getPageParameters(), "view" ) );
-        this.doc = doc;
-
-        add( new CommentForm( "comment" ) );
+        return DocsApplication.getDocument( page, getProject() );
     }
 
     @Override
-    public String getTitle()
+    protected Event getUpdateEvent( Comment comment )
     {
-        return submitLabel + " for document " + doc.getName();
+        return new UpdateDocumentEvent( commentable, getSession().getUser(), comment, "commented on" );
     }
 
-    public Document getDocument()
+    @Override
+    protected MenuLink getViewLink()
     {
-        doc = (Document) ( (HibernateStorage) getStorage() ).getHibernateSession().merge( doc );
-
-        return doc;
+        return new BookmarkableMenuLink( getPageClass( "docs/" ), getPageParameters(), "view" );
     }
 
+    @Override
     protected void layoutChild( Form form )
     {
     }
 
+    @Override
     protected void submitChild( Comment comment )
+            throws SubmitChildException
     {
     }
 
-    protected boolean willChildConsumeComment()
+    @Override
+    protected PageParameters getSubmitPageParameters()
     {
-        return false;
+        return getPageParameters();
     }
 
-    public void setSubmitLabel( String submitLabel )
+    @Override
+    protected Class<? extends Page> getSubmitPageClass()
     {
-        this.submitLabel = submitLabel;
-    }
-
-    protected UpdateDocumentEvent getUpdateEvent( Comment comment )
-    {
-        return new UpdateDocumentEvent( doc, getSession().getUser(), comment, "commented on" );
-    }
-
-    class CommentForm
-            extends Form<Comment>
-    {
-        private Comment create = new Comment();
-
-        public CommentForm( String id )
-        {
-            super( id );
-
-            setModel( new CompoundPropertyModel<Comment>( create ) );
-            add( new TextArea( "comment" ) );
-
-            layoutChild( this );
-
-            add( new OnePressSubmitButton( "submit", new Model<String>()
-            {
-                public String getObject()
-                {
-                    return submitLabel;
-                }
-            } ) );
-        }
-
-        public void onSubmit()
-        {
-            getDocument(); // make sure we are merged into the new session
-
-            Date now = new Date();
-            if ( create.getComment() != null )
-            {
-                create.setUser( CreateComment.this.getSession().getUser() );
-                create.setCreated( now );
-                ( (HibernateStorage) getStorage() ).save( create );
-
-                if ( !willChildConsumeComment() )
-                {
-                    doc.getComments().add( create );
-                }
-
-            }
-
-            submitChild( create );
-            if ( attachmentPanel != null )
-            {
-                if ( attachmentPanel.getAttachments().isEmpty() )
-                {
-                    error( "No attachments added!" );
-                    return;
-                }
-            }
-            // this line is needed by things that extend our form...
-            doc.setUpdated( now );
-
-            getHeadsUpApplication().addEvent( getUpdateEvent( create ) );
-
-            setResponsePage( getPageClass( "docs/" ), getPageParameters() );
-        }
+        return getPageClass( "docs/" );
     }
 }

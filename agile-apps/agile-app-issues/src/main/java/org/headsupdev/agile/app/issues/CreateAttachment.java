@@ -25,6 +25,7 @@ import org.headsupdev.agile.app.issues.event.UpdateIssueEvent;
 import org.headsupdev.agile.storage.Attachment;
 import org.headsupdev.agile.storage.Comment;
 import org.headsupdev.agile.web.MountPoint;
+import org.headsupdev.agile.web.SubmitChildException;
 import org.headsupdev.agile.web.components.AttachmentPanel;
 
 /**
@@ -38,6 +39,8 @@ import org.headsupdev.agile.web.components.AttachmentPanel;
 public class CreateAttachment
         extends CreateComment
 {
+    private AttachmentPanel attachmentPanel;
+
     protected void layoutChild( Form form )
     {
         form.setMultiPart( true );
@@ -50,10 +53,11 @@ public class CreateAttachment
 
     @Override
     protected void submitChild( Comment comment )
+            throws SubmitChildException
     {
         if ( attachmentPanel.getAttachments().isEmpty() )
         {
-            return;
+            throw new SubmitChildException( "No attachments added!" );
         }
         for ( Attachment attachment : attachmentPanel.getAttachments() )
         {
@@ -61,11 +65,12 @@ public class CreateAttachment
             getIssue().addAttachment( attachment );
         }
     }
-    
+
     @Override
-    public String getPreamble()
+    protected IssueSubheader getSubheader()
     {
-        return "Add Attachments to ";
+        String preamble = submitLabel + " to ";
+        return new IssueSubheader( "subHeader", preamble, commentable );
     }
 
     protected Event getUpdateEvent( Comment comment )
