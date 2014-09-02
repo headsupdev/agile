@@ -34,7 +34,6 @@ import org.headsupdev.agile.api.Storage;
 import org.headsupdev.agile.api.User;
 import org.headsupdev.agile.app.issues.permission.IssueEditPermission;
 import org.headsupdev.agile.storage.Comment;
-import org.headsupdev.agile.storage.CommentableEntity;
 import org.headsupdev.agile.storage.HibernateStorage;
 import org.headsupdev.agile.storage.issues.Issue;
 import org.headsupdev.agile.storage.resource.DurationWorked;
@@ -56,9 +55,9 @@ import java.util.List;
  */
 
 public class IssueCommentPanel
-        extends CommentPanel
+        extends CommentPanel<Issue>
 {
-    public IssueCommentPanel( String id, IModel model, Project project, List commentList, CommentableEntity commentableEntity )
+    public IssueCommentPanel( String id, IModel model, Project project, List commentList, Issue commentableEntity )
     {
         super( id, model, project, commentList, commentableEntity, new IssueEditPermission() );
         Object o = getDefaultModel().getObject();
@@ -77,10 +76,9 @@ public class IssueCommentPanel
     {
         final DurationWorked duration = (DurationWorked) getDefaultModel().getObject();
         add( new Image( "icon", new ResourceReference( HeadsUpPage.class, "images/worked.png" ) ) );
-        final Issue issue = (Issue) commentable;
         PageParameters params = new PageParameters();
         params.put( "project", project );
-        params.put( "id", issue.getId() );
+        params.put( "id", commentable.getId() );
         params.put( "durationId", duration.getId() );
         Link edit = new BookmarkablePageLink( "editComment", EditProgressIssue.class, params );
         User currentUser = ( (HeadsUpSession) getSession() ).getUser();
@@ -101,8 +99,8 @@ public class IssueCommentPanel
                     {
                         Storage storage = Manager.getStorageInstance();
                         DurationWorked dur = (DurationWorked) ( (HibernateStorage) storage ).merge( duration );
-                        issue.getTimeWorked().remove( dur );
-                        issue.setUpdated( new Date() );
+                        commentable.getTimeWorked().remove( dur );
+                        commentable.setUpdated( new Date() );
                         commentList.remove( dur );
                         dur.setIssue( null );
                         ( (HibernateStorage) storage ).delete( dur );
@@ -117,11 +115,7 @@ public class IssueCommentPanel
             setVisible( false );
             return;
         }
-        String time = "";
-        if ( duration.getWorked() != null )
-        {
-            time = duration.getWorked().toString();
-        }
+        String time = duration.getWorked().toString();
         workedTitle.add( new Label( "worked", time ) );
 
         workedTitle.add( new AccountFallbackLink( "usernameLink", duration.getUser() ) );
