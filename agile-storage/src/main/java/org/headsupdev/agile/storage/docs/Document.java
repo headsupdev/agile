@@ -18,21 +18,23 @@
 
 package org.headsupdev.agile.storage.docs;
 
-import org.headsupdev.agile.api.*;
+import org.headsupdev.agile.api.Project;
+import org.headsupdev.agile.api.SearchResult;
+import org.headsupdev.agile.api.User;
+import org.headsupdev.agile.storage.Attachment;
+import org.headsupdev.agile.storage.Comment;
+import org.headsupdev.agile.storage.CommentableEntity;
+import org.headsupdev.agile.storage.StoredUser;
 import org.headsupdev.agile.storage.hibernate.NameProjectBridge;
 import org.headsupdev.agile.storage.hibernate.NameProjectId;
-import org.headsupdev.agile.storage.StoredUser;
-import org.headsupdev.agile.storage.Comment;
-import org.headsupdev.agile.storage.Attachment;
-
-import javax.persistence.*;
-import java.util.Date;
-import java.util.Set;
-import java.util.HashSet;
-import java.io.Serializable;
-
 import org.hibernate.annotations.Type;
 import org.hibernate.search.annotations.*;
+
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * This class represents a single document on the system and provides helper methods for editing and rendering.
@@ -42,26 +44,26 @@ import org.hibernate.search.annotations.*;
  * @since 1.0
  */
 @Entity
-@Table( name = "Documents" )
-@Indexed( index = "Documents" )
+@Table(name = "Documents")
+@Indexed(index = "Documents")
 public class Document
-    implements Serializable, SearchResult, Comparable<Document>
+        implements Serializable, SearchResult, Comparable<Document>, CommentableEntity
 {
     public static final String DEFAULT_PAGE = "Welcome";
     @EmbeddedId
     @DocumentId
-    @FieldBridge( impl = NameProjectBridge.class )
+    @FieldBridge(impl = NameProjectBridge.class)
     @Field
     NameProjectId name;
 
-    @Type( type = "text" )
-    @Field( index = Index.TOKENIZED )
+    @Type(type = "text")
+    @Field(index = Index.TOKENIZED)
     private String content;
 
-    @ManyToOne( targetEntity = StoredUser.class )
+    @ManyToOne(targetEntity = StoredUser.class)
     private User creator;
 
-    @Temporal( TemporalType.TIMESTAMP )
+    @Temporal(TemporalType.TIMESTAMP)
     private Date created, updated;
 
     @OneToMany
@@ -72,8 +74,8 @@ public class Document
     @IndexedEmbedded
     private Set<Attachment> attachments = new HashSet<Attachment>();
 
-    @ManyToMany( targetEntity = StoredUser.class )
-    @JoinTable(name = "DOCUMENTS_WATCHERS" )
+    @ManyToMany(targetEntity = StoredUser.class)
+    @JoinTable(name = "DOCUMENTS_WATCHERS")
     private Set<User> watchers = new HashSet<User>();
 
     Document()
@@ -85,15 +87,18 @@ public class Document
         this.name = new NameProjectId( name, project );
     }
 
-    public String getName() {
+    public String getName()
+    {
         return name.getName();
     }
 
-    public Project getProject() {
+    public Project getProject()
+    {
         return name.getProject();
     }
 
-    public String getContent() {
+    public String getContent()
+    {
         if ( content == null )
         {
             return "";
@@ -107,7 +112,8 @@ public class Document
         this.content = content;
     }
 
-    public User getCreator() {
+    public User getCreator()
+    {
         return creator;
     }
 
@@ -116,25 +122,35 @@ public class Document
         this.creator = creator;
     }
 
-    public Date getCreated() {
+    public Date getCreated()
+    {
         return created;
     }
 
-    public void setCreated(Date created) {
+    public void setCreated( Date created )
+    {
         this.created = created;
     }
 
-    public Date getUpdated() {
+    public Date getUpdated()
+    {
         return updated;
     }
 
-    public void setUpdated(Date updated) {
+    public void setUpdated( Date updated )
+    {
         this.updated = updated;
     }
 
-    public void addComment(Comment comment)
+    public void addComment( Comment comment )
     {
-        comments.add(comment);
+        comments.add( comment );
+    }
+
+    @Override
+    public void removeComment( Comment comment )
+    {
+        comments.remove( comment );
     }
 
     public Set<Comment> getComments()
@@ -157,11 +173,13 @@ public class Document
         return watchers;
     }
 
-    public String getIconPath() {
+    public String getIconPath()
+    {
         return null;
     }
 
-    public String getLink() {
+    public String getLink()
+    {
         return "/" + getProject().getId() + "/docs/page/" + getName();
     }
 

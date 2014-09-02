@@ -23,10 +23,7 @@ import org.headsupdev.agile.api.SearchResult;
 import org.headsupdev.agile.api.User;
 import org.headsupdev.agile.api.rest.Publish;
 import org.headsupdev.agile.api.service.ChangeSet;
-import org.headsupdev.agile.storage.Attachment;
-import org.headsupdev.agile.storage.Comment;
-import org.headsupdev.agile.storage.ScmChangeSet;
-import org.headsupdev.agile.storage.StoredUser;
+import org.headsupdev.agile.storage.*;
 import org.headsupdev.agile.storage.hibernate.IdProjectBridge;
 import org.headsupdev.agile.storage.hibernate.IdProjectId;
 import org.headsupdev.agile.storage.resource.DurationWorked;
@@ -50,7 +47,7 @@ import java.util.Set;
 @Table(name = "Issues")
 @Indexed(index = "Issues")
 public class Issue
-        implements Serializable, SearchResult
+        implements Serializable, SearchResult, CommentableEntity
 {
     public static final int TYPE_BUG = 10;
     public static final int TYPE_FEATURE = 20;
@@ -423,9 +420,15 @@ public class Issue
         return reverseRelationships;
     }
 
-    public void addComment(Comment comment)
+    public void addComment( Comment comment )
     {
         comments.add( comment );
+    }
+
+    @Override
+    public void removeComment( Comment comment )
+    {
+        comments.remove( comment );
     }
 
     public Set<Comment> getComments()

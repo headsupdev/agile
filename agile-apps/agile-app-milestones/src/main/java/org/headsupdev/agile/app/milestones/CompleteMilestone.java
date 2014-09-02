@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2013 Heads Up Development Ltd.
+ * Copyright 2009-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -28,6 +28,7 @@ import org.headsupdev.agile.web.MountPoint;
 import java.util.Date;
 
 import org.apache.wicket.markup.html.form.Form;
+import org.headsupdev.agile.web.SubmitChildException;
 
 /**
  * Milestone complete page - mark it as completed
@@ -45,12 +46,12 @@ public class CompleteMilestone
         setSubmitLabel( "Complete Milestone" );
     }
 
-    protected void submitChild()
+    protected void submitChild( Comment comment )
     {
-        getMilestone().setCompletedDate( new Date() );
-        if ( getMilestone().getGroup() != null )
+        commentable.setCompletedDate( new Date() );
+        if ( commentable.getGroup() != null )
         {
-            checkGroupCompletion( getMilestone().getGroup() );
+            checkGroupCompletion( commentable.getGroup() );
         }
     }
 
@@ -67,14 +68,8 @@ public class CompleteMilestone
         group.setCompletedDate( new Date() );
     }
 
-    @Override
-    public String getTitle()
-    {
-        return "Complete milestone " + getMilestone().getName();
-    }
-
     protected Event getUpdateEvent( Comment comment )
     {
-        return new CompleteMilestoneEvent( getMilestone(), getMilestone().getProject(), getSession().getUser(), comment );
+        return new CompleteMilestoneEvent( commentable, commentable.getProject(), getSession().getUser(), comment );
     }
 }

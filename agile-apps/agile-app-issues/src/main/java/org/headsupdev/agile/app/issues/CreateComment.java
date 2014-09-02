@@ -18,25 +18,23 @@
 
 package org.headsupdev.agile.app.issues;
 
-import org.apache.wicket.markup.html.CSSPackageResource;
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.TextArea;
-import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.Model;
 import org.headsupdev.agile.api.Event;
+import org.headsupdev.agile.api.MenuLink;
+import org.headsupdev.agile.api.Page;
 import org.headsupdev.agile.api.Permission;
 import org.headsupdev.agile.app.issues.event.CommentEvent;
 import org.headsupdev.agile.app.issues.permission.IssueEditPermission;
 import org.headsupdev.agile.storage.Comment;
-import org.headsupdev.agile.storage.HibernateStorage;
 import org.headsupdev.agile.storage.issues.Issue;
 import org.headsupdev.agile.web.BookmarkableMenuLink;
-import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.MountPoint;
-import org.headsupdev.agile.web.components.AttachmentPanel;
-import org.headsupdev.agile.web.components.OnePressSubmitButton;
+import org.headsupdev.agile.web.SubmitChildException;
+import org.headsupdev.agile.web.components.AbstractCreateComment;
+import org.headsupdev.agile.web.components.Subheader;
 
-import java.util.Date;
+import java.util.IllegalFormatException;
 
 /**
  * Add a comment for an issue
@@ -47,22 +45,17 @@ import java.util.Date;
  */
 @MountPoint("comment")
 public class CreateComment
-        extends HeadsUpPage
+        extends AbstractCreateComment<Issue>
 {
-    private Issue issue;
-    private String submitLabel = "Create Comment";
-    protected AttachmentPanel attachmentPanel = null;
-
+    @Override
     public Permission getRequiredPermission()
     {
         return new IssueEditPermission();
     }
 
-    public void layout()
+    @Override
+    protected Issue getObject()
     {
-        super.layout();
-        add( CSSPackageResource.getHeaderContribution( getClass(), "issue.css" ) );
-
         long id;
         try
         {
@@ -70,129 +63,63 @@ public class CreateComment
         }
         catch ( NumberFormatException e )
         {
-            notFoundError();
-            return;
+            return null;
         }
 
-        Issue issue = IssuesApplication.getIssue( id, getProject() );
-        if ( issue == null )
-        {
-            notFoundError();
-            return;
-        }
-
-        addLink( new BookmarkableMenuLink( getPageClass( "issues/view" ), getPageParameters(), "view" ) );
-        this.issue = issue;
-
-        add( new CommentForm( "comment" ) );
+        return IssuesApplication.getIssue( id, getProject() );
     }
 
-    public String getPreamble()
+    @Override
+    protected Event getUpdateEvent( Comment comment )
     {
-        if ( submitLabel.toLowerCase().contains( "issue" ) )
-        {
-            return submitLabel.replace( "Issue", "" );
-        }
-
-        return submitLabel + " for ";
+        return new CommentEvent( commentable, commentable.getProject(), getSession().getUser(), comment, "commented on" );
     }
 
-    public Issue getIssue()
+    @Override
+    protected MenuLink getViewLink()
     {
-        return issue;
+        return new BookmarkableMenuLink( getPageClass( "issues/view" ), getPageParameters(), "view" ) ;
     }
 
+    @Override
     protected void layoutChild( Form form )
     {
     }
 
-    protected void submitChild( Comment comment )
+    @Override
+    protected void submitChild( Comment comment ) throws SubmitChildException
     {
-    }
-
-    protected boolean willChildConsumeComment()
-    {
-        return false;
-    }
-
-    public void setSubmitLabel( String submitLabel )
-    {
-        this.submitLabel = submitLabel;
-    }
-
-    protected Event getUpdateEvent( Comment comment )
-    {
-        return new CommentEvent( issue, issue.getProject(), getSession().getUser(), comment, "commented on" );
-    }
-
-    class CommentForm
-            extends Form<Comment>
-    {
-        private Comment create = new Comment();
-
-        public CommentForm( String id )
-        {
-            super( id );
-
-            setModel( new CompoundPropertyModel<Comment>( create ) );
-            add( new TextArea( "comment" ) );
-
-            layoutChild( this );
-
-            add( new Subheader( "subHeader", getPreamble(), issue ) );
-
-            add( new OnePressSubmitButton( "submit", new Model<String>()
-            {
-                public String getObject()
-                {
-                    return submitLabel;
-                }
-            } ) );
-        }
-
-        public void onSubmit()
-        {
-            issue = (Issue) ( (HibernateStorage) getStorage() ).getHibernateSession().merge( issue );
-
-            Date now = new Date();
-            if ( create.getComment() != null )
-            {
-                create.setUser( CreateComment.this.getSession().getUser() );
-                create.setCreated( now );
-                ( (HibernateStorage) getStorage() ).save( create );
-
-                if ( !willChildConsumeComment() )
-                {
-                    issue.addComment( create );
-                }
-            }
-
-            submitChild( create );
-            if ( attachmentPanel != null )
-            {
-                if ( attachmentPanel.getAttachments().isEmpty() )
-                {
-                    error( "No attachments added!" );
-                    return;
-                }
-            }
-            if ( issue.getStatus() < Issue.STATUS_FEEDBACK )
-            {
-                issue.setStatus( Issue.STATUS_FEEDBACK );
-            }
-            // this line is needed by things that extend our form...
-            issue.setUpdated( now );
-            getHeadsUpApplication().addEvent( getUpdateEvent( create ) );
-
-            setResponsePage( getPageClass( "issues/view" ), getPageParameters() );
-        }
     }
 
     @Override
-    public String getPageTitle()
+    protected PageParameters getSubmitPageParameters()
     {
-        return getPreamble() + "Issue:" + issue.getId() + PAGE_TITLE_SEPARATOR + getAppProductTitle();
+        return getPageParameters();
     }
 
+    @Override
+    protected Class<? extends Page> getSubmitPageClass()
+    {
+        return getPageClass( "issues/view" );
+    }
 
+    @Override
+    protected Subheader<Issue> getSubheader()
+    {
+        String preamble;
+        if ( submitLabel.toLowerCase().contains( "issue" ) )
+        {
+            preamble = submitLabel.replace( "Issue", "" );
+        }
+        else
+        {
+            preamble = submitLabel + " for ";
+        }
+        return new IssueSubheader( "subHeader", preamble, commentable );
+    }
+
+    public Issue getIssue()
+    {
+        return commentable;
+    }
 }

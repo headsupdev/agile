@@ -42,23 +42,23 @@ public class ReopenMilestone
 
     protected void submitChild()
     {
-        getMilestone().setCompletedDate( null );
+        commentable.setCompletedDate( null );
 
-        if ( getMilestone().getGroup() != null )
+        if ( commentable.getGroup() != null )
         {
-            getMilestone().getGroup().setCompletedDate( null );
+            commentable.getGroup().setCompletedDate( null );
         }
     }
 
     @Override
     public String getTitle()
     {
-        return "Reopen milestone " + getMilestone().getName();
+        return "Reopen milestone " + commentable.getName();
     }
 
     protected Event getUpdateEvent( Comment comment )
     {
-        return new UpdateMilestoneEvent( getMilestone(), getMilestone().getProject(), getSession().getUser(), comment,
+        return new UpdateMilestoneEvent( commentable, commentable.getProject(), getSession().getUser(), comment,
                 "reopened" );
     }
 }

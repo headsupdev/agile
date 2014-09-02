@@ -22,7 +22,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 import org.headsupdev.agile.api.Project;
 import org.headsupdev.agile.api.User;
-import org.headsupdev.agile.app.issues.CommentPanel;
+import org.headsupdev.agile.app.issues.IssueCommentPanel;
 import org.headsupdev.agile.app.issues.IssuesApplication;
 import org.headsupdev.agile.storage.issues.Issue;
 import org.headsupdev.agile.storage.resource.DurationWorked;
@@ -121,7 +121,7 @@ public class ProgressEvent
         {
             public Panel getPanel()
             {
-                return new CommentPanel( RenderUtil.PANEL_ID, new Model( duration ), getProject(), null, issue );
+                return new IssueCommentPanel( RenderUtil.PANEL_ID, new Model( duration ), getProject(), null, issue );
             }
         }.getRenderedContent();
 

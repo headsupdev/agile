@@ -61,10 +61,4 @@ public class CreateMilestone
             }
         }  );
     }
-
-    @Override
-    public String getTitle()
-    {
-        return "Create Milestone";
-    }
 }

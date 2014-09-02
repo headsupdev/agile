@@ -19,21 +19,22 @@
 package org.headsupdev.agile.app.issues;
 
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.panel.Panel;
 import org.headsupdev.agile.storage.issues.Issue;
+import org.headsupdev.agile.web.components.Subheader;
 
-/**
- * Created by Gordon Edwards on 11/08/2014.
+/** A Subheader that has components unique to issues.
  *
- * Alternative <h2> header
+ * Created on 29/08/2014
+ * @author Gordon Edwards
+ * @version $Id$
+ * @since 2.1
  */
-public class Subheader
-        extends Panel
+public class IssueSubheader
+        extends Subheader<Issue>
 {
-    public Subheader( String id, String preamble, Issue issue )
+    public IssueSubheader( String id, String preamble, Issue issue )
     {
-        super( id );
-        add( new Label( "preamble", preamble ) );
+        super( id, preamble, issue );
         add( new Label( "issueId", "" + issue.getId() ) );
         add( new Label( "summary", issue.getSummary() ) );
     }

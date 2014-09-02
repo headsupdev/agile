@@ -33,6 +33,7 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.headsupdev.agile.api.*;
 import org.headsupdev.agile.api.mime.Mime;
+import org.headsupdev.agile.app.docs.permission.DocEditPermission;
 import org.headsupdev.agile.app.docs.permission.DocViewPermission;
 import org.headsupdev.agile.storage.Attachment;
 import org.headsupdev.agile.storage.Comment;
@@ -41,6 +42,7 @@ import org.headsupdev.agile.storage.docs.Document;
 import org.headsupdev.agile.web.BookmarkableMenuLink;
 import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.HeadsUpSession;
+import org.headsupdev.agile.web.components.CommentPanel;
 import org.headsupdev.agile.web.components.FormattedDateModel;
 import org.headsupdev.agile.web.components.GravatarLinkPanel;
 import org.headsupdev.agile.web.components.MarkedUpTextModel;
@@ -49,7 +51,10 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import java.io.File;
-import java.util.*;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Documents home page
@@ -183,7 +188,7 @@ public class View
                                 doc = (Document) ( (HibernateStorage) getStorage() ).getHibernateSession().merge( doc );
                                 attachmentList.remove( attachment );
                                 doc.getAttachments().remove( attachment );
-                                ((HibernateStorage) getStorage() ).delete( attachment );
+                                ( (HibernateStorage) getStorage() ).delete( attachment );
                                 attachment.getFile( getStorage() ).delete();
                             }
                         };
@@ -218,13 +223,24 @@ public class View
         {
             protected void populateItem( ListItem<Comment> listItem )
             {
-                listItem.add( new CommentPanel( "comment", listItem.getModel(), getProject(), commentList, doc ){
+                listItem.add( new CommentPanel<Document>( "comment", listItem.getModel(), getProject(), commentList, doc, new DocEditPermission() )
+                {
                     @Override
                     public void showConfirmDialog( ConfirmDialog dialog, AjaxRequestTarget target )
                     {
                         showDialog( dialog, target );
                     }
-                });
+
+                    @Override
+                    public Link getEditLink()
+                    {
+                        PageParameters params = new PageParameters();
+                        params.put( "project", getProject() );
+                        params.put( "page", doc.getName() );
+                        params.put( "commentId", getComment().getId() );
+                        return new BookmarkablePageLink( "editComment", EditComment.class, params );
+                    }
+                } );
             }
         } );
     }

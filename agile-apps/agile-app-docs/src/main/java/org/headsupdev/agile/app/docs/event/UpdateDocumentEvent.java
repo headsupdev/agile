@@ -18,14 +18,18 @@
 
 package org.headsupdev.agile.app.docs.event;
 
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.Model;
 import org.headsupdev.agile.api.User;
-import org.headsupdev.agile.app.docs.CommentPanel;
 import org.headsupdev.agile.app.docs.DocsApplication;
+import org.headsupdev.agile.app.docs.permission.DocEditPermission;
 import org.headsupdev.agile.storage.Comment;
 import org.headsupdev.agile.storage.docs.Document;
 import org.headsupdev.agile.web.RenderUtil;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.headsupdev.agile.web.components.CommentPanel;
+import org.headsupdev.agile.web.dialogs.ConfirmDialog;
 
 import javax.persistence.Entity;
 import javax.persistence.DiscriminatorValue;
@@ -96,7 +100,7 @@ public class UpdateDocumentEvent
         {
             public Panel getPanel()
             {
-                return new CommentPanel( RenderUtil.PANEL_ID, new Model(comment), getProject(), null, doc );
+                return new CommentPanel<Document>( RenderUtil.PANEL_ID, new Model( comment ), getProject(), null, doc, new DocEditPermission() );
             }
         }.getRenderedContent();
 

@@ -18,26 +18,23 @@ package org.headsupdev.agile.app.milestones;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import org.apache.wicket.markup.html.CSSPackageResource;
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.TextArea;
-import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.util.string.StringValueConversionException;
 import org.headsupdev.agile.api.Event;
+import org.headsupdev.agile.api.MenuLink;
+import org.headsupdev.agile.api.Page;
 import org.headsupdev.agile.api.Permission;
 import org.headsupdev.agile.app.milestones.event.UpdateMilestoneEvent;
 import org.headsupdev.agile.app.milestones.permission.MilestoneEditPermission;
 import org.headsupdev.agile.storage.Comment;
-import org.headsupdev.agile.storage.HibernateStorage;
 import org.headsupdev.agile.storage.dao.MilestonesDAO;
 import org.headsupdev.agile.storage.issues.Milestone;
 import org.headsupdev.agile.web.BookmarkableMenuLink;
-import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.MountPoint;
-import org.headsupdev.agile.web.components.OnePressSubmitButton;
-
-import java.util.Date;
+import org.headsupdev.agile.web.SubmitChildException;
+import org.headsupdev.agile.web.components.AbstractEditComment;
+import org.headsupdev.agile.web.components.Subheader;
 
 /**
  * Created by Gordon Edwards on 04/08/2014.
@@ -46,152 +43,79 @@ import java.util.Date;
 
 @MountPoint("editComment")
 public class EditComment
-        extends HeadsUpPage
-
+        extends AbstractEditComment<Milestone>
 {
-    private String submitLabel = "Edit Comment";
+    @Override
+    protected Subheader<Milestone> getSubheader()
+    {
+        String preamble;
+        if ( submitLabel.toLowerCase().contains( "milestone" ) )
+        {
+            preamble = submitLabel.replace( "Milestone", "" );
+        }
+        else
+        {
+            preamble = submitLabel + " for ";
+        }
+        return new Subheader<Milestone>( "subHeader", preamble, commentable );
+    }
 
-    private Milestone milestone;
-    protected long itemId;
-    protected Comment create = new Comment();
-
+    @Override
     public Permission getRequiredPermission()
     {
         return new MilestoneEditPermission();
     }
 
     @Override
-    public void layout()
+    protected Milestone getObject()
     {
-        super.layout();
-        add( CSSPackageResource.getHeaderContribution( getClass(), "milestone.css" ) );
-
-        String milestoneId;
+        MilestonesDAO dao = new MilestonesDAO();
+        String name;
         try
         {
-            milestoneId = getPageParameters().getString( "id" );
-            itemId = getPageParameters().getInt( getIdName() );
+            name = getPageParameters().getString( "id" );
         }
-        catch ( NumberFormatException e )
-        {
-            notFoundError();
-            return;
-        }
-
         catch ( StringValueConversionException e )
         {
-            notFoundError();
-            return;
+            return null;
         }
+        return dao.find( name, getProject() );
+    }
 
-        MilestonesDAO dao = new MilestonesDAO();
-        Milestone milestone = dao.find( milestoneId, getProject() );
+    @Override
+    protected Event getUpdateEvent( Comment comment )
+    {
+        return new UpdateMilestoneEvent( commentable, commentable.getProject(), getSession().getUser(), comment, "edited a comment on" );
+    }
 
-        if ( milestone == null )
-        {
-            notFoundError();
-            return;
-        }
+    @Override
+    protected MenuLink getViewLink()
+    {
+        return new BookmarkableMenuLink( getPageClass( "milestones/view" ), getPageParameters(), "view" );
+    }
 
-        this.milestone = milestone;
-        add( new CommentForm( "comment" ) );
-        addLink( new BookmarkableMenuLink( getPageClass( "milestones/view" ), getPageParameters(), "view" ) );
+    @Override
+    protected void layoutChild( Form form )
+    {
 
     }
 
     @Override
-    public String getTitle()
-    {
-        return "Edit Comment";
-    }
-
-    public Milestone getMilestone()
-    {
-        return milestone;
-    }
-
-
-    protected void layoutChild( Form form )
-    {
-    }
-
     protected void submitChild( Comment comment )
+            throws SubmitChildException
     {
     }
 
-    protected boolean willChildConsumeComment()
+    @Override
+    protected PageParameters getSubmitPageParameters()
     {
-        return false;
+        return getPageParameters();
     }
 
-
-    public void setSubmitLabel( String submitLabel )
+    @Override
+    protected Class<? extends Page> getSubmitPageClass()
     {
-        this.submitLabel = submitLabel;
-    }
-
-    protected Event getUpdateEvent( Comment comment )
-    {
-        return new UpdateMilestoneEvent( milestone, milestone.getProject(), getSession().getUser(), comment, "edited a comment on" );
-    }
-
-    class CommentForm
-            extends Form<Comment>
-    {
-        private TextArea input;
-
-        public CommentForm( String id )
-        {
-            super( id );
-            for ( Comment comment : milestone.getComments() )
-            {
-                if ( comment.getId() == itemId )
-                {
-                    create = comment;
-                    break;
-                }
-            }
-
-            setModel( new CompoundPropertyModel<Comment>( create ) );
-            input = new TextArea( "comment" );
-            add( input );
-            layoutChild( this );
-
-            add( new OnePressSubmitButton( "submit", new Model<String>()
-            {
-                public String getObject()
-                {
-                    return submitLabel;
-                }
-            } ) );
-        }
-
-        public void onSubmit()
-        {
-            milestone = (Milestone) ( (HibernateStorage) getStorage() ).getHibernateSession().merge( milestone );
-            create = (Comment) ( (HibernateStorage) getStorage() ).getHibernateSession().merge( create );
-
-            Date now = new Date();
-
-            if ( create.getComment() != null )
-            {
-                create.setUser( EditComment.this.getSession().getUser() );
-                create.setComment( input.getInput() );
-            }
-
-            submitChild( create );
-
-            // this line is needed by things that extend our form...
-            milestone.setUpdated( now );
-            getHeadsUpApplication().addEvent( getUpdateEvent( create ) );
-
-            setResponsePage( getPageClass( "milestones/view" ), getPageParameters() );
-        }
-    }
-
-    protected String getIdName()
-    {
-        return "commentId";
+        return getPageClass( "milestones/view" );
     }
 }
 

@@ -22,7 +22,6 @@ import org.apache.wicket.PageParameters;
 import org.apache.wicket.ResourceReference;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.CSSPackageResource;
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
@@ -33,7 +32,6 @@ import org.apache.wicket.util.value.ValueMap;
 import org.headsupdev.agile.api.Manager;
 import org.headsupdev.agile.api.MenuLink;
 import org.headsupdev.agile.api.Permission;
-import org.headsupdev.agile.api.User;
 import org.headsupdev.agile.app.milestones.permission.MilestoneEditPermission;
 import org.headsupdev.agile.app.milestones.permission.MilestoneViewPermission;
 import org.headsupdev.agile.storage.Comment;
@@ -42,10 +40,11 @@ import org.headsupdev.agile.storage.StoredProject;
 import org.headsupdev.agile.storage.dao.MilestonesDAO;
 import org.headsupdev.agile.storage.issues.Issue;
 import org.headsupdev.agile.storage.issues.Milestone;
-import org.headsupdev.agile.web.*;
-import org.headsupdev.agile.web.components.FormattedDateModel;
-import org.headsupdev.agile.web.components.GravatarLinkPanel;
-import org.headsupdev.agile.web.components.MarkedUpTextModel;
+import org.headsupdev.agile.web.BookmarkableMenuLink;
+import org.headsupdev.agile.web.HeadsUpPage;
+import org.headsupdev.agile.web.MountPoint;
+import org.headsupdev.agile.web.RenderUtil;
+import org.headsupdev.agile.web.components.CommentPanel;
 import org.headsupdev.agile.web.components.issues.IssueFilterPanel;
 import org.headsupdev.agile.web.components.issues.IssueListPanel;
 import org.headsupdev.agile.web.dialogs.ConfirmDialog;
@@ -73,6 +72,7 @@ public class ViewMilestone
 
     private Milestone milestone;
     private IssueFilterPanel filter;
+
     public Permission getRequiredPermission()
     {
         return new MilestoneViewPermission();
@@ -95,9 +95,6 @@ public class ViewMilestone
         addLinks( getLinks( milestone ) );
         addDetails();
 
-        User currentUser = getSession().getUser();
-        final boolean userHasPermission = Manager.getSecurityInstance().userHasPermission( currentUser, new MilestoneEditPermission(), getProject() );
-
         final List<Comment> commentList = new LinkedList<Comment>();
         commentList.addAll( milestone.getComments() );
         Collections.sort( commentList, new Comparator<Comment>()
@@ -107,15 +104,27 @@ public class ViewMilestone
                 return comment1.getCreated().compareTo( comment2.getCreated() );
             }
         } );
+
         add( new ListView<Comment>( "comments", commentList )
         {
             protected void populateItem( ListItem<Comment> listItem )
             {
-                CommentPanel panel = new CommentPanel( "comment", listItem.getModel(), getProject(), commentList, milestone ){
+                CommentPanel panel = new CommentPanel<Milestone>( "comment", listItem.getModel(), getProject(), commentList, milestone, new MilestoneEditPermission() )
+                {
                     @Override
                     public void showConfirmDialog( ConfirmDialog dialog, AjaxRequestTarget target )
                     {
                         showDialog( dialog, target );
+                    }
+
+                    @Override
+                    public Link getEditLink()
+                    {
+                        PageParameters params = new PageParameters();
+                        params.put( "project", getProject() );
+                        params.put( "id", milestone.getName() );
+                        params.put( "commentId", getComment().getId() );
+                        return new BookmarkablePageLink( "editComment", EditComment.class, params );
                     }
                 };
                 listItem.add( panel );

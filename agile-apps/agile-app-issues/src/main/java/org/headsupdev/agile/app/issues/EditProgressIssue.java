@@ -24,7 +24,6 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.headsupdev.agile.api.Event;
 import org.headsupdev.agile.app.issues.event.ProgressEvent;
-import org.headsupdev.agile.app.issues.event.UpdateIssueEvent;
 import org.headsupdev.agile.storage.Comment;
 import org.headsupdev.agile.storage.HibernateStorage;
 import org.headsupdev.agile.storage.StoredProject;
@@ -36,7 +35,6 @@ import org.headsupdev.agile.web.components.DateTimeWithSecondField;
 import org.headsupdev.agile.web.components.DurationEditPanel;
 
 import java.util.Date;
-import java.util.Iterator;
 
 /**
  * Created by Gordon Edwards on 24/07/2014.
@@ -77,10 +75,7 @@ public class EditProgressIssue
         form.add( update );
 
         form.add( new DateTimeWithSecondField( "day", new PropertyModel<Date>( duration, "day" ) ) );
-        if ( duration.getComment() != null )
-        {
-            create.setComment( duration.getComment().getComment() );
-        }
+
         setSubmitLabel( "Progress Issue" );
     }
 
@@ -90,11 +85,10 @@ public class EditProgressIssue
                 "edited progress on" );
     }
 
+    @Override
     protected void submitChild( Comment comment )
     {
         duration = (DurationWorked) ( (HibernateStorage) getStorage() ).merge( duration );
-
-        duration.setUser( getSession().getUser() );
         duration.setIssue( getIssue() );
         if ( willChildConsumeComment() )
         {
@@ -147,5 +141,18 @@ public class EditProgressIssue
     protected String getIdName()
     {
         return "durationId";
+    }
+
+    @Override
+    protected Comment getComment( int itemId )
+    {
+        if ( duration != null )
+        {
+            if ( duration.getComment() != null )
+            {
+                return duration.getComment();
+            }
+        }
+        return new Comment();
     }
 }
