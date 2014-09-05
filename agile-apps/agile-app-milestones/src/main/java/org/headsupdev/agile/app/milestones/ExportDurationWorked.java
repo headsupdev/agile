@@ -126,7 +126,14 @@ public class ExportDurationWorked
             // here we could throw some error I guess...
         }
 
-        MilestoneFilterPanel filter = new MilestoneFilterPanel( "dummy", HeadsUpSession.ANONYMOUS_USER );
+        MilestoneFilterPanel filter = new MilestoneFilterPanel( "dummy", HeadsUpSession.ANONYMOUS_USER )
+        {
+            @Override
+            public void invalidDatePeriod()
+            {
+                warn( "Invalid date period" );
+            }
+        };
         filter.setFilters( MilestonesApplication.QUERY_DUE_ALL, true, true );
         SortableEntityProvider<Milestone> provider = new MilestoneProvider( getProject(), filter );
 

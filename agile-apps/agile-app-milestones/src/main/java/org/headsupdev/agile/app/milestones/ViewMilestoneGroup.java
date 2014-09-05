@@ -128,6 +128,12 @@ public class ViewMilestoneGroup
 
                 return c;
             }
+
+            @Override
+            public void invalidDatePeriod()
+            {
+                warn( "Invalid date period" );
+            }
         };
         if ( group.isCompleted() )
         {

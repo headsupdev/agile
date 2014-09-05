@@ -61,7 +61,16 @@ public class SortableIssuesProvider
         {
             c.add( assignmentRestriction );
         }
-
+        Criterion dateRestrictionUpdated = filter.getDateCriterionUpdated();
+        if ( dateRestrictionUpdated != null )
+        {
+            c.add( dateRestrictionUpdated );
+        }
+        Criterion dateRestrictionCreated = filter.getDateCriterionCreated();
+        if ( dateRestrictionCreated != null )
+        {
+            c.add( dateRestrictionCreated );
+        }
         return c;
     }
 

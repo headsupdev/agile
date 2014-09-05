@@ -55,7 +55,14 @@ public class Issues
             requirePermission( new ProjectListPermission() );
         }
 
-        filter = new IssueFilterPanel( "filter", getSession().getUser() );
+        filter = new IssueFilterPanel( "filter", getSession().getUser() )
+        {
+            @Override
+            public void invalidDatePeriod()
+            {
+                warn( "Invalid date period" );
+            }
+        };
         add( filter );
 
         SortableEntityProvider<Issue> provider;

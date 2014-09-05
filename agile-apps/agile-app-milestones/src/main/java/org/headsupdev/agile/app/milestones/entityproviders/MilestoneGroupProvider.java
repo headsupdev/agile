@@ -79,6 +79,24 @@ public class MilestoneGroupProvider
             c.add( dueQuery );
         }
 
+        Criterion updatedDateQuery = filter.getDateCriterionUpdated();
+        if ( updatedDateQuery != null )
+        {
+            c.add( updatedDateQuery );
+        }
+
+        Criterion createdDateQuery = filter.getDateCriterionCreated();
+        if ( createdDateQuery != null )
+        {
+            c.add( createdDateQuery );
+        }
+
+        Criterion completedDateQuery = filter.getDateCriterionCompleted();
+        if ( completedDateQuery != null )
+        {
+            c.add( completedDateQuery );
+        }
+
         if ( project != null )
         {
             c.add( Restrictions.eq( "name.project", project ) );

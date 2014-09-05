@@ -29,6 +29,8 @@ import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.*;
 
 /**
@@ -384,6 +386,27 @@ public class StoredUser
         }
     }
 
+    public Date getPreference( String key, Date fallback )
+    {
+        String value = getPreference( key );
+
+        if ( value == null )
+        {
+            return fallback;
+        }
+
+        DateFormat dateFormat = DateFormat.getDateTimeInstance( DateFormat.LONG, DateFormat.LONG, Locale.ENGLISH );
+        try
+        {
+            return dateFormat.parse( value );
+        }
+        catch ( ParseException e )
+        {
+            return fallback;
+        }
+
+    }
+
     public void savePreferences()
     {
         for ( String key : preferences.keySet() )
@@ -421,6 +444,12 @@ public class StoredUser
     public void setPreference( String key, boolean value )
     {
         setPreference( key, String.valueOf( value ) );
+    }
+
+    public void setPreference( String key, Date value )
+    {
+        DateFormat dateFormat = DateFormat.getDateTimeInstance( DateFormat.LONG, DateFormat.LONG, Locale.ENGLISH );
+        setPreference( key, dateFormat.format( value ) );
     }
 
     public boolean equals( Object user )

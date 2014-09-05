@@ -77,9 +77,13 @@ public interface User
 
     public boolean getPreference( String key, boolean fallback );
 
+    public Date getPreference( String key, Date fallback );
+
     public void setPreference( String key, String value );
 
     public void setPreference( String key, int value );
 
     public void setPreference( String key, boolean value );
+
+    public void setPreference( String key, Date date );
 }

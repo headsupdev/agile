@@ -17,25 +17,89 @@
   -->
 
 <html>
-  <body>
+  <body >
     <wicket:panel>
       <div wicket:id="filter">
         <form wicket:id="filterform">
+          <script type="text/javascript">
+                function toggleBetweenDatesVisibility()
+                {
+                    startToggle( 'startDateDue' );
+                    startToggle( 'endDateDue' );
+                }
+
+                function startToggle( dateType )
+                {
+                    var radioBetweenDates = document.getElementById( 'radioBetweenDates' );
+                    var toggle = radioBetweenDates.checked;
+                    var component = document.getElementById( ''+dateType );
+                    var inputs = component.getElementsByTagName( 'input' );
+                    for ( i=0; i<inputs.length; i++ )
+                    {
+                        inputs[i].disabled = !toggle;
+                    }
+                    var selects = component.getElementsByTagName( 'select' );
+                    for ( i=0; i<selects.length; i++ )
+                    {
+                        selects[i].disabled = !toggle;
+                    }
+                    var images = component.getElementsByTagName( 'img' );
+                    for ( i=0; i<images.length; i++ )
+                    {
+                        if ( toggle )
+                        {
+                            images[i].style.display='inline';
+                        }
+                        else
+                        {
+                            images[i].style.display='none';
+                        }
+                    }
+                }
+          </script>
           <table class="vertical">
-            <tr wicket:id="dues">
-              <th>Due</th>
-              <wicket:container wicket:id="due">
-              <td>
-                <input type="radio" wicket:id="radio" />
-                <span wicket:id="label">due</span>
-              </td>
-              </wicket:container>
-            </tr>
+            <wicket:container wicket:id="dues" >
+              <tr>
+                <th>Due</th>
+                  <wicket:container wicket:id="due">
+                  <td>
+                    <input onclick="toggleBetweenDatesVisibility()" type="radio" wicket:id="radio" />
+                    <span wicket:id="label">due</span>
+                  </td>
+                  </wicket:container>
+              </tr>
+              <tr>
+                <th>&nbsp;</th>
+                <td><input type="radio" onclick="toggleBetweenDatesVisibility()" wicket:id="radioBetweenDates"/>between dates</td>
+                <td><span id="startDateDue" wicket:id="startDateDue"></span></td>
+                <td><span id="endDateDue" wicket:id="endDateDue"></span></td>
+              </tr>
+            </wicket:container>
             <tr>
               <th>Completed</th>
               <td><input type="checkbox" wicket:id="showIncomplete" />incomplete</td>
               <td><input type="checkbox" wicket:id="showComplete" />completed</td>
               <td colspan="2">&nbsp;</td>
+            </tr>
+            <wicket:enclosure child = "filterByDateCompleted">
+              <tr>
+                <th>&nbsp;</th>
+                <td><input type="checkbox" wicket:id="filterByDateCompleted">between dates</td>
+                <td><span wicket:id="startDateCompleted"></span></td>
+                <td><span wicket:id="endDateCompleted"></span></td>
+              </tr>
+            </wicket:enclosure>
+            <tr>
+              <th>Updated</th>
+              <td><input type="checkbox" wicket:id="filterByDateUpdated">between dates</td>
+              <td><span wicket:id="startDateUpdated"></span></td>
+              <td><span wicket:id="endDateUpdated"></span></td>
+            </tr>
+            <tr>
+              <th>Created</th>
+              <td><input type="checkbox" wicket:id="filterByDateCreated">between dates</td>
+              <td><span wicket:id="startDateCreated"></span></td>
+              <td><span wicket:id="endDateCreated"></span></td>
             </tr>
             <tr><td colspan="5" class="buttons">
               <input type="submit" value="Apply" wicket:id="applybutton" />
@@ -43,6 +107,9 @@
             </td></tr>
           </table>
         </form>
+        <script type="text/javascript">
+          window.onload( toggleBetweenDatesVisibility() );
+        </script>
       </div>
     </wicket:panel>
   </body>

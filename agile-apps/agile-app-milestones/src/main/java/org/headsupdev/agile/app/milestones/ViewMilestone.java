@@ -131,7 +131,14 @@ public class ViewMilestone
             }
         } );
 
-        filter = new IssueFilterPanel( "filter", getSession().getUser() );
+        filter = new IssueFilterPanel( "filter", getSession().getUser() )
+        {
+            @Override
+            public void invalidDatePeriod()
+            {
+                warn( "Invalid date period" );
+            }
+        };
         if ( milestone.isCompleted() )
         {
             filter.setStatuses( new boolean[]{false, false, false, false, false, true, true} );
