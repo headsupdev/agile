@@ -229,6 +229,12 @@ public class EditMilestoneGroupForm
                 }
                 return Restrictions.and( dueFilter, groupFilter );
             }
+
+            @Override
+            public void invalidDatePeriod()
+            {
+                warn( "Invalid date period" );
+            }
         };
         return filter;
     }

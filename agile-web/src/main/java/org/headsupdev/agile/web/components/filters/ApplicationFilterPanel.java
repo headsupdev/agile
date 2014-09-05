@@ -152,7 +152,7 @@ public abstract class ApplicationFilterPanel
 
     private void loadFilters()
     {
-        String typeStr = ( (HeadsUpSession) getSession() ).getUser().getPreference( "filter." + filterId + ".apps", null );
+        String typeStr = ( (HeadsUpSession) getSession() ).getUser().getPreference( "filter." + filterId + ".apps", (String) null );
         if ( typeStr == null )
         {
             for ( String appId : allApps )

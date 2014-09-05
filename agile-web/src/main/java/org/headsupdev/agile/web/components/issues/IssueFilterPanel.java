@@ -20,7 +20,7 @@ package org.headsupdev.agile.web.components.issues;
 
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.*;
@@ -31,11 +31,13 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
 import org.headsupdev.agile.api.User;
 import org.headsupdev.agile.web.HeadsUpSession;
+import org.headsupdev.agile.web.components.DateTimeWithTimeZoneField;
 import org.headsupdev.agile.web.components.FilterBorder;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -46,7 +48,7 @@ import java.util.List;
  * @version $Id$
  * @since 1.0
  */
-public class IssueFilterPanel
+public abstract class IssueFilterPanel
         extends Panel
 {
     // TODO read these from a current set of values in the session/user pref map...
@@ -61,6 +63,12 @@ public class IssueFilterPanel
     private int assigns = 0;
 
     private User user;
+    private Date startDateUpdated;
+    private Date startDateCreated;
+    private Date endDateUpdated;
+    private Date endDateCreated;
+    private boolean filterByDateUpdated;
+    private boolean filterByDateCreated;
 
     public IssueFilterPanel( String id, final User user )
     {
@@ -151,6 +159,43 @@ public class IssueFilterPanel
             }
         };
         assignments.add( assignment );
+
+        final DateTimeWithTimeZoneField startDateFieldUpdated = new DateTimeWithTimeZoneField( "startDateUpdated" );
+        final DateTimeWithTimeZoneField endDateFieldUpdated = new DateTimeWithTimeZoneField( "endDateUpdated" );
+
+        final DateTimeWithTimeZoneField startDateFieldCreated = new DateTimeWithTimeZoneField( "startDateCreated" );
+        final DateTimeWithTimeZoneField endDateFieldCreated = new DateTimeWithTimeZoneField( "endDateCreated" );
+
+        filterForm.add( startDateFieldUpdated.setOutputMarkupId( true ).setEnabled( filterByDateUpdated ) );
+        filterForm.add( endDateFieldUpdated.setOutputMarkupId( true ).setEnabled( filterByDateUpdated ) );
+
+        filterForm.add( startDateFieldCreated.setOutputMarkupId( true ).setEnabled( filterByDateCreated ) );
+        filterForm.add( endDateFieldCreated.setOutputMarkupId( true ).setEnabled( filterByDateCreated ) );
+
+        filterForm.add( new AjaxCheckBox( "filterByDateUpdated" )
+        {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target )
+            {
+                startDateFieldUpdated.setEnabled( filterByDateUpdated );
+                endDateFieldUpdated.setEnabled( filterByDateUpdated );
+                target.addComponent( startDateFieldUpdated );
+                target.addComponent( endDateFieldUpdated );
+            }
+        } );
+
+        filterForm.add( new AjaxCheckBox( "filterByDateCreated" )
+        {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target )
+            {
+                startDateFieldCreated.setEnabled( filterByDateCreated );
+                endDateFieldCreated.setEnabled( filterByDateCreated );
+                target.addComponent( startDateFieldCreated );
+                target.addComponent( endDateFieldCreated );
+            }
+        } );
+
     }
 
     private void loadFilters()
@@ -164,6 +209,24 @@ public class IssueFilterPanel
         showStatusClosed = user.getPreference( "filter.issue.showStatusClosed", showStatusClosed );
 
         assigns = user.getPreference( "filter.issue.assigns", assigns );
+
+        if ( isInvalidDatePeriod( startDateUpdated, endDateUpdated, filterByDateUpdated ) )
+        {
+            invalidDatePeriod();
+            return;
+        }
+        filterByDateUpdated = user.getPreference( "filter.issue.filterByDateUpdated", filterByDateUpdated );
+        startDateUpdated = user.getPreference( "filter.issue.startDateUpdated", startDateUpdated );
+        endDateUpdated = user.getPreference( "filter.issue.endDateUpdated", endDateUpdated );
+
+        if ( isInvalidDatePeriod( startDateCreated, endDateCreated, filterByDateCreated ) )
+        {
+            invalidDatePeriod();
+            return;
+        }
+        filterByDateCreated = user.getPreference( "filter.issue.filterByDateCreated", filterByDateCreated );
+        startDateCreated = user.getPreference( "filter.issue.startDateCreated", startDateCreated );
+        endDateCreated = user.getPreference( "filter.issue.endDateCreated", endDateCreated );
     }
 
     private void saveFilters()
@@ -177,6 +240,34 @@ public class IssueFilterPanel
         user.setPreference( "filter.issue.showStatusClosed", showStatusClosed );
 
         user.setPreference( "filter.issue.assigns", assigns );
+
+        if ( isInvalidDatePeriod( startDateUpdated, endDateUpdated, filterByDateUpdated ) )
+        {
+            invalidDatePeriod();
+            return;
+        }
+        user.setPreference( "filter.issue.filterByDateUpdated", filterByDateUpdated );
+        user.setPreference( "filter.issue.startDateUpdated", startDateUpdated );
+        user.setPreference( "filter.issue.endDateCreated", endDateCreated );
+
+        if ( isInvalidDatePeriod( startDateCreated, endDateCreated, filterByDateCreated ) )
+        {
+            invalidDatePeriod();
+            return;
+        }
+        user.setPreference( "filter.issue.filterByDateCreated", filterByDateCreated );
+        user.setPreference( "filter.issue.startDateCreated", startDateCreated );
+        user.setPreference( "filter.issue.endDateUpdated", endDateUpdated );
+
+    }
+
+    public boolean isInvalidDatePeriod( Date start, Date end, boolean filterByDate )
+    {
+        if ( start != null && end != null && filterByDate )
+        {
+            return start.after( end );
+        }
+        return filterByDate;
     }
 
     public void setStatuses( boolean[] statuses )
@@ -283,4 +374,30 @@ public class IssueFilterPanel
 
         return null;
     }
+
+    public Criterion getDateCriterionUpdated()
+    {
+        if ( startDateUpdated != null && endDateUpdated != null && filterByDateUpdated )
+        {
+            if ( !startDateUpdated.after( endDateUpdated ) )
+            {
+                return Restrictions.between( "updated", startDateUpdated, endDateUpdated );
+            }
+        }
+        return null;
+    }
+
+    public Criterion getDateCriterionCreated()
+    {
+        if ( startDateCreated != null && endDateCreated != null && filterByDateCreated )
+        {
+            if ( !startDateCreated.after( endDateCreated ) )
+            {
+                return Restrictions.between( "created", startDateCreated, endDateCreated );
+            }
+        }
+        return null;
+    }
+
+    public abstract void invalidDatePeriod();
 }

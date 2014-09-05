@@ -46,6 +46,18 @@
                 </td>
               </wicket:container>
             </tr>
+            <tr>
+              <th>Updated</th>
+              <td><input type="checkbox" wicket:id="filterByDateUpdated"/>between dates</td>
+              <td colspan="2" ><span wicket:id="startDateUpdated"></span></td>
+              <td colspan="2"><span wicket:id="endDateUpdated"></span></td>
+            </tr>
+            <tr>
+              <th>Created</th>
+              <td><input type="checkbox" wicket:id="filterByDateCreated"/>between dates</td>
+              <td colspan="2" ><span wicket:id="startDateCreated"></span></td>
+              <td colspan="2"><span wicket:id="endDateCreated"></span></td>
+            </tr>
             <tr><td colspan="9" class="buttons">
               <input type="submit" value="Apply" wicket:id="applybutton" />
               <input type="reset" value="Cancel" wicket:id="cancelbutton" />

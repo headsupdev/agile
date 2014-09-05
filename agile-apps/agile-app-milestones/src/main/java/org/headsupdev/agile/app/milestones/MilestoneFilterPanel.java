@@ -18,9 +18,9 @@
 
 package org.headsupdev.agile.app.milestones;
 
-import org.headsupdev.agile.api.User;
-import org.headsupdev.agile.web.components.FilterBorder;
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.*;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -28,6 +28,10 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
+import org.headsupdev.agile.api.User;
+import org.headsupdev.agile.web.components.DateTimeWithTimeZoneField;
+import org.headsupdev.agile.web.components.FilterBorder;
 import org.headsupdev.agile.web.components.milestones.MilestoneStatusModifier;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
@@ -42,18 +46,28 @@ import java.util.Date;
  * @version $Id$
  * @since 2.0
  */
-public class MilestoneFilterPanel
-    extends Panel
-    implements MilestoneFilter
+public abstract class MilestoneFilterPanel
+        extends Panel
+        implements MilestoneFilter
 {
+    public static final int FILTER_DATES = -1;
     private int dues = 0;
 
     private boolean showIncomplete = true;
     private boolean showComplete = false;
 
     private User user;
+    private Date startDateDue, endDateDue;
+    private boolean filterByDateUpdated;
+    private Date startDateUpdated, endDateUpdated;
+    private boolean filterByDateCreated;
+    private Date startDateCreated, endDateCreated;
+    private boolean filterByDateCompleted;
+    private Date startDateCompleted, endDateCompleted;
+    private int value;
 
-    public MilestoneFilterPanel( String id, final User user ) {
+    public MilestoneFilterPanel( String id, final User user )
+    {
         super( id );
 
         this.user = user;
@@ -61,7 +75,7 @@ public class MilestoneFilterPanel
         FilterBorder filter = new FilterBorder( "filter" );
         add( filter );
 
-        Form<MilestoneFilterPanel> filterForm = new Form<MilestoneFilterPanel>( "filterform" )
+        final Form<MilestoneFilterPanel> filterForm = new Form<MilestoneFilterPanel>( "filterform" )
         {
             @Override
             protected void onSubmit()
@@ -74,36 +88,95 @@ public class MilestoneFilterPanel
         filter.add( filterForm );
         Button cancelButton = new Button( "cancelbutton" );
         filterForm.add( cancelButton );
-        cancelButton.add( new AttributeModifier( "onclick", true, new Model<String>() {
-            public String getObject() {
+        cancelButton.add( new AttributeModifier( "onclick", true, new Model<String>()
+        {
+            public String getObject()
+            {
                 return "filterbuttonAnimator.reverse();";
             }
         } ) );
 
         Button applyButton = new Button( "applybutton" );
         filterForm.add( applyButton );
-        applyButton.add( new AttributeModifier( "onclick", true, new Model<String>() {
-            public String getObject() {
+        applyButton.add( new AttributeModifier( "onclick", true, new Model<String>()
+        {
+            public String getObject()
+            {
                 return "filterbuttonAnimator.reverse();";
             }
         } ) );
 
         filterForm.setModel( new CompoundPropertyModel<MilestoneFilterPanel>( this ) );
-        RadioGroup dueGroup = new RadioGroup( "dues" );
-        filterForm.add( dueGroup );
+        final RadioGroup dueGroup = new RadioGroup<Integer>( "dues", new PropertyModel<Integer>( dues, "dues" )
+        {
+            @Override
+            public void setObject( Integer object )
+            {
+                dues = object;
+            }
 
-        ListView dueView = new ListView<Integer>( "due", Arrays.asList( 3, 2, 1, 0 ) ) {
-            protected void populateItem( final ListItem<Integer> listItem ) {
-                final int value = listItem.getModelObject();
+            @Override
+            public Integer getObject()
+            {
+                return dues;
+            }
+        } );
+
+        final DateTimeWithTimeZoneField startDateFieldDue = new DateTimeWithTimeZoneField( "startDateDue", new PropertyModel<Date>( this, "startDateDue" )
+        {
+            @Override
+            public Date getObject()
+            {
+                return startDateDue;
+            }
+
+            @Override
+            public void setObject( Date object )
+            {
+                if ( object == null &&  (Integer) dueGroup.getConvertedInput() != FILTER_DATES )
+                {
+                    return;
+                }
+                startDateDue = object;
+            }
+        } );
+        final DateTimeWithTimeZoneField endDateFieldDue = new DateTimeWithTimeZoneField( "endDateDue", new PropertyModel<Date>( this, "endDateDue" ){
+            @Override
+            public Date getObject()
+            {
+                return endDateDue;
+            }
+
+            @Override
+            public void setObject( Date object )
+            {
+                if ( object == null &&  (Integer) dueGroup.getConvertedInput() != FILTER_DATES )
+                {
+                    return;
+                }
+                endDateDue = object;
+            }  
+        });
+        startDateFieldDue.setOutputMarkupId( true ).setMarkupId( "startDateDue" );
+        endDateFieldDue.setOutputMarkupId( true ).setMarkupId( "endDateDue" );
+
+
+
+        ListView dueView = new ListView<Integer>( "due", Arrays.asList( MilestonesApplication.QUERY_DUE_OVERDUE, MilestonesApplication.QUERY_DUE_SOON, MilestonesApplication.QUERY_DUE_DEFINED, 0 ) )
+        {
+            protected void populateItem( final ListItem<Integer> listItem )
+            {
+                value = listItem.getModelObject();
                 String label = "all";
-                switch ( value ) {
-                    case 1:
+                switch ( value )
+                {
+                    case MilestonesApplication.QUERY_DUE_DEFINED:
                         label = "due later";
                         break;
-                    case 2:
+                    case MilestonesApplication.QUERY_DUE_SOON:
                         label = "due soon";
                         break;
-                    case 3:
+                    case MilestonesApplication.QUERY_DUE_OVERDUE:
                         label = "overdue";
                 }
                 listItem.add( new Label( "label", label ) );
@@ -111,9 +184,77 @@ public class MilestoneFilterPanel
             }
         };
         dueGroup.add( dueView );
+        dueGroup.add( new Radio<Integer>( "radioBetweenDates", new Model<Integer>( FILTER_DATES ) ).setMarkupId( "radioBetweenDates" ) );
+
+        dueGroup.add( startDateFieldDue );
+        dueGroup.add( endDateFieldDue );
+
+        dueGroup.setRequired( true );
+        filterForm.add( dueGroup.setOutputMarkupId( true ).setRenderBodyOnly( false ) );
+
+        final DateTimeWithTimeZoneField startDateFieldUpdated = new DateTimeWithTimeZoneField( "startDateUpdated" );
+        final DateTimeWithTimeZoneField endDateFieldUpdated = new DateTimeWithTimeZoneField( "endDateUpdated" );
+
+        filterForm.add( startDateFieldUpdated.setOutputMarkupId( true ).setEnabled( filterByDateUpdated ) );
+        filterForm.add( endDateFieldUpdated.setOutputMarkupId( true ).setEnabled( filterByDateUpdated ) );
+        filterForm.add( new AjaxCheckBox( "filterByDateUpdated" )
+        {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target )
+            {
+                startDateFieldUpdated.setEnabled( filterByDateUpdated );
+                endDateFieldUpdated.setEnabled( filterByDateUpdated );
+                target.addComponent( startDateFieldUpdated );
+                target.addComponent( endDateFieldUpdated );
+            }
+        } );
+
+        final DateTimeWithTimeZoneField startDateFieldCreated = new DateTimeWithTimeZoneField( "startDateCreated" );
+        final DateTimeWithTimeZoneField endDateFieldCreated = new DateTimeWithTimeZoneField( "endDateCreated" );
+
+        filterForm.add( startDateFieldCreated.setOutputMarkupId( true ).setEnabled( filterByDateCreated ) );
+        filterForm.add( endDateFieldCreated.setOutputMarkupId( true ).setEnabled( filterByDateCreated ) );
+        filterForm.add( new AjaxCheckBox( "filterByDateCreated" )
+        {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target )
+            {
+                startDateFieldCreated.setEnabled( filterByDateCreated );
+                endDateFieldCreated.setEnabled( filterByDateCreated );
+                target.addComponent( startDateFieldCreated );
+                target.addComponent( endDateFieldCreated );
+            }
+        } );
+
+        final DateTimeWithTimeZoneField startDateFieldCompleted = new DateTimeWithTimeZoneField( "startDateCompleted" );
+        final DateTimeWithTimeZoneField endDateFieldCompleted = new DateTimeWithTimeZoneField( "endDateCompleted" );
+        final AjaxCheckBox filterByDateCompletedCheckbox = new AjaxCheckBox( "filterByDateCompleted" )
+        {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target )
+            {
+                startDateFieldCompleted.setEnabled( filterByDateCompleted );
+                endDateFieldCompleted.setEnabled( filterByDateCompleted );
+                target.addComponent( startDateFieldCompleted );
+                target.addComponent( endDateFieldCompleted );
+            }
+        };
+
+        filterForm.add( filterByDateCompletedCheckbox.setOutputMarkupId( true ).setVisible( showComplete ) );
+        filterForm.add( startDateFieldCompleted.setOutputMarkupId( true ).setEnabled( false ) );
+        filterForm.add( endDateFieldCompleted.setOutputMarkupId( true ).setEnabled( false ) );
 
         filterForm.add( new CheckBox( "showIncomplete" ) );
-        filterForm.add( new CheckBox( "showComplete" ) );
+        filterForm.add( new AjaxCheckBox( "showComplete" )
+        {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target )
+            {
+                filterByDateCompletedCheckbox.setVisible( showComplete );
+                target.addComponent( filterByDateCompletedCheckbox );
+                target.addComponent( filterForm );
+            }
+        } );
     }
 
     private void loadFilters()
@@ -122,13 +263,48 @@ public class MilestoneFilterPanel
         showComplete = user.getPreference( "filter.milestone.showComplete", showComplete );
 
         dues = user.getPreference( "filter.milestone.dues", dues );
+
+        startDateDue = user.getPreference( "filter.milestone.startDateDue", startDateDue );
+        endDateDue = user.getPreference( "filter.milestone.endDateDue", endDateDue );
+        if ( dues == FILTER_DATES && isInvalidDatePeriod( startDateDue, endDateDue ) )
+        {
+            invalidDatePeriod();
+            return;
+        }
+
+        filterByDateUpdated = user.getPreference( "filter.milestone.filterByDateUpdated", filterByDateUpdated );
+        startDateUpdated = user.getPreference( "filter.milestone.startDateUpdated", startDateUpdated );
+        endDateUpdated = user.getPreference( "filter.milestone.endDateUpdated", endDateUpdated );
+        if ( filterByDateUpdated && isInvalidDatePeriod( startDateUpdated, endDateUpdated ) )
+        {
+            invalidDatePeriod();
+            return;
+        }
+
+        filterByDateCreated = user.getPreference( "filter.milestone.filterByDateCreated", filterByDateCreated );
+        startDateCreated = user.getPreference( "filter.milestone.startDateCreated", startDateCreated );
+        endDateCreated = user.getPreference( "filter.milestone.endDateCreated", endDateCreated );
+        if ( filterByDateCreated && isInvalidDatePeriod( startDateCreated, endDateCreated ) )
+        {
+            invalidDatePeriod();
+            return;
+        }
+
+        filterByDateCompleted = user.getPreference( "filter.milestone.filterByDateCompleted", filterByDateCompleted );
+        startDateCompleted = user.getPreference( "filter.milestone.startDateCompleted", startDateCompleted );
+        endDateCompleted = user.getPreference( "filter.milestone.endDateCompleted", endDateCompleted );
+        if ( filterByDateCompleted && isInvalidDatePeriod( startDateCompleted, endDateCompleted ) )
+        {
+            invalidDatePeriod();
+            return;
+        }
     }
-    
+
     public void setFilters( int due, boolean incomplete, boolean complete )
     {
         showIncomplete = incomplete;
         showComplete = complete;
-        
+
         dues = due;
     }
 
@@ -138,8 +314,56 @@ public class MilestoneFilterPanel
         user.setPreference( "filter.milestone.showComplete", showComplete );
 
         user.setPreference( "filter.milestone.dues", dues );
+
+
+        if ( dues == FILTER_DATES && isInvalidDatePeriod( startDateDue, endDateDue ) )
+        {
+            invalidDatePeriod();
+            return;
+        }
+
+        user.setPreference( "filter.milestone.startDateDue", startDateDue );
+        user.setPreference( "filter.milestone.endDateDue", endDateDue );
+
+        if ( filterByDateUpdated && isInvalidDatePeriod( startDateUpdated, endDateUpdated ) )
+        {
+            invalidDatePeriod();
+            return;
+        }
+        user.setPreference( "filter.milestone.filterByDateUpdated", filterByDateUpdated );
+        user.setPreference( "filter.milestone.startDateUpdated", startDateUpdated );
+        user.setPreference( "filter.milestone.endDateUpdated", endDateUpdated );
+
+        if ( filterByDateCreated && isInvalidDatePeriod( startDateCreated, endDateCreated ) )
+        {
+            invalidDatePeriod();
+            return;
+        }
+        user.setPreference( "filter.milestone.filterByDateCreated", filterByDateCreated );
+        user.setPreference( "filter.milestone.startDateCreated", startDateCreated );
+        user.setPreference( "filter.milestone.endDateCreated", endDateCreated );
+
+        if ( filterByDateCompleted && isInvalidDatePeriod( startDateCompleted, endDateCompleted ) )
+        {
+            invalidDatePeriod();
+            return;
+        }
+        user.setPreference( "filter.milestone.filterByDateCompleted", filterByDateCompleted );
+        user.setPreference( "filter.milestone.startDateCompleted", startDateCompleted );
+        user.setPreference( "filter.milestone.endDateCompleted", endDateCompleted );
     }
 
+    public boolean isInvalidDatePeriod( Date start, Date end )
+    {
+        if ( start == null || end == null )
+        {
+            return true;
+        }
+        return start.after( end );
+    }
+
+
+    @Override
     public Criterion getCompletedCriterion()
     {
         if ( showIncomplete )
@@ -165,6 +389,7 @@ public class MilestoneFilterPanel
         return null;
     }
 
+    @Override
     public Criterion getDueCriterion()
     {
         switch ( dues )
@@ -176,8 +401,63 @@ public class MilestoneFilterPanel
                         Restrictions.ge( "due", new Date() ) );
             case MilestonesApplication.QUERY_DUE_OVERDUE:
                 return Restrictions.lt( "due", new Date() );
+            case FILTER_DATES:
+                return getDateCriterionDue();
+            default:
+                return null;
         }
+    }
 
+    private Criterion getDateCriterionDue()
+    {
+        if ( startDateDue != null && endDateDue != null )
+        {
+            if ( !startDateDue.after( endDateDue ) )
+            {
+                return Restrictions.between( "due", startDateDue, endDateDue );
+            }
+        }
         return null;
     }
+
+    @Override
+    public Criterion getDateCriterionUpdated()
+    {
+        if ( startDateUpdated != null && endDateUpdated != null && filterByDateUpdated )
+        {
+            if ( !startDateUpdated.after( endDateUpdated ) )
+            {
+                return Restrictions.between( "updated", startDateUpdated, endDateUpdated );
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public Criterion getDateCriterionCreated()
+    {
+        if ( startDateCreated != null && endDateCreated != null && filterByDateCreated )
+        {
+            if ( !startDateCreated.after( endDateCreated ) )
+            {
+                return Restrictions.between( "created", startDateCreated, endDateCreated );
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public Criterion getDateCriterionCompleted()
+    {
+        if ( startDateCompleted != null && endDateCompleted != null && filterByDateCompleted )
+        {
+            if ( !startDateCompleted.after( endDateCompleted ) )
+            {
+                return Restrictions.between( "completed", startDateCompleted, endDateCompleted );
+            }
+        }
+        return null;
+    }
+
+    public abstract void invalidDatePeriod();
 }

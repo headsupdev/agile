@@ -73,7 +73,13 @@ public class Milestones
         }
         add( CSSPackageResource.getHeaderContribution( getClass(), "milestone.css" ) );
 
-        final MilestoneFilterPanel filter = new MilestoneFilterPanel( "filter", getSession().getUser() );
+        final MilestoneFilterPanel filter = new MilestoneFilterPanel( "filter", getSession().getUser() ){
+            @Override
+            public void invalidDatePeriod()
+            {
+                error( "Invalid date period" );
+            }
+        };
         add( filter );
 
         hideProject = !getProject().equals( StoredProject.getDefault() );

@@ -36,4 +36,10 @@ public interface MilestoneFilter
     public Criterion getCompletedCriterion();
 
     public Criterion getDueCriterion();
+
+    public Criterion getDateCriterionUpdated();
+
+    public Criterion getDateCriterionCreated();
+
+    public Criterion getDateCriterionCompleted();
 }
