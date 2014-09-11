@@ -74,17 +74,18 @@ public class GradleBuildHandler
             }
             List<String> commands = new ArrayList<String>( Arrays.asList( tasksProperty.split( " " ) ) );
 
-            File gradleExe = new File( gradleHome, "gradle" );
-            if ( !gradleExe.exists() )
-            {
-                gradleExe = new File( gradleHome, "gradle.bat" );
-            }
+            File gradleExe = getGradleExecutable( dir, new File( gradleHome ) );
             commands.add( 0, gradleExe.getAbsolutePath() );
+            if ( gradleExe.getName().endsWith( "gradlew" ) )
+            {
+                // our copy of gradlew will not be executable so let's launch it from a shell
+                commands.add( 0, "/bin/sh" );
+            }
+
             result = ExecUtil.executeLoggingExceptions( commands, dir, buildOut, buildOut );
         }
         catch ( IOException e )
         {
-            e.printStackTrace( new PrintWriter( buildOut ) );
             log.error( "Unable to write to build output file - reported in build log", e );
         }
         finally
@@ -105,6 +106,34 @@ public class GradleBuildHandler
             build.setStatus( Build.BUILD_SUCCEEDED );
             onBuildPassed(project, config, appConfig, dir, output, build);
         }
+    }
+
+    private File getGradleExecutable( File workingDir, File gradleHome )
+    {
+        File exe = getGradleExecutableInDir( workingDir, true );
+        if ( exe.exists() && exe.isFile() )
+        {
+            log.info( "Using wrapper at path \"" + exe + "\" to build project" );
+            return exe;
+        }
+
+        return getGradleExecutableInDir( gradleHome, false );
+    }
+
+    private File getGradleExecutableInDir( File directory, boolean wrapper )
+    {
+        String name = "gradle";
+        if ( wrapper )
+        {
+            name += "w";
+        }
+
+        File gradleExe = new File( directory, name );
+        if ( !gradleExe.exists() || !gradleExe.isFile() )
+        {
+            gradleExe = new File( directory, name + ".bat" );
+        }
+        return gradleExe;
     }
 
     protected static File findJUnitReports( File inDir )
