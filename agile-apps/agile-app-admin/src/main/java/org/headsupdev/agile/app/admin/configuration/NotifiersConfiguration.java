@@ -18,16 +18,19 @@
 
 package org.headsupdev.agile.app.admin.configuration;
 
+import org.apache.maven.model.Developer;
+import org.apache.wicket.markup.html.CSSPackageResource;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.*;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
-import java.util.List;
-import java.util.LinkedList;
+import java.util.*;
 
+import org.headsupdev.agile.app.admin.AdminApplication;
 import org.headsupdev.agile.core.DefaultManager;
 import org.headsupdev.agile.core.PrivateConfiguration;
 import org.headsupdev.agile.api.Manager;
@@ -35,6 +38,7 @@ import org.headsupdev.agile.api.Notifier;
 import org.headsupdev.agile.api.PropertyTree;
 import org.headsupdev.agile.api.Project;
 import org.headsupdev.agile.storage.StoredProject;
+import org.headsupdev.agile.web.ApplicationPageMapper;
 import org.headsupdev.agile.web.MountPoint;
 import org.headsupdev.agile.web.components.OnePressSubmitButton;
 
@@ -52,6 +56,8 @@ public class NotifiersConfiguration
     public void layout()
     {
         super.layout();
+
+        add( CSSPackageResource.getHeaderContribution( AdminApplication.class, "admin.css" ));
 
         List<String> inherit = getInheritedNotifiers( getProject() );
         add( new ListView<String>( "inherit", inherit ) {
@@ -86,8 +92,43 @@ public class NotifiersConfiguration
             this.notifier = n;
             config = notifier.getConfiguration();
 
+            final CheckGroup<String> ignoreGroup = new CheckGroup<String>( "ignoregroup", new Model<HashSet<String>>()
+            {
+                @Override
+                public HashSet<String> getObject()
+                {
+                    return new HashSet<String>( notifier.getIgnoredEvents() );
+                }
+
+                @Override
+                public void setObject( HashSet<String> object )
+                {
+                    StringBuilder list = new StringBuilder();
+                    boolean first = true;
+                    for ( String type : object )
+                    {
+                        if ( !first )
+                        {
+                            list.append( "," );
+                        }
+
+                        list.append( type );
+                        first = false;
+                    }
+                    System.out.println( "list = " + list );
+                    config.setProperty( Notifier.IGNORE_EVENTS_KEY, list.toString() );
+                }
+            }){
+                @Override
+                public void updateModel()
+                {
+                    setModelObject( getConvertedInput() );
+                }
+            };
+            add( ignoreGroup );
+
             List<String> fields = notifier.getConfigurationKeys();
-            add( new ListView<String>( "fields", fields )
+            ignoreGroup.add( new ListView<String>( "fields", fields )
             {
                 protected void populateItem( ListItem<String> listItem )
                 {
@@ -100,16 +141,17 @@ public class NotifiersConfiguration
                         listItem.add( new WebMarkupContainer( "password" ).setVisible( false ) );
 
                         listItem.setVisible( Manager.getStorageInstance().getGlobalConfiguration().getSmtpHost() == null ||
-                            Manager.getStorageInstance().getGlobalConfiguration().getSmtpFrom() == null );
+                                Manager.getStorageInstance().getGlobalConfiguration().getSmtpFrom() == null );
                         return;
                     }
                     listItem.add( new WebMarkupContainer( "requiressmtp" ).setVisible( false ) );
 
                     listItem.add( new Label( "field", fieldName ) );
-                    if ( fieldName.equals( "password" ) ) {
+                    if ( fieldName.equals( "password" ) )
+                    {
                         listItem.add( new WebMarkupContainer( "value" ).setVisible( false ) );
                         listItem.add( new PasswordTextField( "password",
-                            new PropertyTreePasswordModel( fieldName, config ) ).setRequired( false ) );
+                                new PropertyTreePasswordModel( fieldName, config ) ).setRequired( false ) );
                     }
                     else
                     {
@@ -118,6 +160,17 @@ public class NotifiersConfiguration
                     }
                 }
             } );
+
+            ignoreGroup.add( new ListView<String>( "ignores", getAllEventTypes() )
+            {
+                @Override
+                protected void populateItem( final ListItem<String> listItem )
+                {
+                    listItem.add( new Check<String>( "eventTypeCheck", listItem.getModel() ) );
+                    listItem.add( new Label( "eventType", listItem.getModelObject() ) );
+                }
+            } );
+
             add( new OnePressSubmitButton( "submitEdit" ) );
             add( new Button( "remove" )
             {
@@ -135,6 +188,20 @@ public class NotifiersConfiguration
             // this just tells the notifier we updated it's config
             notifier.setConfiguration( config );
         }
+    }
+
+    private List<? extends String> getAllEventTypes()
+    {
+        List<String> eventTypes = new ArrayList<String>();
+
+        List<String> allApps = ApplicationPageMapper.get().getApplicationIds();
+        for ( String appId : allApps )
+        {
+            eventTypes.addAll( ApplicationPageMapper.get().getApplication( appId ).getEventTypes() );
+        }
+
+        Collections.sort( eventTypes );
+        return eventTypes;
     }
 
     class NotifierAddForm extends Form

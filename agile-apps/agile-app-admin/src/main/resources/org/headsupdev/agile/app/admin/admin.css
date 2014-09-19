@@ -162,3 +162,12 @@ form.config fieldset {
 .projectmembership input {
     margin-top: 6px;
 }
+
+tr.ignoreitems {
+    vertical-align: top;
+}
+
+div.ignoreitem {
+    width: 150pt;
+    display: inline-block;
+}

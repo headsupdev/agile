@@ -98,7 +98,7 @@ public class DefaultManager
         notifiers.put( "irc", IRCNotifier.class );
         notifiers.put( "email", EmailNotifier.class );
         notifiers.put( "twitter", TwitterNotifier.class );
-        notifiers.put( "hipchat", HipchatNotifier.class);
+        notifiers.put( "hipchat", HipchatNotifier.class );
 
         return notifiers;
     }
@@ -133,6 +133,11 @@ public class DefaultManager
             if ( notifierIds.contains( notifierId ) )
             {
                 Notifier notifier = loadNotifier( notifierId );
+                if ( notifier == null )
+                {
+                    continue;
+                }
+
                 notifier.setConfiguration( PrivateConfiguration.getNotifierConfiguration( notifier.getId(), project ) );
                 notifiers.add( notifier );
 
@@ -285,6 +290,10 @@ public class DefaultManager
         }
 
         Notifier notifier = loadNotifier( notifierId );
+        if ( notifier == null )
+        {
+            return;
+        }
         nots.add( notifier );
 
         PrivateConfiguration.addNotifierConfiguration( notifierId, notifier.getConfiguration(), project );
@@ -316,10 +325,19 @@ public class DefaultManager
     {
         if ( notifiers.get( project ) != null )
         {
-            for ( Notifier notifier : notifiers.get( project ) ) {
+            for ( Notifier notifier : notifiers.get( project ) )
+            {
+                if ( notifier.getIgnoredEvents().contains( event.getType() ) )
+                {
+                    getLoggerForComponent( getClass().getName() ).debug( "Ignoring event " + event.getId() + " for " +
+                            notifier.getId() + " notifier for project " + project.getId() );
+                    continue;
+                }
+
                 try
                 {
-                    getLoggerForComponent( getClass().getName() ).info( "Running " + notifier.getId() + " notifier for project " + project.getId() );
+                    getLoggerForComponent( getClass().getName() ).info( "Running " + notifier.getId() +
+                            " notifier for project " + project.getId() );
                     notifier.eventAdded( event );
                 }
                 catch ( Exception e )

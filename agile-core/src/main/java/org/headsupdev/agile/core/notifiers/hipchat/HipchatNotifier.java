@@ -18,7 +18,6 @@
 
 package org.headsupdev.agile.core.notifiers.hipchat;
 
-import com.github.hipchat.api.Room;
 import com.github.hipchat.api.UserId;
 import com.github.hipchat.api.messages.Message.Color;
 import org.headsupdev.agile.api.Event;
@@ -27,9 +26,11 @@ import org.headsupdev.agile.api.Notifier;
 import org.headsupdev.agile.api.PropertyTree;
 import org.headsupdev.agile.api.logging.Logger;
 import org.headsupdev.agile.storage.StoredProject;
+import org.headsupdev.support.java.StringUtil;
 
-import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -97,6 +98,18 @@ public class HipchatNotifier
     public List<String> getConfigurationKeys()
     {
         return Arrays.asList( "api key", "room name", "email", "notifier username" );
+    }
+
+    @Override
+    public Collection<String> getIgnoredEvents()
+    {
+        String eventIds = getConfiguration().getProperty( "ignore-events" );
+        if ( StringUtil.isEmpty( eventIds ) )
+        {
+            return new HashSet<String>();
+        }
+
+        return Arrays.asList( eventIds.split( "," ) );
     }
 
     @Override

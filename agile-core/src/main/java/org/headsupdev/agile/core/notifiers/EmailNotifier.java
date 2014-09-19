@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -20,9 +20,12 @@ package org.headsupdev.agile.core.notifiers;
 
 import org.headsupdev.agile.api.*;
 import org.headsupdev.agile.api.util.MailUtil;
+import org.headsupdev.support.java.StringUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -201,9 +204,24 @@ public class EmailNotifier
         this.config = config;
     }
 
+    @Override
     public List<String> getConfigurationKeys()
     {
         return Arrays.asList( "to", "from", "<smtp>" );
+    }
+
+    @Override
+    public Collection<String> getIgnoredEvents()
+    {
+        String eventIds = getConfiguration().getProperty( "ignore-events" );
+        if ( StringUtil.isEmpty( eventIds ) )
+        {
+            return new HashSet<String>();
+        }
+
+        Collection<String> stuff = Arrays.asList( eventIds.split( "," ) );
+        System.out.println( "stuff = " + stuff );
+        return stuff;
     }
 
     public void start()

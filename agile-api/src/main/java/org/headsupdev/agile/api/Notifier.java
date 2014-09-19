@@ -19,6 +19,7 @@
 package org.headsupdev.agile.api;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -31,6 +32,8 @@ import java.util.List;
 public interface Notifier
     extends Serializable
 {
+    public static final String IGNORE_EVENTS_KEY = "ignore-events";
+
     String getId();
 
     String getDescription();
@@ -42,6 +45,7 @@ public interface Notifier
     void setConfiguration( PropertyTree config );
 
     List<String> getConfigurationKeys();
+    Collection<String> getIgnoredEvents();
 
     void start();
     void stop();

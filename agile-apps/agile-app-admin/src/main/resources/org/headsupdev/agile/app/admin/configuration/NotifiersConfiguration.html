@@ -31,7 +31,7 @@
       <div wicket:id="notifiers">
         <span wicket:id="id">id</span><br />
         <form wicket:id="edit">
-
+          <div wicket:id="ignoregroup">
           <table>
             <tr wicket:id="fields">
               <th><span wicket:id="field">field</span></th>
@@ -41,7 +41,19 @@
                 <span wicket:id="requiressmtp">This notifier requires the smtp.host value to be set in the system configuration</span>
               </td>
             </tr>
+
+            <tr class="ignoreitems">
+              <th>ignore events</th>
+              <td>
+                <div wicket:id="ignores" class="ignoreitem">
+                  <input type="checkbox" wicket:id="eventTypeCheck" />
+                  <span wicket:id="eventType">event</span>
+                </div>
+              </td>
+            </tr>
           </table>
+          </div>
+
           <input type="submit" wicket:id = "submitEdit" value="Save" />
           <input type="submit" wicket:id="remove" value="Remove" />
         </form>
