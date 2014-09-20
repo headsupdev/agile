@@ -34,6 +34,8 @@ public interface Event
 {
     long getId();
 
+    String getType();
+
     Date getTime();
 
     String getTitle();

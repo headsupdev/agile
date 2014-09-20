@@ -19,6 +19,7 @@
 package org.headsupdev.agile.api;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -42,6 +43,8 @@ public interface Notifier
     void setConfiguration( PropertyTree config );
 
     List<String> getConfigurationKeys();
+    Collection<String> getIgnoredEvents();
+    void setIgnoredEvents( Collection<String> eventIds );
 
     void start();
     void stop();

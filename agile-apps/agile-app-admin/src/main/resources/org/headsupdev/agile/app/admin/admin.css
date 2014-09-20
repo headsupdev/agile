@@ -162,12 +162,21 @@ form.config fieldset {
     margin-top: 6px;
 }
 
-.userlink{
-    position:relative;
-    bottom:7pt;
+.userlink {
+    position: relative;
+    bottom: 7pt;
 }
 
-.disable{
-    position:relative;
-    bottom:5pt;
+.disable {
+    position: relative;
+    bottom: 5pt;
+}
+
+tr.ignoreitems {
+    vertical-align: top;
+}
+
+div.ignoreitem {
+    width: 150pt;
+    display: inline-block;
 }

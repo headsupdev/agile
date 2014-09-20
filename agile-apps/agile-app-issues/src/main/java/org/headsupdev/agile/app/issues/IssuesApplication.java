@@ -21,11 +21,7 @@ package org.headsupdev.agile.app.issues;
 import org.headsupdev.agile.api.*;
 import org.headsupdev.agile.api.rest.Api;
 import org.headsupdev.agile.app.issues.dao.SortableIssuesProvider;
-import org.headsupdev.agile.app.issues.event.CloseIssueEvent;
-import org.headsupdev.agile.app.issues.event.CommentEvent;
-import org.headsupdev.agile.app.issues.event.ProgressEvent;
-import org.headsupdev.agile.app.issues.event.CreateIssueEvent;
-import org.headsupdev.agile.app.issues.event.UpdateIssueEvent;
+import org.headsupdev.agile.app.issues.event.*;
 import org.headsupdev.agile.app.issues.permission.IssueEditPermission;
 import org.headsupdev.agile.app.issues.permission.IssueListPermission;
 import org.headsupdev.agile.app.issues.permission.IssueViewPermission;
@@ -77,6 +73,7 @@ public class IssuesApplication
         eventTypes.add( "closeissue" );
         eventTypes.add( "createissue" );
         eventTypes.add( "updateissue" );
+        eventTypes.add( "resolveissue" );
         eventTypes.add( "comment" );
         eventTypes.add( "progress" );
     }
@@ -203,6 +200,7 @@ public class IssuesApplication
 
     public Class[] getPersistantClasses()
     {
-        return new Class[]{CloseIssueEvent.class, CreateIssueEvent.class, UpdateIssueEvent.class, CommentEvent.class, ProgressEvent.class};
+        return new Class[]{ CloseIssueEvent.class, CreateIssueEvent.class, UpdateIssueEvent.class,
+                ResolveIssueEvent.class,  CommentEvent.class, ProgressEvent.class };
     }
 }

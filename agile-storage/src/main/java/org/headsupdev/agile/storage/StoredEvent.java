@@ -90,6 +90,13 @@ public class StoredEvent
         this.time = time;
     }
 
+    public String getType()
+    {
+        DiscriminatorValue val = getClass().getAnnotation( DiscriminatorValue.class );
+
+        return val == null ? null : val.value();
+    }
+
     public long getId() {
         return id;
     }

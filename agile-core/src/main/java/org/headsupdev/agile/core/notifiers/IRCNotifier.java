@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -23,12 +23,10 @@ import org.headsupdev.agile.storage.StoredProject;
 
 import org.headsupdev.irc.*;
 import org.headsupdev.irc.impl.DefaultIRCServiceManager;
+import org.headsupdev.support.java.StringUtil;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * An IRC notifier
@@ -182,8 +180,28 @@ public class IRCNotifier
         }
     }
 
-    public List<String> getConfigurationKeys() {
+    @Override
+    public List<String> getConfigurationKeys()
+    {
         return Arrays.asList( "host", "username", "password", "nick", "name", "channel" );
+    }
+
+    @Override
+    public Collection<String> getIgnoredEvents()
+    {
+        String eventIds = getConfiguration().getProperty( "ignore-events" );
+        if ( StringUtil.isEmpty( eventIds ) )
+        {
+            return new HashSet<String>();
+        }
+
+        return Arrays.asList( eventIds.split( EmailNotifier.IGNORE_EVENTS_JOIN ) );
+    }
+
+    public void setIgnoredEvents( Collection<String> eventIds )
+    {
+        String ignoreList = StringUtil.join( eventIds, EmailNotifier.IGNORE_EVENTS_JOIN );
+        getConfiguration().setProperty( EmailNotifier.IGNORE_EVENTS_KEY, ignoreList );
     }
 
     public String getHost()

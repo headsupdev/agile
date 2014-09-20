@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -21,15 +21,18 @@ package org.headsupdev.agile.core.notifiers;
 import org.headsupdev.agile.api.*;
 import org.headsupdev.agile.storage.StoredProject;
 
-import java.util.List;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Arrays;
 import java.io.*;
 import java.net.URLEncoder;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.List;
 
 import org.headsupdev.support.java.Base64;
 import org.headsupdev.support.java.IOUtil;
+import org.headsupdev.support.java.StringUtil;
 
 /**
  * Twitter notifier
@@ -117,9 +120,28 @@ public class TwitterNotifier
         this.config = config;
     }
 
+    @Override
     public List<String> getConfigurationKeys()
     {
         return Arrays.asList( "username", "password" );
+    }
+
+    @Override
+    public Collection<String> getIgnoredEvents()
+    {
+        String eventIds = getConfiguration().getProperty( "ignore-events" );
+        if ( StringUtil.isEmpty( eventIds ) )
+        {
+            return new HashSet<String>();
+        }
+
+        return Arrays.asList( eventIds.split( EmailNotifier.IGNORE_EVENTS_JOIN ) );
+    }
+
+    public void setIgnoredEvents( Collection<String> eventIds )
+    {
+        String ignoreList = StringUtil.join( eventIds, EmailNotifier.IGNORE_EVENTS_JOIN );
+        getConfiguration().setProperty( EmailNotifier.IGNORE_EVENTS_KEY, ignoreList );
     }
 
     public void start()

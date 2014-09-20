@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -20,6 +20,7 @@ package org.headsupdev.agile.app.issues;
 
 import org.headsupdev.agile.api.Event;
 import org.headsupdev.agile.api.Project;
+import org.headsupdev.agile.app.issues.event.ResolveIssueEvent;
 import org.headsupdev.agile.app.issues.event.UpdateIssueEvent;
 import org.headsupdev.agile.storage.Comment;
 import org.headsupdev.agile.storage.HibernateStorage;
@@ -224,7 +225,6 @@ public class ResolveIssue
 
     protected Event getUpdateEvent( Comment comment )
     {
-        return new UpdateIssueEvent( getIssue(), getIssue().getProject(), getSession().getUser(), comment,
-                "resolved" );
+        return new ResolveIssueEvent( getIssue(), getIssue().getProject(), getSession().getUser(), comment );
     }
 }

@@ -1,8 +1,14 @@
 2.1
 
-* Add ability to disable any build configuration
 * Add Gravatars to user references and allow individuals to decide if they should be displayed
+* Add additional filters by date for issues and milestones
+
+
+2.1-beta2
+
+* Add ability to disable any build configuration
 * Support gradle wrapper execution for gradle projects including it
+* Allow notifier configurations to ignore certain events
 
 * Fix importing of child modules in large maven projects
 * Resolve issue with exceptions adding issues with very long summaries - Issue:104

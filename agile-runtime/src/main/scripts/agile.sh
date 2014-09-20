@@ -36,7 +36,7 @@ if [ -x /etc/timezone ]; then
     TIMEZONE='-Dagile.runtime.timezone='`cat /etc/timezone`
 
 #then try Mac OSX
-elif [ `which systemsetup` ]; then
+elif [ `which systemsetup 2>/dev/null` ]; then
     SYSTEMZONE=`systemsetup -gettimezone | sed 's/^.*: //g'`
     if [[ "$SYSTEMZONE" !\= *"..."* ]]; then
         TIMEZONE='-Dagile.runtime.timezone='$SYSTEMZONE
