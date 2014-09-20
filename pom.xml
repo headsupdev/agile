@@ -218,7 +218,7 @@
       <dependency>
         <groupId>org.headsupdev.support</groupId>
         <artifactId>java-support</artifactId>
-        <version>1.7</version>
+        <version>1.8-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.headsupdev.support</groupId>

@@ -135,7 +135,13 @@ public class TwitterNotifier
             return new HashSet<String>();
         }
 
-        return Arrays.asList( eventIds.split( "," ) );
+        return Arrays.asList( eventIds.split( EmailNotifier.IGNORE_EVENTS_JOIN ) );
+    }
+
+    public void setIgnoredEvents( Collection<String> eventIds )
+    {
+        String ignoreList = StringUtil.join( eventIds, EmailNotifier.IGNORE_EVENTS_JOIN );
+        getConfiguration().setProperty( EmailNotifier.IGNORE_EVENTS_KEY, ignoreList );
     }
 
     public void start()

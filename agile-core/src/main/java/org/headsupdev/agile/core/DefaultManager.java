@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -77,11 +77,17 @@ public class DefaultManager
 
         availableNotifiers = getNotifierList();
 
-        initNotifiers( StoredProject.getDefault() );
-        for ( Project project : Manager.getStorageInstance().getProjects() )
+        new Thread( "InitNotifiers" )
         {
-            initNotifiers( project );
-        }
+            public void run()
+            {
+                initNotifiers( StoredProject.getDefault() );
+                for ( Project project : Manager.getStorageInstance().getProjects() )
+                {
+                    initNotifiers( project );
+                }
+            }
+        }.start();
 
         updatesThread = newUpdatesThreadInstance();
         updatesThread.start();
@@ -306,19 +312,25 @@ public class DefaultManager
         notifier.setConfiguration( null );
     }
 
-    public void fireEventAdded( Event event )
+    public void fireEventAdded( final Event event )
     {
-        Project project = event.getProject();
-
-        while ( project != null && !project.equals( StoredProject.getDefault() ) )
+        new Thread( "Notifiers" )
         {
-            sendNotification( event, project );
+            public void run()
+            {
+                Project project = event.getProject();
 
-            project = project.getParent();
-        }
+                while ( project != null && !project.equals( StoredProject.getDefault() ) )
+                {
+                    sendNotification( event, project );
 
-        sendNotification( event, StoredProject.getDefault() );
-        sendSubscriptions( event );
+                    project = project.getParent();
+                }
+
+                sendNotification( event, StoredProject.getDefault() );
+                sendSubscriptions( event );
+            }
+        }.start();
     }
 
     private void sendNotification( Event event, Project project )
@@ -329,15 +341,15 @@ public class DefaultManager
             {
                 if ( notifier.getIgnoredEvents().contains( event.getType() ) )
                 {
-                    getLoggerForComponent( getClass().getName() ).debug( "Ignoring event " + event.getId() + " for " +
-                            notifier.getId() + " notifier for project " + project.getId() );
+                    getLoggerForComponent( getClass().getName() ).debug( "Ignoring event " + event.getType() + " for " +
+                            notifier.getId() + " notifier in project " + project.getId() );
                     continue;
                 }
 
                 try
                 {
-                    getLoggerForComponent( getClass().getName() ).info( "Running " + notifier.getId() +
-                            " notifier for project " + project.getId() );
+                    getLoggerForComponent( getClass().getName() ).debug( "Running " + notifier.getId() +
+                            " notifier for event " + event.getType() + " in project " + project.getId() );
                     notifier.eventAdded( event );
                 }
                 catch ( Exception e )

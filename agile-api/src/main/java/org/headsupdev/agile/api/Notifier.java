@@ -32,8 +32,6 @@ import java.util.List;
 public interface Notifier
     extends Serializable
 {
-    public static final String IGNORE_EVENTS_KEY = "ignore-events";
-
     String getId();
 
     String getDescription();
@@ -46,6 +44,7 @@ public interface Notifier
 
     List<String> getConfigurationKeys();
     Collection<String> getIgnoredEvents();
+    void setIgnoredEvents( Collection<String> eventIds );
 
     void start();
     void stop();

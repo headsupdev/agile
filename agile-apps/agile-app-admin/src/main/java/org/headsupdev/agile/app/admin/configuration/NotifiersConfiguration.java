@@ -30,6 +30,7 @@ import org.apache.wicket.model.PropertyModel;
 
 import java.util.*;
 
+import org.apache.wicket.model.util.CollectionModel;
 import org.headsupdev.agile.app.admin.AdminApplication;
 import org.headsupdev.agile.core.DefaultManager;
 import org.headsupdev.agile.core.PrivateConfiguration;
@@ -41,6 +42,7 @@ import org.headsupdev.agile.storage.StoredProject;
 import org.headsupdev.agile.web.ApplicationPageMapper;
 import org.headsupdev.agile.web.MountPoint;
 import org.headsupdev.agile.web.components.OnePressSubmitButton;
+import org.headsupdev.support.java.StringUtil;
 
 /**
  * Admin of the notifiers used for HeadsUp events
@@ -92,37 +94,24 @@ public class NotifiersConfiguration
             this.notifier = n;
             config = notifier.getConfiguration();
 
-            final CheckGroup<String> ignoreGroup = new CheckGroup<String>( "ignoregroup", new Model<HashSet<String>>()
+            final CheckGroup<String> ignoreGroup = new CheckGroup<String>( "ignoregroup", new CollectionModel<String>()
             {
                 @Override
-                public HashSet<String> getObject()
+                public Collection<String> getObject()
                 {
-                    return new HashSet<String>( notifier.getIgnoredEvents() );
+                    return notifier.getIgnoredEvents();
                 }
 
                 @Override
-                public void setObject( HashSet<String> object )
+                public void setObject( Collection<String> object )
                 {
-                    StringBuilder list = new StringBuilder();
-                    boolean first = true;
-                    for ( String type : object )
-                    {
-                        if ( !first )
-                        {
-                            list.append( "," );
-                        }
-
-                        list.append( type );
-                        first = false;
-                    }
-                    System.out.println( "list = " + list );
-                    config.setProperty( Notifier.IGNORE_EVENTS_KEY, list.toString() );
+                    notifier.setIgnoredEvents( object );
                 }
             }){
                 @Override
                 public void updateModel()
                 {
-                    setModelObject( getConvertedInput() );
+                    notifier.setIgnoredEvents( getConvertedInput() );
                 }
             };
             add( ignoreGroup );
@@ -190,20 +179,6 @@ public class NotifiersConfiguration
         }
     }
 
-    private List<? extends String> getAllEventTypes()
-    {
-        List<String> eventTypes = new ArrayList<String>();
-
-        List<String> allApps = ApplicationPageMapper.get().getApplicationIds();
-        for ( String appId : allApps )
-        {
-            eventTypes.addAll( ApplicationPageMapper.get().getApplication( appId ).getEventTypes() );
-        }
-
-        Collections.sort( eventTypes );
-        return eventTypes;
-    }
-
     class NotifierAddForm extends Form
     {
         private DropDownChoice<String> create;
@@ -234,6 +209,20 @@ public class NotifiersConfiguration
             // strange, the model is reset
             create.setModel( new PropertyModel<String>( this, "adding" ) );
         }
+    }
+
+    private List<? extends String> getAllEventTypes()
+    {
+        List<String> eventTypes = new ArrayList<String>();
+
+        List<String> allApps = ApplicationPageMapper.get().getApplicationIds();
+        for ( String appId : allApps )
+        {
+            eventTypes.addAll( ApplicationPageMapper.get().getApplication( appId ).getEventTypes() );
+        }
+
+        Collections.sort( eventTypes );
+        return eventTypes;
     }
 
     public List<String> getOtherNotifiers()

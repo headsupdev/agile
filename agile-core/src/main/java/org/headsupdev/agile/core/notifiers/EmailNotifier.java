@@ -38,7 +38,11 @@ import java.util.List;
 public class EmailNotifier
     implements Notifier
 {
-    public static enum FooterType {
+    public static final String IGNORE_EVENTS_KEY = "ignore-events";
+    public static final String IGNORE_EVENTS_JOIN = ",";
+
+    public static enum FooterType
+    {
         Notification, Subscription
     }
 
@@ -219,9 +223,13 @@ public class EmailNotifier
             return new HashSet<String>();
         }
 
-        Collection<String> stuff = Arrays.asList( eventIds.split( "," ) );
-        System.out.println( "stuff = " + stuff );
-        return stuff;
+        return Arrays.asList( eventIds.split( IGNORE_EVENTS_JOIN ) );
+    }
+
+    public void setIgnoredEvents( Collection<String> eventIds )
+    {
+        String ignoreList = StringUtil.join( eventIds, IGNORE_EVENTS_JOIN );
+        getConfiguration().setProperty( IGNORE_EVENTS_KEY, ignoreList );
     }
 
     public void start()

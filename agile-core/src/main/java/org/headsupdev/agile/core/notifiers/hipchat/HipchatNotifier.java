@@ -25,6 +25,7 @@ import org.headsupdev.agile.api.Manager;
 import org.headsupdev.agile.api.Notifier;
 import org.headsupdev.agile.api.PropertyTree;
 import org.headsupdev.agile.api.logging.Logger;
+import org.headsupdev.agile.core.notifiers.EmailNotifier;
 import org.headsupdev.agile.storage.StoredProject;
 import org.headsupdev.support.java.StringUtil;
 
@@ -109,7 +110,13 @@ public class HipchatNotifier
             return new HashSet<String>();
         }
 
-        return Arrays.asList( eventIds.split( "," ) );
+        return Arrays.asList( eventIds.split( EmailNotifier.IGNORE_EVENTS_JOIN ) );
+    }
+
+    public void setIgnoredEvents( Collection<String> eventIds )
+    {
+        String ignoreList = StringUtil.join( eventIds, EmailNotifier.IGNORE_EVENTS_JOIN );
+        getConfiguration().setProperty( EmailNotifier.IGNORE_EVENTS_KEY, ignoreList );
     }
 
     @Override
