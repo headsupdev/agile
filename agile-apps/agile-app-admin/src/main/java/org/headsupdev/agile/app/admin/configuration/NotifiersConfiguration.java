@@ -18,14 +18,12 @@
 
 package org.headsupdev.agile.app.admin.configuration;
 
-import org.apache.maven.model.Developer;
 import org.apache.wicket.markup.html.CSSPackageResource;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.*;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
 import java.util.*;
@@ -42,7 +40,6 @@ import org.headsupdev.agile.storage.StoredProject;
 import org.headsupdev.agile.web.ApplicationPageMapper;
 import org.headsupdev.agile.web.MountPoint;
 import org.headsupdev.agile.web.components.OnePressSubmitButton;
-import org.headsupdev.support.java.StringUtil;
 
 /**
  * Admin of the notifiers used for HeadsUp events
