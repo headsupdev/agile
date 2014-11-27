@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -163,14 +163,14 @@ public class StoredEclipseProject
             return null;
         }
 
-        String ret = nature;
+        String ret = nature.trim();
         int lastDot = ret.lastIndexOf( '.' );
         if ( lastDot > -1 )
         {
             ret = ret.substring( lastDot + 1 );
         }
 
-        if ( ret.endsWith( "nature" ) )
+        if ( ret.toLowerCase().endsWith( "nature" ) )
         {
             ret = ret.substring( 0, ret.length() - 6 );
         }

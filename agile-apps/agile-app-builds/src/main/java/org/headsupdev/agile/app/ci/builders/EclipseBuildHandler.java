@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -203,6 +203,7 @@ public class EclipseBuildHandler
         if ( eclipse.getNature() != null )
         {
             nature = eclipse.getNature().substring( eclipse.getNature().lastIndexOf( '.' ) + 1 );
+            nature.trim();
         }
         return "AndroidNature".equals( nature );
     }
