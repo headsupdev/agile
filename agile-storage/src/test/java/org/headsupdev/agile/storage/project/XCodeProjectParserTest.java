@@ -161,4 +161,13 @@ public class XCodeProjectParserTest
     {
         assertEquals("iPhone_Demo", parser.getRFC1034("iPhone Demo"));
     }
+
+    public void testStripComments()
+    {
+        assertNull( parser.stripComments( null ) );
+
+        assertEquals( "test", parser.stripComments( "test" ) );
+
+        assertEquals( "split", parser.stripComments( "spl/* comment */it" ) );
+    }
 }
