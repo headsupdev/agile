@@ -167,7 +167,10 @@ public class XCodeProjectParserTest
         assertNull( parser.stripComments( null ) );
 
         assertEquals( "test", parser.stripComments( "test" ) );
+        assertEquals( "test", parser.stripComments( "test/* comment */" ) );
 
-        assertEquals( "split", parser.stripComments( "spl/* comment */it" ) );
+        // here we are testing that anything after an (inline...) comment is removed - that's what we desire!
+        assertEquals( "", parser.stripComments( "/* comment */test" ) );
+        assertEquals( "spl", parser.stripComments( "spl/* comment */it" ) );
     }
 }
