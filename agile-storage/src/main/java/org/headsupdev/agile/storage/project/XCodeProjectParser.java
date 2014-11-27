@@ -147,6 +147,10 @@ public class XCodeProjectParser
 
     protected String stripComments( String in )
     {
+        if ( in == null )
+        {
+            return null;
+        }
         String out = in;
 
         int pos = in.indexOf( COMMENT_START );
@@ -210,17 +214,17 @@ public class XCodeProjectParser
                 // ignore these lines
             }
 
-            return stripComments(in.readLine());
+            return stripComments( in.readLine() );
         }
         catch ( IOException e )
         {
-            Manager.getLogger(getClass().getName()).error( "Error parsing xcode metadata", e );
+            Manager.getLogger( getClass().getName() ).error( "Error parsing xcode metadata", e );
         }
         finally
         {
             if ( in != null )
             {
-                IOUtil.close(in);
+                IOUtil.close( in );
             }
         }
 
