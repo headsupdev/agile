@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -23,7 +23,6 @@ import org.headsupdev.agile.api.Manager;
 import org.headsupdev.agile.api.Page;
 import org.headsupdev.agile.api.util.HashUtil;
 import org.headsupdev.agile.security.permission.AccountCreatePermission;
-import org.headsupdev.agile.storage.StoredUser;
 import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.HeadsUpSession;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -37,10 +36,8 @@ import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.protocol.http.WebResponse;
 import org.headsupdev.agile.web.auth.WebLoginManager;
 
-import java.util.Date;
-
 /**
- * TODO document me
+ * The main login panel for HeadsUp Agile - used for the login screen or within a popover dialog.
  *
  * @author Andrew Williams
  * @version $Id$
@@ -78,15 +75,15 @@ public class LoginDialog
         extends Form
     {
         private String username, password;
-        private boolean remember = false;
+        private boolean remember = true;
 
         public LoginForm( String id )
         {
             super( id );
 
-            add( new TextField( "username", new PropertyModel( this, "username" ) ).setRequired( true ) );
-            add( new PasswordTextField( "password", new PropertyModel( this, "password" ) ).setRequired( true ) );
-            add( new CheckBox( "remember", new PropertyModel( this, "remember" ) ) );
+            add( new TextField<String>( "username", new PropertyModel<String>( this, "username" ) ).setRequired( true ) );
+            add( new PasswordTextField( "password", new PropertyModel<String>( this, "password" ) ).setRequired( true ) );
+            add( new CheckBox( "remember", new PropertyModel<Boolean>( this, "remember" ) ) );
 
             add( new AjaxFallbackButton( "cancel", this )
             {
