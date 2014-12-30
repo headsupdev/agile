@@ -147,7 +147,7 @@ div.filterapp {
     display: none;
 }
 
-.avatar {
+.history-strapline .avatar {
     position:relative;
     top:5pt;
 }

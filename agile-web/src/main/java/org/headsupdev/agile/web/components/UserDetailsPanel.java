@@ -43,7 +43,7 @@ import org.headsupdev.agile.web.HeadsUpSession;
 public class UserDetailsPanel
         extends Panel
 {
-    private static final int ICON_EDGE_LENGTH = 80;
+    private static final int ICON_EDGE_LENGTH = 64;
     private final GravatarLinkPanel gravatarLinkPanel;
     private User user;
 

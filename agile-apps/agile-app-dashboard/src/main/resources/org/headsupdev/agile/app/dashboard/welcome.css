@@ -94,6 +94,6 @@ table.project-details, table.details, table.moredetails {
     width: 100%;
 }
 
-.gravatar {
+.user .gravatar {
     padding-top:5px;
 }
