@@ -55,6 +55,9 @@ import java.io.InputStream;
 public class GravatarLinkPanel
         extends Panel
 {
+    private static final Color AVATAR_BACKGROUND_COLOR = new Color( 66, 72, 72 );
+    private static final Color AVATAR_FOREGROUND_COLOR = new Color( 230, 231, 234 );
+
     private final Logger log;
     private static final int defaultID = -1;
     private User user;
@@ -156,31 +159,39 @@ public class GravatarLinkPanel
         }
         boolean hasGravatar = avatarBytes != null;
         user.setPreference( "user.hasGravatar", hasGravatar );
-        if ( !hasGravatar || !user.getPreference( "gravatar.show", true ) )
-        {
-            String initials = user.getInitials();
-            if ( initials == null )
-            {
-                return getDefaultResource( iconEdgeLength );
-            }
-            BufferedImage alternativeIcon = new BufferedImage( iconEdgeLength, iconEdgeLength,
-                    BufferedImage.TYPE_INT_RGB );
-            Graphics graphics = alternativeIcon.getGraphics();
-            graphics.setColor( Color.BLACK );
-            graphics.setColor( Color.WHITE );
-            graphics.setFont( new Font( "Arial Black", Font.BOLD, iconEdgeLength / 2 ) );
-            int stringLen = (int) graphics.getFontMetrics().getStringBounds( initials, graphics ).getWidth();
-            int start = iconEdgeLength / 2 - stringLen / 2;
-            graphics.drawString( initials, start, (int) ( iconEdgeLength / 1.4 ) );
-            byte[] iconBytes = getImageBytes( alternativeIcon );
-            iconBytes = scale( iconBytes, iconEdgeLength, iconEdgeLength );
-            return new ByteArrayResource( "image/jpeg", iconBytes );
-        }
-        else
+        if ( hasGravatar && user.getPreference( "gravatar.show", true ) )
         {
             avatarBytes = scale( avatarBytes, iconEdgeLength, iconEdgeLength );
             return new ByteArrayResource( "image/jpeg", avatarBytes );
         }
+
+        return createAvatar( user, iconEdgeLength );
+    }
+
+    private ByteArrayResource createAvatar( User user, int iconEdgeLength )
+            throws IOException
+    {
+        String initials = user.getInitials();
+        if ( initials == null )
+        {
+            return getDefaultResource( iconEdgeLength );
+        }
+
+        int doubleLength = iconEdgeLength * 2;
+        BufferedImage alternativeIcon = new BufferedImage( doubleLength, doubleLength,
+                BufferedImage.TYPE_INT_RGB );
+        Graphics graphics = alternativeIcon.getGraphics();
+        graphics.setColor( AVATAR_BACKGROUND_COLOR );
+        graphics.fillRect( 0, 0, doubleLength, doubleLength );
+
+        graphics.setColor( AVATAR_FOREGROUND_COLOR );
+        graphics.setFont( new Font( "Arial Black", Font.BOLD, iconEdgeLength ) );
+        int stringLen = (int) graphics.getFontMetrics().getStringBounds( initials, graphics ).getWidth();
+        int start = iconEdgeLength - stringLen / 2;
+        graphics.drawString( initials, start, (int) ( iconEdgeLength / 0.7 ) );
+        byte[] iconBytes = getImageBytes( alternativeIcon );
+        iconBytes = scale( iconBytes, iconEdgeLength, iconEdgeLength );
+        return new ByteArrayResource( "image/jpeg", iconBytes );
     }
 
     public byte[] scale( byte[] imageBytes, int width, int height )
@@ -198,7 +209,7 @@ public class GravatarLinkPanel
         }
         java.awt.Image scaledImage = img.getScaledInstance( width, height, java.awt.Image.SCALE_SMOOTH );
         BufferedImage imageBuff = new BufferedImage( width, height, BufferedImage.TYPE_INT_RGB );
-        imageBuff.getGraphics().drawImage( scaledImage, 0, 0, new Color( 0, 0, 0 ), null );
+        imageBuff.getGraphics().drawImage( scaledImage, 0, 0, AVATAR_BACKGROUND_COLOR, null );
 
         return getImageBytes( imageBuff );
     }

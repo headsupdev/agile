@@ -147,9 +147,8 @@ div.filterapp {
     display: none;
 }
 
-.gravatar{
+.avatar {
     position:relative;
     top:5pt;
-    left:15pt;
 }
 

@@ -564,6 +564,14 @@ body {min-height: 100%;} /* for proper browsers */
     height: 0;
 }
 
+.avatar img {
+    border: 1px solid #545A5A;
+
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+}
+
 /* Tabbed panel style */
 div.tabs div.tab-row {
     font-size: 11pt;
