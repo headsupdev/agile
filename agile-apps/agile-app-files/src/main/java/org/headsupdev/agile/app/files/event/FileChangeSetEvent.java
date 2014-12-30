@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -65,8 +65,8 @@ public class FileChangeSetEvent
         setApplicationId( BrowseApplication.ID );
         setProject( project );
 
-        setUsername( getUsernameForAuthor( changeSet.getAuthor() ) );
         setObjectId( changeSet.getId() );
+        setSubObjectId( changeSet.getAuthor() );
     }
 
     private String renderChangeSet( final ChangeSet changeSet, final String stripPrefix )
@@ -169,6 +169,17 @@ public class FileChangeSetEvent
         }
 
         return match.getUsername();
+    }
+
+    @Override
+    public String getUsername()
+    {
+        if ( getSubObjectId() != null )
+        {
+            return getUsernameForAuthor( getSubObjectId() );
+        }
+
+        return super.getUsername();
     }
 
     private static String getDisplayNameForAuthor( String author )
