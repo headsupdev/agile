@@ -1,6 +1,6 @@
 <!--
   ~ HeadsUp Agile
-  ~ Copyright 2009-2013 Heads Up Development Ltd.
+  ~ Copyright 2009-2014 Heads Up Development Ltd.
   ~
   ~ This program is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU Affero General Public License as
@@ -19,6 +19,8 @@
 <html>
   <body>
     <wicket:extend>
+      <p wicket:id="noprojects">There are no projects loaded yet - you can add one at the
+        <a href="/admin/add-project">add-project</a> admin page.</p>
       <wicket:enclosure child="recentprojects">
         <div class="projects">
           <p class="projectgraphgroup">Your recent projects</p>

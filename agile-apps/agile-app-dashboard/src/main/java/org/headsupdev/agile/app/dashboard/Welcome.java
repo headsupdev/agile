@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2013 Heads Up Development Ltd.
+ * Copyright 2009-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -21,6 +21,7 @@ package org.headsupdev.agile.app.dashboard;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.ResourceReference;
 import org.apache.wicket.markup.html.CSSPackageResource;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
@@ -72,6 +73,8 @@ public class Welcome extends HeadsUpPage
         Collections.sort( inactive );
         inactive = getProjectsPermitted( inactive );
         addProjectGraphListView( "inactiveprojects", inactive );
+
+        add( new WebMarkupContainer( "noprojects" ).setVisible( getStorage().getRootProjects().size() == 0 ) );
     }
 
     @Override
