@@ -23,17 +23,6 @@
 
       <table class="vertical">
         <tr>
-          <th style="width: 200px">Avatar</th>
-          <td style="width: 75%">
-            <div style="display:inline" wicket:id="gravatar">
-            </div>
-            <wicket:container wicket:id="checkboxContainer">
-              <input type="checkbox" wicket:id="displayGravatar"/>
-              display your Gravatar
-            </wicket:container>
-          </td>
-        </tr>
-        <tr>
           <th style="width: 200px">First Name</th>
           <td wicket:id="firstname" style="width: 75%"></td>
         </tr>
@@ -53,6 +42,16 @@
           <td wicket:id="telephone" style="width: 75%"></td>
         </tr>
         </wicket:enclosure>
+        <tr>
+          <th style="width: 200px">Avatar</th>
+          <td style="width: 75%">
+            <div style="display:inline" wicket:id="gravatar">
+            </div>
+            <wicket:container wicket:id="checkboxContainer">
+              <input type="checkbox" wicket:id="displayGravatar"/>display your Gravatar
+            </wicket:container>
+          </td>
+        </tr>
         <tr>
           <th style="width: 200px">Last Login</th>
           <td wicket:id="last" style="width: 75%"></td>
