@@ -79,6 +79,7 @@ public abstract class HeadsUpPage
 {
     public static final Pattern ID_PATTERN = Pattern.compile( "[a-zA-Z0-9-_\\.]*" );
     public static final int DEFAULT_AVATAR_EDGE_LENGTH = 32;
+    public static final int SMALL_AVATAR_EDGE_LENGTH = 16;
     public static final String DIALOG_PANEL_ID = "agile-dialog";
     protected static final String PAGE_TITLE_SEPARATOR = " :: ";
 

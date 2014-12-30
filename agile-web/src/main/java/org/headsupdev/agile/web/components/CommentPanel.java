@@ -85,7 +85,7 @@ public class CommentPanel<T extends CommentableEntity>
             {
                 commentTitle.add( new WebMarkupContainer( "editComment" ).setVisible( false ) );
             }
-            commentTitle.add( new GravatarLinkPanel( "gravatar", comment.getUser(), HeadsUpPage.DEFAULT_AVATAR_EDGE_LENGTH ) );
+            commentTitle.add( new GravatarLinkPanel( "gravatar", comment.getUser(), HeadsUpPage.SMALL_AVATAR_EDGE_LENGTH ) );
 
             commentTitle.add( new AccountFallbackLink( "usernameLink", comment.getUser() ) );
             commentTitle.add( new Label( "created", new FormattedDateModel( comment.getCreated(),

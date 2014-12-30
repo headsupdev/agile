@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2013 Heads Up Development Ltd.
+ * Copyright 2009-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -31,7 +31,6 @@ import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.model.IModel;
 import org.headsupdev.support.java.StringUtil;
 import org.headsupdev.agile.security.permission.ProjectListPermission;
 import org.headsupdev.agile.api.mime.Mime;
@@ -117,24 +116,18 @@ public class Browse
                         modified = FormattedDateModel.NO_DATE;
                     }
 
-                    Label authorLabel = new Label( "author-label", author );
-                    Link authorLink;
                     User user = getSecurityManager().getUserByUsernameEmailOrFullname( author );
                     if ( user != null )
                     {
-                        params = new PageParameters();
-                        params.add( "username", user.getUsername() );
-                        authorLink = new BookmarkablePageLink( "author-link", getPageClass( "account" ), params );
-
-                        ( (IModel<String>) authorLabel.getDefaultModel() ).setObject( user.getFullnameOrUsername() );
-                        authorLink.add( authorLabel );
-                        listItem.add( authorLink );
+                        listItem.add( new AccountFallbackLink( "author-link", author ) );
+                        listItem.add( new GravatarLinkPanel( "avatar", user, HeadsUpPage.SMALL_AVATAR_EDGE_LENGTH ) );
                         listItem.add( new WebMarkupContainer( "author-label" ).setVisible( false ) );
                     }
                     else
                     {
+                        listItem.add( new Label( "author-label", author ) );
+                        listItem.add( new GravatarLinkPanel( "avatar", null, HeadsUpPage.SMALL_AVATAR_EDGE_LENGTH ) );
                         listItem.add( new WebMarkupContainer( "author-link" ).setVisible( false ) );
-                        listItem.add( authorLabel );
                     }
 
                     listItem.add( new Label( "comment", new MarkedUpTextModel( comment, getProject() ) )
@@ -353,24 +346,18 @@ public class Browse
                         modified = FormattedDateModel.NO_DATE;
                     }
 
-                    Label authorLabel = new Label( "author-label", author );
-                    Link authorLink;
                     User user = getSecurityManager().getUserByUsernameEmailOrFullname( author );
                     if ( user != null )
                     {
-                        PageParameters params = new PageParameters();
-                        params.add( "username", user.getUsername() );
-                        authorLink = new BookmarkablePageLink( "author-link", getPageClass( "account" ), params );
-
-                        ( (IModel<String>) authorLabel.getDefaultModel() ).setObject( user.getFullnameOrUsername() );
-                        authorLink.add( authorLabel );
-                        listItem.add( authorLink );
+                        listItem.add( new AccountFallbackLink( "author-link", author ) );
+                        listItem.add( new GravatarLinkPanel( "avatar", user, HeadsUpPage.SMALL_AVATAR_EDGE_LENGTH ) );
                         listItem.add( new WebMarkupContainer( "author-label" ).setVisible( false ) );
                     }
                     else
                     {
                         listItem.add( new WebMarkupContainer( "author-link" ).setVisible( false ) );
-                        listItem.add( authorLabel );
+                        listItem.add( new GravatarLinkPanel( "avatar", null, HeadsUpPage.SMALL_AVATAR_EDGE_LENGTH ) );
+                        listItem.add( new Label( "author-label", author ) );
                     }
 
                     listItem.add( new Label( "comment", comment ) );

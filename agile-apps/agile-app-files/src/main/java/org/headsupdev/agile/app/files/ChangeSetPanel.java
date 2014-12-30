@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -23,6 +23,7 @@ import org.headsupdev.agile.api.User;
 import org.headsupdev.agile.api.service.Change;
 import org.headsupdev.agile.api.service.ChangeSet;
 import org.headsupdev.agile.storage.ScmChange;
+import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.HeadsUpSession;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
@@ -37,6 +38,7 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.PageParameters;
 import org.headsupdev.agile.web.components.AccountFallbackLink;
 import org.headsupdev.agile.web.components.FormattedDateModel;
+import org.headsupdev.agile.web.components.GravatarLinkPanel;
 import org.headsupdev.agile.web.components.MarkedUpTextModel;
 import org.headsupdev.agile.web.RenderUtil;
 import org.headsupdev.agile.storage.TransactionalScmChangeSet;
@@ -69,6 +71,8 @@ public class ChangeSetPanel
             add( new WebMarkupContainer( "revision" ).setVisible( false ) );
         }
 
+        User user = Manager.getSecurityInstance().getUserByUsernameEmailOrFullname( changeSet.getAuthor() );
+        add( new GravatarLinkPanel( "avatar", user, HeadsUpPage.DEFAULT_AVATAR_EDGE_LENGTH ) );
         add( new AccountFallbackLink( "author-link", changeSet.getAuthor() ) );
         add( new Label( "date", new FormattedDateModel( changeSet.getDate(),
                 ( (HeadsUpSession) getSession() ).getTimeZone() ) ) );

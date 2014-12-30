@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2013 Heads Up Development Ltd.
+ * Copyright 2009-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -24,9 +24,7 @@ import org.headsupdev.agile.api.Permission;
 import org.headsupdev.agile.api.User;
 import org.headsupdev.agile.api.service.ChangeSet;
 import org.headsupdev.agile.app.files.permission.FileViewPermission;
-import org.headsupdev.agile.web.components.EmbeddedFilePanel;
-import org.headsupdev.agile.web.components.FormattedDurationModel;
-import org.headsupdev.agile.web.components.FormattedSizeModel;
+import org.headsupdev.agile.web.components.*;
 import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.BookmarkableMenuLink;
 import org.headsupdev.agile.web.MountPoint;
@@ -185,17 +183,14 @@ public class BrowseFile
             Label authorLabel = new Label( "author-label", change.getAuthor() );
             if ( user != null )
             {
-                params = new PageParameters();
-                params.add( "username", user.getUsername() );
-                Link authorLink = new BookmarkablePageLink( "author-link", getPageClass( "account" ), params );
-                authorLink.add( authorLabel );
-
-                details.add( authorLink );
+                details.add( new AccountFallbackLink( "author-link", change.getAuthor() ) );
+                details.add( new GravatarLinkPanel( "avatar", user, HeadsUpPage.DEFAULT_AVATAR_EDGE_LENGTH ) );
                 details.add( new WebMarkupContainer( "author-label" ).setVisible( false ) );
             }
             else
             {
                 details.add( new WebMarkupContainer( "author-link" ).setVisible( false ) );
+                details.add( new GravatarLinkPanel( "avatar", null, HeadsUpPage.DEFAULT_AVATAR_EDGE_LENGTH ) );
                 details.add( authorLabel );
             }
 

@@ -565,6 +565,7 @@ body {min-height: 100%;} /* for proper browsers */
 }
 
 .avatar img {
+    padding: 0px !important;
     border: 1px solid #545A5A;
 
     -moz-border-radius: 5px;
