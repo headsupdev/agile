@@ -164,11 +164,12 @@
 
   <profiles>
     <profile>
-      <id>windows_profile</id>
+      <id>default_profile</id>
       <activation>
-        <os>
-          <family>!mac</family>
-        </os>
+        <activeByDefault>true</activeByDefault>
+        <file>
+          <exists>${java.home}/../lib/tools.jar</exists>
+        </file>
       </activation>
       <properties>
         <toolsjar>${java.home}/../lib/tools.jar</toolsjar>
@@ -177,10 +178,9 @@
     <profile>
       <id>osx_legacy_profile</id>
       <activation>
-        <os>
-          <family>mac</family>
-          <version>!10.10</version>
-        </os>
+        <file>
+          <exists>${java.home}/../Classes/classes.jar</exists>
+        </file>
       </activation>
       <properties>
         <toolsjar>${java.home}/../Classes/classes.jar</toolsjar>
@@ -189,13 +189,12 @@
     <profile>
       <id>osx_yosemite_profile</id>
       <activation>
-        <os>
-          <family>mac</family>
-          <version>10.10</version>
-        </os>
+        <file>
+          <exists>${java.home}/lib/tools.jar</exists>
+        </file>
       </activation>
       <properties>
-        <toolsjar>${java.home}/../lib/tools.jar</toolsjar>
+        <toolsjar>${java.home}/lib/tools.jar</toolsjar>
       </properties>
     </profile>
   </profiles>
