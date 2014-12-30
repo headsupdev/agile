@@ -58,8 +58,6 @@
     position: relative;
     left:6pt;
     bottom:1pt;
-    padding-top: 10pt;
-    padding-left: 15pt;
 }
 
 .history-icon {
@@ -85,9 +83,15 @@
     font-weight: normal;
 }
 
+.history-strapline {
+    display: block;
+    padding-left: 15pt;
+}
+
 .history-summary {
     padding: 10pt 15pt;
-    margin: 15pt 0;
+    margin-top: 10pt;
+    margin-bottom: 15pt;
 
     color:  #5b5b5b;
     background-color: #f7f8f3;
