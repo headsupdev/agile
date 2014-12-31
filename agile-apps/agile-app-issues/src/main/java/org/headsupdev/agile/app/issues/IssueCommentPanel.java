@@ -85,7 +85,7 @@ public class IssueCommentPanel
         boolean userHasPermission = Manager.getSecurityInstance().userHasPermission( currentUser, permission, project );
         WebMarkupContainer workedTitle = new WebMarkupContainer( "worked-title" );
         workedTitle.add( edit.setVisible( userHasPermission ) );
-        workedTitle.add( new GravatarLinkPanel( "gravatar", duration.getUser(), HeadsUpPage.DEFAULT_AVATAR_EDGE_LENGTH ) );
+        workedTitle.add( new GravatarLinkPanel( "gravatar", duration.getUser(), HeadsUpPage.SMALL_AVATAR_EDGE_LENGTH ) );
 
         Link remove = new AjaxFallbackLink( "removeComment" )
         {
