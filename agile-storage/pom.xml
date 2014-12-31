@@ -23,7 +23,7 @@
     <relativePath>../agile-osgi-settings/</relativePath>
     <groupId>org.headsupdev.agile</groupId>
     <artifactId>agile-osgi-settings</artifactId>
-    <version>2.1-beta4-SNAPSHOT</version>
+    <version>2.1-beta3</version>
   </parent>
   <artifactId>agile-storage</artifactId>
   <name>HeadsUp Agile Storage</name>
