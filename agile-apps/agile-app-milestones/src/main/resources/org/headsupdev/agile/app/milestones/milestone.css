@@ -114,7 +114,7 @@ table.remaining td.number {
     text-align: center;
 }
 
-.inlinevelocity td.dashheader, .inlinevelocity td.velnumber, .inlinevelocity td.dashfooter{
+.inlinevelocity td.dashheader, .inlinevelocity td.velnumber, .inlinevelocity td.dashfooter {
     border-left: none;
 }
 
@@ -124,3 +124,21 @@ table.remaining td.number {
     left:5px
 }
 
+#filter.filterhidden {
+    padding-bottom: 0;
+}
+
+#filter.filtershown {
+    padding-bottom: 23pt;
+}
+
+#filter form {
+    position: relative;
+}
+
+#filter .filter-buttons {
+    position: absolute;
+    text-align: right;
+    top: 121pt;
+    right: 8pt;
+}

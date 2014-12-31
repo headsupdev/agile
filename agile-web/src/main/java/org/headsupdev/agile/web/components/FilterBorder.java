@@ -50,8 +50,10 @@ public class FilterBorder
         animator.addCssStyleSubject( new MarkupIdModel( filter ), "filterhidden", "filtershown" );
         animator.addCssStyleSubject( new MarkupIdModel( filterButton ), "filterbuttonhidden", "filterbuttonshown" );
         animator.attachTo( filterButton, "onclick", Animator.Action.toggle() );
-        animator.addSubject( new IAnimatorSubject() {
-            public String getJavaScript() {
+        animator.addSubject( new IAnimatorSubject()
+        {
+            public String getJavaScript()
+            {
                 return "moveFilterButtonBackground";
             }
         } );

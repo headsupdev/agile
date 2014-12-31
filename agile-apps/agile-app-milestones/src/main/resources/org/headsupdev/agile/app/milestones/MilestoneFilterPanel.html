@@ -101,11 +101,11 @@
               <td><span wicket:id="startDateCreated"></span></td>
               <td><span wicket:id="endDateCreated"></span></td>
             </tr>
-            <tr><td colspan="5" class="buttons">
-              <input type="submit" value="Apply" wicket:id="applybutton" />
-              <input type="reset" value="Cancel" wicket:id="cancelbutton" />
-            </td></tr>
           </table>
+          <div class="filter-buttons">
+            <input type="submit" value="Apply" wicket:id="applybutton" />
+            <input type="reset" value="Cancel" wicket:id="cancelbutton" />
+          </div>
         </form>
         <script type="text/javascript">
           window.onload( toggleBetweenDatesVisibility() );
