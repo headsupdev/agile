@@ -38,7 +38,7 @@ import org.headsupdev.agile.web.BookmarkableMenuLink;
 import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.HeadsUpSession;
 import org.headsupdev.agile.web.MountPoint;
-import org.headsupdev.agile.web.components.IdPatternValidator;
+import org.headsupdev.agile.web.components.NamePatternValidator;
 import org.headsupdev.agile.web.components.OnePressSubmitButton;
 import org.headsupdev.agile.web.components.history.HistoryPanel;
 import org.headsupdev.support.java.StringUtil;
@@ -84,7 +84,7 @@ public class Edit
         {
             canEditTitle = true;
         }
-        else if ( !isValidName( name ) )
+        else if ( !NamePatternValidator.isValidName( name ) )
         {
             userError( "Invalid document name" );
             return;
@@ -128,11 +128,6 @@ public class Edit
         return "Edit";
     }
 
-    protected boolean isValidName( String name )
-    {
-        return ID_PATTERN.matcher( name ).matches();
-    }
-
     class EditForm
             extends Form<Document>
     {
@@ -148,7 +143,7 @@ public class Edit
 
             setModel( new CompoundPropertyModel( Edit.this ) );
             add( new Label( "label", doc.getName() ).setVisible( !canEditTitle ) );
-            add( new TextField<String>( "name" ).add( new IdPatternValidator() ).setRequired( true ).setVisible( canEditTitle ) );
+            add( new TextField<String>( "name" ).add( new NamePatternValidator() ).setRequired( true ).setVisible( canEditTitle ) );
 
             add( new Label( "verb", getVerb() ) );
             final TextArea contentArea = new TextArea<String>( "content" )

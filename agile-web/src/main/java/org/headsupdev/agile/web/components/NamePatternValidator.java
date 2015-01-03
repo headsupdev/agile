@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2014 Heads Up Development Ltd.
+ * Copyright 2009-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -23,29 +23,31 @@ import org.apache.wicket.validation.validator.PatternValidator;
 import java.util.regex.Pattern;
 
 /**
- * A simple pattern validator that checks the string can be used for an object id
+ * A simple pattern validator that checks the string can be used for an object name
  *
  * @author Andrew Williams
- * @since 2.1
+ * @since 1.0
  */
-public class IdPatternValidator
+public class NamePatternValidator
     extends PatternValidator
 {
-    public static final Pattern ID_PATTERN = Pattern.compile( "[0-9]*" );
+    public static final Pattern NAME_PATTERN = Pattern.compile( "[a-zA-Z0-9-_\\.]*" );
 
-    public IdPatternValidator()
+    public NamePatternValidator()
     {
-        super( ID_PATTERN );
+        super( NAME_PATTERN );
     }
 
     /**
-     * A simple helper to verify a id against thee pattern used by this validator.
+     * A simple helper to verify a name against thee pattern used by this validator.
      *
-     * @param id The id to check for validity
-     * @return true if the passed id is valid, false otherwise
+     * @since 2.1
+     *
+     * @param name The name to check for validity
+     * @return true if the passed name is valid, false otherwise
      */
-    public static boolean isValidId( String id )
+    public static boolean isValidName( String name )
     {
-        return ID_PATTERN.matcher( id ).matches();
+        return NAME_PATTERN.matcher( name ).matches();
     }
 }

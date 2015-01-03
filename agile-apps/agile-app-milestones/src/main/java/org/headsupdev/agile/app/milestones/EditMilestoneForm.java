@@ -36,7 +36,7 @@ import org.headsupdev.agile.storage.issues.Milestone;
 import org.headsupdev.agile.storage.issues.MilestoneGroup;
 import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.components.DateTimeWithTimeZoneField;
-import org.headsupdev.agile.web.components.IdPatternValidator;
+import org.headsupdev.agile.web.components.NamePatternValidator;
 import org.headsupdev.agile.web.components.OnePressSubmitButton;
 
 import java.util.Date;
@@ -112,7 +112,7 @@ public class EditMilestoneForm
         form.add( new Label( "project", milestone.getProject().getAlias() ) );
         if ( creating )
         {
-            form.add( new TextField<String>( "name" ).add( new IdPatternValidator() ).setRequired( true ) );
+            form.add( new TextField<String>( "name" ).add( new NamePatternValidator() ).setRequired( true ) );
             form.add( new WebMarkupContainer( "name-label" ).setVisible( false ) );
 //            form.add( new Label( "created", new FormattedDateModel( new Date() ) ) );
         }

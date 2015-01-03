@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -26,6 +26,7 @@ import org.headsupdev.agile.storage.issues.Issue;
 import org.headsupdev.agile.web.BookmarkableMenuLink;
 import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.MountPoint;
+import org.headsupdev.agile.web.components.IdPatternValidator;
 import org.headsupdev.agile.web.components.issues.IssueListPanel;
 
 /**
@@ -53,16 +54,13 @@ public class EditIssue
         add( CSSPackageResource.getHeaderContribution( getClass(), "issue.css" ) );
         add( CSSPackageResource.getHeaderContribution( IssueListPanel.class, "issue.css" ) );
 
-        try
+        if ( !IdPatternValidator.isValidId( getPageParameters().getString( "id" ) ) )
         {
-            issueId = getPageParameters().getInt( "id" );
-        }
-        catch ( NumberFormatException e )
-        {
-            notFoundError();
+            userError( "Invalid issue id" );
             return;
         }
 
+        issueId = getPageParameters().getLong( "id" );
         issue = IssuesApplication.getIssue( issueId, getProject() );
         if ( issue == null )
         {

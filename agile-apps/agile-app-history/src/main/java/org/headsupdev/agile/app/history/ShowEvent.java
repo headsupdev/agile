@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2014 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -25,6 +25,7 @@ import org.headsupdev.agile.web.MountPoint;
 import org.headsupdev.agile.api.*;
 import org.headsupdev.agile.storage.StoredProject;
 import org.apache.wicket.markup.html.basic.Label;
+import org.headsupdev.agile.web.components.IdPatternValidator;
 
 /**
  * Show the event details - used when a history item is clicked or a permalink from rss etc.
@@ -41,6 +42,12 @@ public class ShowEvent
 
     public void layout()
     {
+        if ( !IdPatternValidator.isValidId( getPageParameters().getString( "id" ) ) )
+        {
+            userError( "Invalid event id" );
+            return;
+        }
+
         long id = getPageParameters().getLong( "id" );
         Event event = HistoryApplication.getEvent( id );
 

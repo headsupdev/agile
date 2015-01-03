@@ -45,10 +45,7 @@ import org.headsupdev.agile.storage.StoredProject;
 import org.headsupdev.agile.storage.issues.Issue;
 import org.headsupdev.agile.storage.resource.DurationWorked;
 import org.headsupdev.agile.web.*;
-import org.headsupdev.agile.web.components.EmbeddedFilePanel;
-import org.headsupdev.agile.web.components.FormattedDateModel;
-import org.headsupdev.agile.web.components.GravatarLinkPanel;
-import org.headsupdev.agile.web.components.MarkedUpTextModel;
+import org.headsupdev.agile.web.components.*;
 import org.headsupdev.agile.web.components.issues.IssueListPanel;
 import org.headsupdev.agile.web.dialogs.ConfirmDialog;
 import org.hibernate.Session;
@@ -85,16 +82,13 @@ public class ViewIssue
         add( CSSPackageResource.getHeaderContribution( getClass(), "issue.css" ) );
         add( CSSPackageResource.getHeaderContribution( IssueListPanel.class, "issue.css" ) );
 
-        try
+        if ( !IdPatternValidator.isValidId( getPageParameters().getString( "id" ) ) )
         {
-            issueId = getPageParameters().getLong( "id" );
-        }
-        catch ( NumberFormatException e )
-        {
-            notFoundError();
+            userError( "Invalid issue id" );
             return;
         }
 
+        issueId = getPageParameters().getLong( "id" );
         issue = IssuesApplication.getIssue( issueId, getProject() );
         if ( issue == null )
         {

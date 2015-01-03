@@ -26,7 +26,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
 import org.headsupdev.agile.api.Project;
-import org.headsupdev.agile.web.components.IdPatternValidator;
+import org.headsupdev.agile.web.components.NamePatternValidator;
 import org.apache.wicket.util.string.Strings;
 
 import java.util.LinkedList;
@@ -70,7 +70,7 @@ public class ProjectImportListView
                 } ).setEscapeModelStrings( false ) );
 
                 // TODO add a nice error message if the pattern does not match
-                listItem.add( new TextField<String>( "id" ).add( new IdPatternValidator() ).setRequired( true ) );
+                listItem.add( new TextField<String>( "id" ).add( new NamePatternValidator() ).setRequired( true ) );
 
                 List<Project> children = new LinkedList<Project>( project.getChildProjects() );
                 listItem.add( new ProjectImportListView( "childProjects", children, INDENT + indent, myRow + 1 ) );

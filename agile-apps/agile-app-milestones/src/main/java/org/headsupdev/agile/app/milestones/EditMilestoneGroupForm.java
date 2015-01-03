@@ -138,7 +138,7 @@ public class EditMilestoneGroupForm
         form.add( new Label( "project", group.getProject().getAlias() ) );
         if ( creating )
         {
-            form.add( new TextField<String>( "name" ).add( new IdPatternValidator() ).setRequired( true ) );
+            form.add( new TextField<String>( "name" ).add( new NamePatternValidator() ).setRequired( true ) );
             form.add( new WebMarkupContainer( "name-label" ).setVisible( false ) );
 //            form.add( new Label( "created", new FormattedDateModel( new Date() ) ) );
         }
