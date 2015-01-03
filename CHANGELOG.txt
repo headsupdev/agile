@@ -1,5 +1,10 @@
 2.1
 
+* Improved error handling when invalid IDs are used in URLs
+
+
+2.1-beta3
+
 * Add Gravatars to user references and allow individuals to decide if they should be displayed
 * Add additional filters by date for issues and milestones
 
