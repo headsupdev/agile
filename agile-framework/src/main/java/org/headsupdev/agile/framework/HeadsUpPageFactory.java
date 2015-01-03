@@ -65,7 +65,7 @@ public class HeadsUpPageFactory
             HeadsUpPage page = ( (HeadsUpPage) ret );
 
             Application app = ApplicationPageMapper.get().getApplication( ret.getPageClass() );
-            if ( ApplicationPageMapper.isHomeApp( app ) )
+            if ( app == null || ApplicationPageMapper.isHomeApp( app ) )
             {
                 app = ApplicationPageMapper.get().getApplication( "dashboard" );
                 if ( app == null )

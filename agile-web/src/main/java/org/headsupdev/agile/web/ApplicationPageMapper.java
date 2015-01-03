@@ -265,6 +265,10 @@ public class ApplicationPageMapper
 
     public static boolean isHomeApp( Application app )
     {
+        if ( app == null ) {
+            return false; // the home app is special and should not be polluted by bad apps
+        }
+
         return ( "home".equals( app.getApplicationId() ) || "dashboard".equals( app.getApplicationId( ) ) );
     }
 
