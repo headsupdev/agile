@@ -987,10 +987,10 @@ div.wicketstuff-progressbar span.bar{
 }
 
 .speechbubble.big:after {
-    bottom: -35px;
+    bottom: -36px;
     left: 70px;
 
-    border-left-width: 35px;
-    border-bottom-width: 35px;
+    border-left-width: 36px;
+    border-bottom-width: 36px;
 }
 
