@@ -89,6 +89,11 @@ public class HeadsUpConfiguration
         return "HeadsUp Agile";
     }
 
+    public String getProductDescription()
+    {
+        return "The " + getProductName() + " full stack software project management environment";
+    }
+
     // must have a trailing slash...
     public String getProductUrl()
     {

@@ -464,6 +464,14 @@ public abstract class HeadsUpPage
             }
         } );
         add( new Label( "pagetitle", new PropertyModel( this, "pageTitle" ) ) );
+        add( new WebMarkupContainer( "description" ).add( new AttributeModifier( "content", true, new Model<String>()
+        {
+            @Override
+            public String getObject()
+            {
+                return getStorage().getGlobalConfiguration().getProductDescription();
+            }
+        } ) ) );
         add( new FeedbackPanel( "messages" ) );
 
         add( new Label( "footer-description", WebManager.getInstance().getFooterDescriptionHTML( getSession().getTimeZone() ) ).setEscapeModelStrings( false ) );
