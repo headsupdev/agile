@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2015 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -98,27 +98,27 @@ public class IssueRelationship
 
     public boolean equals( IssueRelationship that )
     {
-
         if ( type != that.type )
         {
             return false;
         }
-        if ( !owner.equals( that.owner ) )
+        if ( owner != null ? !owner.equals( that.owner ) : that.owner != null )
         {
             return false;
         }
-        if ( !related.equals( that.related ) )
+        if ( related != null ? !related.equals( that.related ) : that.related != null )
         {
             return false;
         }
+
         return true;
     }
 
     @Override
     public int hashCode()
     {
-        int result = owner.hashCode();
-        result = 31 * result + related.hashCode();
+        int result = owner != null ? owner.hashCode() : 0;
+        result = 31 * result + ( related != null ? related.hashCode() : 0 );
         result = 31 * result + type;
         return result;
     }
