@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2015 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -79,6 +79,10 @@ public class HeadsUpActivator
         props = new Hashtable();
         props.put( "alias", "/favicon.ico" );
         bc.registerService( Servlet.class.getName(), new FaviconServlet(), props );
+
+        props = new Hashtable();
+        props.put( "alias", "/robots.txt" );
+        bc.registerService( Servlet.class.getName(), new RobotsServlet(), props );
 
         HomeApplication homeApp = new HomeApplication();
         homeApp.setContext( bc );

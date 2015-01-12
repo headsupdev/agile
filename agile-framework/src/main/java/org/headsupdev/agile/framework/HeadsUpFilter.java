@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2015 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -55,7 +55,7 @@ public class HeadsUpFilter
             path = path.substring( 0, cookiePos );
         }
 
-        if ( path.startsWith( "/repository" ) || path.equals( "/favicon.ico" ) )
+        if ( path.startsWith( "/repository" ) || path.equals( "/favicon.ico" ) || path.equals( "/robots.txt" ) )
         {
             // bypass the wicket (which we extend) and go straight to the webdav
             filterChain.doFilter(servletRequest, servletResponse);
