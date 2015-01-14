@@ -35,12 +35,14 @@ import org.headsupdev.agile.web.MountPoint;
 public class ReopenMilestone
         extends CreateComment
 {
+    @Override
     protected void layoutChild( Form form )
     {
         setSubmitLabel( "Reopen Milestone" );
     }
 
-    protected void submitChild()
+    @Override
+    protected void submitChild( Comment comment )
     {
         commentable.setCompletedDate( null );
 
@@ -56,6 +58,7 @@ public class ReopenMilestone
         return "Reopen milestone " + commentable.getName();
     }
 
+    @Override
     protected Event getUpdateEvent( Comment comment )
     {
         return new UpdateMilestoneEvent( commentable, commentable.getProject(), getSession().getUser(), comment,

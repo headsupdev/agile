@@ -41,11 +41,13 @@ import org.headsupdev.agile.web.SubmitChildException;
 public class CompleteMilestone
     extends CreateComment
 {
+    @Override
     protected void layoutChild( Form form )
     {
         setSubmitLabel( "Complete Milestone" );
     }
 
+    @Override
     protected void submitChild( Comment comment )
     {
         commentable.setCompletedDate( new Date() );
@@ -68,6 +70,7 @@ public class CompleteMilestone
         group.setCompletedDate( new Date() );
     }
 
+    @Override
     protected Event getUpdateEvent( Comment comment )
     {
         return new CompleteMilestoneEvent( commentable, commentable.getProject(), getSession().getUser(), comment );
