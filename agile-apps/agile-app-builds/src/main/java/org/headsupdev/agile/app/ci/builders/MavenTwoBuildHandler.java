@@ -117,18 +117,21 @@ public class MavenTwoBuildHandler
             request.setBaseDirectory( dir );
 
             String goals = config.getProperty( CIApplication.CONFIGURATION_MAVEN_GOALS.getKey() );
-            if ( goals == null )
+            if ( StringUtil.isEmpty( goals ) )
             {
                 goals = (String) CIApplication.CONFIGURATION_MAVEN_GOALS.getDefault();
             }
-            request.setGoals( Arrays.asList( goals.split( " " ) ) );
+            if ( !StringUtil.isEmpty( goals ) )
+            {
+                request.setGoals( Arrays.asList( goals.split( " " ) ) );
+            }
 
             String profiles = config.getProperty( CIApplication.CONFIGURATION_MAVEN_PROFILES.getKey() );
-            if ( profiles == null )
+            if ( StringUtil.isEmpty( profiles ) )
             {
                 profiles = (String) CIApplication.CONFIGURATION_MAVEN_PROFILES.getDefault();
             }
-            if ( profiles != null && profiles.length() > 0 )
+            if ( !StringUtil.isEmpty( profiles ) )
             {
                 request.setProfiles( Arrays.asList( profiles.split( " " ) ) );
             }

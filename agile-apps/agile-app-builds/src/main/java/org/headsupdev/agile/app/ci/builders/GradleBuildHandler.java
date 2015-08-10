@@ -27,6 +27,7 @@ import org.headsupdev.agile.app.ci.CIBuilder;
 import org.headsupdev.agile.storage.ci.Build;
 import org.headsupdev.support.java.ExecUtil;
 import org.headsupdev.support.java.IOUtil;
+import org.headsupdev.support.java.StringUtil;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -68,11 +69,15 @@ public class GradleBuildHandler
             }
 
             String tasksProperty = config.getProperty( CIApplication.CONFIGURATION_GRADLE_TASKS.getKey() );
-            if ( tasksProperty == null )
+            if ( StringUtil.isEmpty( tasksProperty ) )
             {
                 tasksProperty = (String) CIApplication.CONFIGURATION_GRADLE_TASKS.getDefault();
             }
-            List<String> commands = new ArrayList<String>( Arrays.asList( tasksProperty.split( " " ) ) );
+            List<String> commands = new ArrayList<String>();
+            if ( !StringUtil.isEmpty( tasksProperty ) )
+            {
+                commands.addAll( Arrays.asList( tasksProperty.split( " " ) ) );
+            }
 
             File gradleExe = getGradleExecutable( dir, new File( gradleHome ) );
             commands.add( 0, gradleExe.getAbsolutePath() );

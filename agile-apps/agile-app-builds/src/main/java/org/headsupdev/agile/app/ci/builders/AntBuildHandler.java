@@ -25,6 +25,7 @@ import org.headsupdev.support.java.IOUtil;
 import org.headsupdev.agile.api.logging.Logger;
 import org.headsupdev.agile.app.ci.CIApplication;
 import org.headsupdev.agile.storage.ci.Build;
+import org.headsupdev.support.java.StringUtil;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -66,11 +67,15 @@ public class AntBuildHandler
             }
 
             String tasksProperty = config.getProperty( CIApplication.CONFIGURATION_ANT_TASKS.getKey() );
-            if ( tasksProperty == null )
+            if ( StringUtil.isEmpty( tasksProperty ) )
             {
                 tasksProperty = (String) CIApplication.CONFIGURATION_ANT_TASKS.getDefault();
             }
-            List<String> commands = new ArrayList<String>( Arrays.asList( tasksProperty.split( " " ) ) );
+            List<String> commands = new ArrayList<String>();
+            if ( !StringUtil.isEmpty( tasksProperty ) )
+            {
+                commands.addAll( Arrays.asList( tasksProperty.split( " " ) ) );
+            }
 
             File antExe = new File( antHome, "ant" );
             if ( !antExe.exists() )
