@@ -1,6 +1,10 @@
 2.1
 
 * Improved error handling when invalid IDs are used in URLs
+* Add robots.txt to block web spiders
+
+* Fix crash that could occur when issue relationships are scrolled off screen
+* Fix issue where default Gradle build task could not be invoked
 
 
 2.1-beta3
