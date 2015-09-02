@@ -72,12 +72,8 @@ public class AccountSummaryPanel extends Panel
             return false;
         }
 
-        if ( milestones.get( 0 ).getDueDate() == null )
-        {
-            return false;
-        }
-
-        return milestones.get( 0 ).getDueDate().before( new Date() );
+        Date oldestDue = milestones.get( 0 ).getDueDate();
+        return oldestDue != null && oldestDue.before( new Date() );
     }
 
     public static boolean userHasDueSoonMilestones( User user )
@@ -88,12 +84,8 @@ public class AccountSummaryPanel extends Panel
             return false;
         }
 
-        if ( milestones.get( 0 ).getDueDate() == null )
-        {
-            return false;
-        }
-
+        Date oldestDue = milestones.get( 0 ).getDueDate();
         // TODO move this to a central place, duplicated in MilestonesApplication
-        return milestones.get( 0 ).getDueDate().before( new Date( System.currentTimeMillis() + (1000L * 60 * 60 * 24 * 14 ) ) );
+        return oldestDue != null && oldestDue.before( new Date( System.currentTimeMillis() + ( 1000L * 60 * 60 * 24 * 14 ) ) );
     }
 }
