@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2013 Heads Up Development Ltd.
+ * Copyright 2013-2015 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -44,12 +44,8 @@ public class UserDashboardModel
     private Map<Milestone,List<Issue>> userMilestoneIssues;
     private List<Issue> userNoMilestoneIssues;
 
-    private User user;
-
     public UserDashboardModel( User user )
     {
-        this.user = user;
-
         userMilestoneIssues = new HashMap<Milestone,List<Issue>>();
         userNoMilestoneIssues = new ArrayList<Issue>();
 
@@ -92,11 +88,11 @@ public class UserDashboardModel
         return userMilestoneIssues.get( milestone );
     }
 
-    protected List<Issue> getIssuesAssignedTo( User user )
+    public static List<Issue> getIssuesAssignedTo( User user )
     {
         Session session = ( (HibernateStorage) Manager.getStorageInstance() ).getHibernateSession();
 
-        Query q = session.createQuery( "from Issue i where status < 250 and assignee = :user order by priority, status" );
+        Query q = session.createQuery( "from Issue i where status < 250 and assignee = :user and (id.project.disabled is null or id.project.disabled = false) order by priority, status" );
         q.setEntity( "user", user );
         List<Issue> list = q.list();
 

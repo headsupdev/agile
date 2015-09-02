@@ -148,17 +148,7 @@ public class IssuesApplication
     public static SortableEntityProvider<Issue> getIssueProviderForProject( final Project project,
                                                                             final IssueFilterPanel filter )
     {
-        return new SortableIssuesProvider( filter )
-        {
-            @Override
-            protected Criteria createCriteria()
-            {
-                Criteria c = super.createCriteria();
-
-                c.add( Restrictions.eq( "id.project", project ) );
-                return c;
-            }
-        };
+        return new SortableIssuesProvider( project, filter );
     }
 
     public static Issue getIssue( long id, Project project )

@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2014 Heads Up Development Ltd.
+ * Copyright 2009-2015 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -55,6 +55,7 @@ import org.headsupdev.agile.web.components.ProjectListPanel;
 import org.headsupdev.agile.web.components.UserDashboard;
 import org.headsupdev.agile.web.dialogs.LoginDialog;
 import org.headsupdev.agile.web.dialogs.LogoutDialog;
+import org.headsupdev.agile.web.model.UserDashboardModel;
 import org.wicketstuff.animator.Animator;
 import org.wicketstuff.animator.IAnimatorSubject;
 import org.wicketstuff.animator.MarkupIdModel;
@@ -64,7 +65,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 /**
  * The parent to all HeadsUp styled pages
@@ -325,7 +325,7 @@ public abstract class HeadsUpPage
         boolean showUserTools = getSession().getUser() != null && !getSession().getUser().equals( HeadsUpSession.ANONYMOUS_USER );
         if ( showUserTools )
         {
-            int userIssues = AccountSummaryPanel.getIssuesAssignedTo( getSession().getUser() ).size();
+            int userIssues = UserDashboardModel.getIssuesAssignedTo( getSession().getUser() ).size();
 
             WebMarkupContainer userDashbutton = new WebMarkupContainer( "userdashbutton" );
             userpanel.add( userDashbutton.setVisible( userIssues > 0 ) );

@@ -120,7 +120,7 @@ public class ActivityApi
         Query q;
         if ( getProject().equals( StoredProject.getDefault() ) )
         {
-            q = session.createQuery( "from StoredEvent e where e.time < :before order by time desc" );
+            q = session.createQuery( "from StoredEvent e where e.time < :before and (id.project.disabled is null or id.project.disabled = false) order by time desc" );
             q.setTimestamp( "before", before );
         }
         else

@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2013 Heads Up Development Ltd.
+ * Copyright 2009-2015 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -450,17 +450,20 @@ public class HibernateStorage
     public Project getProject( String id )
     {
         Session session = getHibernateSession();
-        Project ret = (Project) session.createQuery( "from StoredProject p where id = '" + id + "'" ).uniqueResult();
 
-        return ret;
+        return (Project) session.createQuery( "from StoredProject p where id = '" + id + "'" ).uniqueResult();
     }
 
     public List<Project> getProjects()
     {
-        Session session = getHibernateSession();
-        List<Project> list = session.createQuery( "from StoredProject p where id != '" + Project.ALL_PROJECT_ID + "' order by name" ).list();
+        return getProjects( false );
+    }
 
-        return list;
+    public List<Project> getProjects( boolean withDisabled )
+    {
+        Session session = getHibernateSession();
+
+        return getProjectCriteria( session, withDisabled, false, null ).list();
     }
 
     public List<Project> getRootProjects()
@@ -472,7 +475,7 @@ public class HibernateStorage
     {
         Session session = getHibernateSession();
 
-        return getProjectCriteria( session, withDisabled, null ).list();
+        return getRootProjectCriteria( session, withDisabled, null ).list();
     }
 
     public List<Project> getActiveRootProjects()
@@ -483,7 +486,7 @@ public class HibernateStorage
         {
             return new ArrayList<Project>();
         }
-        return getProjectCriteria( session, false, activeProjectIds ).list();
+        return getRootProjectCriteria( session, false, activeProjectIds ).list();
     }
 
     public List<Project> getRecentRootProjects( User user )
@@ -499,14 +502,23 @@ public class HibernateStorage
         {
             return new ArrayList<Project>();
         }
-        return getProjectCriteria( session, false, recentIds ).list();
+        return getRootProjectCriteria( session, false, recentIds ).list();
     }
 
-    protected Criteria getProjectCriteria( Session session, boolean disabled, Set<String> ids )
+    protected Criteria getRootProjectCriteria( Session session, boolean disabled, Set<String> ids )
+    {
+        return getProjectCriteria( session, disabled, true, ids );
+    }
+
+    protected Criteria getProjectCriteria( Session session, boolean disabled, boolean justRoot, Set<String> ids )
     {
         Criteria criteria = session.createCriteria( Project.class );
         criteria.add( Restrictions.not( Restrictions.eq( "id", Project.ALL_PROJECT_ID ) ) );
-        criteria.add( Restrictions.isNull( "parent" ) );
+
+        if ( justRoot )
+        {
+            criteria.add( Restrictions.isNull( "parent" ) );
+        }
 
         if ( !disabled )
         {

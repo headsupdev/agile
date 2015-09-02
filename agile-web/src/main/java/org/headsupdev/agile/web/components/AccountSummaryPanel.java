@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2015 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -18,16 +18,12 @@
 
 package org.headsupdev.agile.web.components;
 
-import org.headsupdev.agile.api.Manager;
 import org.headsupdev.agile.api.User;
-import org.headsupdev.agile.storage.HibernateStorage;
 import org.headsupdev.agile.storage.issues.Issue;
 import org.headsupdev.agile.storage.issues.Milestone;
 import org.headsupdev.agile.storage.issues.MilestoneComparator;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
+import org.headsupdev.agile.web.model.UserDashboardModel;
 
 import java.util.*;
 
@@ -47,24 +43,11 @@ public class AccountSummaryPanel extends Panel
         super( id );
     }
 
-    public static List<Issue> getIssuesAssignedTo( User user )
-    {
-        Session session = ( (HibernateStorage) Manager.getStorageInstance() ).getHibernateSession();
-
-        Transaction tx = session.beginTransaction();
-        Query q = session.createQuery( "from Issue i where status < 250 and assignee = :user order by priority, status" );
-        q.setEntity( "user", user );
-        List<Issue> list = q.list();
-        tx.commit();
-
-        return list;
-    }
-
     public static List<Milestone> getMilestonesForIssuesAssignedTo( User user )
     {
         List<Milestone> milestones = new ArrayList<Milestone>();
 
-        for ( Issue issue : getIssuesAssignedTo( user ) )
+        for ( Issue issue : UserDashboardModel.getIssuesAssignedTo( user ) )
         {
             if ( issue.getMilestone() == null )
             {

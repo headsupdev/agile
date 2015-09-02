@@ -117,7 +117,7 @@ public class HistoryApplication
 
         Session session = ( (HibernateStorage) Manager.getStorageInstance() ).getHibernateSession();
 
-        Query q = session.createQuery( "from StoredEvent e where e.class in (:types) and e.time < :before order by time desc" );
+        Query q = session.createQuery( "from StoredEvent e where e.class in (:types) and e.time < :before and (id.project.disabled is null or id.project.disabled = false) order by time desc" );
         q.setParameterList( "types", types );
         q.setTimestamp( "before", new Date( before ) );
         q.setMaxResults( count );

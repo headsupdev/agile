@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2015 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -43,6 +43,7 @@ public interface Storage
 
     Project getProject( String id);
     List<Project> getProjects();
+    List<Project> getProjects( boolean withDisabled );
     List<Project> getRootProjects();
     List<Project> getRootProjects( boolean withDisabled );
 

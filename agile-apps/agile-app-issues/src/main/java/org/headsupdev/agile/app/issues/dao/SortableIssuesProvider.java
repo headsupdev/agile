@@ -20,7 +20,9 @@ package org.headsupdev.agile.app.issues.dao;
 
 import org.apache.wicket.extensions.markup.html.repeater.util.SortParam;
 import org.headsupdev.agile.api.Manager;
+import org.headsupdev.agile.api.Project;
 import org.headsupdev.agile.storage.HibernateStorage;
+import org.headsupdev.agile.storage.StoredProject;
 import org.headsupdev.agile.storage.issues.Issue;
 import org.headsupdev.agile.web.components.issues.IssueFilterPanel;
 import org.headsupdev.agile.web.wicket.SortableEntityProvider;
@@ -28,6 +30,7 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 
 import java.util.Arrays;
 import java.util.List;
@@ -42,11 +45,18 @@ import java.util.List;
 public class SortableIssuesProvider
     extends SortableEntityProvider<Issue>
 {
+    private Project project;
     private IssueFilterPanel filter;
 
     public SortableIssuesProvider( IssueFilterPanel filter )
     {
         this.filter = filter;
+    }
+
+    public SortableIssuesProvider( Project project, IssueFilterPanel filter )
+    {
+        this( filter );
+        this.project = project;
     }
 
     @Override
@@ -70,6 +80,17 @@ public class SortableIssuesProvider
         if ( dateRestrictionCreated != null )
         {
             c.add( dateRestrictionCreated );
+        }
+
+        if ( project != null )
+        {
+            c.add( Restrictions.eq( "id.project", project ) );
+        }
+        else
+        {
+            List<Project> allWithAll = Manager.getStorageInstance().getProjects( false );
+            allWithAll.add( StoredProject.getDefault() );
+            c.add( Restrictions.in( "id.project", allWithAll ) );
         }
         return c;
     }

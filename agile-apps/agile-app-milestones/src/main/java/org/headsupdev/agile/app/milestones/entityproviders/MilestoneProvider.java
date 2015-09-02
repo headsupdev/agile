@@ -22,6 +22,7 @@ import org.headsupdev.agile.api.Manager;
 import org.headsupdev.agile.api.Project;
 import org.headsupdev.agile.app.milestones.MilestoneFilter;
 import org.headsupdev.agile.storage.HibernateStorage;
+import org.headsupdev.agile.storage.StoredProject;
 import org.headsupdev.agile.storage.issues.Milestone;
 import org.headsupdev.agile.storage.issues.MilestoneComparator;
 import org.headsupdev.agile.web.wicket.SortableEntityProvider;
@@ -98,6 +99,12 @@ public class MilestoneProvider
         if ( project != null )
         {
             c.add( Restrictions.eq( "name.project", project ) );
+        }
+        else
+        {
+            List<Project> allWithAll = Manager.getStorageInstance().getProjects( false );
+            allWithAll.add( StoredProject.getDefault() );
+            c.add( Restrictions.in( "name.project", allWithAll ) );
         }
         return c;
     }
