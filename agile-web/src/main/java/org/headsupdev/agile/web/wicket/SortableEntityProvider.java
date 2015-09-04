@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2015 Heads Up Development Ltd.
+ * Copyright 2009-2013 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -80,8 +80,13 @@ public abstract class SortableEntityProvider<T> extends SortableDataProvider<T>
     public int size()
     {
         Criteria criteria = createCriteria();
-        criteria.setProjection( Projections.rowCount() );
+        criteria.setProjection( Projections.count( getCountProperty() ) );
         return ((Number) criteria.uniqueResult() ).intValue();
+    }
+
+    public String getCountProperty()
+    {
+        return "id.id";
     }
 
     public IModel<T> model( Object o )
