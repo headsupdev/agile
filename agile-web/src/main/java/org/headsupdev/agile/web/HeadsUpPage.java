@@ -46,6 +46,7 @@ import org.headsupdev.agile.api.Page;
 import org.headsupdev.agile.api.SecurityManager;
 import org.headsupdev.agile.api.logging.Logger;
 import org.headsupdev.agile.core.PrivateConfiguration;
+import org.headsupdev.agile.security.permission.AdminPermission;
 import org.headsupdev.agile.security.permission.ProjectListPermission;
 import org.headsupdev.agile.storage.StoredProject;
 import org.headsupdev.agile.web.auth.WebLoginManager;
@@ -126,6 +127,11 @@ public abstract class HeadsUpPage
         }
 
         /* security check */
+        if ( getProject().isDisabled() && !getClass().getName().endsWith( "ErrorDisabledPage" ) &&
+                ( getRequiredPermission() == null || !getRequiredPermission().equals( new AdminPermission() ) ) )
+        {
+            throw new RestartResponseException( getPageClass( "projectdisabled" ), getProjectPageParameters() );
+        }
         if ( getRequiredPermission() != null )
         {
             requirePermission( getRequiredPermission() );
@@ -230,8 +236,8 @@ public abstract class HeadsUpPage
         WebMarkupContainer projectmenu = createProjectMenu( user );
         add( projectmenu );
 
-        if ( !getClass().getName().endsWith( "Login" ) && !getClass().getName().endsWith( "Logout" )
-                && !getClass().getName().endsWith( "Error404Page" ) )
+        if ( !getClass().getName().endsWith( "Login" ) && !getClass().getName().endsWith( "Logout")
+                && !getClass().getName().contains( "Error" ) )
         {
             getSession().setPreviousPageClass( getClass() );
             getSession().setPreviousPageParameters( getPageParameters() );

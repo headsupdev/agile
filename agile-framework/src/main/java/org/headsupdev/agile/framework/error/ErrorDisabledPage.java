@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2013 Heads Up Development Ltd.
+ * Copyright 2015 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -26,14 +26,14 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.Serializable;
 
 /**
- * An error page that shows a short message about a missing page
+ * An error page that shows a short message if project is disabled
  *
  * @author Andrew Williams
  * @version $Id$
- * @since 2.0
+ * @since 2.1
  */
-@MountPoint( "permissiondenied" )
-public class Error403Page
+@MountPoint( "projectdisabled" )
+public class ErrorDisabledPage
     extends ErrorPage
     implements Serializable
 {
@@ -45,7 +45,7 @@ public class Error403Page
     @Override
     public String getTitle()
     {
-        return "Permission Denied";
+        return "Project Disabled";
     }
 
     @Override

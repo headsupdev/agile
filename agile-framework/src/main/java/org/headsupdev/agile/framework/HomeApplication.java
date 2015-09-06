@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2013 Heads Up Development Ltd.
+ * Copyright 2009-2015 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -61,7 +61,7 @@ public class HomeApplication
 
     protected static void setupPages()
     {
-        Class<? extends Page>[] pages = (Class<? extends Page>[]) new Class[12];
+        Class<? extends Page>[] pages = (Class<? extends Page>[]) new Class[13];
         pages[0] = LoadingPage.class;
         pages[1] = Login.class;
         pages[2] = Logout.class;
@@ -72,8 +72,9 @@ public class HomeApplication
         pages[7] = Error403Page.class;
         pages[8] = Error404Page.class;
         pages[9] = ErrorExpiredPage.class;
-        pages[10] = ErrorInternalPage.class;
-        pages[11] = ManualUpdate.class;
+        pages[10] = ErrorDisabledPage.class;
+        pages[11] = ErrorInternalPage.class;
+        pages[12] = ManualUpdate.class;
 
         setPages( pages );
     }

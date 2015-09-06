@@ -2,9 +2,11 @@
 
 * Improved error handling when invalid IDs are used in URLs
 * Add robots.txt to block web spiders
+* Show an error page when trying to access a disabled project
 
 * Fix crash that could occur when issue relationships are scrolled off screen
 * Fix issue where default Gradle build task could not be invoked
+* Fix issue where issues and milestones would be included in user dashboard and API even if in a disabled project
 
 
 2.1-beta3

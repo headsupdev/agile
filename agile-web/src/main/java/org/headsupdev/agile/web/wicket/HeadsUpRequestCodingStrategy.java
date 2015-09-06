@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2015 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -96,7 +96,7 @@ public class HeadsUpRequestCodingStrategy
         // setup id map
         projectIds.add( Project.ALL_PROJECT_ID );
 
-        for ( Project p : Manager.getStorageInstance().getProjects() )
+        for ( Project p : Manager.getStorageInstance().getProjects( true ) )
         {
             projectIds.add( p.getId() );
         }
