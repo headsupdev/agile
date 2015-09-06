@@ -52,6 +52,8 @@ public interface Storage
 
     void addProject( Project project );
 
+    boolean canEnableProject( Project project );
+
     List<Event> getEvents( Date start, Date stop );
     List<Event> getEvents( Application app, Date start, Date stop );
 

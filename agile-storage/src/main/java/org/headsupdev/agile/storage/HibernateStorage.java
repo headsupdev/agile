@@ -534,6 +534,11 @@ public class HibernateStorage
         return criteria;
     }
 
+    public boolean canEnableProject( Project project )
+    {
+        return true;
+    }
+
     public List<Event> getEvents( Date start )
     {
         Session session = getHibernateSession();

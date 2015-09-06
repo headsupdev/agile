@@ -74,7 +74,7 @@ public class ProjectConfiguration
         projectConfig.add( new Label( "defaultalias", project.getName() ) );
 
         CheckBox disabled = new CheckBox( "disabled", new PropertyModel( project, "disabled" ) );
-        disabled.setVisible( !project.equals( StoredProject.getDefault() ) );
+        disabled.setVisible( !project.equals( StoredProject.getDefault() ) && getStorage().canEnableProject( project ) );
         projectConfig.add( disabled );
 
         projectConfig.add( new ConfigurationItemPanel( "timeenabled", StoredProject.CONFIGURATION_TIMETRACKING_ENABLED,
