@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2013 Heads Up Development Ltd.
+ * Copyright 2013-2015 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -18,16 +18,22 @@
 
 package org.headsupdev.agile.app.milestones.rest;
 
+import com.google.gson.*;
 import org.apache.wicket.model.util.ListModel;
 import org.headsupdev.agile.api.Permission;
-import org.headsupdev.agile.storage.dao.MilestonesDAO;
+import org.headsupdev.agile.app.milestones.MilestoneFilter;
+import org.headsupdev.agile.app.milestones.entityproviders.MilestoneProvider;
 import org.headsupdev.agile.app.milestones.permission.MilestoneListPermission;
 import org.headsupdev.agile.storage.StoredProject;
+import org.headsupdev.agile.storage.issues.Issue;
 import org.headsupdev.agile.storage.issues.Milestone;
 import org.headsupdev.agile.web.MountPoint;
 import org.headsupdev.agile.web.rest.HeadsUpApi;
 
 import org.apache.wicket.PageParameters;
+import org.hibernate.criterion.Criterion;
+
+import java.lang.reflect.Type;
 
 /**
  * A milestones API that provides a simple list of milestones per project.
@@ -41,11 +47,17 @@ import org.apache.wicket.PageParameters;
 public class MilestonesApi
         extends HeadsUpApi
 {
-    private MilestonesDAO dao = new MilestonesDAO();
-
     public MilestonesApi( PageParameters params )
     {
         super( params );
+    }
+
+    @Override
+    public void setupJson( GsonBuilder builder )
+    {
+        super.setupJson( builder );
+
+        builder.registerTypeHierarchyAdapter(Issue.class, new IssueAdapter());
     }
 
     @Override
@@ -57,13 +69,61 @@ public class MilestonesApi
     @Override
     public void doGet( PageParameters params )
     {
+        MilestoneFilter filter = createEmptyFilter();
         if ( getProject().equals( StoredProject.getDefault() ) )
         {
-            setModel( new ListModel<Milestone>( dao.findAll() ) );
+            MilestoneProvider provider = new MilestoneProvider( filter );
+            setModel( new ListModel<Milestone>( provider.list() ) );
         }
         else
         {
-            setModel( new ListModel<Milestone>( dao.findAll( getProject() ) ) );
+            MilestoneProvider provider = new MilestoneProvider( getProject(), filter );
+            setModel( new ListModel<Milestone>( provider.list() ) );
         }
+    }
+
+    private class IssueAdapter implements JsonSerializer<Issue>
+    {
+        @Override
+        public JsonElement serialize( Issue issue, Type type, JsonSerializationContext jsonSerializationContext )
+        {
+            return new JsonPrimitive( issue.getId() );
+        }
+    }
+
+    protected MilestoneFilter createEmptyFilter()
+    {
+        return new MilestoneFilter()
+        {
+            @Override
+            public Criterion getCompletedCriterion()
+            {
+                return null;
+            }
+
+            @Override
+            public Criterion getDueCriterion()
+            {
+                return null;
+            }
+
+            @Override
+            public Criterion getDateCriterionUpdated()
+            {
+                return null;
+            }
+
+            @Override
+            public Criterion getDateCriterionCreated()
+            {
+                return null;
+            }
+
+            @Override
+            public Criterion getDateCriterionCompleted()
+            {
+                return null;
+            }
+        };
     }
 }

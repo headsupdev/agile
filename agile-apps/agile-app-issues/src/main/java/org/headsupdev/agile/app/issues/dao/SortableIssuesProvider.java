@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2013 Heads Up Development Ltd.
+ * Copyright 2013-2015 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -24,7 +24,7 @@ import org.headsupdev.agile.api.Project;
 import org.headsupdev.agile.storage.HibernateStorage;
 import org.headsupdev.agile.storage.StoredProject;
 import org.headsupdev.agile.storage.issues.Issue;
-import org.headsupdev.agile.web.components.issues.IssueFilterPanel;
+import org.headsupdev.agile.web.components.issues.IssueFilter;
 import org.headsupdev.agile.web.wicket.SortableEntityProvider;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -46,14 +46,14 @@ public class SortableIssuesProvider
     extends SortableEntityProvider<Issue>
 {
     private Project project;
-    private IssueFilterPanel filter;
+    private IssueFilter filter;
 
-    public SortableIssuesProvider( IssueFilterPanel filter )
+    public SortableIssuesProvider( IssueFilter filter )
     {
         this.filter = filter;
     }
 
-    public SortableIssuesProvider( Project project, IssueFilterPanel filter )
+    public SortableIssuesProvider( Project project, IssueFilter filter )
     {
         this( filter );
         this.project = project;
@@ -65,7 +65,11 @@ public class SortableIssuesProvider
 
         Criteria c = session.createCriteria( Issue.class );
         c.setResultTransformer( Criteria.DISTINCT_ROOT_ENTITY );
-        c.add( filter.getStatusCriterion() );
+        Criterion statusRestriction = filter.getStatusCriterion();
+        if ( statusRestriction != null )
+        {
+            c.add( statusRestriction );
+        }
         Criterion assignmentRestriction = filter.getAssignmentCriterion();
         if ( assignmentRestriction != null )
         {

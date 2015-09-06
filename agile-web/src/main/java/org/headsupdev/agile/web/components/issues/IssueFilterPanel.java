@@ -50,6 +50,7 @@ import java.util.List;
  */
 public abstract class IssueFilterPanel
         extends Panel
+        implements IssueFilter
 {
     // TODO read these from a current set of values in the session/user pref map...
     private boolean showStatusNew = true;
@@ -79,7 +80,7 @@ public abstract class IssueFilterPanel
         FilterBorder filter = new FilterBorder( "filter" );
         add( filter );
 
-        final Form<IssueFilterPanel> filterForm = new Form<IssueFilterPanel>( "filterform" )
+        final Form<IssueFilter> filterForm = new Form<IssueFilter>( "filterform" )
         {
             @Override
             protected void onSubmit()
@@ -110,7 +111,7 @@ public abstract class IssueFilterPanel
             }
         } ) );
 
-        filterForm.setModel( new CompoundPropertyModel<IssueFilterPanel>( this ) );
+        filterForm.setModel( new CompoundPropertyModel<IssueFilter>( this ) );
         final CheckBox[] checkboxes = new CheckBox[]{new CheckBox( "showStatusNew" ), new CheckBox( "showStatusFeedback" ),
                 new CheckBox( "showStatusAssigned" ), new CheckBox( "showStatusReopened" ), new CheckBox( "showStatusInProgress" ),
                 new CheckBox( "showStatusResolved" ), new CheckBox( "showStatusClosed" )};
@@ -342,6 +343,7 @@ public abstract class IssueFilterPanel
         return ret;
     }
 
+    @Override
     public Criterion getStatusCriterion()
     {
         if ( getStatuses().size() > 0 )
@@ -359,6 +361,7 @@ public abstract class IssueFilterPanel
         return assigns;
     }
 
+    @Override
     public Criterion getAssignmentCriterion()
     {
         switch ( getAssignments() )
@@ -375,6 +378,7 @@ public abstract class IssueFilterPanel
         return null;
     }
 
+    @Override
     public Criterion getDateCriterionUpdated()
     {
         if ( startDateUpdated != null && endDateUpdated != null && filterByDateUpdated )
@@ -387,6 +391,7 @@ public abstract class IssueFilterPanel
         return null;
     }
 
+    @Override
     public Criterion getDateCriterionCreated()
     {
         if ( startDateCreated != null && endDateCreated != null && filterByDateCreated )

@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2014 Heads Up Development Ltd.
+ * Copyright 2009-2015 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -31,13 +31,11 @@ import org.headsupdev.agile.storage.HibernateStorage;
 import org.headsupdev.agile.storage.issues.Issue;
 import org.headsupdev.agile.storage.resource.DurationWorked;
 import org.headsupdev.agile.web.WebApplication;
-import org.headsupdev.agile.web.components.issues.IssueFilterPanel;
+import org.headsupdev.agile.web.components.issues.IssueFilter;
 import org.headsupdev.agile.web.wicket.SortableEntityProvider;
-import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.criterion.Restrictions;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -138,17 +136,6 @@ public class IssuesApplication
     public LinkProvider[] getLinkProviders()
     {
         return new LinkProvider[]{new IssueLinkProvider()};
-    }
-
-    public static SortableEntityProvider<Issue> getIssueProvider( final IssueFilterPanel filter )
-    {
-        return new SortableIssuesProvider( filter );
-    }
-
-    public static SortableEntityProvider<Issue> getIssueProviderForProject( final Project project,
-                                                                            final IssueFilterPanel filter )
-    {
-        return new SortableIssuesProvider( project, filter );
     }
 
     public static Issue getIssue( long id, Project project )

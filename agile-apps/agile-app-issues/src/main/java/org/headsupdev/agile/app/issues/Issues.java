@@ -18,6 +18,7 @@
 
 package org.headsupdev.agile.app.issues;
 
+import org.headsupdev.agile.app.issues.dao.SortableIssuesProvider;
 import org.headsupdev.agile.storage.issues.Issue;
 import org.headsupdev.agile.web.wicket.SortableEntityProvider;
 import org.headsupdev.agile.security.permission.ProjectListPermission;
@@ -68,11 +69,11 @@ public class Issues
         SortableEntityProvider<Issue> provider;
         if ( getProject().equals( StoredProject.getDefault() ) )
         {
-            provider = IssuesApplication.getIssueProvider( filter );
+            provider = new SortableIssuesProvider( filter );
         }
         else
         {
-            provider = IssuesApplication.getIssueProviderForProject( getProject(), filter );
+            provider = new SortableIssuesProvider( getProject(), filter );
         }
 
         add( new IssueListPanel( "issues", provider, this, !getProject().equals( StoredProject.getDefault() ), false, null ) );

@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2013-2014 Heads Up Development Ltd.
+ * Copyright 2013-2015 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -21,15 +21,18 @@ package org.headsupdev.agile.app.issues.rest;
 import com.google.gson.*;
 import org.apache.wicket.model.util.ListModel;
 import org.headsupdev.agile.api.Permission;
-import org.headsupdev.agile.storage.dao.IssuesDAO;
+import org.headsupdev.agile.app.issues.dao.SortableIssuesProvider;
 import org.headsupdev.agile.app.issues.permission.IssueListPermission;
 import org.headsupdev.agile.storage.StoredProject;
 import org.headsupdev.agile.storage.issues.Issue;
 import org.headsupdev.agile.storage.issues.Milestone;
 import org.headsupdev.agile.web.MountPoint;
+import org.headsupdev.agile.web.components.issues.IssueFilter;
 import org.headsupdev.agile.web.rest.HeadsUpApi;
 
 import org.apache.wicket.PageParameters;
+import org.headsupdev.agile.web.wicket.SortableEntityProvider;
+import org.hibernate.criterion.Criterion;
 
 import java.lang.reflect.Type;
 
@@ -45,8 +48,6 @@ import java.lang.reflect.Type;
 public class IssuesApi
         extends HeadsUpApi
 {
-    private IssuesDAO dao = new IssuesDAO();
-
     public IssuesApi( PageParameters params )
     {
         super( params );
@@ -69,13 +70,16 @@ public class IssuesApi
     @Override
     public void doGet( PageParameters params )
     {
+        IssueFilter filter = createEmptyFilter();
         if ( getProject().equals( StoredProject.getDefault() ) )
         {
-            setModel( new ListModel<Issue>( dao.findAll() ) );
+            SortableEntityProvider<Issue> provider = new SortableIssuesProvider( filter );
+            setModel( new ListModel<Issue>( provider.list() ) );
         }
         else
         {
-            setModel( new ListModel<Issue>( dao.findAll( getProject() ) ) );
+            SortableEntityProvider<Issue> provider = new SortableIssuesProvider( getProject(), filter );
+            setModel( new ListModel<Issue>( provider.list() ) );
         }
     }
 
@@ -86,5 +90,35 @@ public class IssuesApi
         {
             return new JsonPrimitive( milestone.getName() );
         }
+    }
+
+    protected IssueFilter createEmptyFilter()
+    {
+        return new IssueFilter()
+        {
+            @Override
+            public Criterion getStatusCriterion()
+            {
+                return null;
+            }
+
+            @Override
+            public Criterion getAssignmentCriterion()
+            {
+                return null;
+            }
+
+            @Override
+            public Criterion getDateCriterionUpdated()
+            {
+                return null;
+            }
+
+            @Override
+            public Criterion getDateCriterionCreated()
+            {
+                return null;
+            }
+        };
     }
 }

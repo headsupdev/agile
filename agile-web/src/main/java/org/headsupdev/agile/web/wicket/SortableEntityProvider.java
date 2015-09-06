@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2013 Heads Up Development Ltd.
+ * Copyright 2009-2015 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -75,6 +75,27 @@ public abstract class SortableEntityProvider<T> extends SortableDataProvider<T>
         }
         criteria.setFirstResult( start ).setMaxResults( limit );
         return (Iterator<T>) criteria.list().iterator();
+    }
+
+    public List<T> list()
+    {
+        Criteria criteria = createCriteria();
+        if ( getSort() != null )
+        {
+            for ( Order order : getOrder( getSort() ) )
+            {
+                criteria.addOrder( order );
+            }
+        }
+        else
+        {
+            for ( Order order : getDefaultOrder() )
+            {
+                criteria.addOrder( order );
+            }
+        }
+
+        return (List<T>) criteria.list();
     }
 
     public int size()
