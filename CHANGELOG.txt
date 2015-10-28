@@ -1,3 +1,8 @@
+2.1.1
+
+* Update to iOS9 defaults for parsing
+
+
 2.1
 
 * Improved error handling when invalid IDs are used in URLs

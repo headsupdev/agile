@@ -179,7 +179,7 @@
 
               javax.mail.*,com.sun.mail.*
             ]]></Export-Package>
-            <Private-Package>com.ice.tar</Private-Package>
+            <Private-Package>com.ice.tar, org.apache.commons.compress.*</Private-Package>
             <Embed-Transitive>true</Embed-Transitive>
             <Embed-Dependency>*;artifactId=bcprov-jdk14</Embed-Dependency>
             <Bundle-ClassPath>.,{maven-dependencies}</Bundle-ClassPath>

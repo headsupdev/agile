@@ -85,7 +85,12 @@ public class XCodeProjectParser
                     String name = getProjectFileValue( line, variables );
                     variables.put( "PRODUCT_NAME", replaceVariables( name ) );
                     project.setName( name );
-                    break; // note that if we parse further blocks a break will not be enough
+                }
+                else if ( line.contains( "PRODUCT_BUNDLE_IDENTIFIER =" ) )
+                {
+                    String name = getProjectFileValue( line, variables );
+                    variables.put( "PRODUCT_BUNDLE_IDENTIFIER", replaceVariables( name ) );
+                    project.setBundleId( name );
                 }
             }
             IOUtil.close( in );
@@ -132,9 +137,11 @@ public class XCodeProjectParser
 
         for ( String key : variables.keySet() )
         {
-            ret = ret.replaceAll( "\\$[({]" + key + "[)}]", variables.get( key ) );
+            ret = ret.replace( "$(" + key + ")", variables.get( key ) );
+            ret = ret.replace( "${" + key + "}", variables.get( key ) );
 
-            ret = ret.replaceAll( "\\$[({]" + key + ":rfc1034identifier[)}]", getRFC1034( variables.get( key ) ) );
+            ret = ret.replace( "$(" + key + ":rfc1034identifier)", getRFC1034( variables.get( key ) ) );
+            ret = ret.replace( "${" + key + ":rfc1034identifier}", getRFC1034( variables.get( key ) ) );
         }
 
         return ret;

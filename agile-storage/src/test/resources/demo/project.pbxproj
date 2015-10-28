@@ -185,6 +185,7 @@
 				GCC_PREFIX_HEADER = iPhone_Demo_Prefix.pch;
 				INFOPLIST_FILE = "iPhone_Demo-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.yourcompany.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -198,6 +199,7 @@
 				GCC_PREFIX_HEADER = iPhone_Demo_Prefix.pch;
 				INFOPLIST_FILE = "iPhone_Demo-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.yourcompany.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALIDATE_PRODUCT = YES;
 			};
