@@ -2,6 +2,7 @@
 
 * Update to iOS9 defaults for parsing
 
+* Fix CVE-2015-8103 in Commons Collections
 
 2.1
 
