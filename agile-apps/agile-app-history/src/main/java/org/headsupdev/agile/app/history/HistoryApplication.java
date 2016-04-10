@@ -74,8 +74,7 @@ public class HistoryApplication
     @Override
     public Class<? extends Page>[] getPages()
     {
-        return new Class[]{ History.class, ShowEvent.class, ShowEventBody.class, GroupedActivity.class,
-                HistoryFeed.class };
+        return new Class[]{ History.class, ShowEvent.class, GroupedActivity.class, HistoryFeed.class };
     }
 
 
