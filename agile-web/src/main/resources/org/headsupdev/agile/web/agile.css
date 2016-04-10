@@ -40,12 +40,13 @@ body {min-height: 100%;} /* for proper browsers */
 *html #outerpage {height: 100%;} /* for IE */
 
 #header1 {
+    position: fixed;
+    top:0;
+    width:100%;
+
     background-color: #505050;
-    background: -webkit-gradient(linear, left top, left bottom, from(#6b6c6d), to(#3e403f));
-    background: -moz-linear-gradient(top,  #6b6c6d,  #3e403f);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#6b6c6d', endColorstr='#3e403f');
     color: white;
-    padding: 0 30px;
+    padding: 0 10px;
     height: 34px;
     overflow: hidden;
     z-index: 200;
@@ -69,19 +70,11 @@ body {min-height: 100%;} /* for proper browsers */
 
 #header1 .headbutton:hover {
     background-color: #7b7b7b;
-    background: -webkit-gradient(linear, left top, left bottom, from(#3e403f), to(#6b6c6d));
-    background: -moz-linear-gradient(top,  #3e403f, #6b6c6d );
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#3e403f', endColorstr='#6b6c6d');
 }
 
 #header1 .headbutton img {
-    padding-top: 2px;
-}
-
-#header2 {
-    background-color: #F0F1EA;
-    color: white;
-    padding: 24px 30px;
+    padding-top: 7px;
+    width: 78pt;
 }
 
 #footer {
@@ -90,37 +83,30 @@ body {min-height: 100%;} /* for proper browsers */
 
     padding: 0;
     width:  100%;
-    height: 130px;
+    height: 38pt;
 
     background-color: #cecfca;
-    background: url(images/footer-bg.png);
-    background-repeat: repeat-x;
     color: #505050;
-    font-size: 9pt;
-}
-
-#footer .content {
-    padding:  20px 30px;
+    font-size: 8pt;
+    text-align: center;
 }
 
 #footer .description {
-    position: absolute;
-    bottom: 37px;
-    left: 30px;
+    display: block;
     
+    width: 100%;
     line-height: 275%;
 }
 
 #footer .copyright {
-    position: absolute;
-    bottom: 28px;
-    left: 30px;
+    display: block;
+
+    width: 100%;
+    bottom: 13px;
 }
 
 #footer .headsupdev {
-    position: absolute;
-    right: 30px;
-    bottom: 28px;
+    display: none;
 }
 
 *html #footer {width: 100%}
@@ -131,7 +117,7 @@ body {min-height: 100%;} /* for proper browsers */
 }
 
 #mainmenu, #submenu {
-    font-weight: bold;
+    font-weight: normal;
     height: 16px;
     white-space: nowrap;
 }
@@ -142,15 +128,15 @@ body {min-height: 100%;} /* for proper browsers */
 }
 
 #mainmenu ul, #submenu ul {
-    margin: 0;
-    padding: 0;
+    margin: 0 !important;
+    padding: 0 !important;
     list-style: none;
     display: inline;
 }
 
-#mainmenu li, #submenu li {
-    display: inline;
-    padding: 11px 15px 10px 15px;
+#mainmenu li {
+    padding: 9px 10px 8px 10px;
+    border-bottom: 1px solid lightgray;
 }
 
 #mainselect, #subselect {
@@ -158,13 +144,15 @@ body {min-height: 100%;} /* for proper browsers */
 }
 
 #mainmenu {
-    background-color: #dad9d7;
-    background: -webkit-gradient(linear, left top, left bottom, from(#f2f0ef), to(#c1bfbe));
-    background: -moz-linear-gradient(top,  #f2f0ef,  #c1bfbe);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f2f0ef', endColorstr='#c1bfbe');
+    position: fixed;
+    top: 34px;
+    width: 92pt;
+    height: 100%;
 
-    font-size: 12pt;
-    padding: 10px 0;
+    background-color: #dad9d7;
+
+    font-size: 11pt;
+    padding: 0;
     border-top: 1px solid lightgray;
 }
 
@@ -173,17 +161,25 @@ body {min-height: 100%;} /* for proper browsers */
 }
 
 #submenu {
-    font-size: 12pt;
-    background-color: #ebecee;
-    margin: 15px 30px;
+    font-size: 11pt;
+    text-align: right;
+    float: right;
+    margin: 32pt 8pt 0 0;
     padding: 10px 0;
 }
 
+#submenu ul {
+    background-color: #ebecee;
+    padding: 4pt 0 !important;
+}
+
+#submenu li {
+    display: inline;
+    padding: 11px 15px 10px 15px;
+}
+
 .mainmenu-item:hover, .mainmenu-item a:hover {
-    background-color: white;
-    background: -webkit-gradient(linear, left top, left bottom, from(#eceff6), to(#ffffff));
-    background: -moz-linear-gradient(top,  #eceff6,  #ffffff);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#eceff6', endColorstr='#ffffff');
+    background-color: #ebecee;
 }
 
 .mainmenu-item:hover span, .mainmenu-item a:hover span {
@@ -199,10 +195,7 @@ body {min-height: 100%;} /* for proper browsers */
 }
 
 .mainmenu-item-selected {
-    background-color: white;
-    background: -webkit-gradient(linear, left top, left bottom, from(#eceff6), to(#fff));
-    background: -moz-linear-gradient(top,  #eceff6,  #ffffff);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#eceff6', endColorstr='#ffffff');
+    background-color: #ebecee;
 }
 
 .mainmenu-item-selected span {
@@ -211,10 +204,10 @@ body {min-height: 100%;} /* for proper browsers */
 
 #projectmenu {
     width: 300px;
-    position: absolute;
-    left: 30px;
-    top: 82px;
-    z-index: 99;
+    position: fixed;
+    left: 92pt;
+    top: 34px;
+    z-index: 299;
 
     float: right;
     background-color: #F0F1EA;
@@ -247,9 +240,7 @@ body {min-height: 100%;} /* for proper browsers */
 }
 
 #projectmenu-content {
-    padding-left: 8px;
-    padding-right: 8px;
-    padding-bottom: 8px;
+    padding: 8px;
 
     color: #545A5A;
     font-size: 12pt;
@@ -293,12 +284,13 @@ body {min-height: 100%;} /* for proper browsers */
 }
 
 #projectselect {
-    position: absolute;
-    left: 30px;
-    top: 48px;
-    font-size: 13pt;
+    position: fixed;
+    z-index: 299;
+    left: 92pt;
+    top: 5px;
+    font-size: 14pt;
     font-weight: bold;
-    color: #545A5A;
+    color: #c0c0c0;
     cursor: pointer;
 }
 
@@ -306,32 +298,34 @@ body {min-height: 100%;} /* for proper browsers */
     color: #25b6e6;
 }
 
-#header2 .quicksearch {
-    float: right;
-    margin-top: -15px;
+#header1 .quicksearch {
+    position: inherit;
+    top: 2px;
+    right: 162pt;
+    left: 192pt;
     height: 31px;
-
-    background: url(images/search-left.png);
-    background-position: left;
-    background-repeat: no-repeat;
+    text-align: right;
+    z-index: 200;
 }
 
-#header2 .quicksearch .input {
-    width: 250px;
-    height: 31px;
-    border: none;
-    background-color: white;
+#header1 .quicksearch .input {
+    width: 100%;
+    height: 26px;
+    border: 1px solid #c0c0c0;
+    color: #c0c0c0;
+    background-color: #505050;
 
-    font-size: 12pt;
-    margin-left: 35px;
-    margin-right: -6px;
+    font-size: 10pt;
+    padding: 0 5pt;
 
     outline: none !important;
-    background: url(images/search-bg.png);
-    background-repeat: repeat-x;
 }
 
-#header2 .quicksearch .submit {
+#header1 .quicksearch .submit {
+    position: relative;
+    top: -22pt;
+    right: -12pt;
+
     height: 31px;
     width: 51px;
     border: none;
@@ -343,7 +337,6 @@ body {min-height: 100%;} /* for proper browsers */
     background-repeat: no-repeat;
 
     font-size: 12pt;
-    vertical-align: top;
     color: #505050;
 }
 
@@ -410,15 +403,6 @@ body {min-height: 100%;} /* for proper browsers */
     color: white;
     background-color: #ee8c0c;
     border: 1px solid #ee8c0c;
-}
-
-#userpanelbutton {
-    position: absolute;
-    top: 6px;
-    right: 8px;
-
-    cursor: pointer;
-    display: none;
 }
 
 #userdashboard {
@@ -548,15 +532,10 @@ body {min-height: 100%;} /* for proper browsers */
     padding: 0;
 }
 
-#taskpanel {
-    position: absolute;
-    left: 225px;
-    top: 8px;
-}
-
 #content {
-    padding: 2px 30px;
-    margin-bottom: 134px;
+    padding: 32pt 10pt 10pt 102pt;
+
+    margin-bottom: 14pt;
 }
 
 .clearBeforeFooter {
@@ -638,6 +617,7 @@ div.tabs div.tab-row li.selected a {
     position: fixed;
     left: 50%;
     top: 50%;
+    z-index: 999;
 }
 
 .dialog .dialogcontent {
@@ -650,10 +630,10 @@ div.tabs div.tab-row li.selected a {
     text-align: left;
     margin-left: auto;
 
-    width: 450px;
+    width: 340pt;
     position: relative;
-    margin-top: -118px;
-    margin-left: -235px;
+    margin-top: -110pt;
+    margin-left: -170pt;
     z-index: 1000;
     
     -webkit-border-radius: 8px;
@@ -752,7 +732,7 @@ div.tabs div.tab-row li.selected a {
     background-repeat: repeat;
 
     position: fixed;
-    top: 34px;
+    top: 0;
     left: 0;
     bottom: 0;
     right: 0;
@@ -993,4 +973,5 @@ div.wicketstuff-progressbar span.bar{
     border-left-width: 36px;
     border-bottom-width: 36px;
 }
+
 

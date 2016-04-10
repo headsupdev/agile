@@ -52,11 +52,20 @@
           <a href="/" class="headbutton">
             <img wicket:id="headerlogo" />
           </a>
-          <!--h1 wicket:id="producttitle">HeadsUp</h1-->
-          <div id="userpanelbutton">
-            <div wicket:id="userpanelbutton"><span wicket:id="label">\/</span></div>
+
+
+
+          <div id="projectselect">
+            <div wicket:id="projectlink"><span wicket:id="title">project</span></div>
           </div>
-          <ul wicket:id="userpanel" id="userpanel" class="up">
+          <form wicket:id="quicksearch" class="quicksearch">
+            <input type="text" placeholder="Search..." wicket:id="query" value="" class="input" />
+            <input type="submit" value="Go" class="submit" />
+          </form>
+
+
+
+          <ul wicket:id="userpanel" id="userpanel">
             <li class="username" wicket:id="username"></li>
             <wicket:enclosure child="userdashbutton">
             <li class="hiddenonmobile"><div class="headbutton" wicket:id="userdashbutton"><span class="totals" wicket:id="totals">0</span></div></li>
@@ -65,36 +74,21 @@
             <li><a class="account headbutton" wicket:id="account">my account</a></li>
             </wicket:enclosure>
             <li><a class="login headbutton" wicket:id="login-link"><span wicket:id="login-label"></span></a></li>
-            <li><a class="search headbutton" wicket:id="search">search</a></li>
             <wicket:enclosure child="support">
             <li><a class="support headbutton" wicket:id="support">support</a></li>
             </wicket:enclosure>
           </ul>
-          <div id="taskpanel" wicket:id="taskpanel">
-            <a wicket:id="tasklink" href="tasks"><img wicket:id="spinner" id="spinner" style="" /></a>
-          </div>
           <div id="userdashboard" class="up" wicket:id="userdashboard"></div>
           <div id="userdashboardbackground" class="up" wicket:id="userdashboardbackground">&nbsp;</div>
-        </div>
-        <div id="header2">
-          <div id="projectselect">
-            <div wicket:id="projectlink"><span wicket:id="title">project</span></div>
-          </div>
-          <form wicket:id="quicksearch" class="quicksearch hiddenonmobile">
-            <input type="text" placeholder="Search..." wicket:id="query" value="" class="input" />
-            <input type="submit" value="Go" class="submit" />
-          </form>
-          <div id="mainselect">
-            <div wicket:id="mainlink"><span wicket:id="title">Application \/</span></div>
-          </div>
-          <div id="subselect">
-            <div wicket:id="sublink"><span wicket:id="title">O</span></div>
-          </div>
         </div>
         <div id="mainmenu" wicket:id="mainmenu-container" class="up">
           <ul>
             <li wicket:id="mainmenu" class="mainmenu-item"><a wicket:id="mainmenu-link"><span wicket:id="mainmenu-label"></span></a></li>
           </ul>
+        </div>
+
+        <div id="subselect">
+          <div wicket:id="sublink"><span wicket:id="title">=</span></div>
         </div>
         <div id="submenu" wicket:id="submenu-container" class="up">
           <ul>
@@ -138,9 +132,6 @@
               <span wicket:id="footer-note" class="note">note</span>
               <a wicket:id="footer-update" class="update">Update is available</a>
             </span>
-            <a href="http://headsupdev.com/" target="_blank">
-              <img class="headsupdev" src="/resources/org.headsupdev.agile.web.HeadsUpPage/images/headsupdev-logo.png" />
-            </a>
           </div>
         </div>
         <div wicket:id="agile-dialog">&nbsp</div>

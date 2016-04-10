@@ -53,10 +53,7 @@ public class WebManagerImpl
     @Override
     public String getFooterDescriptionHTML( TimeZone timeZone )
     {
-        StringBuilder ret = new StringBuilder( "Time zone: " );
-        ret.append( timeZone.getID() );
-        ret.append( "<br />" );
-        ret.append( Manager.getStorageInstance().getGlobalConfiguration().getProductName() );
+        StringBuilder ret = new StringBuilder( Manager.getStorageInstance().getGlobalConfiguration().getProductName() );
         ret.append( " is an open source project, <a href=\"" );
         ret.append( Manager.getStorageInstance().getGlobalConfiguration().getProductUrl() );
         ret.append( "\">download</a> the latest release now!" );

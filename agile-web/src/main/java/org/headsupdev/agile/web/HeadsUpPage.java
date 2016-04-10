@@ -200,13 +200,11 @@ public abstract class HeadsUpPage
                 } ) );
             }
         } );
-
-        addAnimatedSelect( "mainlink", getHeadsUpApplication().getName() + "   \u25bc", mainmenu );
         add( mainmenu );
 
         submenu = new WebMarkupContainer( "submenu-container" );
         submenu.setMarkupId( "submenu" );
-        addAnimatedSelect( "sublink", "\u2699", submenu );
+        addAnimatedSelect( "sublink", "\u2630", submenu );
         add( submenu );
 
         submenu.add( new ListView<Link>( "submenu", links )
@@ -261,7 +259,6 @@ public abstract class HeadsUpPage
                     }
                     else
                     {
-                        target.appendJavascript( "document.getElementById('userpanelbutton').childNodes[1].click()" );
                         showDialog( new LoginDialog( DIALOG_PANEL_ID, true, HeadsUpPage.this ), target );
                     }
                 }
@@ -293,7 +290,6 @@ public abstract class HeadsUpPage
                     }
                     else
                     {
-                        target.appendJavascript( "document.getElementById('userpanelbutton').childNodes[1].click()" );
                         showDialog( new LogoutDialog( DIALOG_PANEL_ID, true ), target );
                     }
                 }
@@ -302,14 +298,6 @@ public abstract class HeadsUpPage
             userpanel.add( login );
         }
 
-        if ( ApplicationPageMapper.get().getSearchApp() != null )
-        {
-            userpanel.add( new BookmarkablePageLink( "search", getPageClass( "search" ), getProjectPageParameters() ) );
-        }
-        else
-        {
-            userpanel.add( new WebMarkupContainer( "search" ).setVisible( false ) );
-        }
         if ( ApplicationPageMapper.get().getSupportApp() != null )
         {
             userpanel.add( new BookmarkablePageLink( "support", ApplicationPageMapper.get().getSupportApp().getHomePage(),
@@ -319,14 +307,6 @@ public abstract class HeadsUpPage
         {
             userpanel.add( new WebMarkupContainer( "support" ).setVisible( false ) );
         }
-
-        WebMarkupContainer userpanelButton = new WebMarkupContainer( "userpanelbutton" );
-        userpanelButton.add( new Label( "label", "\u25bc" ) );
-        add( userpanelButton );
-
-        Animator animator = new Animator();
-        animator.addCssStyleSubject( new MarkupIdModel( userpanel ), "up", "down" );
-        animator.attachTo( userpanelButton, "onclick", Animator.Action.toggle() );
 
         boolean showUserTools = getSession().getUser() != null && !getSession().getUser().equals( HeadsUpSession.ANONYMOUS_USER );
         if ( showUserTools )
@@ -366,7 +346,7 @@ public abstract class HeadsUpPage
             dashBack.setMarkupId( "userdashboardbackground" );
             add( dashBack );
 
-            animator = new Animator();
+            Animator animator = new Animator();
             animator.withEaseInOutTransition();
             animator.addCssStyleSubject( new MarkupIdModel( dash ), "up", "down" );
             animator.addCssStyleSubject( new MarkupIdModel( dashBack ), "up", "down" );
@@ -428,38 +408,6 @@ public abstract class HeadsUpPage
 
         addAnimatedSelect( "projectlink", getProject().getAlias() + "   \u25bc", projectmenu );
 
-        WebMarkupContainer taskpanel = new WebMarkupContainer( "taskpanel" );
-        Link taskLink = new BookmarkablePageLink( "tasklink", getPageClass( "tasks" ), getProjectPageParameters() );
-        taskpanel.add( taskLink );
-        final Image spinner = new Image( "spinner", new ResourceReference( HeadsUpPage.class, "images/ajax-loader.gif" ) );
-        spinner.add( new AttributeModifier( "style", new Model<String>()
-        {
-            public String getObject()
-            {
-                if ( getManager().getTasks() == null || getManager().getTasks().size() == 0 )
-                {
-                    return "display:none";
-                }
-
-                return "";
-            }
-        } ) );
-        spinner.setOutputMarkupId( true );
-        spinner.add( new AbstractAjaxTimerBehavior( Duration.seconds( 10 ) )
-        {
-            {
-                onlyTargetActivePage();
-            }
-
-            protected void onTimer( AjaxRequestTarget target )
-            {
-                target.addComponent( spinner );
-            }
-        } );
-        taskLink.add( spinner );
-        add( taskpanel );
-
-//        add( new Label( "producttitle", HeadsUpConfiguration.getProductName() ) );
         add( new Label( "title", new PropertyModel( this, "title" ) )
         {
             @Override
