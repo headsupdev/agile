@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2016 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -27,8 +27,6 @@ import org.headsupdev.agile.app.dashboard.permission.ProjectViewPermission;
 import org.headsupdev.agile.app.dashboard.permission.MemberViewPermission;
 import org.headsupdev.agile.app.dashboard.permission.MemberListPermission;
 import org.headsupdev.agile.app.dashboard.permission.MemberEditPermission;
-import org.headsupdev.agile.app.dashboard.feed.MemberFeed;
-import org.headsupdev.agile.app.dashboard.feed.ProjectFeed;
 
 import java.util.List;
 import java.util.LinkedList;
@@ -81,7 +79,7 @@ public class DashboardApplication
     @Override
     public Class<? extends Page>[] getPages() {
         return (Class<? extends Page>[]) new Class[]{ ChangePassword.class, EditAccount.class, Subscriptions.class,
-            Accounts.class, Show.class, Account.class, Welcome.class, ProjectFeed.class, MemberFeed.class };
+            Accounts.class, Show.class, Account.class, Welcome.class };
     }
 
     @Override

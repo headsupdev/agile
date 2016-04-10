@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2013 Heads Up Development Ltd.
+ * Copyright 2009-2016 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -24,7 +24,6 @@ import org.headsupdev.agile.app.history.rest.ActivityApi;
 import org.headsupdev.agile.web.WebApplication;
 import org.headsupdev.agile.storage.HibernateStorage;
 import org.headsupdev.agile.app.history.permission.HistoryViewPermission;
-import org.headsupdev.agile.app.history.feed.HistoryFeed;
 
 import java.util.List;
 import java.util.LinkedList;
@@ -74,7 +73,7 @@ public class HistoryApplication
     @Override
     public Class<? extends Page>[] getPages()
     {
-        return new Class[]{ History.class, ShowEvent.class, GroupedActivity.class, HistoryFeed.class };
+        return new Class[]{ History.class, ShowEvent.class, GroupedActivity.class };
     }
 
 

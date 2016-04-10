@@ -23,7 +23,6 @@ import org.apache.wicket.Page;
 import org.apache.wicket.PageParameters;
 import org.headsupdev.agile.web.HeadsUpPage;
 import org.headsupdev.agile.web.ApplicationPageMapper;
-import org.headsupdev.agile.web.feed.AbstractFeed;
 import org.headsupdev.agile.api.Application;
 
 /**
@@ -81,13 +80,6 @@ public class HeadsUpPageFactory
             }
 
             page.layout();
-        }
-        else if ( ret instanceof AbstractFeed )
-        {
-            if ( params != null )
-            {
-                ( (AbstractFeed) ret ).setPageParameters( params );
-            }
         }
         // TODO inject etc
     }

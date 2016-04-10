@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2016 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -22,7 +22,6 @@ import org.headsupdev.agile.api.*;
 import org.headsupdev.agile.api.rest.Api;
 import org.headsupdev.agile.app.search.rest.SearchApi;
 import org.headsupdev.agile.web.WebApplication;
-import org.headsupdev.agile.app.search.feed.SearchFeed;
 import org.headsupdev.agile.app.search.permission.SearchPermission;
 
 import java.util.List;
@@ -68,7 +67,7 @@ public class SearchApplication
     @Override
     public Class<? extends Page>[] getPages()
     {
-        return new Class[] { SearchFeed.class, Reindex.class, Search.class };
+        return new Class[] { Reindex.class, Search.class };
     }
 
     @Override
