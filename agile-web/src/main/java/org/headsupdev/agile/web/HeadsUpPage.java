@@ -19,7 +19,6 @@
 package org.headsupdev.agile.web;
 
 import org.apache.wicket.*;
-import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.CSSPackageResource;
@@ -27,7 +26,6 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.link.Link;
@@ -39,7 +37,6 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.protocol.http.WebResponse;
-import org.apache.wicket.util.time.Duration;
 import org.headsupdev.agile.api.Application;
 import org.headsupdev.agile.api.*;
 import org.headsupdev.agile.api.Page;
@@ -368,6 +365,7 @@ public abstract class HeadsUpPage
                 }
             } );
             animator.attachTo( userDashbutton, "onclick", Animator.Action.toggle() );
+            animator.attachTo( dash.getCloseButton(), "onclick", Animator.Action.toggle() );
         }
         else
         {

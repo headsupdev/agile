@@ -272,8 +272,8 @@ a img {
 
 #userdashboard .dashboard {
     background-color: white;
-    margin: 15px;
-    padding: 0 15px;
+    margin: 10pt;
+    padding: 0 10pt;
 }
 
 #userdashboard .dashheader {
@@ -281,9 +281,9 @@ a img {
     border: none;
     font-weight: bold;
     font-size: 95%;
-    padding: 7px 15px;
-    margin: 15px;
-    margin-bottom: -15px;
+    padding: 5pt 10pt;
+    margin: 10pt;
+    margin-bottom: -10pt;
 
     background-color: #505050;
     background: -webkit-gradient(linear, left top, left bottom, from(#6b6c6d), to(#3e403f));
@@ -293,9 +293,12 @@ a img {
 
 #userdashboard .dashfooter {
     text-align: right;
-    background-color: white;
-    padding-top: 0;
-    padding-bottom: 10px;
+    padding: 0 10pt;
+    margin-bottom: 10pt;
+}
+
+#userdashboard .dashfooter .more {
+   float: left;
 }
 
 #userdashboard table.issues {

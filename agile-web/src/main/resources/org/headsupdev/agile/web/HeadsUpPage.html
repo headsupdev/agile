@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <!--
   ~ HeadsUp Agile
-  ~ Copyright 2009-2013 Heads Up Development Ltd.
-  ~
+  ~ Copyright 2009-2016 Heads Up Development Ltd.
+  ~N
   ~ This program is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU Affero General Public License as
   ~ published by the Free Software Foundation, either version 3 of the
@@ -48,12 +48,13 @@
     <div id="spacer">&nbsp;</div>
     <div id="outerpage">
       <div id="page">
+        <div id="userdashboard" class="up" wicket:id="userdashboard"></div>
+        <div id="userdashboardbackground" class="up" wicket:id="userdashboardbackground">&nbsp;</div>
+
         <div id="header1">
           <a href="/" class="headbutton">
             <img wicket:id="headerlogo" />
           </a>
-
-
 
           <div id="projectselect">
             <div wicket:id="projectlink"><span wicket:id="title">project</span></div>
@@ -62,8 +63,6 @@
             <input type="text" placeholder="Search..." wicket:id="query" value="" class="input" />
             <input type="submit" value="Go" class="submit" />
           </form>
-
-
 
           <ul wicket:id="userpanel" id="userpanel">
             <li class="username" wicket:id="username"></li>
@@ -78,8 +77,6 @@
             <li><a class="support headbutton" wicket:id="support">support</a></li>
             </wicket:enclosure>
           </ul>
-          <div id="userdashboard" class="up" wicket:id="userdashboard"></div>
-          <div id="userdashboardbackground" class="up" wicket:id="userdashboardbackground">&nbsp;</div>
         </div>
         <div id="mainmenu" wicket:id="mainmenu-container" class="up">
           <ul>

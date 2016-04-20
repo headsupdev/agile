@@ -287,13 +287,13 @@ body {min-height: 100%;} /* for proper browsers */
 }
 
 #userdashboard {
-    position: absolute;
+    position: fixed;
     left: 0;
-    top: 34px;
+    top: 0;
     width: 100%;
 
     max-height: 480px;
-    z-index: 200;
+    z-index: 300;
 }
 
 #userdashboard .dashmilestone .due {

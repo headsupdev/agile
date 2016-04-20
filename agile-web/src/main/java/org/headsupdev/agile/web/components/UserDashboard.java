@@ -18,6 +18,8 @@
 
 package org.headsupdev.agile.web.components;
 
+import org.apache.wicket.Component;
+import org.apache.wicket.markup.html.form.Button;
 import org.headsupdev.agile.api.Project;
 import org.headsupdev.agile.api.User;
 import org.headsupdev.agile.storage.HibernateUtil;
@@ -52,6 +54,8 @@ public class UserDashboard extends Panel
 {
     private UserDashboardModel model;
     private HeadsUpPage page;
+
+    private Button close;
 
     public UserDashboard( String id, HeadsUpPage page )
     {
@@ -135,5 +139,13 @@ public class UserDashboard extends Panel
                 listItem.add( new IssuePanelRow( "issue", issue, page, true, true, true ) );
             }
         }.setVisible( noMilestone.size() > 0 ) );
+
+        close = new Button( "close" );
+        add( close );
+    }
+
+    public Component getCloseButton()
+    {
+        return close;
     }
 }
