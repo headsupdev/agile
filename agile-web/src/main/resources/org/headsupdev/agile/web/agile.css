@@ -16,7 +16,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+html {
+    margin: 0;
+}
+
 body {
+    margin: 0;
+    /* Center in older browsers */
+    text-align: center;
+
     height: 100%;
 }
 
@@ -40,12 +48,8 @@ body {min-height: 100%;} /* for proper browsers */
     top:0;
     width:100%;
 
-    background-color: #505050;
-    color: white;
-    padding: 0 10px;
     height: 34px;
     overflow: hidden;
-    z-index: 200;
 }
 
 #header1 a {
@@ -64,10 +68,6 @@ body {min-height: 100%;} /* for proper browsers */
     padding: 9px 5pt;
 }
 
-#header1 .headbutton:hover {
-    background-color: #7b7b7b;
-}
-
 #header1 .headbutton img {
     padding-top: 7px;
     width: 78pt;
@@ -77,14 +77,8 @@ body {min-height: 100%;} /* for proper browsers */
     position: absolute;
     bottom: 0;
 
-    padding: 0;
     width:  100%;
     height: 38pt;
-
-    background-color: #cecfca;
-    color: #505050;
-    font-size: 8pt;
-    text-align: center;
 }
 
 #footer .description {
@@ -113,7 +107,6 @@ body {min-height: 100%;} /* for proper browsers */
 }
 
 #mainmenu, #submenu {
-    font-weight: normal;
     height: 16px;
     white-space: nowrap;
 }
@@ -130,11 +123,6 @@ body {min-height: 100%;} /* for proper browsers */
     display: inline;
 }
 
-#mainmenu li {
-    padding: 9px 10px 8px 10px;
-    border-bottom: 1px solid lightgray;
-}
-
 #mainselect, #subselect {
     display: none;
 }
@@ -144,12 +132,6 @@ body {min-height: 100%;} /* for proper browsers */
     top: 34px;
     width: 92pt;
     height: 100%;
-
-    background-color: #dad9d7;
-
-    font-size: 11pt;
-    padding: 0;
-    border-top: 1px solid lightgray;
 }
 
 #mainmenu ul {
@@ -157,45 +139,11 @@ body {min-height: 100%;} /* for proper browsers */
 }
 
 #submenu {
-    font-size: 11pt;
-    text-align: right;
     float: right;
-    margin: 32pt 8pt 0 0;
-    padding: 10px 0;
-}
-
-#submenu ul {
-    background-color: #ebecee;
-    padding: 4pt 0 !important;
 }
 
 #submenu li {
     display: inline;
-    padding: 11px 15px 10px 15px;
-}
-
-.mainmenu-item:hover, .mainmenu-item a:hover {
-    background-color: #ebecee;
-}
-
-.mainmenu-item:hover span, .mainmenu-item a:hover span {
-    color: #25b6e6;
-}
-
-.submenu-item:hover, .submenu-item a:hover {
-    background-color: white;
-}
-
-.submenu-item:hover span, .submenu-item a:hover span {
-    color: #25b6e6;
-}
-
-.mainmenu-item-selected {
-    background-color: #ebecee;
-}
-
-.mainmenu-item-selected span {
-    color: #1298c4;
 }
 
 #projectmenu {
@@ -206,23 +154,16 @@ body {min-height: 100%;} /* for proper browsers */
     z-index: 299;
 
     float: right;
-    background-color: #F0F1EA;
-    border-left: 1px solid lightgray;
-    border-right: 1px solid lightgray;
 }
 
 #projectmenu.up {
     height: 0;
     overflow: hidden;
-
-    border-bottom: 0 solid lightgray;
 }
 
 #projectmenu.down {
     height: auto;
     overflow: hidden;
-
-    border-bottom: 1px solid lightgray;
 }
 
 #projectmenu-header {
@@ -235,45 +176,15 @@ body {min-height: 100%;} /* for proper browsers */
     font-size: 0;
 }
 
-#projectmenu-content {
-    padding: 8px;
-
-    color: #545A5A;
-    font-size: 12pt;
-}
-
-#projectmenu-content .alllink, #projectmenu-content .noprojects {
-    padding-left: 8px;
-}
-
 #projectmenu-content a {
-    color: #545A5A;
-    text-decoration: none;
-    font-weight: bold;
-
     white-space: nowrap;
 }
 
-#projectmenu-content a:hover, #projectmenu-content a.selected {
-    color: #25b6e6;
-}
-
 #projectmenu .projectgroup {
-    margin-top: 10px;
     display: block;
-    color: grey;
-    font-size: 90%;
-    font-style: italic;
-}
-
-#projectmenu-content {
-    margin-top: -10px;
 }
 
 #projectmenu ul {
-    margin: 0;
-    padding: 0;
-    padding-left: 10px;
     list-style: none;
 
     overflow: hidden;
@@ -284,14 +195,7 @@ body {min-height: 100%;} /* for proper browsers */
     z-index: 299;
     left: 92pt;
     top: 5px;
-    font-size: 14pt;
-    font-weight: bold;
-    color: #c0c0c0;
     cursor: pointer;
-}
-
-#projectselect:hover {
-    color: #25b6e6;
 }
 
 #header1 .quicksearch {
@@ -300,19 +204,12 @@ body {min-height: 100%;} /* for proper browsers */
     right: 162pt;
     left: 192pt;
     height: 31px;
-    text-align: right;
     z-index: 200;
 }
 
 #header1 .quicksearch .input {
     width: 100%;
     height: 26px;
-    border: 1px solid #c0c0c0;
-    color: #c0c0c0;
-    background-color: #505050;
-
-    font-size: 10pt;
-    padding: 0 5pt;
 
     outline: none !important;
 }
@@ -326,18 +223,6 @@ body {min-height: 100%;} /* for proper browsers */
     width: 51px;
     border: none;
     cursor: pointer;
-    padding: 0;
-
-    background: url(images/search-right.png);
-    background-position: right;
-    background-repeat: no-repeat;
-
-    font-size: 12pt;
-    color: #505050;
-}
-
-#main {
-    color: #000000;
 }
 
 #userpanel {
@@ -407,42 +292,15 @@ body {min-height: 100%;} /* for proper browsers */
     top: 34px;
     width: 100%;
 
-    background-color: #d4d4d2;
-    color: black;
-
     max-height: 480px;
     z-index: 200;
 }
 
-#userdashboard .dashmilestone div.project {
-    font-size: 120%;
-    padding: 10px 0;
-    color: #555959;
-}
-
-#userdashboard .dashmilestone .milestone {
-    padding-bottom: 15px;
-    margin-bottom: 5px;
-    border-bottom: 1px solid #cfcfcf;
-}
-
 #userdashboard .dashmilestone .due {
-    font-weight: bold;
     float: right;
 }
 
-#userdashboard .dashmilestone {
-    padding: 0;
-    padding-top: 5px;
-
-    font-size: 120%;
-    background-color: transparent;
-}
-
 #userdashboard .dashboard {
-    background-color: white;
-    margin: 15px;
-    padding: 0 15px;
     display: block;
     width: auto;
     height: auto;
@@ -454,47 +312,19 @@ body {min-height: 100%;} /* for proper browsers */
 }
 
 #userdashboard .dashheader {
-    color: white;
-    border: none;
-    font-weight: bold;
-    font-size: 95%;
-    padding: 7px 15px;
-    margin: 15px;
-    margin-bottom: -15px;
     height: 18px;
-    
-    background-color: #505050;
-    background: -webkit-gradient(linear, left top, left bottom, from(#6b6c6d), to(#3e403f));
-    background: -moz-linear-gradient(top,  #6b6c6d,  #3e403f);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#6b6c6d', endColorstr='#3e403f');
-}
-
-#userdashboard .dashfooter {
-    text-align: right;
-    background-color: white;
-    padding-top: 0;
-    padding-bottom: 10px;
-}
-
-#userdashboard table.issues {
-    margin-top: -5px;
-    margin-bottom: 15px;
 }
 
 #userdashboard.up {
     height: 0;
     width: 100%;
     overflow: hidden;
-
-    border-bottom: 0px solid #010101;
 }
 
 #userdashboard.down {
     height: auto;
     width: 100%;
     overflow: hidden;
-
-    border-bottom: 8px solid #252525;
 }
 
 #userdashboardbackground {
@@ -531,7 +361,12 @@ body {min-height: 100%;} /* for proper browsers */
 #content {
     padding: 32pt 10pt 10pt 102pt;
 
-    margin-bottom: 14pt;
+    display: block;
+    margin-bottom: 45pt;
+}
+
+#tinymce {
+    display: block;
 }
 
 .clearBeforeFooter {
