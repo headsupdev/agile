@@ -124,7 +124,7 @@ public class Setup
     @Override
     public String getTitle()
     {
-        return "Welcome to " + getStorage().getGlobalConfiguration().getProductName() + " setup wizard";
+        return getStorage().getGlobalConfiguration().getProductName() + " Setup";
     }
 
     protected void drawTabs( final boolean[] tabSelected )

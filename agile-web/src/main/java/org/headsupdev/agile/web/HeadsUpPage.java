@@ -243,7 +243,6 @@ public abstract class HeadsUpPage
         userpanel.setMarkupId( "userpanel" );
         if ( !PrivateConfiguration.isInstalled() || user.equals( HeadsUpSession.ANONYMOUS_USER ) )
         {
-            userpanel.add( new Label( "username", "you are not logged in" ) );
             userpanel.add( new WebMarkupContainer( "account" ).setVisible( false ) );
 
             Link login = new AjaxFallbackLink( "login-link" )
@@ -266,7 +265,6 @@ public abstract class HeadsUpPage
         }
         else
         {
-            userpanel.add( new Label( "username", "logged in as " + user.getFullnameOrUsername() ) );
             Class<? extends Page> userLink = getPageClass( "account" );
             if ( userLink != null )
             {
