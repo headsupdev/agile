@@ -69,7 +69,7 @@
     </dependency>
 
     <dependency>
-      <groupId>com.github</groupId>
+      <groupId>com.github.hipchat</groupId>
       <artifactId>jHipchat</artifactId>
     </dependency>
 
