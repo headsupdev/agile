@@ -20,6 +20,7 @@ package org.headsupdev.agile.web.components;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.form.Button;
+import org.apache.wicket.markup.html.form.Form;
 import org.headsupdev.agile.api.Project;
 import org.headsupdev.agile.api.User;
 import org.headsupdev.agile.storage.HibernateUtil;
@@ -140,8 +141,10 @@ public class UserDashboard extends Panel
             }
         }.setVisible( noMilestone.size() > 0 ) );
 
-        close = new Button( "close" );
-        add( close );
+        Form form = new Form( "dashform" );
+        close = new Button( "dashclose" );
+        form.add( close );
+        add( form );
     }
 
     public Component getCloseButton()
