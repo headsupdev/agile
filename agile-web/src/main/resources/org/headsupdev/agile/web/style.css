@@ -131,13 +131,11 @@ a img {
 
 #header1 .quicksearch .submit {
     padding: 0;
+    width: 18pt;
 
     background: url(images/search-right.png);
     background-position: right;
     background-repeat: no-repeat;
-
-    font-size: 12pt;
-    color: #505050;
 }
 
 #main {
