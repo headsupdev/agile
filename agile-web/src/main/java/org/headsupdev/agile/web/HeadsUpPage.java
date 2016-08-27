@@ -19,6 +19,7 @@
 package org.headsupdev.agile.web;
 
 import org.apache.wicket.*;
+import org.apache.wicket.ResourceReference;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.CSSPackageResource;
@@ -26,6 +27,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.link.Link;
@@ -37,6 +39,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.protocol.http.WebResponse;
+import org.headsupdev.agile.HeadsUpResourceMarker;
 import org.headsupdev.agile.api.Application;
 import org.headsupdev.agile.api.*;
 import org.headsupdev.agile.api.Page;
@@ -179,6 +182,7 @@ public abstract class HeadsUpPage
                     }
                 }
                 ExternalLink applink = new ExternalLink( "mainmenu-link", link );
+                applink.add( new Image( "mainmenu-icon", new ResourceReference( HeadsUpResourceMarker.class, "images/app/" + app.getApplicationId() + "_icon.png" ) ) );
                 applink.add( new Label( "mainmenu-label", app.getName() ) );
                 listItem.add( applink );
 

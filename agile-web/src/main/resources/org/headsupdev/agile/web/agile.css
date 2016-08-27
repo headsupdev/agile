@@ -125,7 +125,7 @@ body {min-height: 100%;} /* for proper browsers */
 #mainmenu {
     position: fixed;
     top: 32pt;
-    width: 92pt;
+    width: 102pt;
     height: 100%;
 }
 
@@ -144,7 +144,7 @@ body {min-height: 100%;} /* for proper browsers */
 #projectmenu {
     width: 193pt;
     position: absolute;
-    left: 92pt;
+    left: 102pt;
     top: 32pt;
     z-index: 299;
 
@@ -188,7 +188,7 @@ body {min-height: 100%;} /* for proper browsers */
 #projectselect {
     position: fixed;
     z-index: 299;
-    left: 92pt;
+    left: 102pt;
     top: 0;
     cursor: pointer;
 }
@@ -352,7 +352,7 @@ body {min-height: 100%;} /* for proper browsers */
 }
 
 #content {
-    padding: 46pt 12pt 18pt 106pt;
+    padding: 46pt 12pt 18pt 116pt;
 
     display: block;
     margin-bottom: 45pt;

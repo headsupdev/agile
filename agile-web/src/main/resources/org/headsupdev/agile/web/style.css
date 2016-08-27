@@ -91,7 +91,7 @@ a img {
 
 #header1 .headbutton img {
     padding-top: 6pt;
-    width: 92pt;
+    width: 102pt;
 
     -webkit-filter: grayscale(100%);
     filter: grayscale(100%);
@@ -175,6 +175,16 @@ a img {
 
 #mainmenu ul {
     padding: 0 30px;
+}
+
+#mainmenu li img {
+    vertical-align: middle;
+    margin-top: -2pt;
+    padding: 2pt 0;
+}
+
+#mainmenu li span {
+    font-size: 11pt;
 }
 
 #submenu {
