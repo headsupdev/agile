@@ -373,6 +373,18 @@ a img {
     border-bottom: 8px solid #252525;
 }
 
+#content .applink {
+    background-color: #f6f6f6;
+    border: 1px solid #2e3667;
+    border-radious: 3pt;
+    padding: 1pt;
+}
+
+#content .applink img {
+    height: 14pt;
+    vertical-align: middle;
+}
+
 #content table a {
     font-weight: normal;
 }

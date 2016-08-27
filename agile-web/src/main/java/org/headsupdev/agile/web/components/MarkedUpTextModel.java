@@ -54,6 +54,14 @@ public class MarkedUpTextModel extends Model<String> {
         return out;
     }
 
+    private static String getAppIdForPageName( String pageName )
+    {
+        if ( !pageName.contains( "/" ) )
+            return pageName;
+
+        return pageName.substring( 0, pageName.indexOf( "/" ) );
+    }
+
     public static String markUp( String in, Project project )
     {
         if ( in == null )
@@ -87,14 +95,19 @@ public class MarkedUpTextModel extends Model<String> {
                 {
                     ret.append( "<a href=\"" );
                     ret.append( link );
-                    ret.append( "\"" );
+                    ret.append( "\" class=\"" );
                     if ( broken )
                     {
-                        ret.append( " class=\"brokenlink\" title=\"" );
+                        ret.append( "brokenlink\" title=\"" );
                         ret.append( BROKEN_LINK_HINT );
-                        ret.append( "\"" );
                     }
-                    ret.append( ">" );
+                    else if ( getProviderForLink( next, providers ) != null )
+                    {
+                        String pageName = getProviderForLink( next, providers ).getPageName();
+                        String appId = getAppIdForPageName( pageName );
+                        ret.append( "applink\"><img src=\"/resources/org.headsupdev.agile.HeadsUpResourceMarker/images/app/" + appId + "_icon.png" );
+                    }
+                    ret.append( "\">" );
                     ret.append( encode( next ) );
                     ret.append( "</a>" );
                 }
@@ -135,6 +148,25 @@ public class MarkedUpTextModel extends Model<String> {
         return true;
     }
 
+    public static LinkProvider getProviderForLink( String text, Map<String, LinkProvider> providers )
+    {
+        int pos = text.indexOf( ':' );
+        if ( pos == -1 )
+        {
+            return null;
+        }
+
+        String module = text.substring( 0, pos ).toLowerCase();
+        if ( module.equals( "wiki" ) )
+        {
+            module = "doc";
+        }
+
+        if ( providers.containsKey( module ) )
+            return providers.get( module );
+        return null;
+    }
+
     public static String getLink( String text, Project fallback, Map<String, LinkProvider> providers )
     {
         if ( text == null )
@@ -148,36 +180,31 @@ public class MarkedUpTextModel extends Model<String> {
             return null;
         }
 
-        String module = text.substring( 0, pos ).toLowerCase();
         String name = text.substring( pos + 1 );
-        if ( module.equals( "wiki" ) )
-        {
-            module = "doc";
-        }
-
         // simple URLs should be marked up too!
         if ( name.startsWith( "//" ) ) {
             return text;
         }
 
-        if ( providers.containsKey( module ) )
+        LinkProvider provider = getProviderForLink( text, providers );
+        if ( provider == null )
         {
-            pos = name.indexOf( ":" );
-            if ( pos != -1 )
-            {
-                String projectId = name.substring( 0, pos );
-                Project project = Manager.getStorageInstance().getProject( projectId );
-                if ( project != null )
-                {
-                    fallback = project;
-                }
-
-                name = name.substring( pos + 1 );
-            }
-            return providers.get( module ).getLink( name, fallback );
+            return null;
         }
 
-        return null;
+        pos = name.indexOf( ":" );
+        if ( pos != -1 )
+        {
+            String projectId = name.substring( 0, pos );
+            Project project = Manager.getStorageInstance().getProject( projectId );
+            if ( project != null )
+            {
+                fallback = project;
+            }
+
+            name = name.substring( pos + 1 );
+        }
+        return provider.getLink( name, fallback );
     }
 
     public static boolean isLinkBroken( String text, Project fallback, Map<String, LinkProvider> providers )
@@ -193,37 +220,32 @@ public class MarkedUpTextModel extends Model<String> {
             return false;
         }
 
-        String module = text.substring( 0, pos ).toLowerCase();
         String name = text.substring( pos + 1 );
-
         // simple URLs should never be broken
         if ( name.startsWith( "//" ) ) {
             return false;
         }
 
-        if ( module.equals( "wiki" ) )
+
+        LinkProvider provider = getProviderForLink( text, providers );
+        if ( provider == null )
         {
-            module = "doc";
+            return false;
         }
 
-        if ( providers.containsKey( module ) )
+        pos = name.indexOf( ":" );
+        if ( pos != -1 )
         {
-            pos = name.indexOf( ":" );
-            if ( pos != -1 )
+            String projectId = name.substring( 0, pos );
+            Project project = Manager.getStorageInstance().getProject( projectId );
+            if ( project != null )
             {
-                String projectId = name.substring( 0, pos );
-                Project project = Manager.getStorageInstance().getProject( projectId );
-                if ( project != null )
-                {
-                    fallback = project;
-                }
-
-                name = name.substring( pos + 1 );
+                fallback = project;
             }
-            return providers.get( module ).isLinkBroken( name, fallback );
-        }
 
-        return false;
+            name = name.substring( pos + 1 );
+        }
+        return provider.isLinkBroken( name, fallback );
     }
 
     // TODO find the wicket encoding and use that instead - else centralise this...
