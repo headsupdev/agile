@@ -19,10 +19,10 @@
 package org.headsupdev.agile.web;
 
 import org.apache.wicket.*;
-import org.apache.wicket.ResourceReference;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.CSSPackageResource;
+import org.apache.wicket.markup.html.PackageResource;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
@@ -51,6 +51,7 @@ import org.headsupdev.agile.security.permission.ProjectListPermission;
 import org.headsupdev.agile.storage.StoredProject;
 import org.headsupdev.agile.web.auth.WebLoginManager;
 import org.headsupdev.agile.web.components.AccountSummaryPanel;
+import org.headsupdev.agile.web.components.HeadsUpResourceReference;
 import org.headsupdev.agile.web.components.MarkedUpTextModel;
 import org.headsupdev.agile.web.components.ProjectListPanel;
 import org.headsupdev.agile.web.components.UserDashboard;
@@ -182,7 +183,8 @@ public abstract class HeadsUpPage
                     }
                 }
                 ExternalLink applink = new ExternalLink( "mainmenu-link", link );
-                applink.add( new Image( "mainmenu-icon", new ResourceReference( HeadsUpResourceMarker.class, "images/app/" + app.getApplicationId() + "_icon.png" ) ) );
+                String icon = "images/app/" + app.getApplicationId() + "_icon.png";
+                applink.add( new Image( "mainmenu-icon", new HeadsUpResourceReference( icon ) ).setVisible( PackageResource.exists( HeadsUpResourceMarker.class, icon, null, null ) ) );
                 applink.add( new Label( "mainmenu-label", app.getName() ) );
                 listItem.add( applink );
 

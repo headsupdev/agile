@@ -18,9 +18,11 @@
 
 package org.headsupdev.agile.web.components;
 
+import org.headsupdev.agile.HeadsUpResourceMarker;
 import org.headsupdev.agile.api.Project;
 import org.headsupdev.agile.api.LinkProvider;
 import org.headsupdev.agile.api.Manager;
+import org.apache.wicket.markup.html.PackageResource;
 import org.apache.wicket.model.Model;
 
 import java.util.Map;
@@ -103,9 +105,15 @@ public class MarkedUpTextModel extends Model<String> {
                     }
                     else if ( getProviderForLink( next, providers ) != null )
                     {
+                        ret.append( "applink" );
+
                         String pageName = getProviderForLink( next, providers ).getPageName();
                         String appId = getAppIdForPageName( pageName );
-                        ret.append( "applink\"><img src=\"/resources/org.headsupdev.agile.HeadsUpResourceMarker/images/app/" + appId + "_icon.png" );
+                        String icon = "images/app/" + appId + "_icon.png";
+                        if ( PackageResource.exists( HeadsUpResourceMarker.class, icon, null, null ) )
+                        {
+                            ret.append( "\"><img src=\"/resources/org.headsupdev.agile.HeadsUpResourceMarker/" + icon );
+                        }
                     }
                     ret.append( "\">" );
                     ret.append( encode( next ) );
