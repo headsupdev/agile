@@ -208,7 +208,7 @@ public abstract class HeadsUpPage
 
         submenu = new WebMarkupContainer( "submenu-container" );
         submenu.setMarkupId( "submenu" );
-        addAnimatedSelect( "sublink", "\u2630", submenu );
+        addAnimatedSelect( "sublink", "", submenu );
         add( submenu );
 
         submenu.add( new ListView<Link>( "submenu", links )

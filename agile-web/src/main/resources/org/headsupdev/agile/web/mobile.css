@@ -100,30 +100,33 @@
 #subselect {
     display: block;
     position: absolute;
-    right: 10pt;
-    top: 66pt;
-    font-size: 14pt;
-    font-weight: bold;
-    color: #545A5A;
+    right: 0;
+    top: 64pt;
+
+    width: 8pt;
+    height: 17pt;
+
+    padding: 6pt 12pt !important;
+    border-left: 1px solid #666666;
+    background-color: #f6f6f6;
+
     cursor: pointer;
     z-index: 100;
 }
 
 #submenu {
     position: absolute;
-    right: 0;
-    top: 75.75pt;
+    right: -12pt;
+    top: 52pt;
 
+    margin: 0;
     padding: 0 !important;
-    padding: 0;
     list-style: none;
 
-    background-color: #F0F1EA;
+    background-color: #f6f6f6;
     background-image: none;
-    border-top: none;
-    border-left: 1px solid lightgray;
-    border-right: 1px solid lightgray;
-    border-bottom: 1px solid lightgray;
+    border-left: 1px solid #666666;
+    border-bottom: 1px solid #666666;
     overflow: hidden;
 
     z-index: 250;
