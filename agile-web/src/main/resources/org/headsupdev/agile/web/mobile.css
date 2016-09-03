@@ -26,9 +26,16 @@
     height: 64pt;
 }
 
-#header1 img {
-    padding-left: 2pt;
-    width: 24pt !important;
+#header1 .headbutton {
+    width: 32pt;
+    overflow: hidden;
+}
+
+#header1 .headbutton img {
+    height: 80% !important;
+    width: 450% !important;
+
+    margin-left: 13.5pt
 }
 
 #userpanel {
