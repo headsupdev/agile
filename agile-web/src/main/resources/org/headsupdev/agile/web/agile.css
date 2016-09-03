@@ -447,23 +447,16 @@ div.tabs div.tab-row li.selected a {
 .dialog .dialogcontent {
     margin-left: auto;
     margin-right: auto;
-    padding: 2px;
-
-    background-color: #FAFBF6;
-    border: 10px solid #FAFBF6;
-    text-align: left;
-    margin-left: auto;
 
     width: 340pt;
     position: relative;
     margin-top: -110pt;
     margin-left: -170pt;
     z-index: 1000;
-    
-    -webkit-border-radius: 8px;
-    -moz-border-radius: 8px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px #000000;
+}
+
+.dialog .dialogtitle {
+    display: block;
 }
 
 .dialog .dialogcontent table {
@@ -479,76 +472,19 @@ div.tabs div.tab-row li.selected a {
     width: 100%;
 }
 
-.dialog .dialogtitle, .dialog .dialogtitle h3 {
-    font-size: 18pt;
-    color: #545A5A;
-    border-bottom: 1px solid #d8d8d6;
-
-    width: 100%;
-    padding-bottom: 12px;
-    padding-top: 5px;
-}
-
-.dialog form {
-    margin-top: -10px;
-}
-
 .dialog .textinput {
-    width: 420px;
-    height: 50px;
-    margin: 5px 0;
-    padding: 0 15px;
-
-    font-size: 14pt;
-    font-weight: normal;
-    border: none;
-
-    background: url(images/input-bg.png);
-    background-repeat: no-repeat;
+    width: 360px;
+    height: 25px;
 }
 
 .dialog .rememberme {
+    display: block;
     width: 100%;
-    font-size: 10pt;
-}
-
-.dialog .rememberme input {
-    margin-left: 10px;
 }
 
 .dialog .formbuttons {
     height: 30pt;
-}
-
-.dialog .switchformbuttonsok, .dialog .switchformbuttonscancel {
-    color: white;
-    border: none;
-    cursor: pointer;
-
-    font-size: 14pt;
-    font-weight: bold;
-    padding: 10px;
-
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
-    border-radius: 4px;
-
-}
-
-.dialog .switchformbuttonsok {
-    background-color: #1198c5;
-}
-
-.dialog .switchformbuttonscancel {
-    background-color: #c0c0c0;
-}
-
-.dialog .dialogfooter {
-    font-size: 10pt;
-    font-style: italic;
-
-    padding: 0;
-    margin-bottom: 0;
+    padding-bottom: 7pt;
 }
 
 .dialog .dialogbackdrop, #userdashboardbackground {
@@ -798,5 +734,4 @@ div.wicketstuff-progressbar span.bar{
     border-left-width: 36px;
     border-bottom-width: 36px;
 }
-
 

@@ -576,3 +576,79 @@ div.info {
 .formbuttons {
     height: 22px;
 }
+
+/* dialog style */
+
+.dialog .dialogcontent {
+    background-color: #FFFFFF;
+    text-align: left;
+
+    box-shadow: 0 0 10px #000000;
+}
+
+.dialog p {
+    font-size: 11pt;
+    padding: 8pt 24pt;
+}
+
+.dialog .dialogtitle {
+    font-size: 12pt;
+    color: #2e3667;
+    background-color: #ebedf3;
+    border-bottom: 1px solid #d8d8d6;
+    
+    padding: 14pt 24pt;
+}
+
+.dialog form {
+    padding: 0 24pt;
+}
+
+.dialog .textinput {
+    margin: 3pt 0;
+    padding: 0 11pt;
+
+    font-size: 11pt;
+    font-weight: normal;
+}
+
+.dialog .rememberme {
+    font-size: 10pt;
+
+    padding-bottom: 10pt;
+}
+
+.dialog .rememberme input {
+    margin-left: 5pt;
+}
+
+.dialog .switchformbuttonsok, .dialog .switchformbuttonscancel {
+    color: white;
+    border: none;
+    cursor: pointer;
+
+    font-size: 12pt;
+    font-weight: bold;
+    padding: 7pt;
+
+    -webkit-border-radius: 2pt;
+    -moz-border-radius: 2pt;
+    border-radius: 2pt;
+}
+
+.dialog .switchformbuttonsok {
+    background-color: #2e3667;
+}
+
+.dialog .switchformbuttonscancel {
+    background-color: #ebecee;
+    color: #2e3667;
+}
+
+.dialog .dialogfooter {
+    font-size: 10pt;
+    font-style: italic;
+
+    padding: 0 24pt 10pt 24pt;
+}
+
