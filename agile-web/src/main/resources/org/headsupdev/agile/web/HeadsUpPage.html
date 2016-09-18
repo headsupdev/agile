@@ -41,6 +41,10 @@
           document.login.username.focus();
         }
       }
+
+      function moveFilterButtonBackground( value ) {
+        Wicket.$('filterbutton').style.backgroundPosition = '65px ' + ( -26 + ( value * 39 ) ) + 'px';
+      }
     </script>
 
   </head>
@@ -95,6 +99,7 @@
         <div id="submenu" wicket:id="submenu-container" class="up">
           <ul>
             <li wicket:id="submenu" class="submenu-item"><a wicket:id="submenu-link"><span wicket:id="submenu-label"></span></a></li>
+            <li wicket:id="filterbutton" class="submenu-item"><a href="#">filter</a></li>
           </ul>
         </div>
         <div id="main">

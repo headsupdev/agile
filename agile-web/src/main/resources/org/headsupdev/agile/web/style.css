@@ -203,7 +203,7 @@ a img {
 }
 
 #submenu li {
-    padding: 11px 15px 10px 15px;
+    padding: 4.5pt 12pt;
 }
 
 .mainmenu-item:hover, .mainmenu-item a:hover {
@@ -492,8 +492,6 @@ div.filterborder {
 
 #filterbutton {
     background-color: #f6f8ff;
-    border: 1px solid #ebedf3;
-    border-radius: 2.5pt;
 }
 
 .comments .comment-title {

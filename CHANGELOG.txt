@@ -1,3 +1,7 @@
+2.2
+
+* A great new theme :)
+
 2.1.1
 
 * Update to iOS9 defaults for parsing

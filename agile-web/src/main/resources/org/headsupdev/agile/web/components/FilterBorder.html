@@ -21,12 +21,6 @@
   <body>
     <wicket:border>
       <div class="filterborder">
-        <script type="text/javascript">
-          function moveFilterButtonBackground( value ) {
-            Wicket.$('filterbutton').style.backgroundPosition = '65px ' + ( -26 + ( value * 39 ) ) + 'px';
-          }
-        </script>
-        <div wicket:id="filterbutton" id="filterbutton" class="filterbuttonhidden">Filter</div>
         <div wicket:id="filter" id="filter" class="filterhidden">
           <wicket:body />
         </div>

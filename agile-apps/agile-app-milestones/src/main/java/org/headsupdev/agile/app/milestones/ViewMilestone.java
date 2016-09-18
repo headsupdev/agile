@@ -131,7 +131,7 @@ public class ViewMilestone
             }
         } );
 
-        filter = new IssueFilterPanel( "filter", getSession().getUser() )
+        filter = new IssueFilterPanel( "filter", getFilterButton(), getSession().getUser() )
         {
             @Override
             public void invalidDatePeriod()
@@ -237,6 +237,12 @@ public class ViewMilestone
         }
 
         return links;
+    }
+
+    @Override
+    public boolean hasFilter()
+    {
+        return true;
     }
 }
 

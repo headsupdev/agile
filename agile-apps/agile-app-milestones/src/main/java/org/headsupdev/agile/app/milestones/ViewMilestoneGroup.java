@@ -110,7 +110,7 @@ public class ViewMilestoneGroup
             }
         } );
 
-        filter = new MilestoneFilterPanel( "filter", getSession().getUser() )
+        filter = new MilestoneFilterPanel( "filter", getFilterButton(), getSession().getUser() )
         {
             @Override
             public Criterion getCompletedCriterion()
@@ -206,6 +206,12 @@ public class ViewMilestoneGroup
         }
 
         return links;
+    }
+
+    @Override
+    public boolean hasFilter()
+    {
+        return true;
     }
 }
 

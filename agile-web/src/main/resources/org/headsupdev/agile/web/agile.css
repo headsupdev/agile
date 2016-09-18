@@ -575,17 +575,6 @@ div.filterborder {
 }
 
 #filterbutton {
-    position: absolute;
-    left: 106pt;
-    top: 96pt;
-    margin-top: -52pt;
-
-    padding: 5pt;
-    padding-right: 35px;
-    font-weight: bold;
-
-    cursor: pointer;
-    border-left: 1px solid white;
 }
 
 #filterbutton.filterbuttonhidden {
@@ -601,7 +590,6 @@ div.filterborder {
 }
 
 #filterbutton:hover {
-    color: #3ccfff;
 }
 
 /* autocomplete */

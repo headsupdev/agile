@@ -83,7 +83,7 @@ public class Search
         noresults.setOutputMarkupPlaceholderTag( true );
         add( noresults.setVisible( false ) );
 
-        add( filter = new ApplicationFilterPanel( "filter", "search" )
+        add( filter = new ApplicationFilterPanel( "filter", "search", getFilterButton() )
         {
             @Override
             public void onFilterUpdated()
@@ -235,5 +235,11 @@ public class Search
         {
             searcher.setAppFilter( filter.getApplications() );
         }
+    }
+
+    @Override
+    public boolean hasFilter()
+    {
+        return true;
     }
 }

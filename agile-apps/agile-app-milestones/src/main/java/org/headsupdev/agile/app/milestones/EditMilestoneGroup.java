@@ -83,4 +83,10 @@ public class EditMilestoneGroup
     {
         return "Edit Milestone Group " + name;
     }
+
+    @Override
+    public boolean hasFilter()
+    {
+        return true;
+    }
 }

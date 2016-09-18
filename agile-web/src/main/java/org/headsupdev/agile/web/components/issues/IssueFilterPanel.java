@@ -71,13 +71,13 @@ public abstract class IssueFilterPanel
     private boolean filterByDateUpdated;
     private boolean filterByDateCreated;
 
-    public IssueFilterPanel( String id, final User user )
+    public IssueFilterPanel( String id, final WebMarkupContainer button, final User user )
     {
         super( id );
 
         this.user = user;
         loadFilters();
-        FilterBorder filter = new FilterBorder( "filter" );
+        FilterBorder filter = new FilterBorder( "filter", button );
         add( filter );
 
         final Form<IssueFilter> filterForm = new Form<IssueFilter>( "filterform" )

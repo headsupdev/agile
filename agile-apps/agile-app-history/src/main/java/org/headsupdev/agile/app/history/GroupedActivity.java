@@ -65,7 +65,7 @@ public class GroupedActivity
 
         types = new HashMap<String, List<String>>();
         appIds = new ArrayList<String>();
-        add( filter = new ApplicationFilterPanel( "filter", "history-grouped" )
+        add( filter = new ApplicationFilterPanel( "filter", "history-grouped", getFilterButton() )
         {
             @Override
             public void onFilterUpdated()
@@ -151,5 +151,11 @@ public class GroupedActivity
                 }
             }
         }
+    }
+
+    @Override
+    public boolean hasFilter()
+    {
+        return true;
     }
 }

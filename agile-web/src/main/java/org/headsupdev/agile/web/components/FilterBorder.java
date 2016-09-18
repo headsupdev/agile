@@ -34,17 +34,13 @@ import org.wicketstuff.animator.IAnimatorSubject;
 public class FilterBorder
     extends Border
 {
-    public FilterBorder( String id )
+    public FilterBorder( String id, WebMarkupContainer filterButton )
     {
         super( id );
 
         WebMarkupContainer filter = new WebMarkupContainer( "filter" );
         filter.setMarkupId( "filter" );
         add( filter );
-
-        WebMarkupContainer filterButton = new WebMarkupContainer( "filterbutton" );
-        filterButton.setMarkupId( "filterbutton" );
-        add( filterButton );
 
         Animator animator = new Animator();
         animator.addCssStyleSubject( new MarkupIdModel( filter ), "filterhidden", "filtershown" );

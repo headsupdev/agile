@@ -59,6 +59,7 @@ public class EditMilestoneGroupForm
     private boolean creating;
 
     private MilestoneFilterPanel filter;
+    private HeadsUpPage owner;
 
     public EditMilestoneGroupForm( String id, final MilestoneGroup milestoneGroup, final boolean creating,
                                    final HeadsUpPage owner )
@@ -67,6 +68,7 @@ public class EditMilestoneGroupForm
 
         this.group = milestoneGroup;
         this.creating = creating;
+        this.owner = owner;
 
         Form<MilestoneGroup> form = new Form<MilestoneGroup>( "edit" )
         {
@@ -208,7 +210,7 @@ public class EditMilestoneGroupForm
 
     private Panel setupFilter()
     {
-        filter = new MilestoneFilterPanel( "filter", ( (HeadsUpSession) getSession() ).getUser() )
+        filter = new MilestoneFilterPanel( "filter", owner.getFilterButton(), ( (HeadsUpSession) getSession() ).getUser() )
         {
             public Criterion getDueCriterion()
             {

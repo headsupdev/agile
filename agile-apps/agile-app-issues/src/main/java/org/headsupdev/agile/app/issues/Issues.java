@@ -56,7 +56,7 @@ public class Issues
             requirePermission( new ProjectListPermission() );
         }
 
-        filter = new IssueFilterPanel( "filter", getSession().getUser() )
+        filter = new IssueFilterPanel( "filter", getFilterButton(), getSession().getUser() )
         {
             @Override
             public void invalidDatePeriod()
@@ -83,6 +83,12 @@ public class Issues
     public String getTitle()
     {
         return null;
+    }
+
+    @Override
+    public boolean hasFilter()
+    {
+        return true;
     }
 }
 

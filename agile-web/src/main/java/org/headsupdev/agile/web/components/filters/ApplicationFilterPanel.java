@@ -21,6 +21,7 @@ package org.headsupdev.agile.web.components.filters;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.CheckBox;
@@ -49,15 +50,16 @@ public abstract class ApplicationFilterPanel
 {
     private String filterId;
     private List<String> allApps;
+    private WebMarkupContainer filterButton;
     final Map<String, Boolean> appsVisible = new HashMap<String, Boolean>();
 
-    public ApplicationFilterPanel( String id, String filterId )
+    public ApplicationFilterPanel( String id, String filterId, WebMarkupContainer filterButton )
     {
         super( id );
         this.filterId = filterId;
 
         setupFilter();
-        layoutFilter();
+        layoutFilter( filterButton );
     }
 
     public Map<String, Boolean> getApplications()
@@ -86,10 +88,10 @@ public abstract class ApplicationFilterPanel
         loadFilters();
     }
 
-    protected void layoutFilter()
+    protected void layoutFilter( WebMarkupContainer filterButton )
     {
 
-        FilterBorder filter = new FilterBorder( "filter" );
+        FilterBorder filter = new FilterBorder( "filter", filterButton );
         add( filter );
 
         final Form filterForm = new Form( "filterform" )

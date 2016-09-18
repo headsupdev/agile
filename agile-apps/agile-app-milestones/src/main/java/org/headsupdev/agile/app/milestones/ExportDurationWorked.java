@@ -34,6 +34,7 @@ import org.headsupdev.agile.web.WebUtil;
 import org.headsupdev.agile.web.components.issues.IssueUtils;
 import org.headsupdev.agile.web.wicket.SortableEntityProvider;
 import org.apache.wicket.RequestCycle;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebResource;
 import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.protocol.http.WebResponse;
@@ -126,7 +127,8 @@ public class ExportDurationWorked
             // here we could throw some error I guess...
         }
 
-        MilestoneFilterPanel filter = new MilestoneFilterPanel( "dummy", HeadsUpSession.ANONYMOUS_USER )
+        WebMarkupContainer dummyButton = new WebMarkupContainer( "filterbutton" );
+        MilestoneFilterPanel filter = new MilestoneFilterPanel( "dummy", dummyButton, HeadsUpSession.ANONYMOUS_USER )
         {
             @Override
             public void invalidDatePeriod()

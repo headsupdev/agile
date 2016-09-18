@@ -73,7 +73,7 @@ public class Milestones
         }
         add( CSSPackageResource.getHeaderContribution( getClass(), "milestone.css" ) );
 
-        final MilestoneFilterPanel filter = new MilestoneFilterPanel( "filter", getSession().getUser() ){
+        final MilestoneFilterPanel filter = new MilestoneFilterPanel( "filter", getFilterButton(), getSession().getUser() ){
             @Override
             public void invalidDatePeriod()
             {
@@ -142,5 +142,11 @@ public class Milestones
     public String getTitle()
     {
         return null;
+    }
+
+    @Override
+    public boolean hasFilter()
+    {
+        return true;
     }
 }

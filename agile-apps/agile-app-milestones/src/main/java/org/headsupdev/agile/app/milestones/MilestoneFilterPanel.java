@@ -21,6 +21,7 @@ package org.headsupdev.agile.app.milestones;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.*;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -66,13 +67,13 @@ public abstract class MilestoneFilterPanel
     private Date startDateCompleted, endDateCompleted;
     private int value;
 
-    public MilestoneFilterPanel( String id, final User user )
+    public MilestoneFilterPanel( String id, WebMarkupContainer filterButton, final User user )
     {
         super( id );
 
         this.user = user;
         loadFilters();
-        FilterBorder filter = new FilterBorder( "filter" );
+        FilterBorder filter = new FilterBorder( "filter", filterButton );
         add( filter );
 
         final Form<MilestoneFilterPanel> filterForm = new Form<MilestoneFilterPanel>( "filterform" )

@@ -71,4 +71,10 @@ public class CreateMilestoneGroup
     {
         return "Create Group";
     }
+
+    @Override
+    public boolean hasFilter()
+    {
+        return true;
+    }
 }

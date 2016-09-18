@@ -92,6 +92,7 @@ public abstract class HeadsUpPage
     private WebMarkupContainer dialog, submenu;
     private String searchQuery;
     private ArrayList<MenuLink> menuLinks = new ArrayList<MenuLink>();
+    private WebMarkupContainer filterButton;
     private boolean linksRendered = false;
 
     private Logger log = Manager.getLogger( getClass().getName() );
@@ -234,6 +235,9 @@ public abstract class HeadsUpPage
                 } ) );
             }
         } );
+        filterButton = new WebMarkupContainer( "filterbutton" );
+        filterButton.setMarkupId( "filterbutton" );
+        submenu.add( filterButton.setVisible( hasFilter() ) );
 
         WebMarkupContainer projectmenu = createProjectMenu( user );
         add( projectmenu );
@@ -840,5 +844,15 @@ public abstract class HeadsUpPage
         }
 
         return permitted;
+    }
+
+    public boolean hasFilter()
+    {
+        return false;
+    }
+
+    public WebMarkupContainer getFilterButton()
+    {
+        return filterButton;
     }
 }

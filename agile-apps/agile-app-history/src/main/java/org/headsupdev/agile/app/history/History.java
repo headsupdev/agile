@@ -57,7 +57,7 @@ public class History
         super.layout();
         types = new LinkedList<String>();
 
-        add( filter = new ApplicationFilterPanel( "filter", "history" )
+        add( filter = new ApplicationFilterPanel( "filter", "history", getFilterButton() )
         {
             @Override
             public void onFilterUpdated()
@@ -146,5 +146,11 @@ public class History
                 }
             }
         }
+    }
+
+    @Override
+    public boolean hasFilter()
+    {
+        return true;
     }
 }
