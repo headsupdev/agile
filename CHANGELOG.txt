@@ -1,6 +1,7 @@
 2.2
 
 * A great new theme :)
+* Add a TesterRole for marking people as testers
 
 2.1.1
 
