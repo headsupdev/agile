@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2016 Heads Up Development Ltd.
+ * Copyright 2009-2017 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -185,7 +185,10 @@ public abstract class HeadsUpPage
                 }
                 ExternalLink applink = new ExternalLink( "mainmenu-link", link );
                 String icon = "images/app/" + app.getApplicationId() + "_icon.png";
-                applink.add( new Image( "mainmenu-icon", new HeadsUpResourceReference( icon ) ).setVisible( PackageResource.exists( HeadsUpResourceMarker.class, icon, null, null ) ) );
+                Image img = new Image( "mainmenu-icon", new HeadsUpResourceReference( icon ) );
+                img.setVisible( PackageResource.exists( HeadsUpResourceMarker.class, icon, null, null ) );
+                img.add( new AttributeModifier( "title", true, new Model<String>( app.getName() ) ) );
+                applink.add( img );
                 applink.add( new Label( "mainmenu-label", app.getName() ) );
                 listItem.add( applink );
 
