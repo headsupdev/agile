@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2014 Heads Up Development Ltd.
+ * Copyright 2009-2017 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -40,6 +40,7 @@ import org.headsupdev.agile.api.User;
 import org.headsupdev.agile.security.DefaultSecurityManager;
 import org.headsupdev.agile.security.permission.AdminPermission;
 import org.headsupdev.agile.storage.AnonymousRole;
+import org.headsupdev.agile.storage.TesterRole;
 import org.headsupdev.agile.storage.HibernateUtil;
 import org.headsupdev.agile.storage.StoredUser;
 import org.headsupdev.agile.web.ApplicationPageMapper;
@@ -145,7 +146,7 @@ public class Permissions
                     super.populateItem( listItem );
 
                     final User user = listItem.getModelObject();
-                    final boolean anon;
+                    final boolean builtin;
                     listItem.add( new GravatarLinkPanel( "gravatar", user, HeadsUpPage.SMALL_AVATAR_EDGE_LENGTH ) );
 
                     Model<String> usernameModel = new Model<String>()
@@ -168,7 +169,7 @@ public class Permissions
                         @Override
                         public String getObject()
                         {
-                            if ( !user.canLogin() )
+                            if ( ( (StoredUser) user ).isDisabled() )
                             {
                                 return "disabled";
                             }
@@ -185,7 +186,20 @@ public class Permissions
                         userLink.add( usernameInLink.setVisible( false ) );
                         listItem.add( userLink.setVisible( false ) );
                         user.getRoles().add( new AnonymousRole() );
-                        anon = true;
+                        builtin = true;
+                    }
+                    else if ( user.getRoles().contains( new TesterRole() ) )
+		    {
+                        listItem.add( new Label( "username", usernameModel ).setVisible( false ) );
+                        Label usernameInLink = new Label( "usernameInLink", usernameModel );
+                        usernameInLink.add( modifier );
+                        PageParameters params = new PageParameters();
+                        params.add( "username", user.getUsername() );
+                        params.add( "silent", "true" );
+                        builtin = true;
+                        BookmarkablePageLink userLink = new BookmarkablePageLink( "userLink", ApplicationPageMapper.get().getPageClass( "account" ), params );
+                        userLink.add( usernameInLink );
+                        listItem.add( userLink );
                     }
                     else
                     {
@@ -195,7 +209,7 @@ public class Permissions
                         PageParameters params = new PageParameters();
                         params.add( "username", user.getUsername() );
                         params.add( "silent", "true" );
-                        anon = false;
+                        builtin = false;
                         BookmarkablePageLink userLink = new BookmarkablePageLink( "userLink", ApplicationPageMapper.get().getPageClass( "account" ), params );
                         userLink.add( usernameInLink );
                         listItem.add( userLink );
@@ -212,7 +226,7 @@ public class Permissions
                     };
                     disable.add( new Image( "disable-icon", new ResourceReference( HeadsUpPage.class, "images/delete.png" ) ) );
                     listItem.add( disable.setVisible( !user.equals( ( (HeadsUpSession) getSession() ).getUser() ) &&
-                            !user.equals( HeadsUpSession.ANONYMOUS_USER ) ) );
+                            !builtin ) );
 
                     CheckGroup group = new CheckGroup<Role>( "rolelist", user.getRoles() );
                     group.add( new ListView<Role>( "rolegroup", getSecurityManager().getRoles() )
@@ -227,7 +241,7 @@ public class Permissions
                                 {
                                     return role;
                                 }
-                            } ).setEnabled( !anon ) );
+                            } ).setEnabled( !builtin ) );
                         }
                     } );
                     listItem.add( group );
@@ -292,8 +306,9 @@ public class Permissions
                         protected void populateItem( ListItem<Role> listItem )
                         {
                             final Role role = listItem.getModelObject();
+                            boolean disabled = role.equals( new TesterRole() );
 
-                            listItem.add( new Check<Role>( "role", new Model<Role>( role ) ) );
+                            listItem.add( new Check<Role>( "role", new Model<Role>( role ) ).setEnabled( !disabled ) );
                         }
 
                     } );

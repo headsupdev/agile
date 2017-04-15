@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2017 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -101,7 +101,12 @@ public class Setup
         else
         {
             add( new FinishedPanel( "setup-content" ) );
-
+        
+            if ( PrivateConfiguration.getSetupStep() < PrivateConfiguration.STEP_TESTER )
+            {
+                ( (DefaultSecurityManager) securityManager ).addRole( new TesterRole() );
+            }
+ 
             PrivateConfiguration.setSetupStep( PrivateConfiguration.STEP_FINISHED );
             PrivateConfiguration.setInstalled( true );
 

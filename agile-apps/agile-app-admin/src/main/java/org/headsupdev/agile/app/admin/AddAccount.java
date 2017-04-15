@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2014 Heads Up Development Ltd.
+ * Copyright 2009-2017 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -22,6 +22,7 @@ import org.headsupdev.agile.api.Project;
 import org.headsupdev.agile.security.permission.AccountCreatePermission;
 import org.headsupdev.agile.storage.StoredProject;
 import org.apache.wicket.markup.html.CSSPackageResource;
+import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.form.PasswordTextField;
@@ -34,6 +35,7 @@ import org.headsupdev.agile.api.Permission;
 import org.headsupdev.agile.api.User;
 import org.headsupdev.agile.storage.StoredUser;
 import org.headsupdev.agile.storage.MemberRole;
+import org.headsupdev.agile.storage.TesterRole;
 import org.headsupdev.agile.web.components.OnePressSubmitButton;
 
 import java.util.HashSet;
@@ -79,6 +81,7 @@ public class AddAccount
     {
         String username, password, password2, email, telephone;
         String firstname, lastname = "";
+        boolean tester;
 
         public CreateUserForm( String id )
         {
@@ -96,6 +99,7 @@ public class AddAccount
             pass2 = new PasswordTextField( "password2", new PropertyModel( this, "password2" ) );
             add( pass.setRequired( true ) );
             add( pass2.setRequired( true ) );
+            add( new CheckBox( "tester", new PropertyModel( this, "tester" ) ) );
 
             add( new EqualPasswordInputValidator( pass, pass2 ) );
             add( new OnePressSubmitButton( "submitUser" ) );
@@ -117,22 +121,29 @@ public class AddAccount
             created.setFirstname( firstname );
             created.setLastname( lastname );
 
-            // add the user to all loaded projects
-            created.addRole( getSecurityManager().getRoleById( ( new MemberRole() ).getId() ) );
-            HashSet<Project> allProjects = new HashSet<Project>( getStorage().getProjects() );
-            allProjects.add( StoredProject.getDefault() );
-            created.setProjects( allProjects );
-
-            // bi-directional relationship
-            for ( Project project : allProjects )
+            if ( tester )
             {
-                project.getUsers().add( created );
+                created.addRole( getSecurityManager().getRoleById( ( new TesterRole() ).getId() ) );
             }
+            else
+            {
+                // add the user to all loaded projects
+                created.addRole( getSecurityManager().getRoleById( ( new MemberRole() ).getId() ) );
+                HashSet<Project> allProjects = new HashSet<Project>( getStorage().getProjects() );
+                allProjects.add( StoredProject.getDefault() );
+                created.setProjects( allProjects );
 
-            // and force them into the "all" project too
-            Set<User> defaultProjectMembers = StoredProject.getDefault().getUsers();
-            defaultProjectMembers.add( created );
-            StoredProject.setDefaultProjectMembers( defaultProjectMembers );
+                // bi-directional relationship
+                for ( Project project : allProjects )
+                {
+                    project.getUsers().add( created );
+                }
+
+                // and force them into the "all" project too
+                Set<User> defaultProjectMembers = StoredProject.getDefault().getUsers();
+                defaultProjectMembers.add( created );
+                StoredProject.setDefaultProjectMembers( defaultProjectMembers );
+            }
 
             ( (AdminApplication) getHeadsUpApplication() ).addUser( created );
 
@@ -209,6 +220,16 @@ public class AddAccount
         public void setLastname( String lastname )
         {
             this.lastname = lastname;
+        }
+
+        public boolean isTester()
+        {
+            return tester;
+        }
+
+        public void setTester( boolean tester )
+        {
+            this.tester = tester;
         }
     }
 }

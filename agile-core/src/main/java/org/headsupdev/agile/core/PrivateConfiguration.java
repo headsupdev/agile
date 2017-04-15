@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2012 Heads Up Development Ltd.
+ * Copyright 2009-2017 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -40,8 +40,10 @@ public class PrivateConfiguration {
     public static final int STEP_UPDATES = 3;
     public static final int STEP_ADMIN = 4;
 
+    public static final int STEP_TESTER = 6;
+
     // This can up raised to add new steps - the setup app will see the new steps that need to be added and run them
-    public static final int STEP_FINISHED = 5;
+    public static final int STEP_FINISHED = 7;
 
     private static final String KEY_PERMISSIONS = "permissions";
     private static final String KEY_NOTIFIERS = "notifiers";

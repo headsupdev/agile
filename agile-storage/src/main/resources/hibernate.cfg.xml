@@ -1,6 +1,6 @@
 <!--
   ~ HeadsUp Agile
-  ~ Copyright 2009-2013 Heads Up Development Ltd.
+  ~ Copyright 2009-2017 Heads Up Development Ltd.
   ~
   ~ This program is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU Affero General Public License as
@@ -53,6 +53,7 @@
     <mapping class="org.headsupdev.agile.storage.AdminRole" />
     <mapping class="org.headsupdev.agile.storage.AnonymousRole" />
     <mapping class="org.headsupdev.agile.storage.MemberRole" />
+    <mapping class="org.headsupdev.agile.storage.TesterRole" />
     <mapping class="org.headsupdev.agile.storage.StoredUser" />
     <mapping class="org.headsupdev.agile.storage.StoredEvent" />
     <mapping class="org.headsupdev.agile.storage.StoredConfigurationItem" />
