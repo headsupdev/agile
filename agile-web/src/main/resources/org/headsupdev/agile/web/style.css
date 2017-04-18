@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2016 Heads Up Development Ltd.
+ * Copyright 2009-2017 Heads Up Development Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -428,19 +428,23 @@ table td.pairedrow {
     border-top: none;
 }
 
-table.listing td {
-    background-color: #f7f8f3;
+table.listing tr {
+    background-color: #ffffff;
+}
+
+table.listing tr.even {
+    background-color: #f7f7f7;
 }
 
 table.listing tr:hover td {
-    background-color: #f0fbfe;
+    background-color: #ececec;
 }
 
-table.listing td.nobackground {
+table.listing tr.nobackground {
     background-color: transparent;
 }
 
-table.listing tr:hover td.nobackground {
+table.listing tr.nobackground:hover {
     background-color: transparent;
 }
 
@@ -511,6 +515,7 @@ h1, h2, h3, h4, h5, h6 {
 h1 {
     border-left: 4pt solid #dcdcdc;
     padding-left: 10pt;
+    margin-bottom: 2pt;
 
     font-size: 18pt;
 }
@@ -523,7 +528,8 @@ div.error {
     border: 1px solid #BF6060;
     background-color: #FFDFDF;
 
-    padding: 10px;
+    margin: 2pt 0;
+    padding: 2pt;
 }
 
 div.info {

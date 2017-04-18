@@ -1163,6 +1163,7 @@ public class DefaultServlet
         sb.append("<html xml:lang=\"en\" xmlns=\"http://www.w3.org/1999/xhtml\" lang=\"en\">\r\n");
         sb.append("<head>\r\n");
         sb.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"/resources/org.headsupdev.agile.web.HeadsUpPage/agile.css\" />");
+        sb.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"/resources/org.headsupdev.agile.web.HeadsUpPage/style.css\" />");
         sb.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"/resources/org.headsupdev.agile.app.files.Browse/browse.css\" />");
         sb.append("<title>");
         sb.append(Manager.getStorageInstance().getGlobalConfiguration().getProductName());
@@ -1211,7 +1212,7 @@ public class DefaultServlet
         sb.append("        <div id=\"main\">");
         sb.append("          <div id=\"content\" style=\"margin-left: 0;\">");
 
-        sb.append("          <h2><span>");
+        sb.append("          <h1>");
 
         int split = name.indexOf('/', 1);
         if (name.length() < 2) {
@@ -1222,9 +1223,7 @@ public class DefaultServlet
             sb.append(name.substring(split));
             sb.append(")");
         }
-        sb.append("</span></a>");
-
-        sb.append("</h2>");
+        sb.append("</h1>");
 
         sb.append("<table class=\"browse listing\" width=\"100%\">\r\n");
 
