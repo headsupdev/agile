@@ -39,6 +39,12 @@ public class Admin
     }
 
     @Override
+    public String getTitle()
+    {
+        return "Administration";
+    }
+
+    @Override
     public void layout()
     {
         super.layout();
