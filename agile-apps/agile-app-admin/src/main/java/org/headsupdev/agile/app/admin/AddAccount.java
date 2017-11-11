@@ -56,6 +56,12 @@ public class AddAccount
     {
         return new AccountCreatePermission();
     }
+    private boolean testerOnly = false;
+
+    public AddAccount()
+    {
+        testerOnly = "true".equals( getRequest().getParameter( "tester" ) );
+    }
 
     public void layout()
     {
@@ -71,6 +77,16 @@ public class AddAccount
         return true;
     }
 
+    public boolean isTesterOnly()
+    {
+        return testerOnly;
+    }
+
+    public void setTesterOnly( boolean testerAccount )
+    {
+        this.testerOnly = testerAccount;
+    }
+
     @Override
     public String getTitle()
     {
@@ -81,7 +97,7 @@ public class AddAccount
     {
         String username, password, password2, email, telephone;
         String firstname, lastname = "";
-        boolean tester;
+        boolean tester = testerOnly;
 
         public CreateUserForm( String id )
         {
@@ -99,7 +115,7 @@ public class AddAccount
             pass2 = new PasswordTextField( "password2", new PropertyModel( this, "password2" ) );
             add( pass.setRequired( true ) );
             add( pass2.setRequired( true ) );
-            add( new CheckBox( "tester", new PropertyModel( this, "tester" ) ) );
+            add( new CheckBox( "tester", new PropertyModel( this, "tester" ) ).setEnabled( !testerOnly ) );
 
             add( new EqualPasswordInputValidator( pass, pass2 ) );
             add( new OnePressSubmitButton( "submitUser" ) );
