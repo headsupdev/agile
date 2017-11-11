@@ -1,6 +1,6 @@
 /*
  * HeadsUp Agile
- * Copyright 2009-2016 Heads Up Development Ltd.
+ * Copyright 2009-2017 Heads Up Development.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -64,8 +64,8 @@ public class WebManagerImpl
     @Override
     public String getFooterCopyrightHTML()
     {
-        return "Copyright &copy; 2009 - 2016 <a href=\"http://headsupdev.com/\" target=\"_blank\">" +
-            "Heads Up Development Ltd</a> and contributors.";
+        return "Copyright &copy; 2009 - 2017 <a href=\"http://headsupdev.com/\" target=\"_blank\">" +
+            "Heads Up Development</a> and contributors.";
     }
 
     @Override

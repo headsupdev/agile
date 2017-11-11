@@ -1,7 +1,7 @@
 package org.headsupdev.agile.storage.issues;
 /*
  * HeadsUp Agile
- * Copyright 2014 Heads Up Development Ltd.
+ * Copyright 2014 Heads Up Development.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as

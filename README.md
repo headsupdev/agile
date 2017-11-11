@@ -46,6 +46,6 @@ Should you have any questions or comments please join our mailing list:
 
 Or join us on IRC at `irc.freenode.net` channel `#agile-users`.
 
-Copyright (C) 2009-2012 Heads Up Development Ltd and contributors (see CONTRIBUTORS.txt).   
-"Heads Up Development" and "HeadsUp" are registered trademarks (R) of Heads Up Development Ltd.
+Copyright (C) 2009-2012 Heads Up Development and contributors (see CONTRIBUTORS.txt).
+"Heads Up Development" and "HeadsUp" are registered trademarks (R) of Heads Up Development.
 

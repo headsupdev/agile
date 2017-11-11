@@ -25,6 +25,6 @@ Should you have any questions or comments please email us:
 Alternatively you can use the contact form available at:
   http://headsupdev.com/contact/
 
-Copyright (C) 2009-2012 Heads Up Development Ltd. All rights reserved.
+Copyright (C) 2009-2012 Heads Up Development. All rights reserved.
   http://headsupdev.com/
 
