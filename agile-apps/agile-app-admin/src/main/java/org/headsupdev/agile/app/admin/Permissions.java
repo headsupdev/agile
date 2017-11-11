@@ -189,7 +189,7 @@ public class Permissions
                         builtin = true;
                     }
                     else if ( user.getRoles().contains( new TesterRole() ) )
-		    {
+                    {
                         listItem.add( new Label( "username", usernameModel ).setVisible( false ) );
                         Label usernameInLink = new Label( "usernameInLink", usernameModel );
                         usernameInLink.add( modifier );
@@ -241,10 +241,10 @@ public class Permissions
                                 {
                                     return role;
                                 }
-                            } ).setEnabled( !builtin ) );
+                            } ) );
                         }
                     } );
-                    listItem.add( group );
+                    listItem.add( group.setEnabled( !builtin ) );
                 }
             } );
         }
