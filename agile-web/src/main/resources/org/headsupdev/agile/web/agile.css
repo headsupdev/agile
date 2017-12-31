@@ -143,7 +143,7 @@ body {min-height: 100%;} /* for proper browsers */
 
 #projectmenu {
     width: 193pt;
-    position: absolute;
+    position: fixed;
     left: 102pt;
     top: 32pt;
     z-index: 299;
