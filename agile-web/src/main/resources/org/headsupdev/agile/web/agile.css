@@ -297,7 +297,7 @@ body {min-height: 100%;} /* for proper browsers */
     display: block;
     width: auto;
     height: auto;
-    max-height: 420px;
+    max-height: 390px;
 
     overflow: scroll;
     overflow-x: hidden;
